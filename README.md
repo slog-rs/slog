@@ -21,32 +21,39 @@
 ## Code snippet
 
 ``` rust
-    mioco::start(|| -> io::Result<()> {
-        let addr = listend_addr();
+fn main() {
+    let root = Logger::root().add("example", "basic").end();
+    let log = root.new().add("thread-name", "main").end();
+    let tlog = root.new().add("thread-name", "sleep1000").end();
 
-        let listener = try!(TcpListener::bind(&addr));
+    log.set_drain(
+        drain::duplicate(
+            drain::filter_level(Level::Info, drain::stream(std::io::stderr())),
+            drain::stream(std::io::stdout()),
+            )
+        );
 
-        println!("Starting tcp echo server on {:?}", try!(listener.local_addr()));
+    let join = thread::spawn(move || {
+        tlog.info("subthread started");
+        thread::sleep_ms(1000);
+        tlog.info("subthread finished");
+    });
 
-        loop {
-            let mut conn = try!(listener.accept());
+    let time_ms = 10000;
+    log.info("sleep").add("time", time_ms);
+    thread::sleep_ms(time_ms);
 
-            mioco::spawn(move || -> io::Result<()> {
-                let mut buf = [0u8; 1024 * 16];
-                loop {
-                    let size = try!(conn.read(&mut buf));
-                    if size == 0 {/* eof */ break; }
-                    let _ = try!(conn.write_all(&mut buf[0..size]));
-                }
+    log.info("join");
 
-                Ok(())
-            });
-        }
-    }).unwrap().unwrap();
+    join.join().unwrap();
+    log.warning("exit");
+}
 ```
 ## Introduction
 
 Structured, composable logging for [Rust][rust]
+
+Inspired by [log15] for Go. Work in progress.
 
 Read [Documentation](//dpc.github.io/slog/) for details and features.
 
@@ -57,6 +64,7 @@ To report a bug or ask for features use [github issues][issues].
 [rust]: http://rust-lang.org
 [dpc gitter]: https://gitter.im/dpc/dpc
 [issues]: //github.com/dpc/mioco/issues
+[log15]: //github.com/inconshreveable/log15
 
 ## Building & running
 
