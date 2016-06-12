@@ -1,5 +1,7 @@
-// included from the top file
-
+//! # Drains
+//!
+//! Drains are responsible for filtering, formatting and writing the log records
+//! into given destination.
 use std::fmt;
 use super::{RecordInfo, Level};
 use std::io;
@@ -7,28 +9,30 @@ use std::fmt::Write as FmtWrite;
 use std::io::Write as IoWrite;
 use std::sync::{Arc, Mutex};
 
-// Drain for Loggers
+/// Drain for Loggers
+///
+/// Implementing this trait allows writing own Drains
 pub trait Drain : Send+Sync {
     // Return new RecordDrain to handle log record
     fn new_record(&self, info : &RecordInfo) -> Option<Box<RecordDrain>>;
 }
 
-// Record Drain
-//
-// Handles a single record sent to the drain
+/// Record Drain
+///
+/// Handles a single record sent to the drain
 pub trait RecordDrain {
-    // Add a key:value to the record
+    /// Add a key:value to the record
     fn add(&mut self, key : &str, val : &fmt::Display);
 
-    // Finish handling the record.
+    /// Finish handling the record.
     fn end(&mut self);
 }
 
 
-// Drain formating records and writing them to a byte-stream (io::Write)
-//
-// Uses mutex to serialize writes.
-// TODO: Add one that does not serialize?
+/// Drain formating records and writing them to a byte-stream (io::Write)
+///
+/// Uses mutex to serialize writes.
+/// TODO: Add one that does not serialize?
 pub struct Streamer<W : io::Write> {
     io : Arc<Mutex<W>>,
 }

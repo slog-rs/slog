@@ -1,3 +1,5 @@
+//! # Slog -  Structured, composable logging for Rust
+
 extern crate crossbeam;
 
 use std::sync::{Arc};
@@ -8,9 +10,11 @@ use std::marker::PhantomData;
 use std::io::Write as IoWrite;
 use std::fmt::Write as FmtWrite;
 
+/// Drains - logging outputs
 pub mod drain;
 use drain::*;
 
+/// Logger - logging handle
 pub mod logger;
 
 pub use logger::Logger;
@@ -26,15 +30,18 @@ trait Formatter {
 }
 
 
-
+/// Common information about a logging record
 pub struct RecordInfo {
-    ts : time::SystemTime,
-    level : Level,
-    msg : String,
+    /// Timestamp 
+    pub ts : time::SystemTime,
+    /// Logging level
+    pub level : Level,
+    /// Message
+    pub msg : String,
 }
 
+/// Log record builder
 pub struct RecordBuilder<'a> {
-    _drain: Arc<Box<Drain>>,
     record_drain: Option<Box<RecordDrain>>,
     phantom: PhantomData<&'a Logger>
 }
@@ -57,5 +64,3 @@ impl<'a> Drop for RecordBuilder<'a> {
         }
     }
 }
-
-

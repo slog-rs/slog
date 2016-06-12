@@ -1,5 +1,15 @@
-// included from the top file
-
+//! # Logger
+//!
+//! Loggers are thread-safe and reference counted, so can be freely
+//! passed around the code.
+//!
+//! Each logger is built with a set of key-values.
+//!
+//! Child loggers are build from existing loggers, and copy
+//! all the key-values from their parents
+//!
+//! Loggers form hierarchies sharing a drain. Setting a drain on
+//! any logger will change it on all loggers in given hierarchy.
 use super::{DrainRef, KeyValue, RecordBuilder, Level, RecordInfo};
 use std::marker::PhantomData;
 use std::sync::Arc;
@@ -118,7 +128,6 @@ impl Logger {
         // TODO: check the drain logging level here to skip logging
         // altogether?
         let mut builder = RecordBuilder {
-            _drain : drain,
             record_drain: record_drain,
             phantom: PhantomData::default(),
         };

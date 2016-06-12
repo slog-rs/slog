@@ -1,4 +1,4 @@
-PKG_NAME=$(shell grep name Cargo.toml | head -n 1 | awk -F\" '{print $2}')
+PKG_NAME=$(shell grep name Cargo.toml | head -n 1 | awk -F \" '{print $$2}')
 DOCS_DEFAULT_MODULE=$(PKG_NAME)
 ifeq (, $(shell which cargo-check 2> /dev/null))
 DEFAULT_TARGET=build
@@ -10,11 +10,11 @@ default: $(DEFAULT_TARGET)
 
 ALL_TARGETS += build $(EXAMPLES) test doc
 ifneq ($(RELEASE),)
-$(info RELEASE BUILD)
+$(info RELEASE BUILD: $(PKG_NAME))
 CARGO_FLAGS += --release
 ALL_TARGETS += bench
 else
-$(info DEBUG BUILD; use `RELEASE=true make [args]` for release build)
+$(info DEBUG BUILD: $(PKG_NAME); use `RELEASE=true make [args]` for release build)
 endif
 
 EXAMPLES = $(shell cd examples 2>/dev/null && ls *.rs 2>/dev/null | sed -e 's/.rs$$//g' )

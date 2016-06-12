@@ -1,3 +1,4 @@
+/// Logging level
 #[derive(Copy, Clone, Debug)]
 pub enum Level {
     Critical,
@@ -39,6 +40,7 @@ impl fmt::Display for Level {
 }
 
 impl Level {
+    /// Returns true if `self` is at least `level` logging level
     fn is_at_least(&self, level : Self) -> bool {
         self.as_int() <= level.as_int()
     }
