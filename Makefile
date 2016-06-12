@@ -37,8 +37,7 @@ bench:
 	cargo $@ $(filter-out --release,$(CARGO_FLAGS))
 
 .PHONY: travistest
-travistest:
-	for i in `seq 3`; do make test || exit 1 ; done
+travistest: test
 
 .PHONY: longtest
 longtest:
