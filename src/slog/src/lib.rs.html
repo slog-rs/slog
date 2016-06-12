@@ -107,6 +107,7 @@
 <span id="63">63</span>
 <span id="64">64</span>
 <span id="65">65</span>
+<span id="66">66</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 
@@ -140,15 +141,18 @@
 }
 
 
-
+<span class='doccomment'>/// Common information about a logging record</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>RecordInfo</span> {
-    <span class='ident'>ts</span> : <span class='ident'>time</span>::<span class='ident'>SystemTime</span>,
-    <span class='ident'>level</span> : <span class='ident'>Level</span>,
-    <span class='ident'>msg</span> : <span class='ident'>String</span>,
+    <span class='doccomment'>/// Timestamp </span>
+    <span class='kw'>pub</span> <span class='ident'>ts</span> : <span class='ident'>time</span>::<span class='ident'>SystemTime</span>,
+    <span class='doccomment'>/// Logging level</span>
+    <span class='kw'>pub</span> <span class='ident'>level</span> : <span class='ident'>Level</span>,
+    <span class='doccomment'>/// Message</span>
+    <span class='kw'>pub</span> <span class='ident'>msg</span> : <span class='ident'>String</span>,
 }
 
+<span class='doccomment'>/// Build logging record</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>RecordBuilder</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='ident'>_drain</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&gt;&gt;</span>,
     <span class='ident'>record_drain</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>RecordDrain</span><span class='op'>&gt;&gt;</span>,
     <span class='ident'>phantom</span>: <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Logger</span><span class='op'>&gt;</span>
 }
@@ -171,8 +175,6 @@
         }
     }
 }
-
-
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

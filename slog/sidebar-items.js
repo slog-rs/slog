@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Level","Logging level"]],"mod":[["drain","Drains - logging outputs # Drains"],["logger","Logger - logging handle # Logger"]],"struct":[["RecordBuilder",""],["RecordInfo",""]]});
+initSidebarItems({"enum":[["Level","Logging level"]],"mod":[["drain","Drains - logging outputs # Drains"],["logger","Logger - logging handle # Logger"]],"struct":[["RecordBuilder","Build logging record"],["RecordInfo","Common information about a logging record"]]});

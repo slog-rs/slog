@@ -214,7 +214,6 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
-<span id="173">173</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Logger</span>
 <span class='doccomment'>//!</span>
@@ -346,7 +345,6 @@
         <span class='comment'>// TODO: check the drain logging level here to skip logging</span>
         <span class='comment'>// altogether?</span>
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>RecordBuilder</span> {
-            <span class='ident'>_drain</span> : <span class='ident'>drain</span>,
             <span class='ident'>record_drain</span>: <span class='ident'>record_drain</span>,
             <span class='ident'>phantom</span>: <span class='ident'>PhantomData</span>::<span class='ident'>default</span>(),
         };
