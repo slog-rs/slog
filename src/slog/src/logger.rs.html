@@ -205,9 +205,29 @@
 <span id="161">161</span>
 <span id="162">162</span>
 <span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
 </pre><pre class='rust '>
-<span class='comment'>// included from the top file</span>
-
+<span class='doccomment'>//! # Logger</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Loggers are thread-safe and reference counted, so can be freely</span>
+<span class='doccomment'>//! passed around the code.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Each logger is built with a set of key-values.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Child loggers are build from existing loggers, and copy</span>
+<span class='doccomment'>//! all the key-values from their parents</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Loggers form hierarchies sharing a drain. Setting a drain on</span>
+<span class='doccomment'>//! any logger will change it on all loggers in given hierarchy.</span>
 <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>DrainRef</span>, <span class='ident'>KeyValue</span>, <span class='ident'>RecordBuilder</span>, <span class='ident'>Level</span>, <span class='ident'>RecordInfo</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;

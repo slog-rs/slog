@@ -47,8 +47,21 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-137' class='srclink' href='../../src/slog/src/logger.rs.html#3-163' title='goto source code'>[src]</a></span></h1>
-<h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+               </span><a id='src-137' class='srclink' href='../../src/slog/src/logger.rs.html#1-173' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Logger - logging handle</p>
+
+<h1 id='logger' class='section-header'><a href='#logger'>Logger</a></h1>
+<p>Loggers are thread-safe and reference counted, so can be freely
+passed around the code.</p>
+
+<p>Each logger is built with a set of key-values.</p>
+
+<p>Child loggers are build from existing loggers, and copy
+all the key-values from their parents</p>
+
+<p>Loggers form hierarchies sharing a drain. Setting a drain on
+any logger will change it on all loggers in given hierarchy.</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Logger.html'

@@ -47,14 +47,19 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-24' class='srclink' href='../../src/slog/src/drain.rs.html#19-25' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-24' class='srclink' href='../../src/slog/src/drain.rs.html#23-29' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait RecordDrain {
     fn <a href='#tymethod.add' class='fnname'>add</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: &amp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a>);
     fn <a href='#tymethod.end' class='fnname'>end</a>(&amp;mut self);
-}</pre>
+}</pre><div class='docblock'><p>Record Drain</p>
+
+<p>Handles a single record sent to the drain</p>
+</div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.add' class='method stab '><code>fn <a href='#tymethod.add' class='fnname'>add</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: &amp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a>)</code></h3><h3 id='tymethod.end' class='method stab '><code>fn <a href='#tymethod.end' class='fnname'>end</a>(&amp;mut self)</code></h3></div>
+        <h3 id='tymethod.add' class='method stab '><code>fn <a href='#tymethod.add' class='fnname'>add</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: &amp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a>)</code></h3><div class='docblock'><p>Add a key:value to the record</p>
+</div><h3 id='tymethod.end' class='method stab '><code>fn <a href='#tymethod.end' class='fnname'>end</a>(&amp;mut self)</code></h3><div class='docblock'><p>Finish handling the record.</p>
+</div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
     </ul><script type="text/javascript" async

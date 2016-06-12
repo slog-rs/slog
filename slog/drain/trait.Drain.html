@@ -47,10 +47,13 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-20' class='srclink' href='../../src/slog/src/drain.rs.html#11-14' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-20' class='srclink' href='../../src/slog/src/drain.rs.html#15-18' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Drain: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> {
     fn <a href='#tymethod.new_record' class='fnname'>new_record</a>(&amp;self, info: &amp;<a class='struct' href='../../slog/struct.RecordInfo.html' title='slog::RecordInfo'>RecordInfo</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='trait' href='../../slog/drain/trait.RecordDrain.html' title='slog::drain::RecordDrain'>RecordDrain</a>&gt;&gt;;
-}</pre>
+}</pre><div class='docblock'><p>Drain for Loggers</p>
+
+<p>Implementing this trait allows writing own Drains</p>
+</div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
         <h3 id='tymethod.new_record' class='method stab '><code>fn <a href='#tymethod.new_record' class='fnname'>new_record</a>(&amp;self, info: &amp;<a class='struct' href='../../slog/struct.RecordInfo.html' title='slog::RecordInfo'>RecordInfo</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='trait' href='../../slog/drain/trait.RecordDrain.html' title='slog::drain::RecordDrain'>RecordDrain</a>&gt;&gt;</code></h3></div>

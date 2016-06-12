@@ -103,7 +103,13 @@
 <span id="59">59</span>
 <span id="60">60</span>
 <span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
 </pre><pre class='rust '>
+<span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
+
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>crossbeam</span>;
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>};
@@ -114,9 +120,11 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span> <span class='kw'>as</span> <span class='ident'>IoWrite</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Write</span> <span class='kw'>as</span> <span class='ident'>FmtWrite</span>;
 
+<span class='doccomment'>/// Drains - logging outputs</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>drain</span>;
 <span class='kw'>use</span> <span class='ident'>drain</span>::<span class='op'>*</span>;
 
+<span class='doccomment'>/// Logger - logging handle</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>logger</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>logger</span>::<span class='ident'>Logger</span>;
