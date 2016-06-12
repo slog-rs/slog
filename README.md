@@ -1,4 +1,4 @@
-# mioco
+# slog-rs
 
 <p align="center">
   <a href="https://travis-ci.org/dpc/slog-rs">
