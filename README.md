@@ -55,7 +55,7 @@ Structured, composable logging for [Rust][rust]
 
 Inspired by [log15] for Go. Work in progress.
 
-Read [Documentation](//dpc.github.io/slog/) for details and features.
+Read [Documentation](//dpc.github.io/slog-rs/) for details and features.
 
 If you want to say hi, or need help use [#dpc gitter.im][dpc gitter].
 
@@ -63,7 +63,7 @@ To report a bug or ask for features use [github issues][issues].
 
 [rust]: http://rust-lang.org
 [dpc gitter]: https://gitter.im/dpc/dpc
-[issues]: //github.com/dpc/mioco/issues
+[issues]: //github.com/dpc/slog-rs/issues
 [log15]: //github.com/inconshreveable/log15
 
 ## Building & running
