@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Logger` struct in crate `slog`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Logger">
+
+    <title>slog::logger::Logger - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>slog</a>::<wbr><a href='index.html'>logger</a></p><script>window.sidebarCurrent = {name: 'Logger', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>slog</a>::<wbr><a href='index.html'>logger</a>::<wbr><a class='struct' href=''>Logger</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-148' class='srclink' href='../../src/slog/src/logger.rs.html#18-20' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Logger {
+    // some fields omitted
+}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h3><div class='impl-items'><h4 id='method.root' class='method'><code>fn <a href='#method.root' class='fnname'>root</a>() -&gt; <a class='struct' href='../../slog/logger/struct.LoggerBuilder.html' title='slog::logger::LoggerBuilder'>LoggerBuilder</a>&lt;'static&gt;</code></h4>
+<div class='docblock'><p>Build a root logger</p>
+
+<p>All children and their children and so on form one hierarchy
+sharing a common drain.</p>
+</div><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../slog/logger/struct.LoggerBuilder.html' title='slog::logger::LoggerBuilder'>LoggerBuilder</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>Build a child logger</p>
+
+<p>Child logger copies all existing values from the parent.</p>
+
+<p>All children and their children and so on form one hierarchy sharing
+a common drain.</p>
+</div><h4 id='method.new_root' class='method'><code>fn <a href='#method.new_root' class='fnname'>new_root</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../../slog/logger/struct.LoggerBuilder.html' title='slog::logger::LoggerBuilder'>LoggerBuilder</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>Build a root logger copying values</p>
+
+<p>This logger will copy all values from it&#39;s parent,
+but won&#39;t share drain with it, forming a new hierarchy.</p>
+</div><h4 id='method.set_drain' class='method'><code>fn <a href='#method.set_drain' class='fnname'>set_drain</a>&lt;D: <a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a>&gt;(&amp;self, drain: D)</code></h4>
+<div class='docblock'><p>Set the drain for logger and it&#39;s hierarchy</p>
+</div><h4 id='method.swap_drain' class='method'><code>fn <a href='#method.swap_drain' class='fnname'>swap_drain</a>(&amp;self, drain: <a class='struct' href='https://doc.rust-lang.org/nightly/alloc/arc/struct.Arc.html' title='alloc::arc::Arc'>Arc</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a>&gt;&gt;) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/alloc/arc/struct.Arc.html' title='alloc::arc::Arc'>Arc</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a>&gt;&gt;</code></h4>
+<div class='docblock'><p>Swap the existing drain with a new one</p>
+
+<p>As the drains are shared between threads, and might still be
+referenced <code>Arc</code>s are being used to reference-count them.</p>
+</div><h4 id='method.critical' class='method'><code>fn <a href='#method.critical' class='fnname'>critical</a>&lt;'a, 'b&gt;(&amp;'a self, msg: &amp;'b <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../../slog/struct.RecordBuilder.html' title='slog::RecordBuilder'>RecordBuilder</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>Log a critical level log record</p>
+</div><h4 id='method.error' class='method'><code>fn <a href='#method.error' class='fnname'>error</a>&lt;'a, 'b&gt;(&amp;'a self, msg: &amp;'b <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../../slog/struct.RecordBuilder.html' title='slog::RecordBuilder'>RecordBuilder</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>Log an error level log record</p>
+</div><h4 id='method.warning' class='method'><code>fn <a href='#method.warning' class='fnname'>warning</a>&lt;'a, 'b&gt;(&amp;'a self, msg: &amp;'b <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../../slog/struct.RecordBuilder.html' title='slog::RecordBuilder'>RecordBuilder</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>Log a warning level log record</p>
+</div><h4 id='method.info' class='method'><code>fn <a href='#method.info' class='fnname'>info</a>&lt;'a, 'b&gt;(&amp;'a self, msg: &amp;'b <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../../slog/struct.RecordBuilder.html' title='slog::RecordBuilder'>RecordBuilder</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>Log an info level log record</p>
+</div><h4 id='method.debug' class='method'><code>fn <a href='#method.debug' class='fnname'>debug</a>&lt;'a, 'b&gt;(&amp;'a self, msg: &amp;'b <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../../slog/struct.RecordBuilder.html' title='slog::RecordBuilder'>RecordBuilder</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>Log a debug level log record</p>
+</div><h4 id='method.trace' class='method'><code>fn <a href='#method.trace' class='fnname'>trace</a>&lt;'a, 'b&gt;(&amp;'a self, msg: &amp;'b <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../../slog/struct.RecordBuilder.html' title='slog::RecordBuilder'>RecordBuilder</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>Log a trace level log record</p>
+</div><h4 id='method.log' class='method'><code>fn <a href='#method.log' class='fnname'>log</a>&lt;'a, 'b&gt;(&amp;'a self, lvl: <a class='enum' href='../../slog/enum.Level.html' title='slog::Level'>Level</a>, msg: &amp;'b <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../../slog/struct.RecordBuilder.html' title='slog::RecordBuilder'>RecordBuilder</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>Log a record with a given logging level</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h4>
+<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "slog";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>
