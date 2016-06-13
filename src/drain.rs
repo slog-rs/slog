@@ -3,12 +3,15 @@
 //! Drains are responsible for filtering, formatting and writing the log records
 //! into given destination.
 use std::fmt;
-use super::{RecordInfo, Level};
+use super::{RecordInfo, Level, Serialize};
 use std::io;
 use std::fmt::Write as FmtWrite;
 use std::io::Write as IoWrite;
 use std::sync::{Arc, Mutex};
 
+use serde_json;
+
+///
 /// Drain for Loggers
 ///
 /// Implementing this trait allows writing own Drains
@@ -22,7 +25,7 @@ pub trait Drain : Send+Sync {
 /// Handles a single record sent to the drain
 pub trait RecordDrain {
     /// Add a key:value to the record
-    fn add(&mut self, key : &str, val : &fmt::Display);
+    fn add(&mut self, key : &str, val : &Serialize);
 
     /// Finish handling the record.
     fn end(&mut self);
@@ -54,32 +57,36 @@ impl<W : 'static+io::Write+Send> Drain for Streamer<W> {
 
 struct RecordStreamer<W : io::Write> {
     io : Arc<Mutex<W>>,
-    buf : String,
+    serializer : serde_json::Serializer<Vec<u8>>,
 }
 
 impl<W : io::Write> RecordStreamer<W> {
     fn new(io : Arc<Mutex<W>>, info : &RecordInfo) -> Self {
-        let mut buf = String::new();
+        let mut serializer = serde_json::Serializer::new(vec!());
+
+        /* TODO:
         write!(buf, "[{}][{:?}] {}",
                info.level,
                info.ts,
-               info.msg).unwrap();
+               info.msg).unwrap(); */
 
         RecordStreamer {
             io: io,
-            buf: buf
+            serializer: serializer,
         }
     }
 }
 
 impl<W : io::Write> RecordDrain for RecordStreamer<W> {
-    fn add(&mut self, key : &str, val : &fmt::Display) {
-        write!(self.buf, ", {}: {}", key, val).unwrap()
+    fn add(&mut self, key : &str, val : &Serialize) {
+        self.serializer.serialize(val);
+//        val.serialize(&mut self.serializer)
+//        write!(self.buf, ", {}: {:?}", key, val).unwrap()
     }
 
     fn end(&mut self) {
-        let mut io = self.io.lock().unwrap();
-        let _ = write!(io, "{}\n", self.buf);
+ //       let mut io = self.io.lock().unwrap();
+//        let _ = write!(io, "{}\n", self.buf);
     }
 }
 
@@ -160,7 +167,7 @@ impl DuplicateRecord {
 }
 
 impl RecordDrain for DuplicateRecord {
-    fn add(&mut self, key : &str, val : &fmt::Display) {
+    fn add(&mut self, key : &str, val : &Serialize) {
         self.r1.add(key, val);
         self.r2.add(key, val);
     }

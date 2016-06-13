@@ -13,3 +13,5 @@ readme = "README.md"
 
 [dependencies]
 crossbeam = "0.2.9"
+serde = "*"
+serde_json = "*"
