@@ -1,12 +1,16 @@
 //! # Slog -  Structured, composable logging for Rust
 
+#![warn(missing_docs)]
+
 extern crate crossbeam;
+extern crate serde;
+extern crate serde_json;
+extern crate isatty;
+extern crate ansi_term;
 
 use std::sync::{Arc};
 use crossbeam::sync::ArcCell;
-use std::time;
 use std::fmt;
-use std::marker::PhantomData;
 use std::io::Write as IoWrite;
 use std::fmt::Write as FmtWrite;
 
@@ -17,50 +21,213 @@ use drain::*;
 /// Logger - logging handle
 pub mod logger;
 
+/// Serialization
+pub mod ser;
+
+/// Output formating
+pub mod format;
+
 pub use logger::Logger;
 
 include!("_level.rs");
 
 type DrainRef = Arc<ArcCell<Box<Drain>>>;
-type KeyValue = (String, String);
+
+/// Key value pair that can be owned by `Logger`
+pub type OwnedKeyValue = (&'static str, Arc<ser::SyncSerialize>);
+/// Key value pair that can be part of each logging record
+pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
+
+/// Log a custom level logging record
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+///
+/// fn main() {
+///     let root = root_logger!("key" => "value");
+///     log!(root, slog::Level::Debug, "something happened", "counter" => 1);
+/// }
+/// ```
+#[macro_export]
+macro_rules! log(
+    ($logger:ident, $lvl:expr, $msg:expr) => {
+        $logger.log($lvl, $msg, &[])
+    };
+    ($logger:ident, $lvl:expr, $msg : expr, $($k:expr => $v:expr),*) => {
+        $logger.log($lvl, $msg, &[$(($k, &$v)),*])
+    };
+);
+
+/// Log a critical level logging record
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+/// fn main() {
+///     let root = root_logger!("key" => "value");
+///     critical!(root, "something happened", "counter" => 1);
+/// }
+/// ```
+#[macro_export]
+macro_rules! critical(
+    ($logger:ident, $msg:expr) => {
+        $logger.log($crate::Level::Critical, $msg, &[])
+    };
+    ($logger:ident, $msg : expr, $($k:expr => $v:expr),*) => {
+        $logger.log($crate::Level::Critical, $msg, &[$(($k, &$v)),*])
+    };
+);
+
+/// Log an error level logging record
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+/// fn main() {
+///     let root = root_logger!("key" => "value");
+///     error!(root, "something happened", "counter" => 1);
+/// }
+/// ```
+#[macro_export]
+macro_rules! error(
+    ($logger:ident, $msg:expr) => {
+        $logger.log($crate::Level::Error, $msg, &[])
+    };
+    ($logger:ident, $msg : expr, $($k:expr => $v:expr),*) => {
+        $logger.log($crate::Level::Error, $msg, &[$(($k, &$v)),*])
+    };
+);
 
 
-trait Formatter {
+/// Log a warning level logging record
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+/// fn main() {
+///     let root = root_logger!("key" => "value");
+///     warn!(root, "something happened", "counter" => 1);
+/// }
+/// ```
+#[macro_export]
+macro_rules! warn(
+    ($logger:ident, $msg:expr) => {
+        $logger.log($crate::Level::Warning, $msg, &[])
+    };
+    ($logger:ident, $msg : expr, $($k:expr => $v:expr),*) => {
+        $logger.log($crate::Level::Warning, $msg, &[$(($k, &$v)),*])
+    };
+);
 
-}
+
+/// Log an info level logging record
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+/// fn main() {
+///     let root = root_logger!("key" => "value");
+///     info!(root, "something happened", "counter" => 1);
+/// }
+/// ```
+#[macro_export]
+macro_rules! info(
+    ($logger:ident, $msg:expr) => {
+        $logger.log($crate::Level::Info, $msg, &[])
+    };
+    ($logger:ident, $msg : expr, $($k:expr => $v:expr),*) => {
+        $logger.log($crate::Level::Info, $msg, &[$(($k, &$v)),*])
+    };
+);
 
 
-/// Common information about a logging record
-pub struct RecordInfo {
-    /// Timestamp 
-    pub ts : time::SystemTime,
-    /// Logging level
-    pub level : Level,
-    /// Message
-    pub msg : String,
-}
+/// Log a debug level logging record
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+/// fn main() {
+///     let root = root_logger!("key" => "value");
+///     debug!(root, "something happened", "counter" => 1);
+/// }
+/// ```
+#[macro_export]
+macro_rules! debug(
+    ($logger:ident, $msg:expr) => {
+        $logger.log($crate::Level::Debug, $msg, &[])
+    };
+    ($logger:ident, $msg : expr, $($k:expr => $v:expr),*) => {
+        $logger.log($crate::Level::Debug, $msg, &[$(($k, &$v)),*])
+    };
+);
 
-/// Log record builder
-pub struct RecordBuilder<'a> {
-    record_drain: Option<Box<RecordDrain>>,
-    phantom: PhantomData<&'a Logger>
-}
+/// Log a trace level logging record
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+/// fn main() {
+///     let root = root_logger!("key" => "value");
+///     trace!(root, "something happened", "counter" => 1);
+/// }
+/// ```
+#[macro_export]
+macro_rules! trace(
+    ($logger:ident, $msg:expr) => {
+        $logger.log($crate::Level::Trace, $msg, &[])
+    };
+    ($logger:ident, $msg : expr, $($k:expr => $v:expr),*) => {
+        $logger.log($crate::Level::Trace, $msg, &[$(($k, &$v)),*])
+    };
+);
 
-impl<'a> RecordBuilder<'a> {
-    pub fn add<'b, 'c, T : fmt::Display>(&'b mut self, key : &'b str, val : T) -> &'b mut Self {
-        match self.record_drain {
-            Some(ref mut drain) => drain.add(key, &val),
-            None => {}
-        }
-        self
-    }
-}
+/// Build a root logger
+///
+/// All children and their children and so on form one hierarchy
+/// sharing a common drain.
+///
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+/// fn main() {
+///     let root = root_logger!("key" => "value");
+/// }
+/// ```
+#[macro_export]
+macro_rules! root_logger(
+    () => {
+        $crate::Logger::new_root(vec!())
+    };
+    ($($k:expr => $v:expr),*) => {
+        $crate::Logger::new_root(vec!($(($k, std::sync::Arc::new(Box::new($v)))),*))
+    };
+);
 
-impl<'a> Drop for RecordBuilder<'a> {
-    fn drop(&mut self) {
-        match self.record_drain.take() {
-            Some(mut drain) => drain.end(),
-            None => {}
-        }
-    }
-}
+/// Build a child logger
+///
+/// Child logger copies all existing values from the parent.
+///
+/// All children and their children and so on form one hierarchy sharing
+///
+/// a common drain.
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+///
+/// fn main() {
+///     let root = root_logger!("key" => "value");
+///     let log = child_logger!(root, "key1" => 3);
+/// }
+/// ```
+#[macro_export]
+macro_rules! child_logger(
+    ($parent:expr) => {
+        $parent.new(vec!())
+    };
+    ($parent:expr, $($k:expr => $v:expr),*) => {
+        $parent.new(vec!($(($k, std::sync::Arc::new(Box::new($v)))),*))
+    };
+);

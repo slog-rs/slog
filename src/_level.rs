@@ -1,16 +1,22 @@
 /// Logging level
 #[derive(Copy, Clone, Debug)]
 pub enum Level {
+    /// Critical
     Critical,
+    /// Error
     Error,
+    /// Warning
     Warning,
+    /// Info
     Info,
+    /// Debug
     Debug,
+    /// Trace
     Trace
 }
 
 impl Level {
-    pub fn as_str(&self) -> &'static str {
+    fn as_str(&self) -> &'static str {
         match *self {
             Level::Critical => "CRIT",
             Level::Error => "ERRO",
@@ -21,6 +27,8 @@ impl Level {
         }
     }
 
+    /// Cast `Level` to ordering integer, where
+    /// `Critical` is 0, and `Trace` is 5
     pub fn as_int(&self) -> i32 {
         match *self {
             Level::Critical => 0,

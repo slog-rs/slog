@@ -2,30 +2,22 @@
 //!
 //! Drains are responsible for filtering, formatting and writing the log records
 //! into given destination.
-use std::fmt;
-use super::{RecordInfo, Level};
-use std::io;
+use super::{Level};
+use super::format;
+use super::logger::RecordInfo;
+use std::{io, str};
 use std::fmt::Write as FmtWrite;
 use std::io::Write as IoWrite;
-use std::sync::{Arc, Mutex};
+use std::sync::Mutex;
+use super::{OwnedKeyValue,BorrowedKeyValue};
 
+///
 /// Drain for Loggers
 ///
 /// Implementing this trait allows writing own Drains
 pub trait Drain : Send+Sync {
-    // Return new RecordDrain to handle log record
-    fn new_record(&self, info : &RecordInfo) -> Option<Box<RecordDrain>>;
-}
-
-/// Record Drain
-///
-/// Handles a single record sent to the drain
-pub trait RecordDrain {
-    /// Add a key:value to the record
-    fn add(&mut self, key : &str, val : &fmt::Display);
-
-    /// Finish handling the record.
-    fn end(&mut self);
+    /// Write one logging record
+    fn log(&self, info : &RecordInfo, &[OwnedKeyValue], &[BorrowedKeyValue]);
 }
 
 
@@ -33,55 +25,30 @@ pub trait RecordDrain {
 ///
 /// Uses mutex to serialize writes.
 /// TODO: Add one that does not serialize?
-pub struct Streamer<W : io::Write> {
-    io : Arc<Mutex<W>>,
+pub struct Streamer<W : io::Write, F : format::Format> {
+    io : Mutex<W>,
+    format : F,
 }
 
-impl<W : io::Write> Streamer<W> {
-    pub fn new(io : W) -> Self {
+impl<W : io::Write, F : format::Format> Streamer<W, F> {
+    /// Create new `Streamer` writing to `io` using `format`
+    pub fn new(io : W, format : F) -> Self {
         Streamer {
-            io: Arc::new(Mutex::new(io)),
+            io: Mutex::new(io),
+            format : format,
         }
     }
 }
 
-impl<W : 'static+io::Write+Send> Drain for Streamer<W> {
-    fn new_record(&self, info : &RecordInfo) -> Option<Box<RecordDrain>> {
-        Some(Box::new(RecordStreamer::new(self.io.clone(), info)))
-    }
-}
+impl<W : 'static+io::Write+Send, F : format::Format+Send> Drain for Streamer<W, F> {
+    fn log(&self, info : &RecordInfo, logger_values : &[OwnedKeyValue], values : &[BorrowedKeyValue]) {
+        let formatted = self.format.format(info, logger_values, values);
 
-
-struct RecordStreamer<W : io::Write> {
-    io : Arc<Mutex<W>>,
-    buf : String,
-}
-
-impl<W : io::Write> RecordStreamer<W> {
-    fn new(io : Arc<Mutex<W>>, info : &RecordInfo) -> Self {
-        let mut buf = String::new();
-        write!(buf, "[{}][{:?}] {}",
-               info.level,
-               info.ts,
-               info.msg).unwrap();
-
-        RecordStreamer {
-            io: io,
-            buf: buf
-        }
-    }
-}
-
-impl<W : io::Write> RecordDrain for RecordStreamer<W> {
-    fn add(&mut self, key : &str, val : &fmt::Display) {
-        write!(self.buf, ", {}: {}", key, val).unwrap()
-    }
-
-    fn end(&mut self) {
         let mut io = self.io.lock().unwrap();
-        let _ = write!(io, "{}\n", self.buf);
+        let _ = write!(io, "{}", formatted);
     }
 }
+
 
 /// Record log level filter
 ///
@@ -104,11 +71,9 @@ impl<D : Drain> FilterLevel<D> {
 }
 
 impl<D : Drain> Drain for FilterLevel<D> {
-    fn new_record(&self, info : &RecordInfo) -> Option<Box<RecordDrain>> {
+    fn log(&self, info : &RecordInfo, logger_values : &[OwnedKeyValue], values : &[BorrowedKeyValue]) {
         if info.level.is_at_least(self.level) {
-            return self.drain.new_record(info)
-        } else {
-            None
+            self.drain.log(info, logger_values, values)
         }
     }
 }
@@ -133,47 +98,15 @@ impl<D1 : Drain, D2 : Drain> Duplicate<D1, D2> {
 }
 
 impl<D1 : Drain, D2 : Drain> Drain for Duplicate<D1, D2> {
-    fn new_record(&self, info : &RecordInfo) -> Option<Box<RecordDrain>> {
-        match (self.drain1.new_record(info), self.drain2.new_record(info)) {
-            (Some(r1), Some(r2)) => {
-                Some(Box::new(DuplicateRecord::new(r1, r2)))
-            },
-            (Some(r1), None) => Some(r1),
-            (None, Some(r2)) => Some(r2),
-            (None, None) => None
-        }
-    }
-}
-
-struct DuplicateRecord {
-    r1: Box<RecordDrain>,
-    r2: Box<RecordDrain>,
-}
-
-impl DuplicateRecord {
-    fn new(r1 : Box<RecordDrain>, r2 : Box<RecordDrain>) -> Self {
-        DuplicateRecord{
-            r1: r1,
-            r2: r2,
-        }
-    }
-}
-
-impl RecordDrain for DuplicateRecord {
-    fn add(&mut self, key : &str, val : &fmt::Display) {
-        self.r1.add(key, val);
-        self.r2.add(key, val);
-    }
-
-    fn end(&mut self) {
-        self.r1.end();
-        self.r2.end();
+    fn log(&self, info : &RecordInfo, logger_values : &[OwnedKeyValue], values : &[BorrowedKeyValue]) {
+        self.drain1.log(info, logger_values, values);
+        self.drain2.log(info, logger_values, values);
     }
 }
 
 /// Create Streamer drain
-pub fn stream<W : io::Write + Send>(io : W) -> Streamer<W> {
-    Streamer::new(io)
+pub fn stream<W : io::Write + Send, F : format::Format>(io : W, format : F) -> Streamer<W, F> {
+    Streamer::new(io, format)
 }
 
 /// Create FilterLevel drain
