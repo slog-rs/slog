@@ -2,13 +2,15 @@
 //!
 //! Drains are responsible for filtering, formatting and writing the log records
 //! into given destination.
-use super::{RecordInfo, Level, Serialize};
+use super::{ Level, Serialize};
+use super::logger::RecordInfo;
 use std::{io, str};
 use std::fmt::Write as FmtWrite;
 use std::io::Write as IoWrite;
-use std::sync::{Arc, Mutex};
+use std::sync::Mutex;
 
 use serde;
+use serde::Serializer;
 use serde_json;
 
 ///
@@ -16,101 +18,73 @@ use serde_json;
 ///
 /// Implementing this trait allows writing own Drains
 pub trait Drain : Send+Sync {
-    // Return new RecordDrain to handle log record
-    fn new_record(&self, info : &RecordInfo) -> Option<Box<RecordDrain>>;
+    fn log(&self, info : &RecordInfo, &[(&str, &Serialize)]);
 }
 
-/// Record Drain
-///
-/// Handles a single record sent to the drain
-pub trait RecordDrain {
-    /// Add a key:value to the record
-    fn add(&mut self, key : &str, val : &Serialize);
-
-    /// Finish handling the record.
-    fn end(&mut self, &[(&str, &Serialize)]);
+struct RecordVisitor<'a> {
+    info : &'a RecordInfo,
+    values : &'a[(&'a str, &'a Serialize)],
+    index : usize,
 }
 
+impl<'a> serde::ser::MapVisitor for RecordVisitor<'a> {
+    fn visit<S>(&mut self, serializer: &mut S) -> Result<Option<()>, S::Error> where S: serde::Serializer {
+        let ret = match self.index {
+            0 => {self.info.level.as_str().serialize("level", serializer); Ok(Some(()))},
+            1 => {format!("{:?}", self.info.ts).as_str().serialize("ts", serializer); Ok(Some(()))},
+            2 => {self.info.msg.serialize("msg", serializer); Ok(Some(()))},
+            _ => if self.values.len() < self.index - 3 {
+
+                let (key, val) = self.values[self.index - 3];
+                val.serialize(key, serializer);
+                Ok(Some(()))
+            } else {
+                Ok(None)
+            }
+        };
+        self.index += 1;
+        ret
+    }
+
+    fn len(&self) -> Option<usize> {
+        Some(self.values.len() + 3)
+    }
+}
 
 /// Drain formating records and writing them to a byte-stream (io::Write)
 ///
 /// Uses mutex to serialize writes.
 /// TODO: Add one that does not serialize?
 pub struct Streamer<W : io::Write> {
-    io : Arc<Mutex<W>>,
+    io : Mutex<W>,
 }
 
 impl<W : io::Write> Streamer<W> {
     pub fn new(io : W) -> Self {
         Streamer {
-            io: Arc::new(Mutex::new(io)),
+            io: Mutex::new(io),
         }
     }
 }
 
 impl<W : 'static+io::Write+Send> Drain for Streamer<W> {
-    fn new_record(&self, info : &RecordInfo) -> Option<Box<RecordDrain>> {
-        Some(Box::new(RecordStreamer::new(self.io.clone(), info)))
-    }
-}
+    fn log(&self, info : &RecordInfo, values : &[(&str, &Serialize)]) {
 
-
-struct RecordStreamer<W : io::Write> {
-    io : Arc<Mutex<W>>,
-    serializer : Option<serde_json::Serializer<Vec<u8>>>,
-}
-
-impl<W : io::Write> RecordStreamer<W> {
-    fn new(io : Arc<Mutex<W>>, info : &RecordInfo) -> Self {
         let mut serializer = serde_json::Serializer::new(vec!());
 
-        /* TODO:
-        write!(buf, "[{}][{:?}] {}",
-               info.level,
-               info.ts,
-               info.msg).unwrap(); */
+        let visitor = RecordVisitor {
+            info : info,
+            values : values,
+            index : 0,
+        };
 
-        RecordStreamer {
-            io: io,
-            serializer: Some(serializer),
-        }
-    }
-}
+        serializer.serialize_map(visitor);
 
-struct KeyValueVisitor<'a> {
-    values : &'a[(&'a str, &'a Serialize)],
-    index : usize,
-}
-
-impl<'a> serde::ser::MapVisitor for KeyValueVisitor<'a> {
-    fn visit<S>(&mut self, serializer: &mut S) -> Result<Option<()>, S::Error> where S: serde::Serializer {
-        if self.values.len() < self.index {
-
-            let (key, val) = self.values[self.index];
-            val.serialize(key, serializer);
-            Ok(Some(()))
-        } else {
-            Ok(None)
-        }
-    }
-
-    fn len(&self) -> Option<usize> {
-        Some(self.values.len())
-    }
-}
-
-impl<W : io::Write> RecordDrain for RecordStreamer<W> {
-    fn add(&mut self, key : &str, val : &Serialize) {
-    }
-
-    fn end(&mut self, values : &[(&str, &Serialize)]) {
-        for &(ref key, ref val) in values {
-            val.serialize(key, self.serializer.as_mut().unwrap());
-        }
         let mut io = self.io.lock().unwrap();
-        let _ = write!(io, "{}", str::from_utf8(&self.serializer.take().unwrap().into_inner()).unwrap_or("INVALID UTF8 PRODUCED BY LOGGER"));
+        let _ = write!(io, "{}", str::from_utf8(&serializer.into_inner()).unwrap_or("INVALID UTF8 PRODUCED BY LOGGER"));
     }
 }
+
 
 /// Record log level filter
 ///
@@ -133,11 +107,9 @@ impl<D : Drain> FilterLevel<D> {
 }
 
 impl<D : Drain> Drain for FilterLevel<D> {
-    fn new_record(&self, info : &RecordInfo) -> Option<Box<RecordDrain>> {
+    fn log(&self, info : &RecordInfo, values : &[(&str, &Serialize)]) {
         if info.level.is_at_least(self.level) {
-            return self.drain.new_record(info)
-        } else {
-            None
+            self.drain.log(info, values)
         }
     }
 }
@@ -162,41 +134,9 @@ impl<D1 : Drain, D2 : Drain> Duplicate<D1, D2> {
 }
 
 impl<D1 : Drain, D2 : Drain> Drain for Duplicate<D1, D2> {
-    fn new_record(&self, info : &RecordInfo) -> Option<Box<RecordDrain>> {
-        match (self.drain1.new_record(info), self.drain2.new_record(info)) {
-            (Some(r1), Some(r2)) => {
-                Some(Box::new(DuplicateRecord::new(r1, r2)))
-            },
-            (Some(r1), None) => Some(r1),
-            (None, Some(r2)) => Some(r2),
-            (None, None) => None
-        }
-    }
-}
-
-struct DuplicateRecord {
-    r1: Box<RecordDrain>,
-    r2: Box<RecordDrain>,
-}
-
-impl DuplicateRecord {
-    fn new(r1 : Box<RecordDrain>, r2 : Box<RecordDrain>) -> Self {
-        DuplicateRecord{
-            r1: r1,
-            r2: r2,
-        }
-    }
-}
-
-impl RecordDrain for DuplicateRecord {
-    fn add(&mut self, key : &str, val : &Serialize) {
-        self.r1.add(key, val);
-        self.r2.add(key, val);
-    }
-
-    fn end(&mut self, values : &[(&str, &Serialize)]) {
-        self.r1.end(values);
-        self.r2.end(values);
+    fn log(&self, info : &RecordInfo, values : &[(&str, &Serialize)]) {
+        self.drain1.log(info, values);
+        self.drain2.log(info, values);
     }
 }
 

@@ -6,9 +6,7 @@ extern crate serde_json;
 
 use std::sync::{Arc};
 use crossbeam::sync::ArcCell;
-use std::time;
 use std::fmt;
-use std::marker::PhantomData;
 use std::io::Write as IoWrite;
 use std::fmt::Write as FmtWrite;
 
@@ -75,35 +73,3 @@ impl<S> Serializer for S where S : serde::Serializer {
 }
 
 
-/// Common information about a logging record
-pub struct RecordInfo {
-    /// Timestamp
-    pub ts : time::SystemTime,
-    /// Logging level
-    pub level : Level,
-    /// Message
-    pub msg : String,
-}
-
-/// Log record builder
-pub struct RecordBuilder<'a> {
-    record_drain: Option<Box<RecordDrain>>,
-    values : Vec<(&'a str, &'a Serialize)>,
-    phantom: PhantomData<&'a Logger>
-}
-
-impl<'a> RecordBuilder<'a> {
-    pub fn add<'b, 'c, 'd>(&'b mut self, key : &'a str, val : &'a Serialize) -> &'b mut Self {
-        self.values.push((key, val));
-        self
-    }
-}
-
-impl<'a> Drop for RecordBuilder<'a> {
-    fn drop(&mut self) {
-        match self.record_drain.take() {
-            Some(mut drain) => drain.end(&self.values),
-            None => {}
-        }
-    }
-}

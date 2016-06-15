@@ -10,7 +10,7 @@
 //!
 //! Loggers form hierarchies sharing a drain. Setting a drain on
 //! any logger will change it on all loggers in given hierarchy.
-use super::{DrainRef, KeyValue, RecordBuilder, Level, RecordInfo};
+use super::{DrainRef, KeyValue, Level, Serialize};
 use std::marker::PhantomData;
 use std::sync::Arc;
 use crossbeam::sync::ArcCell;
@@ -114,23 +114,18 @@ impl Logger {
     /// Log a record with a given logging level
     pub fn log<'a, 'b>(&'a self, lvl : Level, msg : &'b str) -> RecordBuilder<'a> {
 
-        let drain = self.inner.drain.get();
-
-
         let info = RecordInfo {
             ts: time::SystemTime::now(),
             msg: msg.to_string(),
             level: lvl,
         };
 
-        let record_drain = drain.new_record(&info);
-
         // TODO: check the drain logging level here to skip logging
         // altogether?
         let mut builder = RecordBuilder {
-            record_drain: record_drain,
+            info: info,
             values : vec!(),
-            phantom: PhantomData::default(),
+            logger : self,
         };
 
         for &(ref k, ref v) in &self.inner.values {
@@ -169,5 +164,36 @@ impl<'a> LoggerBuilder<'a> {
                }
            )
         }
+    }
+}
+
+
+/// Common information about a logging record
+pub struct RecordInfo {
+    /// Timestamp
+    pub ts : time::SystemTime,
+    /// Logging level
+    pub level : Level,
+    /// Message
+    pub msg : String,
+}
+
+/// Log record builder
+pub struct RecordBuilder<'a> {
+    info : RecordInfo,
+    values : Vec<(&'a str, &'a Serialize)>,
+    logger: &'a Logger,
+}
+
+impl<'a> RecordBuilder<'a> {
+    pub fn add<'b, 'c, 'd>(&'b mut self, key : &'a str, val : &'a Serialize) -> &'b mut Self {
+        self.values.push((key, val));
+        self
+    }
+}
+
+impl<'a> Drop for RecordBuilder<'a> {
+    fn drop(&mut self) {
+        self.logger.inner.drain.get().log(&self.info, &self.values)
     }
 }
