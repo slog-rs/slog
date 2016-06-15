@@ -32,25 +32,44 @@ trait Formatter {
 }
 
 pub trait Serialize {
-    fn serialize_serde_json(&self, serializer : &mut serde_json::Serializer);
-}
-
-impl<S> Serialize for S where S : serde::Serialize {
-    fn serialize_serde_json(&self, serializer : &mut serde_json::Serializer) {
-//        serializer.serialize(self);
-        serde::Serialize::serialize(self, serializer)
-    }
+    fn serialize(&self, key : &str, serializer : &mut Serializer);
 }
 
 pub trait Serializer {
-    fn serialize_serde_json(&mut self, val : &Serialize);
+    fn emit_u32(&mut self, key : &str, val : u32);
+    fn emit_str(&mut self, key : &str, val : &str);
 }
 
-impl Serializer for serde_json::Serializer {
-    fn serialize(&mut self, val : &Serialize) {
-        serde::Serialize::serialize_serde(val, self);
+impl Serialize for u32 {
+    fn serialize(&self, key : &str, serializer : &mut Serializer) {
+        serializer.emit_u32(key, *self)
     }
 }
+
+impl Serialize for str {
+    fn serialize(&self, key : &str, serializer : &mut Serializer) {
+        serializer.emit_str(key, self)
+    }
+}
+
+impl<'a> Serialize for &'a str {
+    fn serialize(&self, key : &str, serializer : &mut Serializer) {
+        serializer.emit_str(key, self)
+    }
+}
+
+impl<S> Serializer for S where S : serde::Serializer {
+    fn emit_u32(&mut self, key : &str, val : u32) {
+        let _ = serde::Serialize::serialize(&val, self);
+    }
+
+    fn emit_str(&mut self, key : &str, val : &str) {
+        //let _ = serde::Serialize::serialize(val, self);
+        //let _ = serde::Serialize::serialize(val, self);
+        let _ = serde::Serializer::serialize_map_elt(self, key, val);
+    }
+}
+
 
 /// Common information about a logging record
 pub struct RecordInfo {

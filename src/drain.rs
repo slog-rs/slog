@@ -2,9 +2,8 @@
 //!
 //! Drains are responsible for filtering, formatting and writing the log records
 //! into given destination.
-use std::fmt;
 use super::{RecordInfo, Level, Serialize};
-use std::io;
+use std::{io, str};
 use std::fmt::Write as FmtWrite;
 use std::io::Write as IoWrite;
 use std::sync::{Arc, Mutex};
@@ -57,7 +56,7 @@ impl<W : 'static+io::Write+Send> Drain for Streamer<W> {
 
 struct RecordStreamer<W : io::Write> {
     io : Arc<Mutex<W>>,
-    serializer : serde_json::Serializer<Vec<u8>>,
+    serializer : Option<serde_json::Serializer<Vec<u8>>>,
 }
 
 impl<W : io::Write> RecordStreamer<W> {
@@ -72,21 +71,19 @@ impl<W : io::Write> RecordStreamer<W> {
 
         RecordStreamer {
             io: io,
-            serializer: serializer,
+            serializer: Some(serializer),
         }
     }
 }
 
 impl<W : io::Write> RecordDrain for RecordStreamer<W> {
     fn add(&mut self, key : &str, val : &Serialize) {
-        self.serializer.serialize(val);
-//        val.serialize(&mut self.serializer)
-//        write!(self.buf, ", {}: {:?}", key, val).unwrap()
+        val.serialize(key, self.serializer.as_mut().unwrap());
     }
 
     fn end(&mut self) {
- //       let mut io = self.io.lock().unwrap();
-//        let _ = write!(io, "{}\n", self.buf);
+        let mut io = self.io.lock().unwrap();
+        let _ = write!(io, "{}", str::from_utf8(&self.serializer.take().unwrap().into_inner()).unwrap_or("INVALID UTF8 PRODUCED BY LOGGER"));
     }
 }
 

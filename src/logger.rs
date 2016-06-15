@@ -133,7 +133,7 @@ impl Logger {
         };
 
         for &(ref k, ref v) in &self.inner.values {
-            builder.add(&k, &v);
+            builder.add(&k, v as &str);
         }
 
         builder
