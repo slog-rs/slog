@@ -129,11 +129,12 @@ impl Logger {
         // altogether?
         let mut builder = RecordBuilder {
             record_drain: record_drain,
+            values : vec!(),
             phantom: PhantomData::default(),
         };
 
         for &(ref k, ref v) in &self.inner.values {
-            builder.add(&k, v as &str);
+            builder.add(&k, v);
         }
 
         builder

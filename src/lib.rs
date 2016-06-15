@@ -58,14 +58,18 @@ impl<'a> Serialize for &'a str {
     }
 }
 
+impl Serialize for String {
+    fn serialize(&self, key : &str, serializer : &mut Serializer) {
+        serializer.emit_str(key, self.as_str())
+    }
+}
+
 impl<S> Serializer for S where S : serde::Serializer {
     fn emit_u32(&mut self, key : &str, val : u32) {
         let _ = serde::Serialize::serialize(&val, self);
     }
 
     fn emit_str(&mut self, key : &str, val : &str) {
-        //let _ = serde::Serialize::serialize(val, self);
-        //let _ = serde::Serialize::serialize(val, self);
         let _ = serde::Serializer::serialize_map_elt(self, key, val);
     }
 }
@@ -84,15 +88,13 @@ pub struct RecordInfo {
 /// Log record builder
 pub struct RecordBuilder<'a> {
     record_drain: Option<Box<RecordDrain>>,
+    values : Vec<(&'a str, &'a Serialize)>,
     phantom: PhantomData<&'a Logger>
 }
 
 impl<'a> RecordBuilder<'a> {
-    pub fn add<'b, 'c, T : Serialize>(&'b mut self, key : &'b str, val : T) -> &'b mut Self {
-        match self.record_drain {
-            Some(ref mut drain) => drain.add(key, &val),
-            None => {}
-        }
+    pub fn add<'b, 'c, 'd>(&'b mut self, key : &'a str, val : &'a Serialize) -> &'b mut Self {
+        self.values.push((key, val));
         self
     }
 }
@@ -100,7 +102,7 @@ impl<'a> RecordBuilder<'a> {
 impl<'a> Drop for RecordBuilder<'a> {
     fn drop(&mut self) {
         match self.record_drain.take() {
-            Some(mut drain) => drain.end(),
+            Some(mut drain) => drain.end(&self.values),
             None => {}
         }
     }

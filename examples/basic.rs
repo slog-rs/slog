@@ -22,7 +22,7 @@ fn main() {
     });
 
     let time_ms = 10000;
-    log.info("sleep").add("time", time_ms);
+    log.info("sleep").add("time", &time_ms);
     thread::sleep_ms(time_ms);
 
     log.info("join");

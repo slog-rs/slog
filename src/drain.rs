@@ -8,6 +8,7 @@ use std::fmt::Write as FmtWrite;
 use std::io::Write as IoWrite;
 use std::sync::{Arc, Mutex};
 
+use serde;
 use serde_json;
 
 ///
@@ -27,7 +28,7 @@ pub trait RecordDrain {
     fn add(&mut self, key : &str, val : &Serialize);
 
     /// Finish handling the record.
-    fn end(&mut self);
+    fn end(&mut self, &[(&str, &Serialize)]);
 }
 
 
@@ -76,12 +77,36 @@ impl<W : io::Write> RecordStreamer<W> {
     }
 }
 
-impl<W : io::Write> RecordDrain for RecordStreamer<W> {
-    fn add(&mut self, key : &str, val : &Serialize) {
-        val.serialize(key, self.serializer.as_mut().unwrap());
+struct KeyValueVisitor<'a> {
+    values : &'a[(&'a str, &'a Serialize)],
+    index : usize,
+}
+
+impl<'a> serde::ser::MapVisitor for KeyValueVisitor<'a> {
+    fn visit<S>(&mut self, serializer: &mut S) -> Result<Option<()>, S::Error> where S: serde::Serializer {
+        if self.values.len() < self.index {
+
+            let (key, val) = self.values[self.index];
+            val.serialize(key, serializer);
+            Ok(Some(()))
+        } else {
+            Ok(None)
+        }
     }
 
-    fn end(&mut self) {
+    fn len(&self) -> Option<usize> {
+        Some(self.values.len())
+    }
+}
+
+impl<W : io::Write> RecordDrain for RecordStreamer<W> {
+    fn add(&mut self, key : &str, val : &Serialize) {
+    }
+
+    fn end(&mut self, values : &[(&str, &Serialize)]) {
+        for &(ref key, ref val) in values {
+            val.serialize(key, self.serializer.as_mut().unwrap());
+        }
         let mut io = self.io.lock().unwrap();
         let _ = write!(io, "{}", str::from_utf8(&self.serializer.take().unwrap().into_inner()).unwrap_or("INVALID UTF8 PRODUCED BY LOGGER"));
     }
@@ -169,9 +194,9 @@ impl RecordDrain for DuplicateRecord {
         self.r2.add(key, val);
     }
 
-    fn end(&mut self) {
-        self.r1.end();
-        self.r2.end();
+    fn end(&mut self, values : &[(&str, &Serialize)]) {
+        self.r1.end(values);
+        self.r2.end(values);
     }
 }
 
