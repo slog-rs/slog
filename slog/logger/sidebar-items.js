@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Logger",""],["LoggerBuilder","Logger builder"]]});
+initSidebarItems({"struct":[["Logger","Logger"],["RecordInfo","Common information about a logging record"]]});

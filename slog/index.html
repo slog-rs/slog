@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog/src/lib.rs.html#1-66' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog/src/lib.rs.html#1-136' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='slog----structured-composable-logging-for-rust' class='section-header'><a href='#slog----structured-composable-logging-for-rust'>Slog -  Structured, composable logging for Rust</a></h1></div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
 <table><tr><td><code>pub use logger::<a class='struct' href='../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
@@ -60,25 +60,95 @@
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class='mod' href='format/index.html'
+                                  title='slog::format'>format</a></td>
+                           <td class='docblock short'>
+                                <p>Output formating</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class='mod' href='logger/index.html'
                                   title='slog::logger'>logger</a></td>
                            <td class='docblock short'>
                                 <p>Logger - logging handle</p>
                            </td>
-                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='ser/index.html'
+                                  title='slog::ser'>ser</a></td>
+                           <td class='docblock short'>
+                                <p>Serialization</p>
+                           </td>
+                       </tr></table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.RecordBuilder.html'
-                                  title='slog::RecordBuilder'>RecordBuilder</a></td>
+                           <td><a class='macro' href='macro.child_logger!.html'
+                                  title='slog::child_logger!'>child_logger!</a></td>
                            <td class='docblock short'>
-                                <p>Log record builder</p>
+                                
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.RecordInfo.html'
-                                  title='slog::RecordInfo'>RecordInfo</a></td>
+                           <td><a class='macro' href='macro.critical!.html'
+                                  title='slog::critical!'>critical!</a></td>
                            <td class='docblock short'>
-                                <p>Common information about a logging record</p>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.debug!.html'
+                                  title='slog::debug!'>debug!</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.error!.html'
+                                  title='slog::error!'>error!</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.impl_serialize_for!.html'
+                                  title='slog::impl_serialize_for!'>impl_serialize_for!</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.info!.html'
+                                  title='slog::info!'>info!</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.log!.html'
+                                  title='slog::log!'>log!</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.root_logger!.html'
+                                  title='slog::root_logger!'>root_logger!</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.trace!.html'
+                                  title='slog::trace!'>trace!</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.warn!.html'
+                                  title='slog::warn!'>warn!</a></td>
+                           <td class='docblock short'>
+                                
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -87,6 +157,21 @@
                                   title='slog::Level'>Level</a></td>
                            <td class='docblock short'>
                                 <p>Logging level</p>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.BorrowedKeyValue.html'
+                                  title='slog::BorrowedKeyValue'>BorrowedKeyValue</a></td>
+                           <td class='docblock short'>
+                                <p>Key value pair that can be part of each logging record</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OwnedKeyValue.html'
+                                  title='slog::OwnedKeyValue'>OwnedKeyValue</a></td>
+                           <td class='docblock short'>
+                                <p>Key value pair that can be owned by <code>Logger</code></p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

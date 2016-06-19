@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `serde_json` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, serde_json">
+
+    <title>serde_json - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'serde_json', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>serde_json</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-0' class='srclink' href='../src/serde_json/lib.rs.html#1-148' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>JSON and serialization</p>
+
+<h1 id='what-is-json' class='section-header'><a href='#what-is-json'>What is JSON?</a></h1>
+<p>JSON (JavaScript Object Notation) is a way to write data in JavaScript.  Like XML, it allows to
+encode structured data in a text format that can be easily read by humans.  Its simple syntax
+and native compatibility with JavaScript have made it a widely used format.</p>
+
+<p>Data types that can be encoded are JavaScript types (see the <code>serde_json:Value</code> enum for more
+details):</p>
+
+<ul>
+<li><code>Boolean</code>: equivalent to rust&#39;s <code>bool</code></li>
+<li><code>I64</code>: equivalent to rust&#39;s <code>i64</code></li>
+<li><code>U64</code>: equivalent to rust&#39;s <code>u64</code></li>
+<li><code>F64</code>: equivalent to rust&#39;s <code>f64</code></li>
+<li><code>String</code>: equivalent to rust&#39;s <code>String</code></li>
+<li><code>Array</code>: equivalent to rust&#39;s <code>Vec&lt;T&gt;</code>, but also allowing objects of different types in the
+same array</li>
+<li><code>Object</code>: equivalent to rust&#39;s <code>BTreeMap&lt;String, serde_json::Value&gt;</code></li>
+<li><code>Null</code></li>
+</ul>
+
+<p>An object is a series of string keys mapping to values, in <code>&quot;key&quot;: value</code> format.  Arrays are
+enclosed in square brackets ([ ... ]) and objects in curly brackets ({ ... }).  A simple JSON
+document encoding a person, his/her age, address and phone numbers could look like</p>
+
+<pre class='rust rust-example-rendered'>
+{
+    <span class='string'>&quot;FirstName&quot;</span>: <span class='string'>&quot;John&quot;</span>,
+    <span class='string'>&quot;LastName&quot;</span>: <span class='string'>&quot;Doe&quot;</span>,
+    <span class='string'>&quot;Age&quot;</span>: <span class='number'>43</span>,
+    <span class='string'>&quot;Address&quot;</span>: {
+        <span class='string'>&quot;Street&quot;</span>: <span class='string'>&quot;Downing Street 10&quot;</span>,
+        <span class='string'>&quot;City&quot;</span>: <span class='string'>&quot;London&quot;</span>,
+        <span class='string'>&quot;Country&quot;</span>: <span class='string'>&quot;Great Britain&quot;</span>
+    },
+    <span class='string'>&quot;PhoneNumbers&quot;</span>: [
+        <span class='string'>&quot;+44 1234567&quot;</span>,
+        <span class='string'>&quot;+44 2345678&quot;</span>
+    ]
+}</pre>
+
+<p>If we assume that FirstName is optional and all other fields are mandatory, the above JSON could
+correspond to the following Rust structs:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Serialize</span>, <span class='ident'>Deserialize</span>)]</span>
+<span class='kw'>struct</span> <span class='ident'>Data</span> {
+    <span class='attribute'>#[<span class='ident'>serde</span>(<span class='ident'>rename</span><span class='op'>=</span><span class='string'>&quot;FirstName&quot;</span>)]</span> <span class='comment'>// to comply with Rust coding standards</span>
+    <span class='ident'>first_name</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
+    <span class='ident'>LastName</span>: <span class='ident'>String</span>,
+    <span class='ident'>Age</span>: <span class='ident'>u32</span>,
+    <span class='ident'>Address</span>: <span class='ident'>Address</span>,
+    <span class='ident'>PhoneNumbers</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>
+}
+
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Serialize</span>, <span class='ident'>Deserialize</span>)]</span>
+<span class='kw'>struct</span> <span class='ident'>Address</span> {
+    <span class='ident'>Street</span>: <span class='ident'>String</span>,
+    <span class='ident'>City</span>: <span class='ident'>String</span>,
+    <span class='ident'>Country</span>: <span class='ident'>String</span>
+}</pre>
+
+<h1 id='type-based-serialization-and-deserialization' class='section-header'><a href='#type-based-serialization-and-deserialization'>Type-based Serialization and Deserialization</a></h1>
+<p>Serde provides a mechanism for low boilerplate serialization &amp; deserialization of values to and
+from JSON via the serialization API.  To be able to serialize a piece of data, it must implement
+the <code>serde::Serialize</code> trait.  To be able to deserialize a piece of data, it must implement the
+<code>serde::Deserialize</code> trait.  Serde provides provides an annotation to automatically generate
+the code for these traits: <code>#[derive(Serialize, Deserialize)]</code>.</p>
+
+<p>The JSON API also provides an enum <code>serde_json::Value</code> and a method <code>to_value</code> to serialize
+objects.  A <code>serde_json::Value</code> value can be serialized as a string or buffer using the
+functions described above.  You can also use the <code>json::Serializer</code> object, which implements the
+<code>Serializer</code> trait.</p>
+
+<h1 id='examples-of-use' class='section-header'><a href='#examples-of-use'>Examples of use</a></h1>
+<h2 id='parsing-a-str-to-value-and-reading-the-result' class='section-header'><a href='#parsing-a-str-to-value-and-reading-the-result'>Parsing a <code>str</code> to <code>Value</code> and reading the result</a></h2>
+<pre class='rust rust-example-rendered'>
+<span class='comment'>//#![feature(custom_derive, plugin)]</span>
+<span class='comment'>//#![plugin(serde_macros)]</span>
+
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde_json</span>;
+
+<span class='kw'>use</span> <span class='ident'>serde_json</span>::<span class='ident'>Value</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>data</span>: <span class='ident'>Value</span> <span class='op'>=</span> <span class='ident'>serde_json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;{\&quot;foo\&quot;: 13, \&quot;bar\&quot;: \&quot;baz\&quot;}&quot;</span>).<span class='ident'>unwrap</span>();
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;data: {:?}&quot;</span>, <span class='ident'>data</span>);
+    <span class='comment'>// data: {&quot;bar&quot;:&quot;baz&quot;,&quot;foo&quot;:13}</span>
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;object? {}&quot;</span>, <span class='ident'>data</span>.<span class='ident'>is_object</span>());
+    <span class='comment'>// object? true</span>
+
+    <span class='kw'>let</span> <span class='ident'>obj</span> <span class='op'>=</span> <span class='ident'>data</span>.<span class='ident'>as_object</span>().<span class='ident'>unwrap</span>();
+    <span class='kw'>let</span> <span class='ident'>foo</span> <span class='op'>=</span> <span class='ident'>obj</span>.<span class='ident'>get</span>(<span class='string'>&quot;foo&quot;</span>).<span class='ident'>unwrap</span>();
+
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;array? {:?}&quot;</span>, <span class='ident'>foo</span>.<span class='ident'>as_array</span>());
+    <span class='comment'>// array? None</span>
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;u64? {:?}&quot;</span>, <span class='ident'>foo</span>.<span class='ident'>as_u64</span>());
+    <span class='comment'>// u64? Some(13u64)</span>
+
+    <span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>obj</span>.<span class='ident'>iter</span>() {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>value</span> {
+            <span class='ident'>Value</span>::<span class='ident'>U64</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{} (u64)&quot;</span>, <span class='ident'>v</span>),
+            <span class='ident'>Value</span>::<span class='ident'>String</span>(<span class='kw-2'>ref</span> <span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{} (string)&quot;</span>, <span class='ident'>v</span>),
+            _ <span class='op'>=&gt;</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;other&quot;</span>)
+        });
+    }
+    <span class='comment'>// bar: baz (string)</span>
+    <span class='comment'>// foo: 13 (u64)</span>
+}</pre>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<table><tr><td><code>pub use self::de::{<a class='struct' href='../serde_json/de/struct.Deserializer.html' title='serde_json::de::Deserializer'>Deserializer</a>, <a class='struct' href='../serde_json/de/struct.StreamDeserializer.html' title='serde_json::de::StreamDeserializer'>StreamDeserializer</a>, <a class='fn' href='../serde_json/de/fn.from_iter.html' title='serde_json::de::from_iter'>from_iter</a>, <a class='fn' href='../serde_json/de/fn.from_reader.html' title='serde_json::de::from_reader'>from_reader</a>, <a class='fn' href='../serde_json/de/fn.from_slice.html' title='serde_json::de::from_slice'>from_slice</a>, <a class='fn' href='../serde_json/de/fn.from_str.html' title='serde_json::de::from_str'>from_str</a>};</code></td></tr><tr><td><code>pub use self::error::{<a class='enum' href='../serde_json/error/enum.Error.html' title='serde_json::error::Error'>Error</a>, <a class='enum' href='../serde_json/error/enum.ErrorCode.html' title='serde_json::error::ErrorCode'>ErrorCode</a>, <a class='type' href='../serde_json/error/type.Result.html' title='serde_json::error::Result'>Result</a>};</code></td></tr><tr><td><code>pub use self::ser::{<a class='struct' href='../serde_json/ser/struct.Serializer.html' title='serde_json::ser::Serializer'>Serializer</a>, <a class='fn' href='../serde_json/ser/fn.to_writer.html' title='serde_json::ser::to_writer'>to_writer</a>, <a class='fn' href='../serde_json/ser/fn.to_writer_pretty.html' title='serde_json::ser::to_writer_pretty'>to_writer_pretty</a>, <a class='fn' href='../serde_json/ser/fn.to_vec.html' title='serde_json::ser::to_vec'>to_vec</a>, <a class='fn' href='../serde_json/ser/fn.to_vec_pretty.html' title='serde_json::ser::to_vec_pretty'>to_vec_pretty</a>, <a class='fn' href='../serde_json/ser/fn.to_string.html' title='serde_json::ser::to_string'>to_string</a>, <a class='fn' href='../serde_json/ser/fn.to_string_pretty.html' title='serde_json::ser::to_string_pretty'>to_string_pretty</a>, <a class='fn' href='../serde_json/ser/fn.escape_str.html' title='serde_json::ser::escape_str'>escape_str</a>};</code></td></tr><tr><td><code>pub use self::value::{<a class='enum' href='../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a>, <a class='fn' href='../serde_json/value/fn.to_value.html' title='serde_json::value::to_value'>to_value</a>, <a class='fn' href='../serde_json/value/fn.from_value.html' title='serde_json::value::from_value'>from_value</a>};</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='builder/index.html'
+                                  title='serde_json::builder'>builder</a></td>
+                           <td class='docblock short'>
+                                <p>JSON Builders</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='de/index.html'
+                                  title='serde_json::de'>de</a></td>
+                           <td class='docblock short'>
+                                <p>JSON Deserialization</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='error/index.html'
+                                  title='serde_json::error'>error</a></td>
+                           <td class='docblock short'>
+                                <p>JSON Errors</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='ser/index.html'
+                                  title='serde_json::ser'>ser</a></td>
+                           <td class='docblock short'>
+                                <p>JSON Serialization</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='value/index.html'
+                                  title='serde_json::value'>value</a></td>
+                           <td class='docblock short'>
+                                <p>JSON Value</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "serde_json";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
