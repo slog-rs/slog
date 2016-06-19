@@ -185,6 +185,30 @@
 <span id="141">141</span>
 <span id="142">142</span>
 <span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 
@@ -300,7 +324,46 @@
     };
 );
 
+<span class='doccomment'>/// Build a root logger</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// All children and their children and so on form one hierarchy</span>
+<span class='doccomment'>/// sharing a common drain.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// ```</span>
+<span class='doccomment'>/// #[macro_use]</span>
+<span class='doccomment'>/// extern crate slog;</span>
+<span class='doccomment'>/// fn main() {</span>
+<span class='doccomment'>///     let root = root_logger!(&quot;key&quot; =&gt; &quot;value&quot;);</span>
+<span class='doccomment'>/// }</span>
+<span class='doccomment'>/// ```</span>
+<span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>root_logger</span>(
+    () <span class='op'>=&gt;</span> {
+        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Logger</span>::<span class='ident'>new_root</span>(<span class='macro'>vec</span><span class='macro'>!</span>())
+    };
+    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Logger</span>::<span class='ident'>new_root</span>(<span class='macro'>vec</span><span class='macro'>!</span>($((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>, <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>)))),<span class='op'>*</span>))
+    };
+);
 
+<span class='doccomment'>/// Build a child logger</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Child logger copies all existing values from the parent.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// All children and their children and so on form one hierarchy sharing</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// a common drain.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// ```</span>
+<span class='doccomment'>/// #[macro_use]</span>
+<span class='doccomment'>/// extern crate slog;</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// fn main() {</span>
+<span class='doccomment'>///     let root = root_logger!(&quot;key&quot; =&gt; &quot;value&quot;);</span>
+<span class='doccomment'>///     let log = child_logger!(root, &quot;key1&quot; =&gt; 3);</span>
+<span class='doccomment'>/// }</span>
+<span class='doccomment'>/// ```</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>child_logger</span>(
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>parent</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> {
@@ -312,21 +375,6 @@
 );
 
 
-
-<span class='doccomment'>/// Create a root logger</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// let root = root_logger!(&quot;key&quot; =&gt; &quot;value&quot;);</span>
-<span class='doccomment'>/// ```</span>
-<span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>root_logger</span>(
-    () <span class='op'>=&gt;</span> {
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Logger</span>::<span class='ident'>new_root</span>(<span class='macro'>vec</span><span class='macro'>!</span>())
-    };
-    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> {
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Logger</span>::<span class='ident'>new_root</span>(<span class='macro'>vec</span><span class='macro'>!</span>($((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>, <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>)))),<span class='op'>*</span>))
-    };
-);
 
 
 </pre>
