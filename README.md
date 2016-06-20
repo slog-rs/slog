@@ -22,38 +22,66 @@
 
 ``` rust
 fn main() {
-    let root = Logger::root().add("example", "basic").end();
-    let log = root.new().add("thread-name", "main").end();
-    let tlog = root.new().add("thread-name", "sleep1000").end();
+    // Create a new group of loggers, sharing one drain.
+    let root = root_logger!("version" => VERSION);
 
-    log.set_drain(
-        drain::duplicate(
-            drain::filter_level(Level::Info, drain::stream(std::io::stderr())),
-            drain::stream(std::io::stdout()),
-            )
-        );
+    // Child loggers clone the `key: values` pairs from their parents.
+    let _log = child_logger!(root, "child" => 1);
 
-    let join = thread::spawn(move || {
-        tlog.info("subthread started");
-        thread::sleep_ms(1000);
-        tlog.info("subthread finished");
+    // Closures can be used for values that change at runtime.
+    // Data captured by the closure needs to be `Send+Sync`.
+    let counter = Arc::new(AtomicUsize::new(0));
+    let log = child_logger!(root, "counter" => {
+        let counter = counter.clone();
+        move || { counter.load(SeqCst)}
     });
 
-    let time_ms = 10000;
-    log.info("sleep").add("time", time_ms);
-    thread::sleep_ms(time_ms);
+    info!(log, "before-fetch-add"); // counter == 0
+    counter.fetch_add(1, SeqCst);
+    info!(log, "after-fetch-add"); // counter == 1
 
-    log.info("join");
+    // Drains can be swapped atomically (race-free).
+    log.set_drain(
+        // drains are composable
+        drain::filter_level(
+            Level::Info,
+            drain::stream(
+                std::io::stderr(),
+                // multiple outputs formats are supported
+                format::Json::new(),
+                ),
+            ),
+        );
+
+    // Closures can be used for lazy evaluation:
+    // This `slow_fib` won't be evaluated, as the current drain discards
+    // "trace" level logging records.
+    trace!(log, "trace", "lazy-closure" => Box::new(move || slow_fib(40)));
+
+    // Loggers are internally atomically reference counted so can be cloned,
+    // passed between threads and stored without hassle.
+    let join = thread::spawn({
+        let log = log.clone();
+        move || {
+            info!(log, "subthread", "stage" => "start");
+            thread::sleep(Duration::new(1, 0));
+            info!(log, "subthread", "stage" => "end");
+        }
+    });
 
     join.join().unwrap();
-    log.warning("exit");
 }
 ```
+
+See `examples/features.rs` for full code.
+
 ## Introduction
 
-Structured, composable logging for [Rust][rust]
+Structured, composable logging for [Rust][rust]. Work in progress, but usable
+already.
 
-Inspired by [log15] for Go. Work in progress.
+Heavily inspired by [log15] for Go, which I liked so much, that I want it in
+Rust too.
 
 Read [Documentation](//dpc.github.io/slog-rs/) for details and features.
 
@@ -68,7 +96,7 @@ To report a bug or ask for features use [github issues][issues].
 
 ## Building & running
 
-If you need to install Rust, use [rustup][rustup].
+If you need to install Rust (come on, you should have done that long time ago!), use [rustup][rustup].
 
 [rustup]: https://rustup.rs
 
