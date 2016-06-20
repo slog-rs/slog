@@ -1,6 +1,6 @@
 [package]
 name = "slog"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Structured, composable logging for Rust"
 keywords = ["log", "logging", "structured", "hierarchical"]
@@ -13,7 +13,7 @@ readme = "README.md"
 
 [dependencies]
 crossbeam = "0.2.9"
-serde = "*"
-serde_json = "*"
+serde = "0.7.10"
+serde_json = "0.7.1"
 isatty = "0.1.1"
-ansi_term = "*"
+ansi_term = "0.7.2"
