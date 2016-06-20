@@ -47,13 +47,22 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-500' class='srclink' href='../src/slog/src/lib.rs.html#62-69' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-500' class='srclink' href='../src/slog/src/lib.rs.html#93-100' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>error</span> {
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>logger</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> { ... };
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>logger</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span> : <span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
 }</pre>
-</section>
+<div class='docblock'><p>Log an error level logging record</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='macro'>root_logger</span><span class='macro'>!</span>(<span class='string'>&quot;key&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value&quot;</span>);
+    <span class='macro'>error</span><span class='macro'>!</span>(<span class='ident'>root</span>, <span class='string'>&quot;something happened&quot;</span>, <span class='string'>&quot;counter&quot;</span> <span class='op'>=&gt;</span> <span class='number'>1</span>);
+}</pre>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
