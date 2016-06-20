@@ -14,7 +14,7 @@
       <img src="https://img.shields.io/badge/GITTER-join%20chat-green.svg?style=flat-square" alt="Gitter Chat">
   </a>
   <br>
-  <strong><a href="//dpc.github.io/slog/">Documentation</a></strong>
+  <strong><a href="//dpc.github.io/slog-rs/">Documentation</a></strong>
 </p>
 
 
