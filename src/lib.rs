@@ -8,6 +8,7 @@ extern crate serde_json;
 extern crate isatty;
 extern crate ansi_term;
 extern crate rustc_serialize as serialize;
+extern crate chrono;
 
 use std::sync::{Arc};
 use crossbeam::sync::ArcCell;
@@ -38,6 +39,9 @@ type DrainRef = Arc<ArcCell<Box<Drain>>>;
 pub type OwnedKeyValue = (&'static str, Arc<ser::SyncSerialize>);
 /// Key value pair that can be part of each logging record
 pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
+
+
+
 
 /// Log a custom level logging record
 ///

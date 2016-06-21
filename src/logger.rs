@@ -13,11 +13,13 @@
 use super::{DrainRef, OwnedKeyValue, Level, BorrowedKeyValue};
 use std::sync::Arc;
 use crossbeam::sync::ArcCell;
-use std::{time, io};
+use std::{io};
 use super::format;
 
 use isatty::stderr_isatty;
 use drain;
+
+use chrono;
 
 struct LoggerInner {
     drain: DrainRef,
@@ -74,12 +76,13 @@ impl Logger {
     ///
     /// Use `child_logger!` macro instead.
     #[doc(hidden)]
-    pub fn new(&self, mut values : Vec<OwnedKeyValue>) -> Logger {
-        values.extend_from_slice(&self.inner.values);
+    pub fn new(&self, values : Vec<OwnedKeyValue>) -> Logger {
+        let mut new_values = self.inner.values.clone();
+        new_values.extend_from_slice(&values);
         Logger{
             inner: Arc::new(LoggerInner {
                 drain: self.inner.drain.clone(),
-                values: values,
+                values: new_values,
             }),
         }
     }
@@ -104,7 +107,7 @@ impl Logger {
     pub fn log<'a, 'b>(&'a self, lvl : Level, msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
 
         let info = RecordInfo {
-            ts: time::SystemTime::now(),
+            ts: chrono::UTC::now(),
             msg: msg.to_string(),
             level: lvl,
         };
@@ -116,7 +119,7 @@ impl Logger {
 /// Common information about a logging record
 pub struct RecordInfo {
     /// Timestamp
-    pub ts : time::SystemTime,
+    pub ts : chrono::DateTime<chrono::UTC>,
     /// Logging level
     pub level : Level,
     /// Message
