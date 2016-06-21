@@ -275,6 +275,11 @@
 <span id="231">231</span>
 <span id="232">232</span>
 <span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 
@@ -285,6 +290,8 @@
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde_json</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>isatty</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>ansi_term</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span> <span class='kw'>as</span> <span class='ident'>serialize</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>chrono</span>;
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>};
 <span class='kw'>use</span> <span class='ident'>crossbeam</span>::<span class='ident'>sync</span>::<span class='ident'>ArcCell</span>;
@@ -315,6 +322,9 @@
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>OwnedKeyValue</span> <span class='op'>=</span> (<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>ser</span>::<span class='ident'>SyncSerialize</span><span class='op'>&gt;</span>);
 <span class='doccomment'>/// Key value pair that can be part of each logging record</span>
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>BorrowedKeyValue</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='op'>=</span> (<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>ser</span>::<span class='ident'>Serialize</span>);
+
+
+
 
 <span class='doccomment'>/// Log a custom level logging record</span>
 <span class='doccomment'>///</span>
