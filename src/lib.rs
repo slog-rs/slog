@@ -7,6 +7,7 @@ extern crate serde;
 extern crate serde_json;
 extern crate isatty;
 extern crate ansi_term;
+extern crate rustc_serialize as serialize;
 
 use std::sync::{Arc};
 use crossbeam::sync::ArcCell;
