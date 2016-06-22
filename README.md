@@ -98,7 +98,7 @@ To report a bug or ask for features use [github issues][issues].
 
 If you need to install Rust (come on, you should have done that long time ago!), use [rustup][rustup].
 
-[rustup]: https://rustup.rs
+[rustup]: https://www.rustup.rs
 
 ### In your project
 
