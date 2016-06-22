@@ -106,6 +106,25 @@ impl SyncSerialize for Vec<u8> {}
 
 impl SyncSerialize for Box<Vec<u8>> {}
 
+impl<T : Serialize> Serialize for Option<T> {
+    fn serialize(&self, key : &str, serializer : &mut Serializer) {
+        match *self {
+            Some(ref s) => serializer.emit_some(key, s as &Serialize),
+            None => serializer.emit_none(key),
+        }
+    }
+}
+
+impl<T : Serialize> Serialize for Box<Option<T>> {
+    fn serialize(&self, key : &str, serializer : &mut Serializer) {
+        (**self).serialize(key, serializer)
+    }
+}
+
+impl<T : Serialize> SyncSerialize for Option<T> {}
+
+impl<T : Serialize> SyncSerialize for Box<Option<T>> {}
+
 
 impl Serialize for String {
     fn serialize(&self, key : &str, serializer : &mut Serializer) {
@@ -190,11 +209,12 @@ impl<'a, S> Serializer for SerdeSerializer<'a, S> where S : 'a+serde::Serializer
     }
 
     fn emit_none(&mut self, key : &str) {
-        let _ = serde::Serializer::serialize_map_elt(self.0, key, "None");
+        let none : Option<()> = None;
+        let _ = serde::Serializer::serialize_map_elt(self.0, key, none);
     }
 
-    fn emit_some(&mut self, _key : &str, _val : &Serialize) {
-        unimplemented!();
+    fn emit_some(&mut self, key : &str, val : &Serialize) {
+        val.serialize(key, self)
     }
 
     fn emit_u8(&mut self, key : &str, val : u8) {
@@ -256,8 +276,8 @@ impl Serializer for String {
     fn emit_bytes(&mut self, key : &str, val : &[u8]) {
         write!(self, "{}: {}", key, val.to_hex()).unwrap()
     }
-    fn emit_some(&mut self, _key : &str, _val : &Serialize) {
-        unimplemented!()
+    fn emit_some(&mut self, key : &str, val : &Serialize) {
+        val.serialize(key, self);
     }
 
     fn emit_usize(&mut self, key : &str, val : usize) {

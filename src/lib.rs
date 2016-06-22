@@ -1,5 +1,4 @@
 //! # Slog -  Structured, composable logging for Rust
-
 #![warn(missing_docs)]
 
 extern crate crossbeam;
@@ -39,8 +38,6 @@ type DrainRef = Arc<ArcCell<Box<Drain>>>;
 pub type OwnedKeyValue = (&'static str, Arc<ser::SyncSerialize>);
 /// Key value pair that can be part of each logging record
 pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
-
-
 
 
 /// Log a custom level logging record
