@@ -42,8 +42,7 @@ impl Logger {
     /// Use `root_logger!` macro instead.
     #[doc(hidden)]
     pub fn new_root(values : Vec<OwnedKeyValue>) -> Logger {
-
-        let drain =  Arc::new(
+        let drain = Arc::new(
             ArcCell::new(
                 Arc::new(
                     Box::new(
