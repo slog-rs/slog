@@ -1,6 +1,6 @@
 [package]
 name = "slog"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Structured, composable logging for Rust"
 keywords = ["log", "logging", "structured", "hierarchical"]
@@ -17,5 +17,5 @@ serde = "0.7.10"
 serde_json = "0.7.1"
 isatty = "0.1.1"
 ansi_term = "0.7.2"
-rustc-serialize = "*"
-chrono = "*"
+rustc-serialize = "0.3.19"
+chrono = "0.2.22"
