@@ -112,5 +112,6 @@ slog = "*"
 In your `main.rs`:
 
 ```
+#[macro_use]
 extern crate slog;
 ```
