@@ -39,7 +39,7 @@ impl Logger {
     /// All children and their children and so on form one hierarchy
     /// sharing a common drain.
     ///
-    /// Use `root_logger!` macro instead.
+    /// Use `s!` macro to help build `values`
     #[doc(hidden)]
     pub fn new_root(values : Vec<OwnedKeyValue>) -> Logger {
         let drain = Arc::new(
@@ -73,7 +73,7 @@ impl Logger {
     /// All children and their children and so on form one hierarchy sharing
     /// a common drain.
     ///
-    /// Use `child_logger!` macro instead.
+    /// Use `s!` macro to help build `values`
     #[doc(hidden)]
     pub fn new(&self, values : Vec<OwnedKeyValue>) -> Logger {
         let mut new_values = self.inner.values.clone();
@@ -101,8 +101,7 @@ impl Logger {
 
     /// Log one logging record
     ///
-    /// Use specific logging macros instead.
-    #[doc(hidden)]
+    /// Use specific logging functions instead.
     pub fn log<'a>(&'a self, lvl : Level, msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
 
         let info = RecordInfo {
@@ -112,6 +111,48 @@ impl Logger {
         };
 
         self.inner.drain.get().log(&info, self.inner.values.as_slice(), values);
+    }
+
+    /// Log critical level record
+    ///
+    /// Use `s!` macro to help build `values`
+    pub fn critical<'a>(&'a self,  msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+        self.log(Level::Critical, msg, values);
+    }
+
+    /// Log error level record
+    ///
+    /// Use `s!` macro to help build `values`
+    pub fn error<'a>(&'a self,  msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+        self.log(Level::Error, msg, values);
+    }
+
+    /// Log warning level record
+    ///
+    /// Use `s!` macro to help build `values`
+    pub fn warn<'a>(&'a self,  msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+        self.log(Level::Warning, msg, values);
+    }
+
+    /// Log info level record
+    ///
+    /// Use `s!` macro to help build `values`
+    pub fn info<'a>(&'a self,  msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+        self.log(Level::Info, msg, values);
+    }
+
+    /// Log debug level record
+    ///
+    /// Use `s!` macro to help build `values`
+    pub fn debug<'a>(&'a self,  msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+        self.log(Level::Debug, msg, values);
+    }
+
+    /// Log trace level record
+    ///
+    /// Use `s!` macro to help build `values`
+    pub fn trace<'a>(&'a self,  msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+        self.log(Level::Trace, msg, values);
     }
 }
 

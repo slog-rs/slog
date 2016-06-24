@@ -20,22 +20,25 @@ fn slow_fib(n : u64) -> u64 {
 
 fn main() {
     // Create a new group of loggers, sharing one drain.
-    let root = root_logger!("version" => VERSION);
+    let root = Logger::new_root(v!("version" => VERSION, "build-id" => "8dfljdf"));
 
-    // Child loggers clone the `key: values` pairs from their parents.
-    let log = child_logger!(root, "child" => 1);
+    // Create child loggers from existing ones. Children
+    // clone `key: value` pairs from their parents.
+    //
+    // Build logging context as data becomes available.
+    let log = root.new(v!("child" => 1));
 
     // Closures can be used for values that change at runtime.
     // Data captured by the closure needs to be `Send+Sync`.
     let counter = Arc::new(AtomicUsize::new(0));
-    let log = child_logger!(root, "counter" => {
+    let log = log.new(v!("counter" => {
         let counter = counter.clone();
         move |_ : &_| { counter.load(SeqCst)}
-    });
+    }));
 
-    info!(log, "before-fetch-add"); // counter == 0
+    log.info("before-fetch-add", s!()); // counter == 0
     counter.fetch_add(1, SeqCst);
-    info!(log, "after-fetch-add"); // counter == 1
+    log.info("after-fetch-add", s!()); // counter == 1
 
     // Drains can be swapped atomically (race-free).
     log.set_drain(
@@ -53,19 +56,18 @@ fn main() {
     // Closures can be used for lazy evaluation:
     // This `slow_fib` won't be evaluated, as the current drain discards
     // "trace" level logging records.
-    trace!(log, "trace", "lazy-closure" => |_ : &_| slow_fib(40));
+    log.debug("debug", s!("lazy-closure" => |_ : &_| slow_fib(40)));
 
     // Loggers are internally atomically reference counted so can be cloned,
     // passed between threads and stored without hassle.
     let join = thread::spawn({
         let log = log.clone();
         move || {
-            info!(log, "subthread", "stage" => "start");
+            log.info("subthread", s!("stage" => "start"));
             thread::sleep(Duration::new(1, 0));
-            info!(log, "subthread", "stage" => "end");
+            log.info("subthread", s!("stage" => "end"));
         }
     });
 
     join.join().unwrap();
 }
-
