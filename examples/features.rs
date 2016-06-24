@@ -20,6 +20,9 @@ fn slow_fib(n : u64) -> u64 {
 
 fn main() {
     // Create a new group of loggers, sharing one drain.
+    //
+    // Note `v!` macro for more natural `key-value` pair
+    // building.
     let root = Logger::new_root(v!("version" => VERSION, "build-id" => "8dfljdf"));
 
     // Create child loggers from existing ones. Children
@@ -33,6 +36,10 @@ fn main() {
     let counter = Arc::new(AtomicUsize::new(0));
     let log = log.new(v!("counter" => {
         let counter = counter.clone();
+        /// Note the `move` to capture `counter`,
+        /// and unfortunate `|_ : &_|` that helps
+        /// current `rustc` limitations. In the future,
+        /// a `|_|` could work.
         move |_ : &_| { counter.load(SeqCst)}
     }));
 
