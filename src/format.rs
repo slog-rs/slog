@@ -1,5 +1,5 @@
 use super::logger::RecordInfo;
-use super::ser::{Serialize, SerdeSerializer};
+use super::ser::{SerdeSerializer};
 use super::Level;
 
 use super::{BorrowedKeyValue,OwnedKeyValue};
@@ -20,23 +20,38 @@ pub trait Format : Send+Sync+Sized {
 /// Each record will be printed as a Json map.
 pub struct Json {
     newlines : bool,
+    values : Vec<OwnedKeyValue>,
 }
 
 
 impl Json {
     /// Create new `Json` format.
+    ///
+    /// TODO: Add a builder pattern to configure newlines,
+    /// and custom records.
     pub fn new() -> Self {
         Json {
             newlines : true,
+            values : v!(
+                "ts" => |rinfo : &RecordInfo| {
+                    rinfo.ts.to_rfc3339()
+                },
+                "level" => |rinfo : &RecordInfo| {
+                    rinfo.level.as_str()
+                },
+                "msg" => |rinfo : &RecordInfo| {
+                    rinfo.msg.clone()
+                }
+                )
         }
     }
 
     /// Create new `Json` format that does not add
     /// newlines after each record.
     pub fn new_nonewline() -> Self {
-        Json {
-            newlines : false,
-        }
+        let mut json = Json::new();
+        json.newlines = false;
+        json
     }
 }
 
@@ -45,10 +60,9 @@ impl Format for Json {
         let mut serializer = serde_json::Serializer::new(vec!());
         {
             let mut serializer = &mut SerdeSerializer(&mut serializer);
-
-            rinfo.level.as_str().serialize(rinfo, "level", serializer);
-            rinfo.msg.serialize(rinfo, "msg", serializer);
-
+            for &(ref k, ref v) in self.values.iter() {
+                v.serialize(rinfo, k, serializer);
+            }
             for &(ref k, ref v) in logger_values.iter() {
                 v.serialize(rinfo, k, serializer);
             }
@@ -58,14 +72,21 @@ impl Format for Json {
             }
         }
 
-        let ts = rinfo.ts.to_rfc3339();
-        let formatted = if self.newlines {
-            format!("{{\"ts\":{}{}}}\n", ts, String::from_utf8_lossy(&serializer.into_inner()))
-        } else {
-            format!("{{\"ts\":{}{}}}", ts, String::from_utf8_lossy(&serializer.into_inner()))
-        };
+        // TODO: Optimize this part
+        let mut inner_bytes = serializer.into_inner();
+        {
+            let empty = inner_bytes.is_empty();
+            if empty {
+                inner_bytes.push(',' as u8);
+            }
+        }
+        let inner_str = String::from_utf8_lossy(&inner_bytes);
 
-        formatted
+        if self.newlines {
+            format!("{{{}}}\n", &inner_str[1..])
+        } else {
+            format!("{{{}}}", &inner_str[1..])
+        }
     }
 }
 

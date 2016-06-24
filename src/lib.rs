@@ -13,6 +13,31 @@ use std::sync::{Arc};
 use crossbeam::sync::ArcCell;
 use std::fmt;
 
+/// Build a `Vec<OwnedKeyValue>`
+#[macro_export]
+macro_rules! v(
+    () => {
+        vec!()
+    };
+    ($($k:expr => $v:expr),*) => {
+        {
+        use std;
+        vec!($(($k, std::sync::Arc::new($v))),*)
+        }
+    };
+);
+
+/// Build a `&[OwnedKeyValue]`
+#[macro_export]
+macro_rules! s(
+    () => {
+        &[]
+    };
+    ($($k:expr => $v:expr),*) => {
+        &[$(($k, &$v)),*]
+    };
+);
+
 /// Drains - logging outputs
 pub mod drain;
 use drain::*;
@@ -38,24 +63,3 @@ pub type OwnedKeyValue = (&'static str, Arc<ser::SyncSerialize>);
 pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
 
 
-/// Build a `Vec<OwnedKeyValue>`
-#[macro_export]
-macro_rules! v(
-    () => {
-        vec!()
-    };
-    ($($k:expr => $v:expr),*) => {
-        vec!($(($k, std::sync::Arc::new($v))),*)
-    };
-);
-
-/// Build a `&[OwnedKeyValue]`
-#[macro_export]
-macro_rules! s(
-    () => {
-        &[]
-    };
-    ($($k:expr => $v:expr),*) => {
-        &[$(($k, &$v)),*]
-    };
-);
