@@ -103,7 +103,7 @@ impl Logger {
     ///
     /// Use specific logging macros instead.
     #[doc(hidden)]
-    pub fn log<'a, 'b>(&'a self, lvl : Level, msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+    pub fn log<'a>(&'a self, lvl : Level, msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
 
         let info = RecordInfo {
             ts: chrono::UTC::now(),

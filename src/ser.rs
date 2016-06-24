@@ -2,6 +2,8 @@ use serde;
 use std::fmt::Write;
 use serialize::hex::{ToHex};
 
+use super::logger::RecordInfo;
+
 /// Value that can be serialized
 ///
 /// Loggers require values in key-value pairs to
@@ -12,7 +14,7 @@ pub trait Serialize : Send+Sync+'static {
     ///
     /// Structs implementing this trait should generally
     /// only call respective methods of `serializer`.
-    fn serialize(&self, key : &str, serializer : &mut Serializer);
+    fn serialize(&self, rinfo : &RecordInfo, key : &str, serializer : &mut Serializer);
 }
 
 /// Value that can be serialized and stored
@@ -35,8 +37,6 @@ pub trait Serializer {
     fn emit_unit(&mut self, key : &str);
     /// Emit `None`
     fn emit_none(&mut self, key : &str);
-    /// Emit `Some(val)`
-    fn emit_some(&mut self, key : &str, val : &Serialize);
     /// Emit char
     fn emit_char(&mut self, key : &str, val : char);
     /// Emit bytes
@@ -70,94 +70,60 @@ pub trait Serializer {
 }
 
 impl Serialize for str {
-    fn serialize(&self, key : &str, serializer : &mut Serializer) {
+    fn serialize(&self, _rinfo : &RecordInfo, key : &str, serializer : &mut Serializer) {
         serializer.emit_str(key, self)
     }
 }
 
 impl Serialize for [u8] {
-    fn serialize(&self, key : &str, serializer : &mut Serializer) {
-        serializer.emit_bytes(key, self)
-    }
-}
-
-impl Serialize for Box<[u8]> {
-    fn serialize(&self, key : &str, serializer : &mut Serializer) {
+    fn serialize(&self, _rinfo : &RecordInfo, key : &str, serializer : &mut Serializer) {
         serializer.emit_bytes(key, self)
     }
 }
 
 impl SyncSerialize for [u8] {}
-impl SyncSerialize for Box<[u8]> {}
 
 impl Serialize for Vec<u8> {
-    fn serialize(&self, key : &str, serializer : &mut Serializer) {
-        serializer.emit_bytes(key, self.as_slice())
-    }
-}
-
-impl Serialize for Box<Vec<u8>> {
-    fn serialize(&self, key : &str, serializer : &mut Serializer) {
+    fn serialize(&self, _rinfo : &RecordInfo, key : &str, serializer : &mut Serializer) {
         serializer.emit_bytes(key, self.as_slice())
     }
 }
 
 impl SyncSerialize for Vec<u8> {}
 
-impl SyncSerialize for Box<Vec<u8>> {}
 
 impl<T : Serialize> Serialize for Option<T> {
-    fn serialize(&self, key : &str, serializer : &mut Serializer) {
+    fn serialize(&self, rinfo : &RecordInfo, key : &str, serializer : &mut Serializer) {
         match *self {
-            Some(ref s) => serializer.emit_some(key, s as &Serialize),
+            Some(ref s) => s.serialize(rinfo, key, serializer),
             None => serializer.emit_none(key),
         }
     }
 }
 
-impl<T : Serialize> Serialize for Box<Option<T>> {
-    fn serialize(&self, key : &str, serializer : &mut Serializer) {
-        (**self).serialize(key, serializer)
-    }
-}
 
 impl<T : Serialize> SyncSerialize for Option<T> {}
 
-impl<T : Serialize> SyncSerialize for Box<Option<T>> {}
 
 
 impl Serialize for String {
-    fn serialize(&self, key : &str, serializer : &mut Serializer) {
+    fn serialize(&self, _rinfo : &RecordInfo, key : &str, serializer : &mut Serializer) {
         serializer.emit_str(key, self.as_str())
     }
 }
 
-impl Serialize for Box<String> {
-    fn serialize(&self, key : &str, serializer : &mut Serializer) {
-        serializer.emit_str(key, self.as_str())
-    }
-}
-
-impl SyncSerialize for Box<String> { }
+impl SyncSerialize for String { }
 
 
 macro_rules! impl_serialize_for{
     ($t:ty, $f:ident) => {
         impl Serialize for $t {
-            fn serialize(&self, key : &str, serializer : &mut Serializer) {
+            fn serialize(&self, _rinfo : &RecordInfo, key : &str, serializer : &mut Serializer) {
                 serializer.$f(key, *self)
             }
         }
 
-        impl Serialize for Box<$t> where $t : Send+Sync {
-            fn serialize(&self, key : &str, serializer : &mut Serializer) {
-                serializer.$f(key, **self)
-            }
-        }
-
-        impl SyncSerialize for Box<$t> where $t : Send+Sync { }
-
-
+        impl SyncSerialize for $t where $t : Send+Sync { }
     };
 }
 
@@ -177,13 +143,13 @@ impl_serialize_for!(u64, emit_u64);
 impl_serialize_for!(i64, emit_i64);
 impl_serialize_for!(f64, emit_f64);
 
-impl<S : Serialize, F : 'static+Sync+Send+Fn()->S> Serialize for Box<F> {
-    fn serialize(&self, key : &str, serializer : &mut Serializer) {
-        (*self)().serialize(key, serializer)
+impl<S : Serialize, F : 'static+Sync+Send+Fn(&RecordInfo)-> S> Serialize for F {
+    fn serialize(&self, rinfo : &RecordInfo, key : &str, serializer : &mut Serializer) {
+        (*self)(rinfo).serialize(rinfo, key, serializer)
     }
 }
 
-impl<S : Serialize, F : 'static+Sync+Send+Fn()->S> SyncSerialize for Box<F> { }
+impl<S : Serialize, F : 'static+Sync+Send+Fn(&RecordInfo)-> S> SyncSerialize for F { }
 
 
 /// Newtype to wrap serde Serializer, so that `Serialize` can be implemented
@@ -211,10 +177,6 @@ impl<'a, S> Serializer for SerdeSerializer<'a, S> where S : 'a+serde::Serializer
     fn emit_none(&mut self, key : &str) {
         let none : Option<()> = None;
         let _ = serde::Serializer::serialize_map_elt(self.0, key, none);
-    }
-
-    fn emit_some(&mut self, key : &str, val : &Serialize) {
-        val.serialize(key, self)
     }
 
     fn emit_u8(&mut self, key : &str, val : u8) {
@@ -275,9 +237,6 @@ impl Serializer for String {
     }
     fn emit_bytes(&mut self, key : &str, val : &[u8]) {
         write!(self, "{}: {}", key, val.to_hex()).unwrap()
-    }
-    fn emit_some(&mut self, key : &str, val : &Serialize) {
-        val.serialize(key, self);
     }
 
     fn emit_usize(&mut self, key : &str, val : usize) {

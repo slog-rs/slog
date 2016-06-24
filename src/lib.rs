@@ -12,8 +12,6 @@ extern crate chrono;
 use std::sync::{Arc};
 use crossbeam::sync::ArcCell;
 use std::fmt;
-use std::io::Write as IoWrite;
-use std::fmt::Write as FmtWrite;
 
 /// Drains - logging outputs
 pub mod drain;
@@ -203,7 +201,7 @@ macro_rules! root_logger(
         $crate::Logger::new_root(vec!())
     };
     ($($k:expr => $v:expr),*) => {
-        $crate::Logger::new_root(vec!($(($k, std::sync::Arc::new(Box::new($v)))),*))
+        $crate::Logger::new_root(vec!($(($k, std::sync::Arc::new($v))),*))
     };
 );
 
@@ -230,6 +228,6 @@ macro_rules! child_logger(
         $parent.new(vec!())
     };
     ($parent:expr, $($k:expr => $v:expr),*) => {
-        $parent.new(vec!($(($k, std::sync::Arc::new(Box::new($v)))),*))
+        $parent.new(vec!($(($k, std::sync::Arc::new($v))),*))
     };
 );

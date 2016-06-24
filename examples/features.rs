@@ -23,14 +23,14 @@ fn main() {
     let root = root_logger!("version" => VERSION);
 
     // Child loggers clone the `key: values` pairs from their parents.
-    let _log = child_logger!(root, "child" => 1);
+    let log = child_logger!(root, "child" => 1);
 
     // Closures can be used for values that change at runtime.
     // Data captured by the closure needs to be `Send+Sync`.
     let counter = Arc::new(AtomicUsize::new(0));
     let log = child_logger!(root, "counter" => {
         let counter = counter.clone();
-        move || { counter.load(SeqCst)}
+        move |_ : &_| { counter.load(SeqCst)}
     });
 
     info!(log, "before-fetch-add"); // counter == 0
@@ -53,7 +53,7 @@ fn main() {
     // Closures can be used for lazy evaluation:
     // This `slow_fib` won't be evaluated, as the current drain discards
     // "trace" level logging records.
-    trace!(log, "trace", "lazy-closure" => Box::new(move || slow_fib(40)));
+    trace!(log, "trace", "lazy-closure" => |_ : &_| slow_fib(40));
 
     // Loggers are internally atomically reference counted so can be cloned,
     // passed between threads and stored without hassle.

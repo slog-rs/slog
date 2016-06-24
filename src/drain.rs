@@ -6,8 +6,6 @@ use super::{Level};
 use super::format;
 use super::logger::RecordInfo;
 use std::{io, str};
-use std::fmt::Write as FmtWrite;
-use std::io::Write as IoWrite;
 use std::sync::Mutex;
 use super::{OwnedKeyValue,BorrowedKeyValue};
 

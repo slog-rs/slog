@@ -41,24 +41,24 @@ impl Json {
 }
 
 impl Format for Json {
-    fn format(&self, info : &RecordInfo, logger_values : &[OwnedKeyValue], record_values : &[BorrowedKeyValue]) -> String {
+    fn format(&self, rinfo : &RecordInfo, logger_values : &[OwnedKeyValue], record_values : &[BorrowedKeyValue]) -> String {
         let mut serializer = serde_json::Serializer::new(vec!());
         {
             let mut serializer = &mut SerdeSerializer(&mut serializer);
 
-            info.level.as_str().serialize("level", serializer);
-            info.msg.serialize("msg", serializer);
+            rinfo.level.as_str().serialize(rinfo, "level", serializer);
+            rinfo.msg.serialize(rinfo, "msg", serializer);
 
             for &(ref k, ref v) in logger_values.iter() {
-                v.serialize(k, serializer);
+                v.serialize(rinfo, k, serializer);
             }
 
             for &(ref k, ref v) in record_values.iter() {
-                v.serialize(k, serializer);
+                v.serialize(rinfo, k, serializer);
             }
         }
 
-        let ts = info.ts.to_rfc3339();
+        let ts = rinfo.ts.to_rfc3339();
         let formatted = if self.newlines {
             format!("{{\"ts\":{}{}}}\n", ts, String::from_utf8_lossy(&serializer.into_inner()))
         } else {
@@ -120,12 +120,12 @@ impl Format for Terminal {
 
         for &(ref k, ref v) in logger_values {
             let _ = write!(s, ", ");
-            v.serialize(k, &mut s);
+            v.serialize(info, k, &mut s);
         }
 
         for &(k,v) in values {
             let _ = write!(s, ", ");
-            v.serialize(k, &mut s);
+            v.serialize(info, k, &mut s);
         }
 
         s.push_str("\n");
