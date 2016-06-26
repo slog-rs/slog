@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.2.22/src/format/parse.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/chrono-0.2.22/src/format/parse.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>parse.rs.html -- source</title>
@@ -774,9 +774,9 @@
 
 <span class='kw'>use</span> <span class='ident'>Weekday</span>;
 
-<span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>scan</span>;
-<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Parsed</span>, <span class='ident'>ParseResult</span>, <span class='ident'>Item</span>};
-<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>OUT_OF_RANGE</span>, <span class='ident'>INVALID</span>, <span class='ident'>TOO_SHORT</span>, <span class='ident'>TOO_LONG</span>, <span class='ident'>BAD_FORMAT</span>};
+<span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>scan</span>;
+<span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Parsed</span>, <span class='ident'>ParseResult</span>, <span class='ident'>Item</span>};
+<span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>OUT_OF_RANGE</span>, <span class='ident'>INVALID</span>, <span class='ident'>TOO_SHORT</span>, <span class='ident'>TOO_LONG</span>, <span class='ident'>BAD_FORMAT</span>};
 
 <span class='kw'>fn</span> <span class='ident'>set_weekday_with_num_days_from_sunday</span>(<span class='ident'>p</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parsed</span>, <span class='ident'>v</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='ident'>ParseResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
     <span class='ident'>p</span>.<span class='ident'>set_weekday</span>(<span class='kw'>match</span> <span class='ident'>v</span> {
@@ -985,30 +985,30 @@
             }
 
             <span class='ident'>Item</span>::<span class='ident'>Numeric</span>(<span class='ident'>spec</span>, <span class='ident'>_pad</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Numeric</span>::<span class='op'>*</span>;
+                <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>Numeric</span>::<span class='op'>*</span>;
 
                 <span class='kw'>let</span> (<span class='ident'>width</span>, <span class='ident'>signed</span>, <span class='ident'>set</span>): (<span class='ident'>usize</span>, <span class='ident'>bool</span>,
                                            <span class='kw'>fn</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parsed</span>, <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='ident'>ParseResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>) <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>spec</span> {
-                    <span class='ident'>Year</span>           <span class='op'>=&gt;</span> (<span class='number'>4</span>, <span class='bool-val'>true</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_year</span>),
-                    <span class='ident'>YearDiv100</span>     <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_year_div_100</span>),
-                    <span class='ident'>YearMod100</span>     <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_year_mod_100</span>),
-                    <span class='ident'>IsoYear</span>        <span class='op'>=&gt;</span> (<span class='number'>4</span>, <span class='bool-val'>true</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_isoyear</span>),
-                    <span class='ident'>IsoYearDiv100</span>  <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_isoyear_div_100</span>),
-                    <span class='ident'>IsoYearMod100</span>  <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_isoyear_mod_100</span>),
-                    <span class='ident'>Month</span>          <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_month</span>),
-                    <span class='ident'>Day</span>            <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_day</span>),
-                    <span class='ident'>WeekFromSun</span>    <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_week_from_sun</span>),
-                    <span class='ident'>WeekFromMon</span>    <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_week_from_mon</span>),
-                    <span class='ident'>IsoWeek</span>        <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_isoweek</span>),
-                    <span class='ident'>NumDaysFromSun</span> <span class='op'>=&gt;</span> (<span class='number'>1</span>, <span class='bool-val'>false</span>, <span class='ident'>set_weekday_with_num_days_from_sunday</span>),
-                    <span class='ident'>WeekdayFromMon</span> <span class='op'>=&gt;</span> (<span class='number'>1</span>, <span class='bool-val'>false</span>, <span class='ident'>set_weekday_with_number_from_monday</span>),
-                    <span class='ident'>Ordinal</span>        <span class='op'>=&gt;</span> (<span class='number'>3</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_ordinal</span>),
-                    <span class='ident'>Hour</span>           <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_hour</span>),
-                    <span class='ident'>Hour12</span>         <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_hour12</span>),
-                    <span class='ident'>Minute</span>         <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_minute</span>),
-                    <span class='ident'>Second</span>         <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_second</span>),
-                    <span class='ident'>Nanosecond</span>     <span class='op'>=&gt;</span> (<span class='number'>9</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_nanosecond</span>),
-                    <span class='ident'>Timestamp</span>      <span class='op'>=&gt;</span> (<span class='ident'>usize</span>::<span class='ident'>MAX</span>, <span class='bool-val'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_timestamp</span>),
+                    <span class='ident'>Year</span>           <span class='op'>=&gt;</span> (<span class='number'>4</span>, <span class='boolval'>true</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_year</span>),
+                    <span class='ident'>YearDiv100</span>     <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_year_div_100</span>),
+                    <span class='ident'>YearMod100</span>     <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_year_mod_100</span>),
+                    <span class='ident'>IsoYear</span>        <span class='op'>=&gt;</span> (<span class='number'>4</span>, <span class='boolval'>true</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_isoyear</span>),
+                    <span class='ident'>IsoYearDiv100</span>  <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_isoyear_div_100</span>),
+                    <span class='ident'>IsoYearMod100</span>  <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_isoyear_mod_100</span>),
+                    <span class='ident'>Month</span>          <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_month</span>),
+                    <span class='ident'>Day</span>            <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_day</span>),
+                    <span class='ident'>WeekFromSun</span>    <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_week_from_sun</span>),
+                    <span class='ident'>WeekFromMon</span>    <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_week_from_mon</span>),
+                    <span class='ident'>IsoWeek</span>        <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_isoweek</span>),
+                    <span class='ident'>NumDaysFromSun</span> <span class='op'>=&gt;</span> (<span class='number'>1</span>, <span class='boolval'>false</span>, <span class='ident'>set_weekday_with_num_days_from_sunday</span>),
+                    <span class='ident'>WeekdayFromMon</span> <span class='op'>=&gt;</span> (<span class='number'>1</span>, <span class='boolval'>false</span>, <span class='ident'>set_weekday_with_number_from_monday</span>),
+                    <span class='ident'>Ordinal</span>        <span class='op'>=&gt;</span> (<span class='number'>3</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_ordinal</span>),
+                    <span class='ident'>Hour</span>           <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_hour</span>),
+                    <span class='ident'>Hour12</span>         <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_hour12</span>),
+                    <span class='ident'>Minute</span>         <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_minute</span>),
+                    <span class='ident'>Second</span>         <span class='op'>=&gt;</span> (<span class='number'>2</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_second</span>),
+                    <span class='ident'>Nanosecond</span>     <span class='op'>=&gt;</span> (<span class='number'>9</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_nanosecond</span>),
+                    <span class='ident'>Timestamp</span>      <span class='op'>=&gt;</span> (<span class='ident'>usize</span>::<span class='ident'>MAX</span>, <span class='boolval'>false</span>, <span class='ident'>Parsed</span>::<span class='ident'>set_timestamp</span>),
                 };
 
                 <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>trim_left</span>();
@@ -1029,7 +1029,7 @@
             }
 
             <span class='ident'>Item</span>::<span class='ident'>Fixed</span>(<span class='ident'>spec</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Fixed</span>::<span class='op'>*</span>;
+                <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>Fixed</span>::<span class='op'>*</span>;
 
                 <span class='kw'>match</span> <span class='ident'>spec</span> {
                     <span class='ident'>ShortMonthName</span> <span class='op'>=&gt;</span> {
@@ -1055,8 +1055,8 @@
                     <span class='ident'>LowerAmPm</span> <span class='op'>|</span> <span class='ident'>UpperAmPm</span> <span class='op'>=&gt;</span> {
                         <span class='kw'>if</span> <span class='ident'>s</span>.<span class='ident'>len</span>() <span class='op'>&lt;</span> <span class='number'>2</span> { <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>TOO_SHORT</span>); }
                         <span class='kw'>let</span> <span class='ident'>ampm</span> <span class='op'>=</span> <span class='kw'>match</span> (<span class='ident'>s</span>.<span class='ident'>as_bytes</span>()[<span class='number'>0</span>] <span class='op'>|</span> <span class='number'>32</span>, <span class='ident'>s</span>.<span class='ident'>as_bytes</span>()[<span class='number'>1</span>] <span class='op'>|</span> <span class='number'>32</span>) {
-                            (<span class='string'>b&#39;a&#39;</span>,<span class='string'>b&#39;m&#39;</span>) <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
-                            (<span class='string'>b&#39;p&#39;</span>,<span class='string'>b&#39;m&#39;</span>) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
+                            (<span class='string'>b&#39;a&#39;</span>,<span class='string'>b&#39;m&#39;</span>) <span class='op'>=&gt;</span> <span class='boolval'>false</span>,
+                            (<span class='string'>b&#39;p&#39;</span>,<span class='string'>b&#39;m&#39;</span>) <span class='op'>=&gt;</span> <span class='boolval'>true</span>,
                             _ <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>INVALID</span>)
                         };
                         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parsed</span>.<span class='ident'>set_ampm</span>(<span class='ident'>ampm</span>));
@@ -1106,8 +1106,8 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_parse</span>() {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>IMPOSSIBLE</span>;
+    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>IMPOSSIBLE</span>;
 
     <span class='comment'>// workaround for Rust issue #22255</span>
     <span class='kw'>fn</span> <span class='ident'>parse_all</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>items</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>Item</span>]) <span class='op'>-&gt;</span> <span class='ident'>ParseResult</span><span class='op'>&lt;</span><span class='ident'>Parsed</span><span class='op'>&gt;</span> {
@@ -1353,8 +1353,8 @@
 <span class='kw'>fn</span> <span class='ident'>test_rfc2822</span>() {
     <span class='kw'>use</span> <span class='ident'>datetime</span>::<span class='ident'>DateTime</span>;
     <span class='kw'>use</span> <span class='ident'>offset</span>::<span class='ident'>fixed</span>::<span class='ident'>FixedOffset</span>;
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>NOT_ENOUGH</span>;
+    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>NOT_ENOUGH</span>;
 
     <span class='comment'>// Test data - (input, Ok(expected result after parse and format) or Err(error code))</span>
     <span class='kw'>let</span> <span class='ident'>testdates</span> <span class='op'>=</span> [
@@ -1437,7 +1437,7 @@
 <span class='kw'>fn</span> <span class='ident'>test_rfc3339</span>() {
     <span class='kw'>use</span> <span class='ident'>datetime</span>::<span class='ident'>DateTime</span>;
     <span class='kw'>use</span> <span class='ident'>offset</span>::<span class='ident'>fixed</span>::<span class='ident'>FixedOffset</span>;
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
 
     <span class='comment'>// Test data - (input, Ok(expected result after parse and format) or Err(error code))</span>
     <span class='kw'>let</span> <span class='ident'>testdates</span> <span class='op'>=</span> [
@@ -1503,8 +1503,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

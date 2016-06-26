@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/num-traits-0.1.32/src/identities.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/num-traits-0.1.32/src/identities.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>identities.rs.html -- source</title>
@@ -141,7 +141,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::{<span class='ident'>Add</span>, <span class='ident'>Mul</span>};
 
 <span class='doccomment'>/// Defines an additive identity element for `Self`.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Zero</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Add</span><span class='op'>&lt;</span><span class='self'>Self</span>, <span class='ident'>Output</span> <span class='op'>=</span> <span class='self'>Self</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Zero</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Add</span><span class='op'>&lt;</span><span class='kw'>Self</span>, <span class='ident'>Output</span> <span class='op'>=</span> <span class='kw'>Self</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Returns the additive identity element of `Self`, `0`.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Laws</span>
@@ -157,7 +157,7 @@
     <span class='doccomment'>/// external mutable state, for example values stored in TLS or in</span>
     <span class='doccomment'>/// `static mut`s.</span>
     <span class='comment'>// FIXME (#5527): This should be an associated constant</span>
-    <span class='kw'>fn</span> <span class='ident'>zero</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>zero</span>() <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
 
     <span class='doccomment'>/// Returns `true` if `self` is equal to the additive identity.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -191,7 +191,7 @@
 <span class='macro'>zero_impl</span><span class='macro'>!</span>(<span class='ident'>f64</span>, <span class='number'>0.0f64</span>);
 
 <span class='doccomment'>/// Defines a multiplicative identity element for `Self`.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>One</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Mul</span><span class='op'>&lt;</span><span class='self'>Self</span>, <span class='ident'>Output</span> <span class='op'>=</span> <span class='self'>Self</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>One</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Mul</span><span class='op'>&lt;</span><span class='kw'>Self</span>, <span class='ident'>Output</span> <span class='op'>=</span> <span class='kw'>Self</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Returns the multiplicative identity element of `Self`, `1`.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Laws</span>
@@ -207,7 +207,7 @@
     <span class='doccomment'>/// external mutable state, for example values stored in TLS or in</span>
     <span class='doccomment'>/// `static mut`s.</span>
     <span class='comment'>// FIXME (#5527): This should be an associated constant</span>
-    <span class='kw'>fn</span> <span class='ident'>one</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>one</span>() <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
 }
 
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>one_impl</span> {
@@ -257,8 +257,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

@@ -47,10 +47,10 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-7302' class='srclink' href='../../src/serde/de/mod.rs.html#805-812' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-7178' class='srclink' href='../../src/serde/de/mod.rs.html#805-812' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait EnumVisitor {
     type <a href='#associatedtype.Value' class='type'>Value</a>;
-    fn <a href='#tymethod.visit' class='fnname'>visit</a>&lt;V&gt;(&amp;mut self, visitor: V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self::<a class='trait' href='../../serde/de/trait.EnumVisitor.html' title='serde::de::EnumVisitor'>Value</a>,&nbsp;V::Error&gt; <span class='where'>where V: <a class='trait' href='../../serde/de/trait.VariantVisitor.html' title='serde::de::VariantVisitor'>VariantVisitor</a></span>;
+    fn <a href='#tymethod.visit' class='fnname'>visit</a>&lt;V&gt;(&amp;mut self, visitor: V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self::<a class='trait' href='../../serde/de/trait.EnumVisitor.html' title='serde::de::EnumVisitor'>Value</a>, V::Error&gt; <span class='where'>where V: <a class='trait' href='../../serde/de/trait.VariantVisitor.html' title='serde::de::VariantVisitor'>VariantVisitor</a></span>;
 }</pre><div class='docblock'><p><code>EnumVisitor</code> is a visitor that is created by the <code>Deserialize</code> and passed to the
 <code>Deserializer</code> in order to deserialize enums.</p>
 </div>
@@ -60,7 +60,7 @@
 </div></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.visit' class='method stab '><code>fn <a href='#tymethod.visit' class='fnname'>visit</a>&lt;V&gt;(&amp;mut self, visitor: V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self::<a class='trait' href='../../serde/de/trait.EnumVisitor.html' title='serde::de::EnumVisitor'>Value</a>,&nbsp;V::Error&gt; <span class='where'>where V: <a class='trait' href='../../serde/de/trait.VariantVisitor.html' title='serde::de::VariantVisitor'>VariantVisitor</a></span></code></h3><div class='docblock'><p>Visit the specific variant with the <code>VariantVisitor</code>.</p>
+        <h3 id='tymethod.visit' class='method stab '><code>fn <a href='#tymethod.visit' class='fnname'>visit</a>&lt;V&gt;(&amp;mut self, visitor: V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self::<a class='trait' href='../../serde/de/trait.EnumVisitor.html' title='serde::de::EnumVisitor'>Value</a>, V::Error&gt; <span class='where'>where V: <a class='trait' href='../../serde/de/trait.VariantVisitor.html' title='serde::de::VariantVisitor'>VariantVisitor</a></span></code></h3><div class='docblock'><p>Visit the specific variant with the <code>VariantVisitor</code>.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
@@ -89,8 +89,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

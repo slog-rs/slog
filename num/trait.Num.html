@@ -47,10 +47,10 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2466' class='srclink' href='../num_traits/trait.Num.html?gotosrc=2466' title='goto source code'>[src]</a></span></h1>
-<pre class='rust trait'>pub trait Num: <a class='trait' href='../num/traits/trait.Zero.html' title='num::traits::Zero'>Zero</a>&lt;Output=Self&gt; + <a class='trait' href='../num/traits/trait.One.html' title='num::traits::One'>One</a>&lt;Output=Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Add.html' title='core::ops::Add'>Add</a>&lt;Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Sub.html' title='core::ops::Sub'>Sub</a>&lt;Self,&nbsp;Output=Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Mul.html' title='core::ops::Mul'>Mul</a>&lt;Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Div.html' title='core::ops::Div'>Div</a>&lt;Self,&nbsp;Output=Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Rem.html' title='core::ops::Rem'>Rem</a>&lt;Self,&nbsp;Output=Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;Self&gt; {
+               </span><a id='src-2475' class='srclink' href='../num_traits/trait.Num.html?gotosrc=2475' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait Num: <a class='trait' href='../num/traits/trait.Zero.html' title='num::traits::Zero'>Zero</a>&lt;Output=Self&gt; + <a class='trait' href='../num/traits/trait.One.html' title='num::traits::One'>One</a>&lt;Output=Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Add.html' title='core::ops::Add'>Add</a>&lt;Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Sub.html' title='core::ops::Sub'>Sub</a>&lt;Self, Output=Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Mul.html' title='core::ops::Mul'>Mul</a>&lt;Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Div.html' title='core::ops::Div'>Div</a>&lt;Self, Output=Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Rem.html' title='core::ops::Rem'>Rem</a>&lt;Self, Output=Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;Self&gt; {
     type <a href='#associatedtype.FromStrRadixErr' class='type'>FromStrRadixErr</a>;
-    fn <a href='#tymethod.from_str_radix' class='fnname'>from_str_radix</a>(str: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, radix: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self,&nbsp;Self::<a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>FromStrRadixErr</a>&gt;;
+    fn <a href='#tymethod.from_str_radix' class='fnname'>from_str_radix</a>(str: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, radix: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self, Self::<a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>FromStrRadixErr</a>&gt;;
 }</pre><div class='docblock'><p>The base trait for numeric types</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
@@ -58,22 +58,22 @@
         <h3 id='associatedtype.FromStrRadixErr' class='method stab '><code>type <a href='#associatedtype.FromStrRadixErr' class='type'>FromStrRadixErr</a></code></h3></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.from_str_radix' class='method stab '><code>fn <a href='#tymethod.from_str_radix' class='fnname'>from_str_radix</a>(str: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, radix: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self,&nbsp;Self::<a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>FromStrRadixErr</a>&gt;</code></h3><div class='docblock'><p>Convert from a string and radix &lt;= 36.</p>
+        <h3 id='tymethod.from_str_radix' class='method stab '><code>fn <a href='#tymethod.from_str_radix' class='fnname'>from_str_radix</a>(str: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, radix: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self, Self::<a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>FromStrRadixErr</a>&gt;</code></h3><div class='docblock'><p>Convert from a string and radix &lt;= 36.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl Num for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></li>
-<li><code>impl Num for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a></code></li>
-<li><code>impl Num for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a></code></li>
-<li><code>impl Num for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></li>
-<li><code>impl Num for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></li>
-<li><code>impl Num for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.isize.html'>isize</a></code></li>
-<li><code>impl Num for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i8.html'>i8</a></code></li>
-<li><code>impl Num for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a></code></li>
-<li><code>impl Num for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></li>
-<li><code>impl Num for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a></code></li>
-<li><code>impl Num for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a></code></li>
-<li><code>impl Num for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a></code></li>
+    <li><code>impl <a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>Num</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a></code></li>
+<li><code>impl <a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>Num</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a></code></li>
+<li><code>impl <a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>Num</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a></code></li>
+<li><code>impl <a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>Num</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></li>
+<li><code>impl <a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>Num</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a></code></li>
+<li><code>impl <a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>Num</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i8.html'>i8</a></code></li>
+<li><code>impl <a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>Num</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.isize.html'>isize</a></code></li>
+<li><code>impl <a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>Num</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></li>
+<li><code>impl <a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>Num</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></li>
+<li><code>impl <a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>Num</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a></code></li>
+<li><code>impl <a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>Num</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a></code></li>
+<li><code>impl <a class='trait' href='../num/traits/trait.Num.html' title='num::traits::Num'>Num</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></li>
 </ul><script type="text/javascript" async
                          src="../implementors/num_traits/trait.Num.js">
                  </script></section>
@@ -99,8 +99,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

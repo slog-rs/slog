@@ -48,18 +48,18 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a id='src-21' class='srclink' href='../../num_iter/fn.range.html?gotosrc=21' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn range&lt;A&gt;(start: A, stop: A) -&gt; <a class='struct' href='../../num/iter/struct.Range.html' title='num::iter::Range'>Range</a>&lt;A&gt; <span class='where'>where A: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Add.html' title='core::ops::Add'>Add</a>&lt;A,&nbsp;Output=A&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a>&lt;A&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> + <a class='trait' href='../../num/traits/trait.One.html' title='num::traits::One'>One</a></span></pre><div class='docblock'><p>Returns an iterator over the given range [start, stop) (that is, starting
+<pre class='rust fn'>pub fn range&lt;A&gt;(start: A, stop: A) -&gt; <a class='struct' href='../../num/iter/struct.Range.html' title='num::iter::Range'>Range</a>&lt;A&gt; <span class='where'>where A: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Add.html' title='core::ops::Add'>Add</a>&lt;A, Output=A&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a>&lt;A&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> + <a class='trait' href='../../num/traits/trait.One.html' title='num::traits::One'>One</a></span></pre><div class='docblock'><p>Returns an iterator over the given range [start, stop) (that is, starting
 at start (inclusive), and ending at stop (exclusive)).</p>
 
 <h1 id='example' class='section-header'><a href='#example'>Example</a></h1>
 <span class='rusttest'>extern crate num;
 fn main() {
     let array = [0, 1, 2, 3, 4];
-
-for i in num_iter::range(0, 5) {
-    println!(&quot;{}&quot;, i);
-    assert_eq!(i,  array[i]);
-}
+    
+    for i in num_iter::range(0, 5) {
+        println!(&quot;{}&quot;, i);
+        assert_eq!(i,  array[i]);
+    }
 }</span><pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>array</span> <span class='op'>=</span> [<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>, <span class='number'>4</span>];
 
@@ -90,8 +90,6 @@ for i in num_iter::range(0, 5) {
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

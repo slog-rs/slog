@@ -47,12 +47,11 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-112' class='srclink' href='../../src/slog/src/logger.rs.html#32-34' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-114' class='srclink' href='../../src/slog/src/logger.rs.html#32-34' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Logger {
     // some fields omitted
 }</pre><div class='docblock'><p>Logger</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-118' class='srclink' href='../../src/slog/src/logger.rs.html#36-173' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new_root' class='method'><code>fn <a href='#method.new_root' class='fnname'>new_root</a>(values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h3><div class='impl-items'><h4 id='method.new_root' class='method'><code>fn <a href='#method.new_root' class='fnname'>new_root</a>(values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h4>
 <div class='docblock'><p>Build a root logger</p>
 
 <p>All children and their children and so on form one hierarchy
@@ -85,7 +84,7 @@ a common drain.</p>
     <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>new_root</span>(<span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>));
     <span class='kw'>let</span> <span class='ident'>log</span> <span class='op'>=</span> <span class='ident'>root</span>.<span class='ident'>new</span>(<span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value&quot;</span>));
 }</pre>
-</div><h4 id='method.set_drain' class='method'><code>fn <a href='#method.set_drain' class='fnname'>set_drain</a>&lt;D:&nbsp;<a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a>&gt;(&amp;self, drain: D)</code></h4>
+</div><h4 id='method.set_drain' class='method'><code>fn <a href='#method.set_drain' class='fnname'>set_drain</a>&lt;D: <a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a>&gt;(&amp;self, drain: D)</code></h4>
 <div class='docblock'><p>Set the drain for logger and it&#39;s hierarchy</p>
 </div><h4 id='method.swap_drain' class='method'><code>fn <a href='#method.swap_drain' class='fnname'>swap_drain</a>(&amp;self, drain: <a class='struct' href='https://doc.rust-lang.org/nightly/alloc/arc/struct.Arc.html' title='alloc::arc::Arc'>Arc</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a>&gt;&gt;) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/alloc/arc/struct.Arc.html' title='alloc::arc::Arc'>Arc</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a>&gt;&gt;</code></h4>
 <div class='docblock'><p>Swap the existing drain with a new one</p>
@@ -120,12 +119,9 @@ referenced <code>Arc</code>s are being used to reference-count them.</p>
 <div class='docblock'><p>Log trace level record</p>
 
 <p>Use <code>b!</code> macro to help build <code>values</code></p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-114' class='srclink' href='../../src/slog/src/logger.rs.html#30' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h4>
-<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
-<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h4>
+<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -148,8 +144,6 @@ referenced <code>Arc</code>s are being used to reference-count them.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

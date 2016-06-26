@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-179' class='srclink' href='../../src/slog/src/ser.rs.html#12-18' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-182' class='srclink' href='../../src/slog/src/ser.rs.html#12-18' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Serialize: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + 'static {
     fn <a href='#tymethod.serialize' class='fnname'>serialize</a>(&amp;self, rinfo: &amp;<a class='struct' href='../../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a>, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, serializer: &amp;mut <a class='trait' href='../../slog/ser/trait.Serializer.html' title='slog::ser::Serializer'>Serializer</a>);
 }</pre><div class='docblock'><p>Value that can be serialized</p>
@@ -64,27 +64,26 @@ only call respective methods of <code>serializer</code>.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></li>
-<li><code>impl Serialize for <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code></li>
-<li><code>impl&lt;T:&nbsp;<a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a>&gt; Serialize for <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;</code></li>
-<li><code>impl Serialize for <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></li>
-<li><code>impl Serialize for &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.isize.html'>isize</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.char.html'>char</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i8.html'>i8</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a></code></li>
-<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a></code></li>
-<li><code>impl&lt;S:&nbsp;<a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a>,&nbsp;F:&nbsp;'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(&amp;<a class='struct' href='../../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a>) -&gt; S&gt; Serialize for F</code></li>
+    <li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code></li>
+<li><code>impl&lt;T: <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a>&gt; <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;</code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.isize.html'>isize</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.char.html'>char</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i8.html'>i8</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a></code></li>
+<li><code>impl <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/slog/ser/trait.Serialize.js">
                  </script></section>
@@ -110,8 +109,6 @@ only call respective methods of <code>serializer</code>.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

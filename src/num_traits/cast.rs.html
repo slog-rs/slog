@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/num-traits-0.1.32/src/cast.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/num-traits-0.1.32/src/cast.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>cast.rs.html -- source</title>
@@ -752,78 +752,78 @@
     <span class='doccomment'>/// Convert an `isize` to return an optional value of this type. If the</span>
     <span class='doccomment'>/// value cannot be represented by this value, the `None` is returned.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_isize</span>(<span class='ident'>n</span>: <span class='ident'>isize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_isize</span>(<span class='ident'>n</span>: <span class='ident'>isize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_i64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='doccomment'>/// Convert an `i8` to return an optional value of this type. If the</span>
     <span class='doccomment'>/// type cannot be represented by this value, the `None` is returned.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_i8</span>(<span class='ident'>n</span>: <span class='ident'>i8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_i8</span>(<span class='ident'>n</span>: <span class='ident'>i8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_i64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='doccomment'>/// Convert an `i16` to return an optional value of this type. If the</span>
     <span class='doccomment'>/// type cannot be represented by this value, the `None` is returned.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_i16</span>(<span class='ident'>n</span>: <span class='ident'>i16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_i16</span>(<span class='ident'>n</span>: <span class='ident'>i16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_i64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='doccomment'>/// Convert an `i32` to return an optional value of this type. If the</span>
     <span class='doccomment'>/// type cannot be represented by this value, the `None` is returned.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_i32</span>(<span class='ident'>n</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_i32</span>(<span class='ident'>n</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_i64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='doccomment'>/// Convert an `i64` to return an optional value of this type. If the</span>
     <span class='doccomment'>/// type cannot be represented by this value, the `None` is returned.</span>
-    <span class='kw'>fn</span> <span class='ident'>from_i64</span>(<span class='ident'>n</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>from_i64</span>(<span class='ident'>n</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Convert a `usize` to return an optional value of this type. If the</span>
     <span class='doccomment'>/// type cannot be represented by this value, the `None` is returned.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_usize</span>(<span class='ident'>n</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_usize</span>(<span class='ident'>n</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_u64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='doccomment'>/// Convert an `u8` to return an optional value of this type. If the</span>
     <span class='doccomment'>/// type cannot be represented by this value, the `None` is returned.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_u8</span>(<span class='ident'>n</span>: <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_u8</span>(<span class='ident'>n</span>: <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_u64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='doccomment'>/// Convert an `u16` to return an optional value of this type. If the</span>
     <span class='doccomment'>/// type cannot be represented by this value, the `None` is returned.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_u16</span>(<span class='ident'>n</span>: <span class='ident'>u16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_u16</span>(<span class='ident'>n</span>: <span class='ident'>u16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_u64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='doccomment'>/// Convert an `u32` to return an optional value of this type. If the</span>
     <span class='doccomment'>/// type cannot be represented by this value, the `None` is returned.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_u32</span>(<span class='ident'>n</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_u32</span>(<span class='ident'>n</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_u64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='doccomment'>/// Convert an `u64` to return an optional value of this type. If the</span>
     <span class='doccomment'>/// type cannot be represented by this value, the `None` is returned.</span>
-    <span class='kw'>fn</span> <span class='ident'>from_u64</span>(<span class='ident'>n</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>from_u64</span>(<span class='ident'>n</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Convert a `f32` to return an optional value of this type. If the</span>
     <span class='doccomment'>/// type cannot be represented by this value, the `None` is returned.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_f32</span>(<span class='ident'>n</span>: <span class='ident'>f32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_f32</span>(<span class='ident'>n</span>: <span class='ident'>f32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_f64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>f64</span>)
     }
 
     <span class='doccomment'>/// Convert a `f64` to return an optional value of this type. If the</span>
     <span class='doccomment'>/// type cannot be represented by this value, the `None` is returned.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_f64</span>(<span class='ident'>n</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_f64</span>(<span class='ident'>n</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_i64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 }
@@ -880,7 +880,7 @@
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>NumCast</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>ToPrimitive</span> {
     <span class='doccomment'>/// Creates a number from another value that can be converted into</span>
     <span class='doccomment'>/// a primitive via the `ToPrimitive` trait.</span>
-    <span class='kw'>fn</span> <span class='ident'>from</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ToPrimitive</span><span class='op'>&gt;</span>(<span class='ident'>n</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>from</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ToPrimitive</span><span class='op'>&gt;</span>(<span class='ident'>n</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
 }
 
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>impl_num_cast</span> {
@@ -933,8 +933,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

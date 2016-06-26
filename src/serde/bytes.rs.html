@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.7.10/src/bytes.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/serde-0.7.10/src/bytes.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>bytes.rs.html -- source</title>
@@ -315,7 +315,7 @@
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Bytes</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='ident'>Bytes</span> {
             <span class='ident'>bytes</span>: <span class='ident'>bytes</span>,
         }
@@ -324,7 +324,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>))]</span>
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>Bytes</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='ident'>Bytes</span> {
             <span class='ident'>bytes</span>: <span class='ident'>bytes</span>,
         }
@@ -374,14 +374,14 @@
 
     <span class='kw'>impl</span> <span class='ident'>ByteBuf</span> {
         <span class='doccomment'>/// Construct a new, empty `ByteBuf`.</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
             <span class='ident'>ByteBuf</span> {
                 <span class='ident'>bytes</span>: <span class='ident'>Vec</span>::<span class='ident'>new</span>(),
             }
         }
 
         <span class='doccomment'>/// Construct a new, empty `ByteBuf` with the specified capacity.</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>with_capacity</span>(<span class='ident'>cap</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>with_capacity</span>(<span class='ident'>cap</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
             <span class='ident'>ByteBuf</span> {
                 <span class='ident'>bytes</span>: <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>cap</span>)
             }
@@ -391,7 +391,7 @@
     <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>ByteBuf</span> {
         <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>f</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;b\&quot;&quot;</span>));
-            <span class='kw'>for</span> <span class='ident'>c</span> <span class='kw'>in</span> <span class='kw'>super</span>::<span class='ident'>escape_bytestring</span>(<span class='self'>self</span>.<span class='ident'>bytes</span>.<span class='ident'>as_ref</span>()) {
+            <span class='kw'>for</span> <span class='ident'>c</span> <span class='kw'>in</span> <span class='ident'>super</span>::<span class='ident'>escape_bytestring</span>(<span class='self'>self</span>.<span class='ident'>bytes</span>.<span class='ident'>as_ref</span>()) {
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>f</span>.<span class='ident'>write_char</span>(<span class='ident'>c</span>));
             }
             <span class='ident'>f</span>.<span class='ident'>write_char</span>(<span class='string'>&#39;&quot;&#39;</span>)
@@ -405,7 +405,7 @@
     }
 
     <span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> <span class='kw'>for</span> <span class='ident'>ByteBuf</span> {
-        <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>bytes</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+        <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>bytes</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
             <span class='ident'>ByteBuf</span> {
                 <span class='ident'>bytes</span>: <span class='ident'>bytes</span>,
             }
@@ -547,8 +547,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

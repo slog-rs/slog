@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-150' class='srclink' href='../../src/chrono/offset/mod.rs.html#167-329' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-153' class='srclink' href='../../src/chrono/offset/mod.rs.html#167-329' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait TimeZone: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> {
     type <a href='#associatedtype.Offset' class='type'>Offset</a>: <a class='trait' href='../../chrono/offset/trait.Offset.html' title='chrono::offset::Offset'>Offset</a>;
     fn <a href='#tymethod.from_offset' class='fnname'>from_offset</a>(offset: &amp;Self::<a class='trait' href='../../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>Offset</a>) -&gt; Self;
@@ -162,9 +162,9 @@ The UTC is continuous and thus this cannot fail (but can give the duplicate loca
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl TimeZone for <a class='struct' href='../../chrono/offset/utc/struct.UTC.html' title='chrono::offset::utc::UTC'>UTC</a></code></li>
-<li><code>impl TimeZone for <a class='struct' href='../../chrono/offset/fixed/struct.FixedOffset.html' title='chrono::offset::fixed::FixedOffset'>FixedOffset</a></code></li>
-<li><code>impl TimeZone for <a class='struct' href='../../chrono/offset/local/struct.Local.html' title='chrono::offset::local::Local'>Local</a></code></li>
+    <li><code>impl <a class='trait' href='../../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>TimeZone</a> for <a class='struct' href='../../chrono/offset/utc/struct.UTC.html' title='chrono::offset::utc::UTC'>UTC</a></code></li>
+<li><code>impl <a class='trait' href='../../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>TimeZone</a> for <a class='struct' href='../../chrono/offset/fixed/struct.FixedOffset.html' title='chrono::offset::fixed::FixedOffset'>FixedOffset</a></code></li>
+<li><code>impl <a class='trait' href='../../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>TimeZone</a> for <a class='struct' href='../../chrono/offset/local/struct.Local.html' title='chrono::offset::local::Local'>Local</a></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/chrono/offset/trait.TimeZone.js">
                  </script></section>
@@ -190,8 +190,6 @@ The UTC is continuous and thus this cannot fail (but can give the duplicate loca
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

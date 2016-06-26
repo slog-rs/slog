@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.2.22/src/offset/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/chrono-0.2.22/src/offset/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -556,7 +556,7 @@
     <span class='doccomment'>/// but it will propagate to the `DateTime` values constructed via this date.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Panics on the out-of-range date, invalid month and/or day.</span>
-    <span class='kw'>fn</span> <span class='ident'>ymd</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>, <span class='ident'>month</span>: <span class='ident'>u32</span>, <span class='ident'>day</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>Date</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>ymd</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>, <span class='ident'>month</span>: <span class='ident'>u32</span>, <span class='ident'>day</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>Date</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>ymd_opt</span>(<span class='ident'>year</span>, <span class='ident'>month</span>, <span class='ident'>day</span>).<span class='ident'>unwrap</span>()
     }
 
@@ -567,7 +567,7 @@
     <span class='doccomment'>/// but it will propagate to the `DateTime` values constructed via this date.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` on the out-of-range date, invalid month and/or day.</span>
-    <span class='kw'>fn</span> <span class='ident'>ymd_opt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>, <span class='ident'>month</span>: <span class='ident'>u32</span>, <span class='ident'>day</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>Date</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>ymd_opt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>, <span class='ident'>month</span>: <span class='ident'>u32</span>, <span class='ident'>day</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>Date</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>match</span> <span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd_opt</span>(<span class='ident'>year</span>, <span class='ident'>month</span>, <span class='ident'>day</span>) {
             <span class='prelude-val'>Some</span>(<span class='ident'>d</span>) <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>from_local_date</span>(<span class='kw-2'>&amp;</span><span class='ident'>d</span>),
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>LocalResult</span>::<span class='prelude-val'>None</span>,
@@ -581,7 +581,7 @@
     <span class='doccomment'>/// but it will propagate to the `DateTime` values constructed via this date.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Panics on the out-of-range date and/or invalid DOY.</span>
-    <span class='kw'>fn</span> <span class='ident'>yo</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>, <span class='ident'>ordinal</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>Date</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>yo</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>, <span class='ident'>ordinal</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>Date</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>yo_opt</span>(<span class='ident'>year</span>, <span class='ident'>ordinal</span>).<span class='ident'>unwrap</span>()
     }
 
@@ -592,7 +592,7 @@
     <span class='doccomment'>/// but it will propagate to the `DateTime` values constructed via this date.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` on the out-of-range date and/or invalid DOY.</span>
-    <span class='kw'>fn</span> <span class='ident'>yo_opt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>, <span class='ident'>ordinal</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>Date</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>yo_opt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>, <span class='ident'>ordinal</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>Date</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>match</span> <span class='ident'>NaiveDate</span>::<span class='ident'>from_yo_opt</span>(<span class='ident'>year</span>, <span class='ident'>ordinal</span>) {
             <span class='prelude-val'>Some</span>(<span class='ident'>d</span>) <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>from_local_date</span>(<span class='kw-2'>&amp;</span><span class='ident'>d</span>),
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>LocalResult</span>::<span class='prelude-val'>None</span>,
@@ -608,7 +608,7 @@
     <span class='doccomment'>/// but it will propagate to the `DateTime` values constructed via this date.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Panics on the out-of-range date and/or invalid week number.</span>
-    <span class='kw'>fn</span> <span class='ident'>isoywd</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>, <span class='ident'>week</span>: <span class='ident'>u32</span>, <span class='ident'>weekday</span>: <span class='ident'>Weekday</span>) <span class='op'>-&gt;</span> <span class='ident'>Date</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>isoywd</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>, <span class='ident'>week</span>: <span class='ident'>u32</span>, <span class='ident'>weekday</span>: <span class='ident'>Weekday</span>) <span class='op'>-&gt;</span> <span class='ident'>Date</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>isoywd_opt</span>(<span class='ident'>year</span>, <span class='ident'>week</span>, <span class='ident'>weekday</span>).<span class='ident'>unwrap</span>()
     }
 
@@ -621,7 +621,7 @@
     <span class='doccomment'>/// but it will propagate to the `DateTime` values constructed via this date.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` on the out-of-range date and/or invalid week number.</span>
-    <span class='kw'>fn</span> <span class='ident'>isoywd_opt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>, <span class='ident'>week</span>: <span class='ident'>u32</span>, <span class='ident'>weekday</span>: <span class='ident'>Weekday</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>Date</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>isoywd_opt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>, <span class='ident'>week</span>: <span class='ident'>u32</span>, <span class='ident'>weekday</span>: <span class='ident'>Weekday</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>Date</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>match</span> <span class='ident'>NaiveDate</span>::<span class='ident'>from_isoywd_opt</span>(<span class='ident'>year</span>, <span class='ident'>week</span>, <span class='ident'>weekday</span>) {
             <span class='prelude-val'>Some</span>(<span class='ident'>d</span>) <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>from_local_date</span>(<span class='kw-2'>&amp;</span><span class='ident'>d</span>),
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>LocalResult</span>::<span class='prelude-val'>None</span>,
@@ -633,7 +633,7 @@
     <span class='doccomment'>/// and the number of nanoseconds since the last whole non-leap second.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Panics on the out-of-range number of seconds and/or invalid nanosecond.</span>
-    <span class='kw'>fn</span> <span class='ident'>timestamp</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>secs</span>: <span class='ident'>i64</span>, <span class='ident'>nsecs</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>timestamp</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>secs</span>: <span class='ident'>i64</span>, <span class='ident'>nsecs</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>timestamp_opt</span>(<span class='ident'>secs</span>, <span class='ident'>nsecs</span>).<span class='ident'>unwrap</span>()
     }
 
@@ -642,7 +642,7 @@
     <span class='doccomment'>/// and the number of nanoseconds since the last whole non-leap second.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` on the out-of-range number of seconds and/or invalid nanosecond.</span>
-    <span class='kw'>fn</span> <span class='ident'>timestamp_opt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>secs</span>: <span class='ident'>i64</span>, <span class='ident'>nsecs</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>timestamp_opt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>secs</span>: <span class='ident'>i64</span>, <span class='ident'>nsecs</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>match</span> <span class='ident'>NaiveDateTime</span>::<span class='ident'>from_timestamp_opt</span>(<span class='ident'>secs</span>, <span class='ident'>nsecs</span>) {
             <span class='prelude-val'>Some</span>(<span class='ident'>dt</span>) <span class='op'>=&gt;</span> <span class='ident'>LocalResult</span>::<span class='ident'>Single</span>(<span class='self'>self</span>.<span class='ident'>from_utc_datetime</span>(<span class='kw-2'>&amp;</span><span class='ident'>dt</span>)),
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>LocalResult</span>::<span class='prelude-val'>None</span>,
@@ -659,50 +659,50 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// See also `DateTime::parse_from_str` which gives a local `DateTime`</span>
     <span class='doccomment'>/// with parsed `FixedOffset`.</span>
-    <span class='kw'>fn</span> <span class='ident'>datetime_from_str</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>fmt</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>ParseResult</span><span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>datetime_from_str</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>fmt</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>ParseResult</span><span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>parsed</span> <span class='op'>=</span> <span class='ident'>Parsed</span>::<span class='ident'>new</span>();
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>parsed</span>, <span class='ident'>s</span>, <span class='ident'>StrftimeItems</span>::<span class='ident'>new</span>(<span class='ident'>fmt</span>)));
         <span class='ident'>parsed</span>.<span class='ident'>to_datetime_with_timezone</span>(<span class='self'>self</span>)
     }
 
     <span class='doccomment'>/// Reconstructs the time zone from the offset.</span>
-    <span class='kw'>fn</span> <span class='ident'>from_offset</span>(<span class='ident'>offset</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>::<span class='ident'>Offset</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>from_offset</span>(<span class='ident'>offset</span>: <span class='kw-2'>&amp;</span><span class='ident'>Self</span>::<span class='ident'>Offset</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
 
     <span class='doccomment'>/// Creates the offset(s) for given local `NaiveDate` if possible.</span>
-    <span class='kw'>fn</span> <span class='ident'>offset_from_local_date</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>local</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Offset</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>offset_from_local_date</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>local</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Offset</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Creates the offset(s) for given local `NaiveDateTime` if possible.</span>
-    <span class='kw'>fn</span> <span class='ident'>offset_from_local_datetime</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>local</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDateTime</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Offset</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>offset_from_local_datetime</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>local</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDateTime</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>Self</span>::<span class='ident'>Offset</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Converts the local `NaiveDate` to the timezone-aware `Date` if possible.</span>
-    <span class='kw'>fn</span> <span class='ident'>from_local_date</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>local</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>Date</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_local_date</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>local</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>Date</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>offset_from_local_date</span>(<span class='ident'>local</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>offset</span><span class='op'>|</span> {
             <span class='ident'>Date</span>::<span class='ident'>from_utc</span>(<span class='op'>*</span><span class='ident'>local</span> <span class='op'>-</span> <span class='ident'>offset</span>.<span class='ident'>local_minus_utc</span>(), <span class='ident'>offset</span>)
         })
     }
 
     <span class='doccomment'>/// Converts the local `NaiveDateTime` to the timezone-aware `DateTime` if possible.</span>
-    <span class='kw'>fn</span> <span class='ident'>from_local_datetime</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>local</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDateTime</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_local_datetime</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>local</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDateTime</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>offset_from_local_datetime</span>(<span class='ident'>local</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>offset</span><span class='op'>|</span> {
             <span class='ident'>DateTime</span>::<span class='ident'>from_utc</span>(<span class='op'>*</span><span class='ident'>local</span> <span class='op'>-</span> <span class='ident'>offset</span>.<span class='ident'>local_minus_utc</span>(), <span class='ident'>offset</span>)
         })
     }
 
     <span class='doccomment'>/// Creates the offset for given UTC `NaiveDate`. This cannot fail.</span>
-    <span class='kw'>fn</span> <span class='ident'>offset_from_utc_date</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>utc</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Offset</span>;
+    <span class='kw'>fn</span> <span class='ident'>offset_from_utc_date</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>utc</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>Offset</span>;
 
     <span class='doccomment'>/// Creates the offset for given UTC `NaiveDateTime`. This cannot fail.</span>
-    <span class='kw'>fn</span> <span class='ident'>offset_from_utc_datetime</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>utc</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDateTime</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Offset</span>;
+    <span class='kw'>fn</span> <span class='ident'>offset_from_utc_datetime</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>utc</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDateTime</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>Offset</span>;
 
     <span class='doccomment'>/// Converts the UTC `NaiveDate` to the local time.</span>
     <span class='doccomment'>/// The UTC is continuous and thus this cannot fail (but can give the duplicate local time).</span>
-    <span class='kw'>fn</span> <span class='ident'>from_utc_date</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>utc</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>) <span class='op'>-&gt;</span> <span class='ident'>Date</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_utc_date</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>utc</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>) <span class='op'>-&gt;</span> <span class='ident'>Date</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>Date</span>::<span class='ident'>from_utc</span>(<span class='ident'>utc</span>.<span class='ident'>clone</span>(), <span class='self'>self</span>.<span class='ident'>offset_from_utc_date</span>(<span class='ident'>utc</span>))
     }
 
     <span class='doccomment'>/// Converts the UTC `NaiveDateTime` to the local time.</span>
     <span class='doccomment'>/// The UTC is continuous and thus this cannot fail (but can give the duplicate local time).</span>
-    <span class='kw'>fn</span> <span class='ident'>from_utc_datetime</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>utc</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDateTime</span>) <span class='op'>-&gt;</span> <span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_utc_datetime</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>utc</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDateTime</span>) <span class='op'>-&gt;</span> <span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>DateTime</span>::<span class='ident'>from_utc</span>(<span class='ident'>utc</span>.<span class='ident'>clone</span>(), <span class='self'>self</span>.<span class='ident'>offset_from_utc_datetime</span>(<span class='ident'>utc</span>))
     }
 }
@@ -735,8 +735,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

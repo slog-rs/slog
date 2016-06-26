@@ -47,30 +47,30 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1968' class='srclink' href='../../src/num_traits/cast.rs.html#402-406' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-1976' class='srclink' href='../../src/num_traits/cast.rs.html#402-406' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait NumCast: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../../num_traits/cast/trait.ToPrimitive.html' title='num_traits::cast::ToPrimitive'>ToPrimitive</a> {
-    fn <a href='#tymethod.from' class='fnname'>from</a>&lt;T:&nbsp;<a class='trait' href='../../num_traits/cast/trait.ToPrimitive.html' title='num_traits::cast::ToPrimitive'>ToPrimitive</a>&gt;(n: T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;;
+    fn <a href='#tymethod.from' class='fnname'>from</a>&lt;T: <a class='trait' href='../../num_traits/cast/trait.ToPrimitive.html' title='num_traits::cast::ToPrimitive'>ToPrimitive</a>&gt;(n: T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;;
 }</pre><div class='docblock'><p>An interface for casting between machine scalars.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.from' class='method stab '><code>fn <a href='#tymethod.from' class='fnname'>from</a>&lt;T:&nbsp;<a class='trait' href='../../num_traits/cast/trait.ToPrimitive.html' title='num_traits::cast::ToPrimitive'>ToPrimitive</a>&gt;(n: T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></h3><div class='docblock'><p>Creates a number from another value that can be converted into
+        <h3 id='tymethod.from' class='method stab '><code>fn <a href='#tymethod.from' class='fnname'>from</a>&lt;T: <a class='trait' href='../../num_traits/cast/trait.ToPrimitive.html' title='num_traits::cast::ToPrimitive'>ToPrimitive</a>&gt;(n: T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></h3><div class='docblock'><p>Creates a number from another value that can be converted into
 a primitive via the <code>ToPrimitive</code> trait.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl NumCast for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a></code></li>
-<li><code>impl NumCast for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a></code></li>
-<li><code>impl NumCast for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></li>
-<li><code>impl NumCast for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></li>
-<li><code>impl NumCast for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></li>
-<li><code>impl NumCast for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i8.html'>i8</a></code></li>
-<li><code>impl NumCast for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a></code></li>
-<li><code>impl NumCast for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></li>
-<li><code>impl NumCast for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a></code></li>
-<li><code>impl NumCast for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.isize.html'>isize</a></code></li>
-<li><code>impl NumCast for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a></code></li>
-<li><code>impl NumCast for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a></code></li>
+    <li><code>impl <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a></code></li>
+<li><code>impl <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a></code></li>
+<li><code>impl <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></li>
+<li><code>impl <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></li>
+<li><code>impl <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></li>
+<li><code>impl <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i8.html'>i8</a></code></li>
+<li><code>impl <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a></code></li>
+<li><code>impl <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></li>
+<li><code>impl <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a></code></li>
+<li><code>impl <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.isize.html'>isize</a></code></li>
+<li><code>impl <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a></code></li>
+<li><code>impl <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/num_traits/cast/trait.NumCast.js">
                  </script></section>
@@ -96,8 +96,6 @@ a primitive via the <code>ToPrimitive</code> trait.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

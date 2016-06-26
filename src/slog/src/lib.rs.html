@@ -199,6 +199,14 @@
 <span id="155">155</span>
 <span id="156">156</span>
 <span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 <span class='doccomment'>//! ```</span>
@@ -224,12 +232,16 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! fn main() {</span>
 <span class='doccomment'>//!     // Create a new group of loggers, sharing one drain.</span>
+<span class='doccomment'>//!     //</span>
+<span class='doccomment'>//!     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.</span>
 <span class='doccomment'>//!     let root = Logger::new_root(o!(&quot;version&quot; =&gt; VERSION, &quot;build-id&quot; =&gt; &quot;8dfljdf&quot;));</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // Create child loggers from existing ones. Children</span>
-<span class='doccomment'>//!     // clone `key: value` pairs from their parents.</span>
-<span class='doccomment'>//!     //</span>
 <span class='doccomment'>//!     // Build logging context as data becomes available.</span>
+<span class='doccomment'>//!     //</span>
+<span class='doccomment'>//!     // Create child loggers from existing ones. Children clone `key: value`</span>
+<span class='doccomment'>//!     // pairs from their parents.</span>
+<span class='doccomment'>//!     //</span>
+<span class='doccomment'>//!     // Note `b!` macro for more natural `BorrowedKeyValue` sequence building.</span>
 <span class='doccomment'>//!     let log = root.new(o!(&quot;child&quot; =&gt; 1));</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//!     // Closures can be used for values that change at runtime.</span>
@@ -237,6 +249,10 @@
 <span class='doccomment'>//!     let counter = Arc::new(AtomicUsize::new(0));</span>
 <span class='doccomment'>//!     let log = log.new(o!(&quot;counter&quot; =&gt; {</span>
 <span class='doccomment'>//!         let counter = counter.clone();</span>
+<span class='doccomment'>//!         // Note the `move` to capture `counter`,</span>
+<span class='doccomment'>//!         // and unfortunate `|_ : &amp;_|` that helps</span>
+<span class='doccomment'>//!         // current `rustc` limitations. In the future,</span>
+<span class='doccomment'>//!         // a `|_|` could work.</span>
 <span class='doccomment'>//!         move |_ : &amp;_| { counter.load(SeqCst)}</span>
 <span class='doccomment'>//!     }));</span>
 <span class='doccomment'>//!</span>
@@ -307,7 +323,7 @@
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> {
         {
         <span class='kw'>use</span> <span class='ident'>std</span>;
-        <span class='kw-2'>&amp;</span>[$((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>, <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>) <span class='kw'>as</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>ser</span>::<span class='ident'>SyncSerialize</span><span class='op'>&gt;</span>)),<span class='op'>*</span>]
+        <span class='kw-2'>&amp;</span>[$((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>, <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>) <span class='kw'>as</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>ser</span>::<span class='ident'>SyncSerialize</span><span class='op'>&gt;</span>)),<span class='op'>*</span>]
         }
     };
 );
@@ -381,8 +397,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

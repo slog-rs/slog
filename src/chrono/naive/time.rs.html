@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.2.22/src/naive/time.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/chrono-0.2.22/src/naive/time.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>time.rs.html -- source</title>
@@ -1461,7 +1461,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde&quot;</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>serde</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>NaiveTime</span>;
+    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>NaiveTime</span>;
     <span class='kw'>use</span> <span class='ident'>serde</span>::{<span class='ident'>ser</span>, <span class='ident'>de</span>};
 
     <span class='kw'>impl</span> <span class='ident'>ser</span>::<span class='ident'>Serialize</span> <span class='kw'>for</span> <span class='ident'>NaiveTime</span> {
@@ -1485,7 +1485,7 @@
     }
     
     <span class='kw'>impl</span> <span class='ident'>de</span>::<span class='ident'>Deserialize</span> <span class='kw'>for</span> <span class='ident'>NaiveTime</span> {
-        <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='ident'>deserializer</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+        <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='ident'>deserializer</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw'>Self</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
             <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>de</span>::<span class='ident'>Deserializer</span>
         {
             <span class='ident'>deserializer</span>.<span class='ident'>deserialize</span>(<span class='ident'>NaiveTimeVisitor</span>)
@@ -1495,7 +1495,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>NaiveTime</span>;
+    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>NaiveTime</span>;
     <span class='kw'>use</span> <span class='ident'>Timelike</span>;
     <span class='kw'>use</span> <span class='ident'>duration</span>::<span class='ident'>Duration</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>u32</span>;
@@ -1747,8 +1747,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

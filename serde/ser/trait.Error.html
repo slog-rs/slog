@@ -47,9 +47,9 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-8688' class='srclink' href='../../src/serde/ser/mod.rs.html#17-30' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-8534' class='srclink' href='../../src/serde/ser/mod.rs.html#17-30' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Error: <a class='trait' href='../../core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/std/error/trait.Error.html' title='std::error::Error'>Error</a> {
-    fn <a href='#tymethod.custom' class='fnname'>custom</a>&lt;T:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;(msg: T) -&gt; Self;
+    fn <a href='#tymethod.custom' class='fnname'>custom</a>&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;(msg: T) -&gt; Self;
 
     fn <a href='#method.invalid_value' class='fnname'>invalid_value</a>(msg: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; Self { ... }
 }</pre><div class='docblock'><p><code>Error</code> is a trait that allows a <code>Serialize</code> to generically create a
@@ -57,7 +57,7 @@
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.custom' class='method stab '><code>fn <a href='#tymethod.custom' class='fnname'>custom</a>&lt;T:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;(msg: T) -&gt; Self</code></h3><div class='docblock'><p>Raised when there is general error when deserializing a type.</p>
+        <h3 id='tymethod.custom' class='method stab '><code>fn <a href='#tymethod.custom' class='fnname'>custom</a>&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;(msg: T) -&gt; Self</code></h3><div class='docblock'><p>Raised when there is general error when deserializing a type.</p>
 </div></div>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
@@ -90,8 +90,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

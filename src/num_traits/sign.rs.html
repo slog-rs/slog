@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/num-traits-0.1.32/src/sign.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/num-traits-0.1.32/src/sign.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>sign.rs.html -- source</title>
@@ -175,19 +175,19 @@
 <span class='kw'>use</span> <span class='ident'>Num</span>;
 
 <span class='doccomment'>/// Useful functions for signed numbers (i.e. numbers that can be negative).</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Signed</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>Neg</span><span class='op'>&lt;</span><span class='ident'>Output</span> <span class='op'>=</span> <span class='self'>Self</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Signed</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Num</span> <span class='op'>+</span> <span class='ident'>Neg</span><span class='op'>&lt;</span><span class='ident'>Output</span> <span class='op'>=</span> <span class='kw'>Self</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Computes the absolute value.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// For `f32` and `f64`, `NaN` will be returned if the number is `NaN`.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// For signed integers, `::MIN` will be returned if the number is `::MIN`.</span>
-    <span class='kw'>fn</span> <span class='ident'>abs</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>abs</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
 
     <span class='doccomment'>/// The positive difference of two numbers.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `zero` if the number is less than or equal to `other`, otherwise the difference</span>
     <span class='doccomment'>/// between `self` and `other` is returned.</span>
-    <span class='kw'>fn</span> <span class='ident'>abs_sub</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>abs_sub</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
 
     <span class='doccomment'>/// Returns the sign of the number.</span>
     <span class='doccomment'>///</span>
@@ -202,7 +202,7 @@
     <span class='doccomment'>/// * `0` if the number is zero</span>
     <span class='doccomment'>/// * `1` if the number is positive</span>
     <span class='doccomment'>/// * `-1` if the number is negative</span>
-    <span class='kw'>fn</span> <span class='ident'>signum</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>signum</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
 
     <span class='doccomment'>/// Returns true if the number is positive and false if the number is zero or negative.</span>
     <span class='kw'>fn</span> <span class='ident'>is_positive</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>;
@@ -319,8 +319,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

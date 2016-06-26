@@ -238,11 +238,11 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Loggers form hierarchies sharing a drain. Setting a drain on</span>
 <span class='doccomment'>//! any logger will change it on all loggers in given hierarchy.</span>
-<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>DrainRef</span>, <span class='ident'>OwnedKeyValue</span>, <span class='ident'>Level</span>, <span class='ident'>BorrowedKeyValue</span>};
+<span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>DrainRef</span>, <span class='ident'>OwnedKeyValue</span>, <span class='ident'>Level</span>, <span class='ident'>BorrowedKeyValue</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
 <span class='kw'>use</span> <span class='ident'>crossbeam</span>::<span class='ident'>sync</span>::<span class='ident'>ArcCell</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>io</span>};
-<span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>format</span>;
+<span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>format</span>;
 
 <span class='kw'>use</span> <span class='ident'>isatty</span>::<span class='ident'>stderr_isatty</span>;
 <span class='kw'>use</span> <span class='ident'>drain</span>;
@@ -433,8 +433,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

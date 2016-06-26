@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.7.10/src/ser/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/serde-0.7.10/src/ser/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -445,14 +445,14 @@
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Error</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>error</span>::<span class='ident'>Error</span> {
     <span class='doccomment'>/// Raised when there is general error when deserializing a type.</span>
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>))]</span>
-    <span class='kw'>fn</span> <span class='ident'>custom</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='ident'>msg</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>custom</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='ident'>msg</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
 
     <span class='doccomment'>/// Raised when there is general error when deserializing a type.</span>
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>), <span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>)))]</span>
-    <span class='kw'>fn</span> <span class='ident'>custom</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span><span class='op'>&gt;&gt;</span>(<span class='ident'>msg</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>custom</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span><span class='op'>&gt;&gt;</span>(<span class='ident'>msg</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
 
     <span class='doccomment'>/// Raised when a `Serialize` was passed an incorrect value.</span>
-    <span class='kw'>fn</span> <span class='ident'>invalid_value</span>(<span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+    <span class='kw'>fn</span> <span class='ident'>invalid_value</span>(<span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='ident'>Error</span>::<span class='ident'>custom</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;invalid value: {}&quot;</span>, <span class='ident'>msg</span>))
     }
 }
@@ -474,107 +474,107 @@
     <span class='kw'>type</span> <span class='ident'>Error</span>: <span class='ident'>Error</span>;
 
     <span class='doccomment'>/// Serializes a `bool` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_bool</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>serialize_bool</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Serializes a `isize` value. By default it casts the value to a `i64` and</span>
     <span class='doccomment'>/// passes it to the `serialize_i64` method.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_isize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>isize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>serialize_isize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>isize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_i64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='doccomment'>/// Serializes a `i8` value. By default it casts the value to a `i64` and</span>
     <span class='doccomment'>/// passes it to the `serialize_i64` method.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_i8</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>serialize_i8</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_i64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='doccomment'>/// Serializes a `i16` value. By default it casts the value to a `i64` and</span>
     <span class='doccomment'>/// passes it to the `serialize_i64` method.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_i16</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>serialize_i16</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_i64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='doccomment'>/// Serializes a `i32` value. By default it casts the value to a `i64` and</span>
     <span class='doccomment'>/// passes it to the `serialize_i64` method.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_i32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>serialize_i32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_i64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='doccomment'>/// Serializes a `i64` value.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_i64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>serialize_i64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Serializes a `usize` value. By default it casts the value to a `u64` and</span>
     <span class='doccomment'>/// passes it to the `serialize_u64` method.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_usize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>serialize_usize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_u64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='doccomment'>/// Serializes a `u8` value. By default it casts the value to a `u64` and passes</span>
     <span class='doccomment'>/// it to the `serialize_u64` method.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_u8</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>serialize_u8</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_u64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='doccomment'>/// Serializes a `u32` value. By default it casts the value to a `u64` and passes</span>
     <span class='doccomment'>/// it to the `serialize_u64` method.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_u16</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>serialize_u16</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_u64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='doccomment'>/// Serializes a `u32` value. By default it casts the value to a `u64` and passes</span>
     <span class='doccomment'>/// it to the `serialize_u64` method.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_u32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>serialize_u32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_u64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='doccomment'>/// `Serializes a `u64` value.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_u64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>serialize_u64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Serializes a `f32` value. By default it casts the value to a `f64` and passes</span>
     <span class='doccomment'>/// it to the `serialize_f64` method.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_f32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>f32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>serialize_f32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>f32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_f64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>f64</span>)
     }
 
     <span class='doccomment'>/// Serializes a `f64` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_f64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>serialize_f64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Serializes a character. By default it serializes it as a `&amp;str` containing a</span>
     <span class='doccomment'>/// single character.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_char</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>serialize_char</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_str</span>(::<span class='ident'>utils</span>::<span class='ident'>encode_utf8</span>(<span class='ident'>v</span>).<span class='ident'>as_str</span>())
     }
 
     <span class='doccomment'>/// Serializes a `&amp;str`.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_str</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>serialize_str</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Enables those serialization formats that support serializing</span>
     <span class='doccomment'>/// byte slices separately from generic arrays. By default it serializes as a regular array.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_bytes</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>serialize_bytes</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_seq</span>(<span class='ident'>impls</span>::<span class='ident'>SeqIteratorVisitor</span>::<span class='ident'>new</span>(<span class='ident'>value</span>.<span class='ident'>iter</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>value</span>.<span class='ident'>len</span>())))
     }
 
     <span class='doccomment'>/// Serializes a `()` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_unit</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>serialize_unit</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Serializes a unit struct value.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// By default, unit structs are serialized as a `()`.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_unit_struct</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>_name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>serialize_unit_struct</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>_name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_unit</span>()
     }
 
@@ -585,7 +585,7 @@
     <span class='kw'>fn</span> <span class='ident'>serialize_unit_variant</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
                               <span class='ident'>_name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
                               <span class='ident'>_variant_index</span>: <span class='ident'>usize</span>,
-                              <span class='ident'>_variant</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+                              <span class='ident'>_variant</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>serialize_unit</span>()
     }
 
@@ -595,7 +595,7 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>serialize_newtype_struct</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
                                    <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                   <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                                   <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Serialize</span>,
     {
         <span class='self'>self</span>.<span class='ident'>serialize_tuple_struct</span>(<span class='ident'>name</span>, <span class='prelude-val'>Some</span>(<span class='ident'>value</span>))
@@ -609,7 +609,7 @@
                                     <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
                                     <span class='ident'>variant_index</span>: <span class='ident'>usize</span>,
                                     <span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                    <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                                    <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Serialize</span>,
     {
         <span class='self'>self</span>.<span class='ident'>serialize_tuple_variant</span>(
@@ -620,28 +620,28 @@
     }
 
     <span class='doccomment'>/// Serializes a `None` value..serialize</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_none</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>serialize_none</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Serializes a `Some(...)` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_some</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>serialize_some</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Serialize</span>;
 
     <span class='doccomment'>/// Serializes a sequence.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Callees of this method need to construct a `SeqVisitor`, which iterates through each item</span>
     <span class='doccomment'>/// in the sequence.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_seq</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>serialize_seq</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>SeqVisitor</span>;
 
     <span class='doccomment'>/// Serializes a sequence element.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_seq_elt</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>serialize_seq_elt</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Serialize</span>;
 
     <span class='doccomment'>/// Serializes a tuple.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// By default this serializes a tuple as a sequence.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_tuple</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>serialize_tuple</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>SeqVisitor</span>,
     {
         <span class='self'>self</span>.<span class='ident'>serialize_seq</span>(<span class='ident'>visitor</span>)
@@ -651,7 +651,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// By default, tuples are serialized as a sequence.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_tuple_elt</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>serialize_tuple_elt</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Serialize</span>
     {
         <span class='self'>self</span>.<span class='ident'>serialize_seq_elt</span>(<span class='ident'>value</span>)
@@ -661,7 +661,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// By default this serializes an array as a sequence.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_fixed_size_array</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>serialize_fixed_size_array</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>SeqVisitor</span>,
     {
         <span class='self'>self</span>.<span class='ident'>serialize_seq</span>(<span class='ident'>visitor</span>)
@@ -673,7 +673,7 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>serialize_tuple_struct</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
                                  <span class='ident'>_name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                 <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                                 <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>SeqVisitor</span>,
     {
         <span class='self'>self</span>.<span class='ident'>serialize_tuple</span>(<span class='ident'>visitor</span>)
@@ -683,7 +683,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// By default, tuple struct elements are serialized as a tuple element.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_tuple_struct_elt</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>serialize_tuple_struct_elt</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Serialize</span>
     {
         <span class='self'>self</span>.<span class='ident'>serialize_tuple_elt</span>(<span class='ident'>value</span>)
@@ -697,7 +697,7 @@
                                   <span class='ident'>_name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
                                   <span class='ident'>_variant_index</span>: <span class='ident'>usize</span>,
                                   <span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                  <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                                  <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>SeqVisitor</span>,
     {
         <span class='self'>self</span>.<span class='ident'>serialize_tuple_struct</span>(<span class='ident'>variant</span>, <span class='ident'>visitor</span>)
@@ -707,7 +707,7 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// By default, tuples are serialized as a sequence.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_tuple_variant_elt</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>serialize_tuple_variant_elt</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Serialize</span>
     {
         <span class='self'>self</span>.<span class='ident'>serialize_tuple_struct_elt</span>(<span class='ident'>value</span>)
@@ -717,11 +717,11 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Callees of this method need to construct a `MapVisitor`, which iterates through each item</span>
     <span class='doccomment'>/// in the map.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_map</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>serialize_map</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>MapVisitor</span>;
 
     <span class='doccomment'>/// Serializes a map element (key-value pair).</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_map_elt</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>K</span>, <span class='ident'>value</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>serialize_map_elt</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>K</span>, <span class='ident'>value</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>Serialize</span>,
               <span class='ident'>V</span>: <span class='ident'>Serialize</span>;
 
@@ -731,7 +731,7 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>serialize_struct</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
                            <span class='ident'>_name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                           <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                           <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>MapVisitor</span>,
     {
         <span class='self'>self</span>.<span class='ident'>serialize_map</span>(<span class='ident'>visitor</span>)
@@ -743,7 +743,7 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>serialize_struct_elt</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
                                <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                               <span class='ident'>value</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                               <span class='ident'>value</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Serialize</span>,
     {
         <span class='self'>self</span>.<span class='ident'>serialize_map_elt</span>(<span class='ident'>key</span>, <span class='ident'>value</span>)
@@ -757,7 +757,7 @@
                                    <span class='ident'>_name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
                                    <span class='ident'>_variant_index</span>: <span class='ident'>usize</span>,
                                    <span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                   <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                                   <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>MapVisitor</span>,
     {
         <span class='self'>self</span>.<span class='ident'>serialize_struct</span>(<span class='ident'>variant</span>, <span class='ident'>visitor</span>)
@@ -769,7 +769,7 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>serialize_struct_variant_elt</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
                                        <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                       <span class='ident'>value</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                                       <span class='ident'>value</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Serialize</span>,
     {
         <span class='self'>self</span>.<span class='ident'>serialize_struct_elt</span>(<span class='ident'>key</span>, <span class='ident'>value</span>)
@@ -833,8 +833,6 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
