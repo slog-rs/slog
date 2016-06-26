@@ -54,7 +54,7 @@ fn main() {
         drain::filter_level(
             Level::Info,
             drain::stream(
-                std::io::stderr(),
+                drain::async(std::io::stderr()),
                 // multiple outputs formats are supported
                 format::Json::new(),
                 ),

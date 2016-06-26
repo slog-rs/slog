@@ -8,6 +8,8 @@ use super::logger::RecordInfo;
 use std::{io, str};
 use std::sync::Mutex;
 use super::{OwnedKeyValue,BorrowedKeyValue};
+use std::sync::mpsc;
+use std::thread;
 
 ///
 /// Drain for Loggers
@@ -100,6 +102,69 @@ impl<D1 : Drain, D2 : Drain> Drain for Duplicate<D1, D2> {
         self.drain1.log(info, logger_values, values);
         self.drain2.log(info, logger_values, values);
     }
+}
+
+enum AsyncIoMsg{
+    Bytes(Vec<u8>),
+    Flush,
+    Eof
+}
+
+/// Asynchronous io::Writer
+///
+/// Wraps an `io::Writer` and writes to it in separate thread
+/// using channel to send the data.
+///
+/// This makes logging not block on potentially-slow IO operations.
+pub struct AsyncIoWriter {
+    sender : mpsc::Sender<AsyncIoMsg>,
+    join : Option<thread::JoinHandle<()>>,
+}
+
+impl AsyncIoWriter {
+    /// Create `AsyncIoWriter`
+    pub fn new<W : io::Write+Send+'static>(mut io : W) -> Self {
+        let (tx, rx) = mpsc::channel();
+        let join = thread::spawn(move || {
+            loop {
+                match rx.recv().unwrap() {
+                    AsyncIoMsg::Bytes(buf) => io.write_all(&buf).unwrap(),
+                    AsyncIoMsg::Flush => io.flush().unwrap(),
+                    AsyncIoMsg::Eof => return,
+                }
+            }
+        });
+
+        AsyncIoWriter {
+            sender: tx,
+            join: Some(join),
+        }
+    }
+}
+
+impl io::Write for AsyncIoWriter {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        let _ = self.sender.send(AsyncIoMsg::Bytes(buf.to_vec())).unwrap();
+        Ok(buf.len())
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        let _ = self.sender.send(AsyncIoMsg::Flush);
+        Ok(())
+    }
+}
+
+
+impl Drop for AsyncIoWriter {
+    fn drop(&mut self) {
+        let _ = self.sender.send(AsyncIoMsg::Eof);
+        let _ = self.join.take().unwrap().join();
+    }
+}
+
+/// Create AsyncIoWriter
+pub fn async<W : io::Write + Send + 'static>(io : W) -> AsyncIoWriter {
+    AsyncIoWriter::new(io)
 }
 
 /// Create Streamer drain
