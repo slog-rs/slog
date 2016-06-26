@@ -225,6 +225,43 @@
 <span id="181">181</span>
 <span id="182">182</span>
 <span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Drains</span>
 <span class='doccomment'>//!</span>
@@ -277,23 +314,54 @@
     }
 }
 
+<span class='doccomment'>/// Filter log record</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Wraps a drain and passes records to it, only if their `RecordInfo`</span>
+<span class='doccomment'>/// satisifies a condition `cond`.</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> {
+    <span class='ident'>drain</span> : <span class='ident'>D</span>,
+    <span class='comment'>// eliminated dynamic dispatch, after rust learns `-&gt; impl Trait`</span>
+    <span class='ident'>cond</span> : <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>)<span class='op'>-&gt;</span><span class='ident'>bool</span><span class='op'>+</span><span class='lifetime'>&#39;static</span><span class='op'>+</span><span class='ident'>Send</span><span class='op'>+</span><span class='ident'>Sync</span><span class='op'>&gt;</span>,
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
+    <span class='doccomment'>/// Create Filter wrapping given `subdrain` and passing to it records</span>
+    <span class='doccomment'>/// only the `cond` is true</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>F</span> : <span class='lifetime'>&#39;static</span><span class='op'>+</span><span class='ident'>Sync</span><span class='op'>+</span><span class='ident'>Send</span><span class='op'>+</span><span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>)<span class='op'>-&gt;</span><span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='ident'>drain</span> : <span class='ident'>D</span>, <span class='ident'>cond</span> : <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+        <span class='ident'>Filter</span> {
+            <span class='ident'>drain</span>: <span class='ident'>drain</span>,
+            <span class='ident'>cond</span>: <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>cond</span>),
+        }
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>info</span> : <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='ident'>logger_values</span> : <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>], <span class='ident'>values</span> : <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) {
+        <span class='kw'>if</span> (<span class='self'>self</span>.<span class='ident'>cond</span>)(<span class='kw-2'>&amp;</span><span class='ident'>info</span>) {
+            <span class='self'>self</span>.<span class='ident'>drain</span>.<span class='ident'>log</span>(<span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>)
+        }
+    }
+}
 
 <span class='doccomment'>/// Record log level filter</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Wraps a drain and passes records to it, only</span>
 <span class='doccomment'>/// if their level is at least given level.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// TODO: Remove this type. This drain is a special case of `Filter`, but</span>
+<span class='doccomment'>/// because `Filter` can not use static dispatch ATM due to Rust limitations</span>
+<span class='doccomment'>/// that will be lifted in the future, it is a standalone type.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> {
     <span class='ident'>level</span>: <span class='ident'>Level</span>,
     <span class='ident'>drain</span> : <span class='ident'>D</span>,
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Create FilterLevel wrapping given `subdrain` and passing to it records</span>
-    <span class='doccomment'>/// only of at least `level`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>level</span> : <span class='ident'>Level</span>, <span class='ident'>subdrain</span> : <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='doccomment'>/// Create `FilterLevel`</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>drain</span> : <span class='ident'>D</span>, <span class='ident'>level</span> : <span class='ident'>Level</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='ident'>FilterLevel</span> {
             <span class='ident'>level</span>: <span class='ident'>level</span>,
-            <span class='ident'>drain</span>: <span class='ident'>subdrain</span>,
+            <span class='ident'>drain</span>: <span class='ident'>drain</span>,
         }
     }
 }
@@ -306,7 +374,6 @@
     }
 }
 
-
 <span class='doccomment'>/// Duplicate records into two drains</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span> : <span class='ident'>Drain</span>, <span class='ident'>D2</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> {
     <span class='ident'>drain1</span> : <span class='ident'>D1</span>,
@@ -315,8 +382,7 @@
 
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D1</span> : <span class='ident'>Drain</span>, <span class='ident'>D2</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span>, <span class='ident'>D2</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Create FilterLevel wrapping given `subdrain` and passing to it records</span>
-    <span class='doccomment'>/// only of at least `level`.</span>
+    <span class='doccomment'>/// Create `Duplicate`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>drain1</span> : <span class='ident'>D1</span>, <span class='ident'>drain2</span> : <span class='ident'>D2</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
         <span class='ident'>Duplicate</span> {
             <span class='ident'>drain1</span>: <span class='ident'>drain1</span>,
@@ -344,6 +410,9 @@
 <span class='doccomment'>/// using channel to send the data.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// This makes logging not block on potentially-slow IO operations.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Note: Dropping `AsyncIoWriter` waits for it&#39;s io-thread to finish.</span>
+<span class='doccomment'>/// If you can&#39;t tolerate the delay, make sure to use `Logger::</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>AsyncIoWriter</span> {
     <span class='ident'>sender</span> : <span class='ident'>mpsc</span>::<span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>AsyncIoMsg</span><span class='op'>&gt;</span>,
     <span class='ident'>join</span> : <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>thread</span>::<span class='ident'>JoinHandle</span><span class='op'>&lt;</span>()<span class='op'>&gt;&gt;</span>,
@@ -400,9 +469,14 @@
     <span class='ident'>Streamer</span>::<span class='ident'>new</span>(<span class='ident'>io</span>, <span class='ident'>format</span>)
 }
 
-<span class='doccomment'>/// Create FilterLevel drain</span>
+<span class='doccomment'>/// Filter by `cond` closure</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>filter</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span>, <span class='ident'>F</span> : <span class='lifetime'>&#39;static</span><span class='op'>+</span><span class='ident'>Send</span><span class='op'>+</span><span class='ident'>Sync</span><span class='op'>+</span><span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>)<span class='op'>-&gt;</span><span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='ident'>cond</span> : <span class='ident'>F</span>, <span class='ident'>d</span> : <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
+    <span class='ident'>Filter</span>::<span class='ident'>new</span>(<span class='ident'>d</span>, <span class='ident'>cond</span>)
+}
+
+<span class='doccomment'>/// Filter by log level</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>filter_level</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span>(<span class='ident'>level</span> : <span class='ident'>Level</span>, <span class='ident'>d</span> : <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
-    <span class='ident'>FilterLevel</span>::<span class='ident'>new</span>(<span class='ident'>level</span>, <span class='ident'>d</span>)
+    <span class='ident'>FilterLevel</span>::<span class='ident'>new</span>(<span class='ident'>d</span>, <span class='ident'>level</span>)
 }
 
 <span class='doccomment'>/// Create Duplicate drain</span>

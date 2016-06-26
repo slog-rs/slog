@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `format` mod in crate `slog`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, format">
+    <meta name="description" content="API documentation for the Rust `filter` fn in crate `slog`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, filter">
 
-    <title>slog::format - Rust</title>
+    <title>slog::drain::filter - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>slog</a></p><script>window.sidebarCurrent = {name: 'format', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'><a href='../index.html'>slog</a>::<wbr><a href='index.html'>drain</a></p><script>window.sidebarCurrent = {name: 'filter', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,37 +42,14 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>slog</a>::<wbr><a class='mod' href=''>format</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content fn">
+<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>slog</a>::<wbr><a href='index.html'>drain</a>::<wbr><a class='fn' href=''>filter</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-670' class='srclink' href='../../src/slog/src/format.rs.html#1-156' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>Output formating</p>
-</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Json.html'
-                                  title='slog::format::Json'>Json</a></td>
-                           <td class='docblock short'>
-                                <p>ToJson formatter</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Terminal.html'
-                                  title='slog::format::Terminal'>Terminal</a></td>
-                           <td class='docblock short'>
-                                <p>Terminal formatting with optional color support</p>
-                           </td>
-                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Format.html'
-                                  title='slog::format::Format'>Format</a></td>
-                           <td class='docblock short'>
-                                <p>Format record information</p>
-                           </td>
-                       </tr></table></section>
+               </span><a id='src-139' class='srclink' href='../../src/slog/src/drain.rs.html#208-210' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn filter&lt;D: <a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a>, F: 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(&amp;<a class='struct' href='../../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>&gt;(cond: F, d: D) -&gt; <a class='struct' href='../../slog/drain/struct.Filter.html' title='slog::drain::Filter'>Filter</a>&lt;D&gt;</pre><div class='docblock'><p>Filter by <code>cond</code> closure</p>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

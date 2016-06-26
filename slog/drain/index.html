@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-14' class='srclink' href='../../src/slog/src/drain.rs.html#1-183' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-14' class='srclink' href='../../src/slog/src/drain.rs.html#1-220' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Drains - logging outputs</p>
 
 <h1 id='drains' class='section-header'><a href='#drains'>Drains</a></h1>
@@ -67,6 +67,13 @@ into given destination.</p>
                                   title='slog::drain::Duplicate'>Duplicate</a></td>
                            <td class='docblock short'>
                                 <p>Duplicate records into two drains</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Filter.html'
+                                  title='slog::drain::Filter'>Filter</a></td>
+                           <td class='docblock short'>
+                                <p>Filter log record</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -107,10 +114,17 @@ into given destination.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class='fn' href='fn.filter.html'
+                                  title='slog::drain::filter'>filter</a></td>
+                           <td class='docblock short'>
+                                <p>Filter by <code>cond</code> closure</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class='fn' href='fn.filter_level.html'
                                   title='slog::drain::filter_level'>filter_level</a></td>
                            <td class='docblock short'>
-                                <p>Create FilterLevel drain</p>
+                                <p>Filter by log level</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
