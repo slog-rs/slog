@@ -359,42 +359,42 @@
 
     <span class='doccomment'>/// Log critical level record</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use `s!` macro to help build `values`</span>
+    <span class='doccomment'>/// Use `b!` macro to help build `values`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>critical</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>,  <span class='ident'>msg</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>values</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>BorrowedKeyValue</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>]) {
         <span class='self'>self</span>.<span class='ident'>log</span>(<span class='ident'>Level</span>::<span class='ident'>Critical</span>, <span class='ident'>msg</span>, <span class='ident'>values</span>);
     }
 
     <span class='doccomment'>/// Log error level record</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use `s!` macro to help build `values`</span>
+    <span class='doccomment'>/// Use `b!` macro to help build `values`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>error</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>,  <span class='ident'>msg</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>values</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>BorrowedKeyValue</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>]) {
         <span class='self'>self</span>.<span class='ident'>log</span>(<span class='ident'>Level</span>::<span class='ident'>Error</span>, <span class='ident'>msg</span>, <span class='ident'>values</span>);
     }
 
     <span class='doccomment'>/// Log warning level record</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use `s!` macro to help build `values`</span>
+    <span class='doccomment'>/// Use `b!` macro to help build `values`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>warn</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>,  <span class='ident'>msg</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>values</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>BorrowedKeyValue</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>]) {
         <span class='self'>self</span>.<span class='ident'>log</span>(<span class='ident'>Level</span>::<span class='ident'>Warning</span>, <span class='ident'>msg</span>, <span class='ident'>values</span>);
     }
 
     <span class='doccomment'>/// Log info level record</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use `s!` macro to help build `values`</span>
+    <span class='doccomment'>/// Use `b!` macro to help build `values`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>info</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>,  <span class='ident'>msg</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>values</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>BorrowedKeyValue</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>]) {
         <span class='self'>self</span>.<span class='ident'>log</span>(<span class='ident'>Level</span>::<span class='ident'>Info</span>, <span class='ident'>msg</span>, <span class='ident'>values</span>);
     }
 
     <span class='doccomment'>/// Log debug level record</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use `s!` macro to help build `values`</span>
+    <span class='doccomment'>/// Use `b!` macro to help build `values`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>debug</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>,  <span class='ident'>msg</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>values</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>BorrowedKeyValue</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>]) {
         <span class='self'>self</span>.<span class='ident'>log</span>(<span class='ident'>Level</span>::<span class='ident'>Debug</span>, <span class='ident'>msg</span>, <span class='ident'>values</span>);
     }
 
     <span class='doccomment'>/// Log trace level record</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use `s!` macro to help build `values`</span>
+    <span class='doccomment'>/// Use `b!` macro to help build `values`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>trace</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>,  <span class='ident'>msg</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>values</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span>[<span class='ident'>BorrowedKeyValue</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>]) {
         <span class='self'>self</span>.<span class='ident'>log</span>(<span class='ident'>Level</span>::<span class='ident'>Trace</span>, <span class='ident'>msg</span>, <span class='ident'>values</span>);
     }

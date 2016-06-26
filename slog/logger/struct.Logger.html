@@ -99,27 +99,27 @@ referenced <code>Arc</code>s are being used to reference-count them.</p>
 </div><h4 id='method.critical' class='method'><code>fn <a href='#method.critical' class='fnname'>critical</a>&lt;'a&gt;(&amp;'a self, msg: &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'a [</a><a class='type' href='../../slog/type.BorrowedKeyValue.html' title='slog::BorrowedKeyValue'>BorrowedKeyValue</a>&lt;'a&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
 <div class='docblock'><p>Log critical level record</p>
 
-<p>Use <code>s!</code> macro to help build <code>values</code></p>
+<p>Use <code>b!</code> macro to help build <code>values</code></p>
 </div><h4 id='method.error' class='method'><code>fn <a href='#method.error' class='fnname'>error</a>&lt;'a&gt;(&amp;'a self, msg: &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'a [</a><a class='type' href='../../slog/type.BorrowedKeyValue.html' title='slog::BorrowedKeyValue'>BorrowedKeyValue</a>&lt;'a&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
 <div class='docblock'><p>Log error level record</p>
 
-<p>Use <code>s!</code> macro to help build <code>values</code></p>
+<p>Use <code>b!</code> macro to help build <code>values</code></p>
 </div><h4 id='method.warn' class='method'><code>fn <a href='#method.warn' class='fnname'>warn</a>&lt;'a&gt;(&amp;'a self, msg: &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'a [</a><a class='type' href='../../slog/type.BorrowedKeyValue.html' title='slog::BorrowedKeyValue'>BorrowedKeyValue</a>&lt;'a&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
 <div class='docblock'><p>Log warning level record</p>
 
-<p>Use <code>s!</code> macro to help build <code>values</code></p>
+<p>Use <code>b!</code> macro to help build <code>values</code></p>
 </div><h4 id='method.info' class='method'><code>fn <a href='#method.info' class='fnname'>info</a>&lt;'a&gt;(&amp;'a self, msg: &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'a [</a><a class='type' href='../../slog/type.BorrowedKeyValue.html' title='slog::BorrowedKeyValue'>BorrowedKeyValue</a>&lt;'a&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
 <div class='docblock'><p>Log info level record</p>
 
-<p>Use <code>s!</code> macro to help build <code>values</code></p>
+<p>Use <code>b!</code> macro to help build <code>values</code></p>
 </div><h4 id='method.debug' class='method'><code>fn <a href='#method.debug' class='fnname'>debug</a>&lt;'a&gt;(&amp;'a self, msg: &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'a [</a><a class='type' href='../../slog/type.BorrowedKeyValue.html' title='slog::BorrowedKeyValue'>BorrowedKeyValue</a>&lt;'a&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
 <div class='docblock'><p>Log debug level record</p>
 
-<p>Use <code>s!</code> macro to help build <code>values</code></p>
+<p>Use <code>b!</code> macro to help build <code>values</code></p>
 </div><h4 id='method.trace' class='method'><code>fn <a href='#method.trace' class='fnname'>trace</a>&lt;'a&gt;(&amp;'a self, msg: &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'a [</a><a class='type' href='../../slog/type.BorrowedKeyValue.html' title='slog::BorrowedKeyValue'>BorrowedKeyValue</a>&lt;'a&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
 <div class='docblock'><p>Log trace level record</p>
 
-<p>Use <code>s!</code> macro to help build <code>values</code></p>
+<p>Use <code>b!</code> macro to help build <code>values</code></p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-114' class='srclink' href='../../src/slog/src/logger.rs.html#30' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
