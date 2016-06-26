@@ -22,12 +22,16 @@
 //!
 //! fn main() {
 //!     // Create a new group of loggers, sharing one drain.
+//!     //
+//!     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
 //!     let root = Logger::new_root(o!("version" => VERSION, "build-id" => "8dfljdf"));
 //!
-//!     // Create child loggers from existing ones. Children
-//!     // clone `key: value` pairs from their parents.
-//!     //
 //!     // Build logging context as data becomes available.
+//!     //
+//!     // Create child loggers from existing ones. Children clone `key: value`
+//!     // pairs from their parents.
+//!     //
+//!     // Note `b!` macro for more natural `BorrowedKeyValue` sequence building.
 //!     let log = root.new(o!("child" => 1));
 //!
 //!     // Closures can be used for values that change at runtime.
@@ -35,6 +39,10 @@
 //!     let counter = Arc::new(AtomicUsize::new(0));
 //!     let log = log.new(o!("counter" => {
 //!         let counter = counter.clone();
+//!         // Note the `move` to capture `counter`,
+//!         // and unfortunate `|_ : &_|` that helps
+//!         // current `rustc` limitations. In the future,
+//!         // a `|_|` could work.
 //!         move |_ : &_| { counter.load(SeqCst)}
 //!     }));
 //!

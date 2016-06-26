@@ -23,25 +23,33 @@
 ``` rust
 fn main() {
     // Create a new group of loggers, sharing one drain.
-    let root = Logger::new_root(v!("version" => VERSION, "build-id" => "8dfljdf"));
-
-    // Create child loggers from existing ones. Children
-    // clone `key: value` pairs from their parents.
     //
+    // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
+    let root = Logger::new_root(o!("version" => VERSION, "build-id" => "8dfljdf"));
+
     // Build logging context as data becomes available.
-    let log = root.new(v!("child" => 1));
+    //
+    // Create child loggers from existing ones. Children clone `key: value`
+    // pairs from their parents.
+    //
+    // Note `b!` macro for more natural `BorrowedKeyValue` sequence building.
+    let log = root.new(o!("child" => 1));
 
     // Closures can be used for values that change at runtime.
     // Data captured by the closure needs to be `Send+Sync`.
     let counter = Arc::new(AtomicUsize::new(0));
-    let log = log.new(v!("counter" => {
+    let log = log.new(o!("counter" => {
         let counter = counter.clone();
+        // Note the `move` to capture `counter`,
+        // and unfortunate `|_ : &_|` that helps
+        // current `rustc` limitations. In the future,
+        // a `|_|` could work.
         move |_ : &_| { counter.load(SeqCst)}
     }));
 
-    log.info("before-fetch-add", s!()); // counter == 0
+    log.info("before-fetch-add", b!()); // counter == 0
     counter.fetch_add(1, SeqCst);
-    log.info("after-fetch-add", s!()); // counter == 1
+    log.info("after-fetch-add", b!()); // counter == 1
 
     // Drains can be swapped atomically (race-free).
     log.set_drain(
@@ -59,16 +67,16 @@ fn main() {
     // Closures can be used for lazy evaluation:
     // This `slow_fib` won't be evaluated, as the current drain discards
     // "trace" level logging records.
-    log.debug("debug", s!("lazy-closure" => |_ : &_| slow_fib(40)));
+    log.debug("debug", b!("lazy-closure" => |_ : &_| slow_fib(40)));
 
     // Loggers are internally atomically reference counted so can be cloned,
     // passed between threads and stored without hassle.
     let join = thread::spawn({
         let log = log.clone();
         move || {
-            log.info("subthread", s!("stage" => "start"));
+            log.info("subthread", b!("stage" => "start"));
             thread::sleep(Duration::new(1, 0));
-            log.info("subthread", s!("stage" => "end"));
+            log.info("subthread", b!("stage" => "end"));
         }
     });
 

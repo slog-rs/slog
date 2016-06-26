@@ -37,10 +37,10 @@ fn main() {
     let counter = Arc::new(AtomicUsize::new(0));
     let log = log.new(o!("counter" => {
         let counter = counter.clone();
-        /// Note the `move` to capture `counter`,
-        /// and unfortunate `|_ : &_|` that helps
-        /// current `rustc` limitations. In the future,
-        /// a `|_|` could work.
+        // Note the `move` to capture `counter`,
+        // and unfortunate `|_ : &_|` that helps
+        // current `rustc` limitations. In the future,
+        // a `|_|` could work.
         move |_ : &_| { counter.load(SeqCst)}
     }));
 
