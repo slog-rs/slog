@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/time-0.1.35/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.35/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -1967,9 +1967,9 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Timespec</span>, <span class='ident'>get_time</span>, <span class='ident'>precise_time_ns</span>, <span class='ident'>precise_time_s</span>,
+    <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Timespec</span>, <span class='ident'>get_time</span>, <span class='ident'>precise_time_ns</span>, <span class='ident'>precise_time_s</span>,
                 <span class='ident'>at_utc</span>, <span class='ident'>at</span>, <span class='ident'>strptime</span>, <span class='ident'>PreciseTime</span>, <span class='ident'>SteadyTime</span>, <span class='ident'>ParseError</span>, <span class='ident'>Duration</span>};
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>ParseError</span>::{<span class='ident'>InvalidTime</span>, <span class='ident'>InvalidYear</span>, <span class='ident'>MissingFormatConverter</span>,
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>ParseError</span>::{<span class='ident'>InvalidTime</span>, <span class='ident'>InvalidYear</span>, <span class='ident'>MissingFormatConverter</span>,
                             <span class='ident'>InvalidFormatSpecifier</span>};
 
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Once</span>, <span class='ident'>ONCE_INIT</span>, <span class='ident'>Mutex</span>, <span class='ident'>MutexGuard</span>, <span class='ident'>LockResult</span>};
@@ -2005,11 +2005,11 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>set_time_zone</span>() <span class='op'>-&gt;</span> <span class='ident'>TzReset</span> {
-        <span class='ident'>set_time_zone_la_or_london</span>(<span class='boolval'>false</span>)
+        <span class='ident'>set_time_zone_la_or_london</span>(<span class='bool-val'>false</span>)
     }
 
     <span class='kw'>fn</span> <span class='ident'>set_time_zone_london_dst</span>() <span class='op'>-&gt;</span> <span class='ident'>TzReset</span> {
-        <span class='ident'>set_time_zone_la_or_london</span>(<span class='boolval'>true</span>)
+        <span class='ident'>set_time_zone_la_or_london</span>(<span class='bool-val'>true</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -2184,7 +2184,7 @@
                 <span class='comment'>// oneway tests are used when reformatting the parsed Tm</span>
                 <span class='comment'>// back into a string can generate a different string</span>
                 <span class='comment'>// from the original (i.e. leading zeroes)</span>
-                <span class='boolval'>true</span>
+                <span class='bool-val'>true</span>
               },
               <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;{:?},  s={:?}, format={:?}&quot;</span>, <span class='ident'>e</span>, <span class='ident'>s</span>, <span class='ident'>format</span>)
             }
@@ -2507,13 +2507,13 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>sec</span>, <span class='number'>3</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>nsec</span>, <span class='number'>5</span>);
 
-        <span class='kw'>let</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Timespec</span>::<span class='ident'>new</span>(<span class='number'>1</span>, <span class='ident'>super</span>::<span class='ident'>NSEC_PER_SEC</span> <span class='op'>-</span> <span class='number'>2</span>);
+        <span class='kw'>let</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Timespec</span>::<span class='ident'>new</span>(<span class='number'>1</span>, <span class='kw'>super</span>::<span class='ident'>NSEC_PER_SEC</span> <span class='op'>-</span> <span class='number'>2</span>);
         <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Duration</span>::<span class='ident'>seconds</span>(<span class='number'>2</span>) <span class='op'>+</span> <span class='ident'>Duration</span>::<span class='ident'>nanoseconds</span>(<span class='number'>2</span>);
         <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>p</span> <span class='op'>+</span> <span class='ident'>q</span>;
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>r</span>.<span class='ident'>sec</span>, <span class='number'>4</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>r</span>.<span class='ident'>nsec</span>, <span class='number'>0</span>);
 
-        <span class='kw'>let</span> <span class='ident'>u</span> <span class='op'>=</span> <span class='ident'>Timespec</span>::<span class='ident'>new</span>(<span class='number'>1</span>, <span class='ident'>super</span>::<span class='ident'>NSEC_PER_SEC</span> <span class='op'>-</span> <span class='number'>2</span>);
+        <span class='kw'>let</span> <span class='ident'>u</span> <span class='op'>=</span> <span class='ident'>Timespec</span>::<span class='ident'>new</span>(<span class='number'>1</span>, <span class='kw'>super</span>::<span class='ident'>NSEC_PER_SEC</span> <span class='op'>-</span> <span class='number'>2</span>);
         <span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='ident'>Duration</span>::<span class='ident'>seconds</span>(<span class='number'>2</span>) <span class='op'>+</span> <span class='ident'>Duration</span>::<span class='ident'>nanoseconds</span>(<span class='number'>3</span>);
         <span class='kw'>let</span> <span class='ident'>w</span> <span class='op'>=</span> <span class='ident'>u</span> <span class='op'>+</span> <span class='ident'>v</span>;
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>w</span>.<span class='ident'>sec</span>, <span class='number'>4</span>);
@@ -2531,17 +2531,17 @@
         <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>Timespec</span>::<span class='ident'>new</span>(<span class='number'>2</span>, <span class='number'>3</span>);
         <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>Timespec</span>::<span class='ident'>new</span>(<span class='number'>1</span>, <span class='number'>2</span>);
         <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>a</span> <span class='op'>-</span> <span class='ident'>b</span>;
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>num_nanoseconds</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>super</span>::<span class='ident'>NSEC_PER_SEC</span> <span class='kw'>as</span> <span class='ident'>i64</span> <span class='op'>+</span> <span class='number'>1</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>num_nanoseconds</span>(), <span class='prelude-val'>Some</span>(<span class='kw'>super</span>::<span class='ident'>NSEC_PER_SEC</span> <span class='kw'>as</span> <span class='ident'>i64</span> <span class='op'>+</span> <span class='number'>1</span>));
 
         <span class='kw'>let</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>Timespec</span>::<span class='ident'>new</span>(<span class='number'>2</span>, <span class='number'>0</span>);
         <span class='kw'>let</span> <span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>Timespec</span>::<span class='ident'>new</span>(<span class='number'>1</span>, <span class='number'>2</span>);
         <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>p</span> <span class='op'>-</span> <span class='ident'>q</span>;
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>r</span>.<span class='ident'>num_nanoseconds</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>super</span>::<span class='ident'>NSEC_PER_SEC</span> <span class='kw'>as</span> <span class='ident'>i64</span> <span class='op'>-</span> <span class='number'>2</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>r</span>.<span class='ident'>num_nanoseconds</span>(), <span class='prelude-val'>Some</span>(<span class='kw'>super</span>::<span class='ident'>NSEC_PER_SEC</span> <span class='kw'>as</span> <span class='ident'>i64</span> <span class='op'>-</span> <span class='number'>2</span>));
 
         <span class='kw'>let</span> <span class='ident'>u</span> <span class='op'>=</span> <span class='ident'>Timespec</span>::<span class='ident'>new</span>(<span class='number'>1</span>, <span class='number'>2</span>);
         <span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='ident'>Timespec</span>::<span class='ident'>new</span>(<span class='number'>2</span>, <span class='number'>3</span>);
         <span class='kw'>let</span> <span class='ident'>w</span> <span class='op'>=</span> <span class='ident'>u</span> <span class='op'>-</span> <span class='ident'>v</span>;
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>w</span>.<span class='ident'>num_nanoseconds</span>(), <span class='prelude-val'>Some</span>(<span class='op'>-</span><span class='ident'>super</span>::<span class='ident'>NSEC_PER_SEC</span> <span class='kw'>as</span> <span class='ident'>i64</span> <span class='op'>-</span> <span class='number'>1</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>w</span>.<span class='ident'>num_nanoseconds</span>(), <span class='prelude-val'>Some</span>(<span class='op'>-</span><span class='kw'>super</span>::<span class='ident'>NSEC_PER_SEC</span> <span class='kw'>as</span> <span class='ident'>i64</span> <span class='op'>-</span> <span class='number'>1</span>));
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -2549,7 +2549,7 @@
         <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> ::<span class='ident'>now</span>();
         <span class='kw'>let</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>at</span>(<span class='ident'>a</span>.<span class='ident'>to_timespec</span>() <span class='op'>+</span> <span class='ident'>Duration</span>::<span class='ident'>seconds</span>(<span class='number'>5</span>));
         <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>b</span> <span class='op'>-</span> <span class='ident'>a</span>;
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>num_nanoseconds</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>super</span>::<span class='ident'>NSEC_PER_SEC</span> <span class='kw'>as</span> <span class='ident'>i64</span> <span class='op'>*</span> <span class='number'>5</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>c</span>.<span class='ident'>num_nanoseconds</span>(), <span class='prelude-val'>Some</span>(<span class='kw'>super</span>::<span class='ident'>NSEC_PER_SEC</span> <span class='kw'>as</span> <span class='ident'>i64</span> <span class='op'>*</span> <span class='number'>5</span>));
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -2617,6 +2617,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

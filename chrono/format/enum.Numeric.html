@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2217' class='srclink' href='../../src/chrono/format/mod.rs.html#47-92' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-2207' class='srclink' href='../../src/chrono/format/mod.rs.html#47-92' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum Numeric {
     Year,
     YearDiv100,
@@ -82,36 +82,46 @@ It also trims the preceding whitespaces if any.
 It cannot parse the negative number, so some date and time cannot be formatted then
 parsed with the same formatting items.</p>
 </div><h2 class='variants'>Variants</h2>
-<table class='variants_table'><tr><td id='variant.Year'><code>Year</code></td><td><div class='docblock'><p>Full Gregorian year (FW=4, PW=infinity).
+<span id='variant.Year' class='variant'><code>Year</code></span><div class='docblock'><p>Full Gregorian year (FW=4, PW=infinity).
 May accept years before 1 BCE or after 9999 CE, given an initial sign.</p>
-</div></td><td></td></tr><tr><td id='variant.YearDiv100'><code>YearDiv100</code></td><td><div class='docblock'><p>Gregorian year divided by 100 (century number; FW=PW=2). Implies the non-negative year.</p>
-</div></td><td></td></tr><tr><td id='variant.YearMod100'><code>YearMod100</code></td><td><div class='docblock'><p>Gregorian year modulo 100 (FW=PW=2). Cannot be negative.</p>
-</div></td><td></td></tr><tr><td id='variant.IsoYear'><code>IsoYear</code></td><td><div class='docblock'><p>Year in the ISO week date (FW=4, PW=infinity).
+</div><span id='variant.YearDiv100' class='variant'><code>YearDiv100</code></span><div class='docblock'><p>Gregorian year divided by 100 (century number; FW=PW=2). Implies the non-negative year.</p>
+</div><span id='variant.YearMod100' class='variant'><code>YearMod100</code></span><div class='docblock'><p>Gregorian year modulo 100 (FW=PW=2). Cannot be negative.</p>
+</div><span id='variant.IsoYear' class='variant'><code>IsoYear</code></span><div class='docblock'><p>Year in the ISO week date (FW=4, PW=infinity).
 May accept years before 1 BCE or after 9999 CE, given an initial sign.</p>
-</div></td><td></td></tr><tr><td id='variant.IsoYearDiv100'><code>IsoYearDiv100</code></td><td><div class='docblock'><p>Year in the ISO week date, divided by 100 (FW=PW=2). Implies the non-negative year.</p>
-</div></td><td></td></tr><tr><td id='variant.IsoYearMod100'><code>IsoYearMod100</code></td><td><div class='docblock'><p>Year in the ISO week date, modulo 100 (FW=PW=2). Cannot be negative.</p>
-</div></td><td></td></tr><tr><td id='variant.Month'><code>Month</code></td><td><div class='docblock'><p>Month (FW=PW=2).</p>
-</div></td><td></td></tr><tr><td id='variant.Day'><code>Day</code></td><td><div class='docblock'><p>Day of the month (FW=PW=2).</p>
-</div></td><td></td></tr><tr><td id='variant.WeekFromSun'><code>WeekFromSun</code></td><td><div class='docblock'><p>Week number, where the week 1 starts at the first Sunday of January (FW=PW=2).</p>
-</div></td><td></td></tr><tr><td id='variant.WeekFromMon'><code>WeekFromMon</code></td><td><div class='docblock'><p>Week number, where the week 1 starts at the first Monday of January (FW=PW=2).</p>
-</div></td><td></td></tr><tr><td id='variant.IsoWeek'><code>IsoWeek</code></td><td><div class='docblock'><p>Week number in the ISO week date (FW=PW=2).</p>
-</div></td><td></td></tr><tr><td id='variant.NumDaysFromSun'><code>NumDaysFromSun</code></td><td><div class='docblock'><p>Day of the week, where Sunday = 0 and Saturday = 6 (FW=PW=1).</p>
-</div></td><td></td></tr><tr><td id='variant.WeekdayFromMon'><code>WeekdayFromMon</code></td><td><div class='docblock'><p>Day of the week, where Monday = 1 and Sunday = 7 (FW=PW=1).</p>
-</div></td><td></td></tr><tr><td id='variant.Ordinal'><code>Ordinal</code></td><td><div class='docblock'><p>Day of the year (FW=PW=3).</p>
-</div></td><td></td></tr><tr><td id='variant.Hour'><code>Hour</code></td><td><div class='docblock'><p>Hour number in the 24-hour clocks (FW=PW=2).</p>
-</div></td><td></td></tr><tr><td id='variant.Hour12'><code>Hour12</code></td><td><div class='docblock'><p>Hour number in the 12-hour clocks (FW=PW=2).</p>
-</div></td><td></td></tr><tr><td id='variant.Minute'><code>Minute</code></td><td><div class='docblock'><p>The number of minutes since the last whole hour (FW=PW=2).</p>
-</div></td><td></td></tr><tr><td id='variant.Second'><code>Second</code></td><td><div class='docblock'><p>The number of seconds since the last whole minute (FW=PW=2).</p>
-</div></td><td></td></tr><tr><td id='variant.Nanosecond'><code>Nanosecond</code></td><td><div class='docblock'><p>The number of nanoseconds since the last whole second (FW=PW=9).
+</div><span id='variant.IsoYearDiv100' class='variant'><code>IsoYearDiv100</code></span><div class='docblock'><p>Year in the ISO week date, divided by 100 (FW=PW=2). Implies the non-negative year.</p>
+</div><span id='variant.IsoYearMod100' class='variant'><code>IsoYearMod100</code></span><div class='docblock'><p>Year in the ISO week date, modulo 100 (FW=PW=2). Cannot be negative.</p>
+</div><span id='variant.Month' class='variant'><code>Month</code></span><div class='docblock'><p>Month (FW=PW=2).</p>
+</div><span id='variant.Day' class='variant'><code>Day</code></span><div class='docblock'><p>Day of the month (FW=PW=2).</p>
+</div><span id='variant.WeekFromSun' class='variant'><code>WeekFromSun</code></span><div class='docblock'><p>Week number, where the week 1 starts at the first Sunday of January (FW=PW=2).</p>
+</div><span id='variant.WeekFromMon' class='variant'><code>WeekFromMon</code></span><div class='docblock'><p>Week number, where the week 1 starts at the first Monday of January (FW=PW=2).</p>
+</div><span id='variant.IsoWeek' class='variant'><code>IsoWeek</code></span><div class='docblock'><p>Week number in the ISO week date (FW=PW=2).</p>
+</div><span id='variant.NumDaysFromSun' class='variant'><code>NumDaysFromSun</code></span><div class='docblock'><p>Day of the week, where Sunday = 0 and Saturday = 6 (FW=PW=1).</p>
+</div><span id='variant.WeekdayFromMon' class='variant'><code>WeekdayFromMon</code></span><div class='docblock'><p>Day of the week, where Monday = 1 and Sunday = 7 (FW=PW=1).</p>
+</div><span id='variant.Ordinal' class='variant'><code>Ordinal</code></span><div class='docblock'><p>Day of the year (FW=PW=3).</p>
+</div><span id='variant.Hour' class='variant'><code>Hour</code></span><div class='docblock'><p>Hour number in the 24-hour clocks (FW=PW=2).</p>
+</div><span id='variant.Hour12' class='variant'><code>Hour12</code></span><div class='docblock'><p>Hour number in the 12-hour clocks (FW=PW=2).</p>
+</div><span id='variant.Minute' class='variant'><code>Minute</code></span><div class='docblock'><p>The number of minutes since the last whole hour (FW=PW=2).</p>
+</div><span id='variant.Second' class='variant'><code>Second</code></span><div class='docblock'><p>The number of seconds since the last whole minute (FW=PW=2).</p>
+</div><span id='variant.Nanosecond' class='variant'><code>Nanosecond</code></span><div class='docblock'><p>The number of nanoseconds since the last whole second (FW=PW=9).
 Note that this is <em>not</em> left-aligned; see also <code>Fixed::Nanosecond</code>.</p>
-</div></td><td></td></tr><tr><td id='variant.Timestamp'><code>Timestamp</code></td><td><div class='docblock'><p>The number of non-leap seconds since January 1, 1970 0:00:00 UTC (FW=1, PW=infinity).
+</div><span id='variant.Timestamp' class='variant'><code>Timestamp</code></span><div class='docblock'><p>The number of non-leap seconds since January 1, 1970 0:00:00 UTC (FW=1, PW=infinity).
 For formatting, it assumes UTC upon the absence of time zone offset.</p>
-</div></td><td></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a></code></h3><div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-<h4 id='method.ne' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a></code></h4>
-<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a></code></h3><div class='impl-items'></div></section>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2228' class='srclink' href='../../src/chrono/format/mod.rs.html#46' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2252' class='srclink' href='../../src/chrono/format/mod.rs.html#46' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2255' class='srclink' href='../../src/chrono/format/mod.rs.html#46' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2261' class='srclink' href='../../src/chrono/format/mod.rs.html#46' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a></code></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../../chrono/format/enum.Numeric.html' title='chrono::format::Numeric'>Numeric</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2264' class='srclink' href='../../src/chrono/format/mod.rs.html#46' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -134,6 +144,8 @@ For formatting, it assumes UTC upon the absence of time zone offset.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

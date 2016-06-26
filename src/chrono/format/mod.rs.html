@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/chrono-0.2.22/src/format/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.2.22/src/format/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -912,13 +912,13 @@
                     <span class='ident'>TimezoneName</span> <span class='op'>=&gt;</span>
                         <span class='ident'>off</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>(<span class='kw-2'>ref</span> <span class='ident'>name</span>, _)<span class='op'>|</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>w</span>, <span class='string'>&quot;{}&quot;</span>, <span class='op'>*</span><span class='ident'>name</span>)),
                     <span class='ident'>TimezoneOffsetColon</span> <span class='op'>=&gt;</span>
-                        <span class='ident'>off</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>(_, <span class='ident'>off</span>)<span class='op'>|</span> <span class='ident'>write_local_minus_utc</span>(<span class='ident'>w</span>, <span class='ident'>off</span>, <span class='boolval'>false</span>, <span class='boolval'>true</span>)),
+                        <span class='ident'>off</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>(_, <span class='ident'>off</span>)<span class='op'>|</span> <span class='ident'>write_local_minus_utc</span>(<span class='ident'>w</span>, <span class='ident'>off</span>, <span class='bool-val'>false</span>, <span class='bool-val'>true</span>)),
                     <span class='ident'>TimezoneOffsetColonZ</span> <span class='op'>=&gt;</span>
-                        <span class='ident'>off</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>(_, <span class='ident'>off</span>)<span class='op'>|</span> <span class='ident'>write_local_minus_utc</span>(<span class='ident'>w</span>, <span class='ident'>off</span>, <span class='boolval'>true</span>, <span class='boolval'>true</span>)),
+                        <span class='ident'>off</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>(_, <span class='ident'>off</span>)<span class='op'>|</span> <span class='ident'>write_local_minus_utc</span>(<span class='ident'>w</span>, <span class='ident'>off</span>, <span class='bool-val'>true</span>, <span class='bool-val'>true</span>)),
                     <span class='ident'>TimezoneOffset</span> <span class='op'>=&gt;</span>
-                        <span class='ident'>off</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>(_, <span class='ident'>off</span>)<span class='op'>|</span> <span class='ident'>write_local_minus_utc</span>(<span class='ident'>w</span>, <span class='ident'>off</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>)),
+                        <span class='ident'>off</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>(_, <span class='ident'>off</span>)<span class='op'>|</span> <span class='ident'>write_local_minus_utc</span>(<span class='ident'>w</span>, <span class='ident'>off</span>, <span class='bool-val'>false</span>, <span class='bool-val'>false</span>)),
                     <span class='ident'>TimezoneOffsetZ</span> <span class='op'>=&gt;</span>
-                        <span class='ident'>off</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>(_, <span class='ident'>off</span>)<span class='op'>|</span> <span class='ident'>write_local_minus_utc</span>(<span class='ident'>w</span>, <span class='ident'>off</span>, <span class='boolval'>true</span>, <span class='boolval'>false</span>)),
+                        <span class='ident'>off</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>(_, <span class='ident'>off</span>)<span class='op'>|</span> <span class='ident'>write_local_minus_utc</span>(<span class='ident'>w</span>, <span class='ident'>off</span>, <span class='bool-val'>true</span>, <span class='bool-val'>false</span>)),
                     <span class='ident'>RFC2822</span> <span class='op'>=&gt;</span> <span class='comment'>// same to `%a, %e %b %Y %H:%M:%S %z`</span>
                         <span class='kw'>if</span> <span class='kw'>let</span> (<span class='prelude-val'>Some</span>(<span class='ident'>d</span>), <span class='prelude-val'>Some</span>(<span class='ident'>t</span>), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span>(_, <span class='ident'>off</span>))) <span class='op'>=</span> (<span class='ident'>date</span>, <span class='ident'>time</span>, <span class='ident'>off</span>) {
                             <span class='kw'>let</span> <span class='ident'>sec</span> <span class='op'>=</span> <span class='ident'>t</span>.<span class='ident'>second</span>() <span class='op'>+</span> <span class='ident'>t</span>.<span class='ident'>nanosecond</span>() <span class='op'>/</span> <span class='number'>1_000_000_000</span>;
@@ -926,7 +926,7 @@
                                         <span class='ident'>SHORT_WEEKDAYS</span>[<span class='ident'>d</span>.<span class='ident'>weekday</span>().<span class='ident'>num_days_from_monday</span>() <span class='kw'>as</span> <span class='ident'>usize</span>],
                                         <span class='ident'>d</span>.<span class='ident'>day</span>(), <span class='ident'>SHORT_MONTHS</span>[<span class='ident'>d</span>.<span class='ident'>month0</span>() <span class='kw'>as</span> <span class='ident'>usize</span>], <span class='ident'>d</span>.<span class='ident'>year</span>(),
                                         <span class='ident'>t</span>.<span class='ident'>hour</span>(), <span class='ident'>t</span>.<span class='ident'>minute</span>(), <span class='ident'>sec</span>));
-                            <span class='prelude-val'>Some</span>(<span class='ident'>write_local_minus_utc</span>(<span class='ident'>w</span>, <span class='ident'>off</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>))
+                            <span class='prelude-val'>Some</span>(<span class='ident'>write_local_minus_utc</span>(<span class='ident'>w</span>, <span class='ident'>off</span>, <span class='bool-val'>false</span>, <span class='bool-val'>false</span>))
                         } <span class='kw'>else</span> {
                             <span class='prelude-val'>None</span>
                         },
@@ -935,7 +935,7 @@
                             <span class='comment'>// reuse `Debug` impls which already print ISO 8601 format.</span>
                             <span class='comment'>// this is faster in this way.</span>
                             <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>w</span>, <span class='string'>&quot;{:?}T{:?}&quot;</span>, <span class='ident'>d</span>, <span class='ident'>t</span>));
-                            <span class='prelude-val'>Some</span>(<span class='ident'>write_local_minus_utc</span>(<span class='ident'>w</span>, <span class='ident'>off</span>, <span class='boolval'>false</span>, <span class='boolval'>true</span>))
+                            <span class='prelude-val'>Some</span>(<span class='ident'>write_local_minus_utc</span>(<span class='ident'>w</span>, <span class='ident'>off</span>, <span class='bool-val'>false</span>, <span class='bool-val'>true</span>))
                         } <span class='kw'>else</span> {
                             <span class='prelude-val'>None</span>
                         },
@@ -1021,6 +1021,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

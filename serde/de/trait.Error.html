@@ -47,9 +47,9 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-6758' class='srclink' href='../../src/serde/de/mod.rs.html#19-69' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-6882' class='srclink' href='../../src/serde/de/mod.rs.html#19-69' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Error: <a class='trait' href='../../core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/std/error/trait.Error.html' title='std::error::Error'>Error</a> {
-    fn <a href='#tymethod.custom' class='fnname'>custom</a>&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;(msg: T) -&gt; Self;
+    fn <a href='#tymethod.custom' class='fnname'>custom</a>&lt;T:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;(msg: T) -&gt; Self;
     fn <a href='#tymethod.end_of_stream' class='fnname'>end_of_stream</a>() -&gt; Self;
 
     fn <a href='#method.invalid_type' class='fnname'>invalid_type</a>(ty: <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a>) -&gt; Self { ... }
@@ -64,7 +64,7 @@
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.custom' class='method stab '><code>fn <a href='#tymethod.custom' class='fnname'>custom</a>&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;(msg: T) -&gt; Self</code></h3><div class='docblock'><p>Raised when there is general error when deserializing a type.</p>
+        <h3 id='tymethod.custom' class='method stab '><code>fn <a href='#tymethod.custom' class='fnname'>custom</a>&lt;T:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;(msg: T) -&gt; Self</code></h3><div class='docblock'><p>Raised when there is general error when deserializing a type.</p>
 </div><h3 id='tymethod.end_of_stream' class='method stab '><code>fn <a href='#tymethod.end_of_stream' class='fnname'>end_of_stream</a>() -&gt; Self</code></h3><div class='docblock'><p>Raised when a <code>Deserialize</code> type unexpectedly hit the end of the stream.</p>
 </div></div>
             <h2 id='provided-methods'>Provided Methods</h2>
@@ -83,7 +83,7 @@ same struct field.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl <a class='trait' href='../../serde/de/trait.Error.html' title='serde::de::Error'>Error</a> for <a class='enum' href='../../serde/de/value/enum.Error.html' title='serde::de::value::Error'>Error</a></code></li>
+    <li><code>impl Error for <a class='enum' href='../../serde/de/value/enum.Error.html' title='serde::de::value::Error'>Error</a></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/serde/de/trait.Error.js">
                  </script></section>
@@ -109,6 +109,8 @@ same struct field.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/serde-0.7.10/src/de/from_primitive.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.7.10/src/de/from_primitive.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>from_primitive.rs.html -- source</title>
@@ -476,9 +476,9 @@
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Bounded</span> {
     <span class='comment'>// FIXME (#5527): These should be associated constants</span>
     <span class='doccomment'>/// returns the smallest finite number this type can represent</span>
-    <span class='kw'>fn</span> <span class='ident'>min_value</span>() <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>min_value</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span>;
     <span class='doccomment'>/// returns the largest finite number this type can represent</span>
-    <span class='kw'>fn</span> <span class='ident'>max_value</span>() <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>max_value</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span>;
 }
 
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>bounded_impl</span> {
@@ -776,56 +776,56 @@
 
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>FromPrimitive</span>: <span class='ident'>Sized</span> {
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_isize</span>(<span class='ident'>n</span>: <span class='ident'>isize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_isize</span>(<span class='ident'>n</span>: <span class='ident'>isize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_i64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_i8</span>(<span class='ident'>n</span>: <span class='ident'>i8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_i8</span>(<span class='ident'>n</span>: <span class='ident'>i8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_i64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_i16</span>(<span class='ident'>n</span>: <span class='ident'>i16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_i16</span>(<span class='ident'>n</span>: <span class='ident'>i16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_i64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_i32</span>(<span class='ident'>n</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_i32</span>(<span class='ident'>n</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_i64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>from_i64</span>(<span class='ident'>n</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>from_i64</span>(<span class='ident'>n</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_usize</span>(<span class='ident'>n</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_usize</span>(<span class='ident'>n</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_u64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_u8</span>(<span class='ident'>n</span>: <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_u8</span>(<span class='ident'>n</span>: <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_u64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_u16</span>(<span class='ident'>n</span>: <span class='ident'>u16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_u16</span>(<span class='ident'>n</span>: <span class='ident'>u16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_u64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_u32</span>(<span class='ident'>n</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_u32</span>(<span class='ident'>n</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_u64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>from_u64</span>(<span class='ident'>n</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>from_u64</span>(<span class='ident'>n</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_f32</span>(<span class='ident'>n</span>: <span class='ident'>f32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_f32</span>(<span class='ident'>n</span>: <span class='ident'>f32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_f64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>f64</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_f64</span>(<span class='ident'>n</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>from_f64</span>(<span class='ident'>n</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
         <span class='ident'>FromPrimitive</span>::<span class='ident'>from_i64</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 }
@@ -885,6 +885,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

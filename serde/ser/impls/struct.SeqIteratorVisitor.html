@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-7384' class='srclink' href='../../../src/serde/ser/impls.rs.html#190-193' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-7505' class='srclink' href='../../../src/serde/ser/impls.rs.html#190-193' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct SeqIteratorVisitor&lt;Iter&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A <code>serde::Visitor</code> for sequence iterators.</p>
@@ -69,11 +69,15 @@
         ))
     }
 }</pre>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;T, Iter&gt; <a class='struct' href='../../../serde/ser/impls/struct.SeqIteratorVisitor.html' title='serde::ser::impls::SeqIteratorVisitor'>SeqIteratorVisitor</a>&lt;Iter&gt; <span class='where'>where Iter: <a class='trait' href='../../../core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=T&gt;</span></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(iter: Iter, len: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;) -&gt; <a class='struct' href='../../../serde/ser/impls/struct.SeqIteratorVisitor.html' title='serde::ser::impls::SeqIteratorVisitor'>SeqIteratorVisitor</a>&lt;Iter&gt;</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;T,&nbsp;Iter&gt; <a class='struct' href='../../../serde/ser/impls/struct.SeqIteratorVisitor.html' title='serde::ser::impls::SeqIteratorVisitor'>SeqIteratorVisitor</a>&lt;Iter&gt; <span class='where'>where Iter: <a class='trait' href='../../../core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a>&lt;Item=T&gt;</span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7509' class='srclink' href='../../../src/serde/ser/impls.rs.html#195-206' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(iter: Iter, len: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;) -&gt; <a class='struct' href='../../../serde/ser/impls/struct.SeqIteratorVisitor.html' title='serde::ser::impls::SeqIteratorVisitor'>SeqIteratorVisitor</a>&lt;Iter&gt;</code></h4>
 <div class='docblock'><p>Construct a new <code>SeqIteratorVisitor&lt;Iter&gt;</code>.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl&lt;T, Iter&gt; <a class='trait' href='../../../serde/ser/trait.SeqVisitor.html' title='serde::ser::SeqVisitor'>SeqVisitor</a> for <a class='struct' href='../../../serde/ser/impls/struct.SeqIteratorVisitor.html' title='serde::ser::impls::SeqIteratorVisitor'>SeqIteratorVisitor</a>&lt;Iter&gt; <span class='where'>where T: <a class='trait' href='../../../serde/ser/trait.Serialize.html' title='serde::ser::Serialize'>Serialize</a>, Iter: <a class='trait' href='../../../core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=T&gt;</span></code></h3><div class='impl-items'><h4 id='method.visit' class='method'><code>fn <a href='../../../serde/ser/trait.SeqVisitor.html#tymethod.visit' class='fnname'>visit</a>&lt;S&gt;(&amp;mut self, serializer: &amp;mut S) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;, S::Error&gt; <span class='where'>where S: <a class='trait' href='../../../serde/ser/trait.Serializer.html' title='serde::ser::Serializer'>Serializer</a></span></code></h4>
-<h4 id='method.len' class='method'><code>fn <a href='../../../serde/ser/trait.SeqVisitor.html#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;</code></h4>
-</div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;T,&nbsp;Iter&gt; <a class='trait' href='../../../serde/ser/trait.SeqVisitor.html' title='serde::ser::SeqVisitor'>SeqVisitor</a> for <a class='struct' href='../../../serde/ser/impls/struct.SeqIteratorVisitor.html' title='serde::ser::impls::SeqIteratorVisitor'>SeqIteratorVisitor</a>&lt;Iter&gt; <span class='where'>where T: <a class='trait' href='../../../serde/ser/trait.Serialize.html' title='serde::ser::Serialize'>Serialize</a>, Iter: <a class='trait' href='../../../core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a>&lt;Item=T&gt;</span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7515' class='srclink' href='../../../src/serde/ser/impls.rs.html#208-229' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.visit' class='method'><code>fn <a href='../../../serde/ser/trait.SeqVisitor.html#tymethod.visit' class='fnname'>visit</a>&lt;S&gt;(&amp;mut self, serializer: &amp;mut S) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;,&nbsp;S::Error&gt; <span class='where'>where S: <a class='trait' href='../../../serde/ser/trait.Serializer.html' title='serde::ser::Serializer'>Serializer</a></span></code></h4>
+<div class='docblock'><p>Serializes a sequence item in the serializer. <a href="../../../serde/ser/trait.SeqVisitor.html#tymethod.visit">Read more</a></p>
+</div><h4 id='method.len' class='method'><code>fn <a href='../../../serde/ser/trait.SeqVisitor.html#method.len' class='fnname'>len</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;</code></h4>
+<div class='docblock'><p>Return the length of the sequence if known.</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -96,6 +100,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

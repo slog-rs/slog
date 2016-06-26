@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-3835' class='srclink' href='../src/chrono/lib.rs.html#558-609' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-3832' class='srclink' href='../src/chrono/lib.rs.html#558-609' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Timelike: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> {
     fn <a href='#tymethod.hour' class='fnname'>hour</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>;
     fn <a href='#tymethod.minute' class='fnname'>minute</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>;
@@ -90,9 +90,9 @@ which is false for AM and true for PM.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl <a class='trait' href='../chrono/trait.Timelike.html' title='chrono::Timelike'>Timelike</a> for <a class='struct' href='../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></li>
-<li><code>impl <a class='trait' href='../chrono/trait.Timelike.html' title='chrono::Timelike'>Timelike</a> for <a class='struct' href='../chrono/naive/datetime/struct.NaiveDateTime.html' title='chrono::naive::datetime::NaiveDateTime'>NaiveDateTime</a></code></li>
-<li><code>impl&lt;Tz: <a class='trait' href='../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>TimeZone</a>&gt; <a class='trait' href='../chrono/trait.Timelike.html' title='chrono::Timelike'>Timelike</a> for <a class='struct' href='../chrono/datetime/struct.DateTime.html' title='chrono::datetime::DateTime'>DateTime</a>&lt;Tz&gt;</code></li>
+    <li><code>impl Timelike for <a class='struct' href='../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></li>
+<li><code>impl Timelike for <a class='struct' href='../chrono/naive/datetime/struct.NaiveDateTime.html' title='chrono::naive::datetime::NaiveDateTime'>NaiveDateTime</a></code></li>
+<li><code>impl&lt;Tz:&nbsp;<a class='trait' href='../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>TimeZone</a>&gt; Timelike for <a class='struct' href='../chrono/datetime/struct.DateTime.html' title='chrono::datetime::DateTime'>DateTime</a>&lt;Tz&gt;</code></li>
 </ul><script type="text/javascript" async
                          src="../implementors/chrono/trait.Timelike.js">
                  </script></section>
@@ -118,6 +118,8 @@ which is false for AM and true for PM.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

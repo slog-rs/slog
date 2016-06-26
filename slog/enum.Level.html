@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-738' class='srclink' href='../src/slog/src/_level.rs.html#3-16' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-689' class='srclink' href='../src/slog/src/_level.rs.html#3-16' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum Level {
     Critical,
     Error,
@@ -57,20 +57,29 @@
     Trace,
 }</pre><div class='docblock'><p>Logging level</p>
 </div><h2 class='variants'>Variants</h2>
-<table class='variants_table'><tr><td id='variant.Critical'><code>Critical</code></td><td><div class='docblock'><p>Critical</p>
-</div></td><td></td></tr><tr><td id='variant.Error'><code>Error</code></td><td><div class='docblock'><p>Error</p>
-</div></td><td></td></tr><tr><td id='variant.Warning'><code>Warning</code></td><td><div class='docblock'><p>Warning</p>
-</div></td><td></td></tr><tr><td id='variant.Info'><code>Info</code></td><td><div class='docblock'><p>Info</p>
-</div></td><td></td></tr><tr><td id='variant.Debug'><code>Debug</code></td><td><div class='docblock'><p>Debug</p>
-</div></td><td></td></tr><tr><td id='variant.Trace'><code>Trace</code></td><td><div class='docblock'><p>Trace</p>
-</div></td><td></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></h3><div class='impl-items'><h4 id='method.as_int' class='method'><code>fn <a href='#method.as_int' class='fnname'>as_int</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
+<span id='variant.Critical' class='variant'><code>Critical</code></span><div class='docblock'><p>Critical</p>
+</div><span id='variant.Error' class='variant'><code>Error</code></span><div class='docblock'><p>Error</p>
+</div><span id='variant.Warning' class='variant'><code>Warning</code></span><div class='docblock'><p>Warning</p>
+</div><span id='variant.Info' class='variant'><code>Info</code></span><div class='docblock'><p>Info</p>
+</div><span id='variant.Debug' class='variant'><code>Debug</code></span><div class='docblock'><p>Debug</p>
+</div><span id='variant.Trace' class='variant'><code>Trace</code></span><div class='docblock'><p>Trace</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-710' class='srclink' href='../src/slog/src/_level.rs.html#18-42' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.as_int' class='method'><code>fn <a href='#method.as_int' class='fnname'>as_int</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h4>
 <div class='docblock'><p>Cast <code>Level</code> to ordering integer, where
 <code>Critical</code> is 0, and <code>Trace</code> is 5</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
-</div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></h3><div class='impl-items'><h4 id='method.fmt-1' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></h4>
-<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></h3><div class='impl-items'></div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-715' class='srclink' href='../src/slog/src/_level.rs.html#44-48' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-696' class='srclink' href='../src/slog/src/_level.rs.html#2' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt-1' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-706' class='srclink' href='../src/slog/src/_level.rs.html#2' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-709' class='srclink' href='../src/slog/src/_level.rs.html#2' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -93,6 +102,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

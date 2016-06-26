@@ -160,21 +160,17 @@
 <span id="116">116</span>
 <span id="117">117</span>
 <span id="118">118</span>
-<span id="119">119</span>
-<span id="120">120</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Drains</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Drains are responsible for filtering, formatting and writing the log records</span>
 <span class='doccomment'>//! into given destination.</span>
-<span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Level</span>};
-<span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>format</span>;
-<span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>logger</span>::<span class='ident'>RecordInfo</span>;
+<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Level</span>};
+<span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>format</span>;
+<span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>logger</span>::<span class='ident'>RecordInfo</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>io</span>, <span class='ident'>str</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Write</span> <span class='kw'>as</span> <span class='ident'>FmtWrite</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span> <span class='kw'>as</span> <span class='ident'>IoWrite</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Mutex</span>;
-<span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>OwnedKeyValue</span>,<span class='ident'>BorrowedKeyValue</span>};
+<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>OwnedKeyValue</span>,<span class='ident'>BorrowedKeyValue</span>};
 
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Drain for Loggers</span>
@@ -197,7 +193,7 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>W</span> : <span class='ident'>io</span>::<span class='ident'>Write</span>, <span class='ident'>F</span> : <span class='ident'>format</span>::<span class='ident'>Format</span><span class='op'>&gt;</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>W</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Create new `Streamer` writing to `io` using `format`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>io</span> : <span class='ident'>W</span>, <span class='ident'>format</span> : <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>io</span> : <span class='ident'>W</span>, <span class='ident'>format</span> : <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>Streamer</span> {
             <span class='ident'>io</span>: <span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='ident'>io</span>),
             <span class='ident'>format</span> : <span class='ident'>format</span>,
@@ -227,7 +223,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Create FilterLevel wrapping given `subdrain` and passing to it records</span>
     <span class='doccomment'>/// only of at least `level`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>level</span> : <span class='ident'>Level</span>, <span class='ident'>subdrain</span> : <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>level</span> : <span class='ident'>Level</span>, <span class='ident'>subdrain</span> : <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>FilterLevel</span> {
             <span class='ident'>level</span>: <span class='ident'>level</span>,
             <span class='ident'>drain</span>: <span class='ident'>subdrain</span>,
@@ -254,7 +250,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D1</span> : <span class='ident'>Drain</span>, <span class='ident'>D2</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span>, <span class='ident'>D2</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Create FilterLevel wrapping given `subdrain` and passing to it records</span>
     <span class='doccomment'>/// only of at least `level`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>drain1</span> : <span class='ident'>D1</span>, <span class='ident'>drain2</span> : <span class='ident'>D2</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>drain1</span> : <span class='ident'>D1</span>, <span class='ident'>drain2</span> : <span class='ident'>D2</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>Duplicate</span> {
             <span class='ident'>drain1</span>: <span class='ident'>drain1</span>,
             <span class='ident'>drain2</span>: <span class='ident'>drain2</span>,
@@ -307,6 +303,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

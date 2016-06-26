@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-3191' class='srclink' href='../src/libc/macros.rs.html#42' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-3220' class='srclink' href='../src/libc/macros.rs.html#42' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct stat64 {
     pub st_dev: <a class='type' href='../libc/type.dev_t.html' title='libc::dev_t'>dev_t</a>,
     pub st_ino: <a class='type' href='../libc/type.ino64_t.html' title='libc::ino64_t'>ino64_t</a>,
@@ -66,26 +66,29 @@
     pub st_ctime: <a class='type' href='../libc/type.time_t.html' title='libc::time_t'>time_t</a>,
     pub st_ctime_nsec: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a>,
     // some fields omitted
-}</pre><h2 class='fields'>Fields</h2>
-<table><tr class='stab '>
-                             <td id='structfield.st_dev'><code>st_dev</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_ino'><code>st_ino</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_nlink'><code>st_nlink</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_mode'><code>st_mode</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_uid'><code>st_uid</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_gid'><code>st_gid</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_rdev'><code>st_rdev</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_size'><code>st_size</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_blksize'><code>st_blksize</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_blocks'><code>st_blocks</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_atime'><code>st_atime</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_atime_nsec'><code>st_atime_nsec</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_mtime'><code>st_mtime</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_mtime_nsec'><code>st_mtime_nsec</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_ctime'><code>st_ctime</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.st_ctime_nsec'><code>st_ctime_nsec</code></td><td></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../libc/struct.stat64.html' title='libc::stat64'>stat64</a></code></h3><div class='impl-items'></div><h3 class='impl'><code>impl <a class='trait' href='../core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../libc/struct.stat64.html' title='libc::stat64'>stat64</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='../core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../libc/struct.stat64.html' title='libc::stat64'>stat64</a></code></h4>
-<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='../core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div></section>
+}</pre><h2 class='fields'>Fields</h2><span id='structfield.st_dev' class='structfield'><code>st_dev: <a class='type' href='../libc/type.dev_t.html' title='libc::dev_t'>dev_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_ino' class='structfield'><code>st_ino: <a class='type' href='../libc/type.ino64_t.html' title='libc::ino64_t'>ino64_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_nlink' class='structfield'><code>st_nlink: <a class='type' href='../libc/type.nlink_t.html' title='libc::nlink_t'>nlink_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_mode' class='structfield'><code>st_mode: <a class='type' href='../libc/type.mode_t.html' title='libc::mode_t'>mode_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_uid' class='structfield'><code>st_uid: <a class='type' href='../libc/type.uid_t.html' title='libc::uid_t'>uid_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_gid' class='structfield'><code>st_gid: <a class='type' href='../libc/type.gid_t.html' title='libc::gid_t'>gid_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_rdev' class='structfield'><code>st_rdev: <a class='type' href='../libc/type.dev_t.html' title='libc::dev_t'>dev_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_size' class='structfield'><code>st_size: <a class='type' href='../libc/type.off_t.html' title='libc::off_t'>off_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_blksize' class='structfield'><code>st_blksize: <a class='type' href='../libc/type.blksize_t.html' title='libc::blksize_t'>blksize_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_blocks' class='structfield'><code>st_blocks: <a class='type' href='../libc/type.blkcnt64_t.html' title='libc::blkcnt64_t'>blkcnt64_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_atime' class='structfield'><code>st_atime: <a class='type' href='../libc/type.time_t.html' title='libc::time_t'>time_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_atime_nsec' class='structfield'><code>st_atime_nsec: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_mtime' class='structfield'><code>st_mtime: <a class='type' href='../libc/type.time_t.html' title='libc::time_t'>time_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_mtime_nsec' class='structfield'><code>st_mtime_nsec: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_ctime' class='structfield'><code>st_ctime: <a class='type' href='../libc/type.time_t.html' title='libc::time_t'>time_t</a></code>
+                           </span><span class='stab '></span><span id='structfield.st_ctime_nsec' class='structfield'><code>st_ctime_nsec: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span><span class='stab '></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../libc/struct.stat64.html' title='libc::stat64'>stat64</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3240' class='srclink' href='../src/libc/macros.rs.html#44' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../libc/struct.stat64.html' title='libc::stat64'>stat64</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3241' class='srclink' href='../src/libc/macros.rs.html#45-47' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='../core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../libc/struct.stat64.html' title='libc::stat64'>stat64</a></code></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="../core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='../core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="../core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -108,6 +111,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

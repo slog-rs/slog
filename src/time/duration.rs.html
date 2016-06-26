@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/time-0.1.35/src/duration.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/time-0.1.35/src/duration.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>duration.rs.html -- source</title>
@@ -827,9 +827,9 @@
     <span class='doccomment'>/// Runs a closure, returning the duration of time it took to run the</span>
     <span class='doccomment'>/// closure.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>span</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>Duration</span> <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>() {
-        <span class='kw'>let</span> <span class='ident'>before</span> <span class='op'>=</span> <span class='ident'>super</span>::<span class='ident'>precise_time_ns</span>();
+        <span class='kw'>let</span> <span class='ident'>before</span> <span class='op'>=</span> <span class='kw'>super</span>::<span class='ident'>precise_time_ns</span>();
         <span class='ident'>f</span>();
-        <span class='ident'>Duration</span>::<span class='ident'>nanoseconds</span>((<span class='ident'>super</span>::<span class='ident'>precise_time_ns</span>() <span class='op'>-</span> <span class='ident'>before</span>) <span class='kw'>as</span> <span class='ident'>i64</span>)
+        <span class='ident'>Duration</span>::<span class='ident'>nanoseconds</span>((<span class='kw'>super</span>::<span class='ident'>precise_time_ns</span>() <span class='op'>-</span> <span class='ident'>before</span>) <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='doccomment'>/// Returns the total number of whole weeks in the duration.</span>
@@ -1136,7 +1136,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Duration</span>, <span class='ident'>MIN</span>, <span class='ident'>MAX</span>, <span class='ident'>OutOfRangeError</span>};
+    <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Duration</span>, <span class='ident'>MIN</span>, <span class='ident'>MAX</span>, <span class='ident'>OutOfRangeError</span>};
     <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>i32</span>, <span class='ident'>i64</span>};
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span> <span class='kw'>as</span> <span class='ident'>StdDuration</span>;
 
@@ -1363,6 +1363,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

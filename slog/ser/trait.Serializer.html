@@ -47,12 +47,11 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-162' class='srclink' href='../../src/slog/src/ser.rs.html#31-70' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-186' class='srclink' href='../../src/slog/src/ser.rs.html#33-70' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Serializer {
     fn <a href='#tymethod.emit_bool' class='fnname'>emit_bool</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>);
     fn <a href='#tymethod.emit_unit' class='fnname'>emit_unit</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>);
     fn <a href='#tymethod.emit_none' class='fnname'>emit_none</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>);
-    fn <a href='#tymethod.emit_some' class='fnname'>emit_some</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: &amp;<a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a>);
     fn <a href='#tymethod.emit_char' class='fnname'>emit_char</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.char.html'>char</a>);
     fn <a href='#tymethod.emit_bytes' class='fnname'>emit_bytes</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>);
     fn <a href='#tymethod.emit_u8' class='fnname'>emit_u8</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>);
@@ -78,7 +77,6 @@ types implementing this trait.</p>
         <h3 id='tymethod.emit_bool' class='method stab '><code>fn <a href='#tymethod.emit_bool' class='fnname'>emit_bool</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></h3><div class='docblock'><p>Emit bool</p>
 </div><h3 id='tymethod.emit_unit' class='method stab '><code>fn <a href='#tymethod.emit_unit' class='fnname'>emit_unit</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h3><div class='docblock'><p>Emit <code>()</code></p>
 </div><h3 id='tymethod.emit_none' class='method stab '><code>fn <a href='#tymethod.emit_none' class='fnname'>emit_none</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</code></h3><div class='docblock'><p>Emit <code>None</code></p>
-</div><h3 id='tymethod.emit_some' class='method stab '><code>fn <a href='#tymethod.emit_some' class='fnname'>emit_some</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: &amp;<a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a>)</code></h3><div class='docblock'><p>Emit <code>Some(val)</code></p>
 </div><h3 id='tymethod.emit_char' class='method stab '><code>fn <a href='#tymethod.emit_char' class='fnname'>emit_char</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.char.html'>char</a>)</code></h3><div class='docblock'><p>Emit char</p>
 </div><h3 id='tymethod.emit_bytes' class='method stab '><code>fn <a href='#tymethod.emit_bytes' class='fnname'>emit_bytes</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h3><div class='docblock'><p>Emit bytes</p>
 </div><h3 id='tymethod.emit_u8' class='method stab '><code>fn <a href='#tymethod.emit_u8' class='fnname'>emit_u8</a>(&amp;mut self, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, val: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>)</code></h3><div class='docblock'><p>Emit u8</p>
@@ -97,8 +95,8 @@ types implementing this trait.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;'a, S&gt; <a class='trait' href='../../slog/ser/trait.Serializer.html' title='slog::ser::Serializer'>Serializer</a> for <a class='struct' href='../../slog/ser/struct.SerdeSerializer.html' title='slog::ser::SerdeSerializer'>SerdeSerializer</a>&lt;'a, S&gt; <span class='where'>where S: 'a + <a class='trait' href='../../serde/ser/trait.Serializer.html' title='serde::ser::Serializer'>Serializer</a></span></code></li>
-<li><code>impl <a class='trait' href='../../slog/ser/trait.Serializer.html' title='slog::ser::Serializer'>Serializer</a> for <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></li>
+    <li><code>impl&lt;'a,&nbsp;S&gt; Serializer for <a class='struct' href='../../slog/ser/struct.SerdeSerializer.html' title='slog::ser::SerdeSerializer'>SerdeSerializer</a>&lt;'a,&nbsp;S&gt; <span class='where'>where S: 'a + <a class='trait' href='../../serde/ser/trait.Serializer.html' title='serde::ser::Serializer'>Serializer</a></span></code></li>
+<li><code>impl Serializer for <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/slog/ser/trait.Serializer.js">
                  </script></section>
@@ -124,6 +122,8 @@ types implementing this trait.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
