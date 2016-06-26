@@ -49,23 +49,54 @@ impl<W : 'static+io::Write+Send, F : format::Format+Send> Drain for Streamer<W, 
     }
 }
 
+/// Filter log record
+///
+/// Wraps a drain and passes records to it, only if their `RecordInfo`
+/// satisifies a condition `cond`.
+pub struct Filter<D : Drain> {
+    drain : D,
+    // eliminated dynamic dispatch, after rust learns `-> impl Trait`
+    cond : Box<Fn(&RecordInfo)->bool+'static+Send+Sync>,
+}
+
+impl<D : Drain> Filter<D> {
+    /// Create Filter wrapping given `subdrain` and passing to it records
+    /// only the `cond` is true
+    pub fn new<F : 'static+Sync+Send+Fn(&RecordInfo)->bool>(drain : D, cond : F) -> Self {
+        Filter {
+            drain: drain,
+            cond: Box::new(cond),
+        }
+    }
+}
+
+impl<D : Drain> Drain for Filter<D> {
+    fn log(&self, info : &RecordInfo, logger_values : &[OwnedKeyValue], values : &[BorrowedKeyValue]) {
+        if (self.cond)(&info) {
+            self.drain.log(info, logger_values, values)
+        }
+    }
+}
 
 /// Record log level filter
 ///
 /// Wraps a drain and passes records to it, only
 /// if their level is at least given level.
+///
+/// TODO: Remove this type. This drain is a special case of `Filter`, but
+/// because `Filter` can not use static dispatch ATM due to Rust limitations
+/// that will be lifted in the future, it is a standalone type.
 pub struct FilterLevel<D : Drain> {
     level: Level,
     drain : D,
 }
 
 impl<D : Drain> FilterLevel<D> {
-    /// Create FilterLevel wrapping given `subdrain` and passing to it records
-    /// only of at least `level`.
-    pub fn new(level : Level, subdrain : D) -> Self {
+    /// Create `FilterLevel`
+    pub fn new(drain : D, level : Level) -> Self {
         FilterLevel {
             level: level,
-            drain: subdrain,
+            drain: drain,
         }
     }
 }
@@ -78,7 +109,6 @@ impl<D : Drain> Drain for FilterLevel<D> {
     }
 }
 
-
 /// Duplicate records into two drains
 pub struct Duplicate<D1 : Drain, D2 : Drain> {
     drain1 : D1,
@@ -87,8 +117,7 @@ pub struct Duplicate<D1 : Drain, D2 : Drain> {
 
 
 impl<D1 : Drain, D2 : Drain> Duplicate<D1, D2> {
-    /// Create FilterLevel wrapping given `subdrain` and passing to it records
-    /// only of at least `level`.
+    /// Create `Duplicate`
     pub fn new(drain1 : D1, drain2 : D2) -> Self {
         Duplicate {
             drain1: drain1,
@@ -175,9 +204,14 @@ pub fn stream<W : io::Write + Send, F : format::Format>(io : W, format : F) -> S
     Streamer::new(io, format)
 }
 
-/// Create FilterLevel drain
+/// Filter by `cond` closure
+pub fn filter<D : Drain, F : 'static+Send+Sync+Fn(&RecordInfo)->bool>(cond : F, d : D) -> Filter<D> {
+    Filter::new(d, cond)
+}
+
+/// Filter by log level
 pub fn filter_level<D : Drain>(level : Level, d : D) -> FilterLevel<D> {
-    FilterLevel::new(level, d)
+    FilterLevel::new(d, level)
 }
 
 /// Create Duplicate drain
