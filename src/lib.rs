@@ -13,23 +13,40 @@ use std::sync::{Arc};
 use crossbeam::sync::ArcCell;
 use std::fmt;
 
-/// Build a `Vec<OwnedKeyValue>`
+/// Convenience function for building `&[OwnedKeyValue]`
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+///
+/// fn main() {
+///     let root = root_logger!(o!("key1" => "value1", "key2" => "value2"));
+/// }
 #[macro_export]
-macro_rules! v(
+macro_rules! o(
     () => {
-        vec!()
+        &[]
     };
     ($($k:expr => $v:expr),*) => {
         {
         use std;
-        vec!($(($k, std::sync::Arc::new($v))),*)
+        &[$(($k, std::sync::Arc::new($v) as std::sync::Arc<$crate::ser::SyncSerialize>)),*]
         }
     };
 );
 
-/// Build a `&[OwnedKeyValue]`
+/// Convenience function for building `&[BorrowedKeyValue]`
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+///
+/// fn main() {
+///     let root = root_logger!(o!());
+///     let logger = root.new(b!("log-key" => true));
+/// }
 #[macro_export]
-macro_rules! s(
+macro_rules! b(
     () => {
         &[]
     };

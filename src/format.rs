@@ -32,7 +32,7 @@ impl Json {
     pub fn new() -> Self {
         Json {
             newlines : true,
-            values : v!(
+            values : o!(
                 "ts" => |rinfo : &RecordInfo| {
                     rinfo.ts.to_rfc3339()
                 },
@@ -42,7 +42,7 @@ impl Json {
                 "msg" => |rinfo : &RecordInfo| {
                     rinfo.msg.clone()
                 }
-                )
+                ).to_vec()
         }
     }
 

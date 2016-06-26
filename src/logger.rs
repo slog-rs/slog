@@ -41,7 +41,7 @@ impl Logger {
     ///
     /// Use `s!` macro to help build `values`
     #[doc(hidden)]
-    pub fn new_root(values : Vec<OwnedKeyValue>) -> Logger {
+    pub fn new_root(values : &[OwnedKeyValue]) -> Logger {
         let drain = Arc::new(
             ArcCell::new(
                 Arc::new(
@@ -61,7 +61,7 @@ impl Logger {
         Logger{
             inner: Arc::new(LoggerInner {
                 drain: drain,
-                values: values,
+                values: values.to_vec(),
             }),
         }
     }
@@ -75,9 +75,9 @@ impl Logger {
     ///
     /// Use `s!` macro to help build `values`
     #[doc(hidden)]
-    pub fn new(&self, values : Vec<OwnedKeyValue>) -> Logger {
+    pub fn new(&self, values : &[OwnedKeyValue]) -> Logger {
         let mut new_values = self.inner.values.clone();
-        new_values.extend_from_slice(&values);
+        new_values.extend_from_slice(values);
         Logger{
             inner: Arc::new(LoggerInner {
                 drain: self.inner.drain.clone(),
