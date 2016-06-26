@@ -30,8 +30,6 @@
 //!     //
 //!     // Create child loggers from existing ones. Children clone `key: value`
 //!     // pairs from their parents.
-//!     //
-//!     // Note `b!` macro for more natural `BorrowedKeyValue` sequence building.
 //!     let log = root.new(o!("child" => 1));
 //!
 //!     // Closures can be used for values that change at runtime.
@@ -46,6 +44,7 @@
 //!         move |_ : &_| { counter.load(SeqCst)}
 //!     }));
 //!
+//!     // Note `b!` macro for more natural `BorrowedKeyValue` sequence building.
 //!     log.info("before-fetch-add", b!()); // counter == 0
 //!     counter.fetch_add(1, SeqCst);
 //!     log.info("after-fetch-add", b!()); // counter == 1
