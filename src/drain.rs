@@ -116,6 +116,9 @@ enum AsyncIoMsg{
 /// using channel to send the data.
 ///
 /// This makes logging not block on potentially-slow IO operations.
+///
+/// Note: Dropping `AsyncIoWriter` waits for it's io-thread to finish.
+/// If you can't tolerate the delay, make sure to use `Logger::
 pub struct AsyncIoWriter {
     sender : mpsc::Sender<AsyncIoMsg>,
     join : Option<thread::JoinHandle<()>>,
