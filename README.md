@@ -1,16 +1,13 @@
-# slog-rs
+# slog-rs - Structured, composable logging for Rust
 
 <p align="center">
   <a href="https://travis-ci.org/dpc/slog-rs">
-      <img src="https://img.shields.io/travis/dpc/mioco/master.svg?style=flat-square" alt="Travis CI Build Status">
-  </a>
-  <a href="https://ci.appveyor.com/project/dpc/slog-rs/branch/master">
-      <img src="https://ci.appveyor.com/api/projects/status/p5rjfbqw2a3pxc4o/branch/master?svg=true" alt="App Veyor Build Status">
+      <img src="https://img.shields.io/travis/dpc/slog-rs/master.svg?style=flat-square" alt="Travis CI Build Status">
   </a>
   <a href="https://crates.io/crates/slog">
       <img src="http://meritbadge.herokuapp.com/slog?style=flat-square" alt="crates.io">
   </a>
-  <a href="https://gitter.im/dpc/slog">
+  <a href="https://gitter.im/dpc/dpc">
       <img src="https://img.shields.io/badge/GITTER-join%20chat-green.svg?style=flat-square" alt="Gitter Chat">
   </a>
   <br>
