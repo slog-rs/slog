@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog/src/lib.rs.html#1-163' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog/src/lib.rs.html#1-162' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='slog----structured-composable-logging-for-rust' class='section-header'><a href='#slog----structured-composable-logging-for-rust'>Slog -  Structured, composable logging for Rust</a></h1>
 <pre class='rust rust-example-rendered'>
@@ -81,8 +81,6 @@
     <span class='comment'>//</span>
     <span class='comment'>// Create child loggers from existing ones. Children clone `key: value`</span>
     <span class='comment'>// pairs from their parents.</span>
-    <span class='comment'>//</span>
-    <span class='comment'>// Note `b!` macro for more natural `BorrowedKeyValue` sequence building.</span>
     <span class='kw'>let</span> <span class='ident'>log</span> <span class='op'>=</span> <span class='ident'>root</span>.<span class='ident'>new</span>(<span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;child&quot;</span> <span class='op'>=&gt;</span> <span class='number'>1</span>));
 
     <span class='comment'>// Closures can be used for values that change at runtime.</span>
@@ -97,6 +95,7 @@
         <span class='kw'>move</span> <span class='op'>|</span>_ : <span class='kw-2'>&amp;</span>_<span class='op'>|</span> { <span class='ident'>counter</span>.<span class='ident'>load</span>(<span class='ident'>SeqCst</span>)}
     }));
 
+    <span class='comment'>// Note `b!` macro for more natural `BorrowedKeyValue` sequence building.</span>
     <span class='ident'>log</span>.<span class='ident'>info</span>(<span class='string'>&quot;before-fetch-add&quot;</span>, <span class='macro'>b</span><span class='macro'>!</span>()); <span class='comment'>// counter == 0</span>
     <span class='ident'>counter</span>.<span class='ident'>fetch_add</span>(<span class='number'>1</span>, <span class='ident'>SeqCst</span>);
     <span class='ident'>log</span>.<span class='ident'>info</span>(<span class='string'>&quot;after-fetch-add&quot;</span>, <span class='macro'>b</span><span class='macro'>!</span>()); <span class='comment'>// counter == 1</span>

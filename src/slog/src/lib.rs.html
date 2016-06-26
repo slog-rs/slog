@@ -206,7 +206,6 @@
 <span id="162">162</span>
 <span id="163">163</span>
 <span id="164">164</span>
-<span id="165">165</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 <span class='doccomment'>//! ```</span>
@@ -240,8 +239,6 @@
 <span class='doccomment'>//!     //</span>
 <span class='doccomment'>//!     // Create child loggers from existing ones. Children clone `key: value`</span>
 <span class='doccomment'>//!     // pairs from their parents.</span>
-<span class='doccomment'>//!     //</span>
-<span class='doccomment'>//!     // Note `b!` macro for more natural `BorrowedKeyValue` sequence building.</span>
 <span class='doccomment'>//!     let log = root.new(o!(&quot;child&quot; =&gt; 1));</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//!     // Closures can be used for values that change at runtime.</span>
@@ -256,6 +253,7 @@
 <span class='doccomment'>//!         move |_ : &amp;_| { counter.load(SeqCst)}</span>
 <span class='doccomment'>//!     }));</span>
 <span class='doccomment'>//!</span>
+<span class='doccomment'>//!     // Note `b!` macro for more natural `BorrowedKeyValue` sequence building.</span>
 <span class='doccomment'>//!     log.info(&quot;before-fetch-add&quot;, b!()); // counter == 0</span>
 <span class='doccomment'>//!     counter.fetch_add(1, SeqCst);</span>
 <span class='doccomment'>//!     log.info(&quot;after-fetch-add&quot;, b!()); // counter == 1</span>
