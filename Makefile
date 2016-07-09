@@ -60,11 +60,13 @@ $(EXTRAS):
 
 .PHONY: doc
 doc: FORCE
-	rm -rf target/doc
-	cargo doc
+	cargo doc -p slog
+	cd "extra/bunyan"; cargo doc -p slog-bunyan
 
 .PHONY: publishdoc
-publishdoc: doc
+publishdoc:
+	rm -rf target/doc
+	make doc
 	echo '<meta http-equiv="refresh" content="0;url='${DOCS_DEFAULT_MODULE}'/index.html">' > target/doc/index.html
 	ghp-import -n target/doc
 	git push -f origin gh-pages
