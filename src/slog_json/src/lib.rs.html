@@ -209,9 +209,43 @@
 <span id="165">165</span>
 <span id="166">166</span>
 <span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! [Bunyan](https://www.npmjs.com/package/bunyan) formatting for `slog-rs`</span>
-
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! #[macro_use]</span>
+<span class='doccomment'>//! extern crate slog;</span>
+<span class='doccomment'>//! extern crate slog_json;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! use slog::*;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! fn main() {</span>
+<span class='doccomment'>//!     let root = Logger::new_root(o!(&quot;build-id&quot; =&gt; &quot;8dfljdf&quot;));</span>
+<span class='doccomment'>//!     root.set_drain(</span>
+<span class='doccomment'>//!             drain::stream(</span>
+<span class='doccomment'>//!                 std::io::stderr(),</span>
+<span class='doccomment'>//!                 slog_json::new()</span>
+<span class='doccomment'>//!                 )</span>
+<span class='doccomment'>//!             );</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>missing_docs</span>)]</span>
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
@@ -237,7 +271,7 @@
     }
 }
 
-<span class='doccomment'>/// ToJson formatter</span>
+<span class='doccomment'>/// Json formatter</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Each record will be printed as a Json map.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Json</span> {
@@ -270,7 +304,7 @@
         }
     }
 
-    <span class='doccomment'>/// Build a JSON formatter with custom settings</span>
+    <span class='doccomment'>/// Build a Json formatter with custom settings</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>() <span class='op'>-&gt;</span> <span class='ident'>JsonBuilder</span> {
         <span class='ident'>JsonBuilder</span>::<span class='ident'>new</span>()
     }
@@ -284,7 +318,7 @@
     }
 }
 
-<span class='doccomment'>/// JSON formatter builder</span>
+<span class='doccomment'>/// Json formatter builder</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Create with `Json::build`.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>JsonBuilder</span> {
@@ -300,7 +334,7 @@
         }
     }
 
-    <span class='doccomment'>/// Build `JSON` format</span>
+    <span class='doccomment'>/// Build `Json` format</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// This consumes the builder.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Json</span> {

@@ -196,9 +196,33 @@
 <span id="152">152</span>
 <span id="153">153</span>
 <span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Unix terminal formatter for slog-rs</span>
-
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! #[macro_use]</span>
+<span class='doccomment'>//! extern crate slog;</span>
+<span class='doccomment'>//! extern crate slog_term;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! use slog::*;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! fn main() {</span>
+<span class='doccomment'>//!     let root = Logger::new_root(o!(&quot;build-id&quot; =&gt; &quot;8dfljdf&quot;));</span>
+<span class='doccomment'>//!     root.set_drain(slog_term::async_stderr());</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>missing_docs</span>)]</span>
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>

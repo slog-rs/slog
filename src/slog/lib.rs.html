@@ -202,12 +202,18 @@
 <span id="158">158</span>
 <span id="159">159</span>
 <span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
+<span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//! #[macro_use]</span>
 <span class='doccomment'>//! extern crate slog;</span>
 <span class='doccomment'>//! extern crate slog_json;</span>
+<span class='doccomment'>//! extern crate slog_term;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! use slog::*;</span>
 <span class='doccomment'>//! use std::thread;</span>
@@ -232,6 +238,8 @@
 <span class='doccomment'>//!     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.</span>
 <span class='doccomment'>//!     let root = Logger::new_root(o!(&quot;version&quot; =&gt; VERSION, &quot;build-id&quot; =&gt; &quot;8dfljdf&quot;));</span>
 <span class='doccomment'>//!</span>
+<span class='doccomment'>//!    // Set drains to specify the output format and destination.</span>
+<span class='doccomment'>//!    root.set_drain(slog_term::async_stderr());</span>
 <span class='doccomment'>//!     // Build logging context as data becomes available.</span>
 <span class='doccomment'>//!     //</span>
 <span class='doccomment'>//!     // Create child loggers from existing ones. Children clone `key: value`</span>

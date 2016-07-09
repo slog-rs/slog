@@ -47,16 +47,16 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-15' class='srclink' href='../src/slog_term/src/lib.rs.html#22-24' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-15' class='srclink' href='../src/slog_term/src/lib.rs.html#34-36' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Format {
     // some fields omitted
 }</pre><div class='docblock'><p>Format formatting with optional color support</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../slog_term/struct.Format.html' title='slog_term::Format'>Format</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-17' class='srclink' href='../src/slog_term/src/lib.rs.html#26-36' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../slog_term/struct.Format.html' title='slog_term::Format'>Format</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-17' class='srclink' href='../src/slog_term/src/lib.rs.html#38-48' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.colored' class='method'><code>fn <a href='#method.colored' class='fnname'>colored</a>() -&gt; Self</code></h4>
 <div class='docblock'><p>New Format format that prints using color</p>
 </div><h4 id='method.plain' class='method'><code>fn <a href='#method.plain' class='fnname'>plain</a>() -&gt; Self</code></h4>
 <div class='docblock'><p>New Format format that prints without using color</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../slog/format/trait.Format.html' title='slog::format::Format'>SlogFormat</a> for <a class='struct' href='../slog_term/struct.Format.html' title='slog_term::Format'>Format</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-22' class='srclink' href='../src/slog_term/src/lib.rs.html#49-84' title='goto source code'>[src]</a></span></h3>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../slog/format/trait.Format.html' title='slog::format::Format'>SlogFormat</a> for <a class='struct' href='../slog_term/struct.Format.html' title='slog_term::Format'>Format</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-22' class='srclink' href='../src/slog_term/src/lib.rs.html#61-96' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.format' class='method'><code>fn <a href='../slog/format/trait.Format.html#tymethod.format' class='fnname'>format</a>(&amp;self, info: &amp;<a class='struct' href='../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a>, logger_values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../slog/type.BorrowedKeyValue.html' title='slog::BorrowedKeyValue'>BorrowedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
 <div class='docblock'><p>Format one logging record into <code>String</code></p>
 </div></div></section>
