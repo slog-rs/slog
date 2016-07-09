@@ -2,6 +2,7 @@
 //! ```
 //! #[macro_use]
 //! extern crate slog;
+//! extern crate slog_json;
 //!
 //! use slog::*;
 //! use std::thread;
@@ -57,7 +58,7 @@
 //!             drain::stream(
 //!                 std::io::stderr(),
 //!                 // multiple outputs formats are supported
-//!                 format::Json::new(),
+//!                 slog_json::new(),
 //!                 ),
 //!             ),
 //!         );
@@ -84,12 +85,11 @@
 #![warn(missing_docs)]
 
 extern crate crossbeam;
-extern crate serde;
-extern crate serde_json;
 extern crate isatty;
 extern crate ansi_term;
-extern crate rustc_serialize as serialize;
 extern crate chrono;
+extern crate rustc_serialize as serialize;
+
 
 use std::sync::Arc;
 use crossbeam::sync::ArcCell;

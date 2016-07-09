@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate slog;
+extern crate slog_json;
 
 use slog::*;
 use std::thread;
@@ -55,7 +56,7 @@ fn main() {
             drain::stream(
                 drain::async(std::io::stderr()),
                 // multiple outputs formats are supported
-                format::Json::new(),
+                slog_json::new(),
                 ),
             ),
         );

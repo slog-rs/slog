@@ -1,9 +1,9 @@
 [package]
-name = "slog-bunyan"
+name = "slog-serde"
 version = "0.1.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
-description = "Structured, composable logging for Rust"
-keywords = ["log", "logging", "structured", "hierarchical"]
+description = "Serde serialization adapter for slog-rs"
+keywords = ["slog", "logging", "serde"]
 license = "MPL-2.0"
 documentation = "https://dpc.github.io/slog-rs/"
 homepage = "https://github.com/dpc/slog-rs"
@@ -13,6 +13,4 @@ readme = "README.md"
 
 [dependencies]
 slog = { version = "0.4.0", path = "../.." }
-slog-json = { version = "0.1.0", path = "../json" }
-nix = "0.6.0"
-chrono = "0.2.22"
+serde = "0.7.10"

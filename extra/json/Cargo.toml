@@ -1,9 +1,9 @@
 [package]
-name = "slog"
-version = "0.4.0"
+name = "slog-json"
+version = "0.1.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Structured, composable logging for Rust"
-keywords = ["log", "logging", "structured", "hierarchical"]
+keywords = ["slog", "logging", "json"]
 license = "MPL-2.0"
 documentation = "https://dpc.github.io/slog-rs/"
 homepage = "https://github.com/dpc/slog-rs"
@@ -12,11 +12,7 @@ readme = "README.md"
 
 
 [dependencies]
-crossbeam = "0.2.9"
-isatty = "0.1.1"
-ansi_term = "0.7.2"
-chrono = "0.2.22"
-rustc-serialize = "0.3.19"
+slog = { version = "0.4.0", path = "../.." }
+slog-serde = { version = "0.1.0", path = "../serde"}
+serde_json = "0.7.1"
 
-[dev-dependencies]
-slog-json = { version = "0.1.0", path = "extra/json" }

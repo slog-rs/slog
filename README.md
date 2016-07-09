@@ -55,7 +55,7 @@ fn main() {
             drain::stream(
                 std::io::stderr(),
                 // multiple outputs formats are supported
-                format::Json::new(),
+                slog_json::new(),
                 ),
             ),
         );
@@ -113,7 +113,7 @@ To report a bug or ask for features use [github issues][issues].
 	* first-class custom implementations support
 * output formatting
 	* terminal (with color support)
-	* Json
+	* Json (`./extra/json`)
 		* Bunyan (`./extra/bunyan`)
 	* first-class custom implementations support
 

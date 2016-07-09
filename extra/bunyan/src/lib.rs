@@ -6,8 +6,9 @@
 extern crate slog;
 extern crate nix;
 extern crate chrono;
+extern crate slog_json;
 
-use slog::format::Json;
+use slog_json::Json;
 use slog::logger::RecordInfo;
 use slog::Level;
 
