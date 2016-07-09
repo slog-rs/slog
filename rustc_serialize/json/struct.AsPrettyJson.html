@@ -47,13 +47,16 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-5373' class='srclink' href='../../src/rustc_serialize/json.rs.html#278' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-5360' class='srclink' href='../../src/rustc_serialize/json.rs.html#278' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct AsPrettyJson&lt;'a, T: 'a&gt; {
     // some fields omitted
-}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;'a, T&gt; <a class='struct' href='../../rustc_serialize/json/struct.AsPrettyJson.html' title='rustc_serialize::json::AsPrettyJson'>AsPrettyJson</a>&lt;'a, T&gt;</code></h3><div class='impl-items'><h4 id='method.indent' class='method'><code>fn <a href='#method.indent' class='fnname'>indent</a>(self, indent: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='struct' href='../../rustc_serialize/json/struct.AsPrettyJson.html' title='rustc_serialize::json::AsPrettyJson'>AsPrettyJson</a>&lt;'a, T&gt;</code></h4>
+}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a, T&gt; <a class='struct' href='../../rustc_serialize/json/struct.AsPrettyJson.html' title='rustc_serialize::json::AsPrettyJson'>AsPrettyJson</a>&lt;'a, T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7291' class='srclink' href='../../src/rustc_serialize/json.rs.html#2526-2532' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.indent' class='method'><code>fn <a href='#method.indent' class='fnname'>indent</a>(self, indent: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='struct' href='../../rustc_serialize/json/struct.AsPrettyJson.html' title='rustc_serialize::json::AsPrettyJson'>AsPrettyJson</a>&lt;'a, T&gt;</code></h4>
 <div class='docblock'><p>Set the indentation level for the emitted JSON</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl&lt;'a, T: <a class='trait' href='../../rustc_serialize/trait.Encodable.html' title='rustc_serialize::Encodable'>Encodable</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='struct' href='../../rustc_serialize/json/struct.AsPrettyJson.html' title='rustc_serialize::json::AsPrettyJson'>AsPrettyJson</a>&lt;'a, T&gt;</code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
-</div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a, T: <a class='trait' href='../../rustc_serialize/trait.Encodable.html' title='rustc_serialize::Encodable'>Encodable</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='struct' href='../../rustc_serialize/json/struct.AsPrettyJson.html' title='rustc_serialize::json::AsPrettyJson'>AsPrettyJson</a>&lt;'a, T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7297' class='srclink' href='../../src/rustc_serialize/json.rs.html#2534-2548' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Encodes a json value into a string</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -76,6 +79,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

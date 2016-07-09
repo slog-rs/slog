@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Statvfs` struct in crate `nix`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Statvfs">
+
+    <title>nix::sys::statvfs::vfs::Statvfs - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../../index.html'>nix</a>::<wbr><a href='../../index.html'>sys</a>::<wbr><a href='../index.html'>statvfs</a>::<wbr><a href='index.html'>vfs</a></p><script>window.sidebarCurrent = {name: 'Statvfs', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../../index.html'>nix</a>::<wbr><a href='../../index.html'>sys</a>::<wbr><a href='../index.html'>statvfs</a>::<wbr><a href='index.html'>vfs</a>::<wbr><a class='struct' href=''>Statvfs</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-9863' class='srclink' href='../../../../src/nix/sys/statvfs.rs.html#54-82' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Statvfs {
+    pub f_bsize: <a class='type' href='../../../../libc/unix/notbsd/linux/other/b64/type.c_ulong.html' title='libc::unix::notbsd::linux::other::b64::c_ulong'>c_ulong</a>,
+    pub f_frsize: <a class='type' href='../../../../libc/unix/notbsd/linux/other/b64/type.c_ulong.html' title='libc::unix::notbsd::linux::other::b64::c_ulong'>c_ulong</a>,
+    pub f_blocks: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,
+    pub f_bfree: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,
+    pub f_bavail: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,
+    pub f_files: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,
+    pub f_ffree: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,
+    pub f_favail: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,
+    pub f_fsid: <a class='type' href='../../../../libc/unix/notbsd/linux/other/b64/type.c_ulong.html' title='libc::unix::notbsd::linux::other::b64::c_ulong'>c_ulong</a>,
+    pub f_flag: <a class='struct' href='../../../../nix/sys/statvfs/vfs/struct.FsFlags.html' title='nix::sys::statvfs::vfs::FsFlags'>FsFlags</a>,
+    pub f_namemax: <a class='type' href='../../../../libc/unix/notbsd/linux/other/b64/type.c_ulong.html' title='libc::unix::notbsd::linux::other::b64::c_ulong'>c_ulong</a>,
+    // some fields omitted
+}</pre><div class='docblock'><p>The posix statvfs struct</p>
+
+<p><a href="http://linux.die.net/man/2/statvfs">http://linux.die.net/man/2/statvfs</a></p>
+</div><h2 class='fields'>Fields</h2>
+<table><tr class='stab '>
+                             <td id='structfield.f_bsize'><code>f_bsize</code></td><td><div class='docblock'><p>Filesystem block size. This is the value that will lead to
+most efficient use of the filesystem</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.f_frsize'><code>f_frsize</code></td><td><div class='docblock'><p>Fragment Size -- actual minimum unit of allocation on this
+filesystem</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.f_blocks'><code>f_blocks</code></td><td><div class='docblock'><p>Total number of blocks on the filesystem</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.f_bfree'><code>f_bfree</code></td><td><div class='docblock'><p>Number of unused blocks on the filesystem, including those
+reserved for root</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.f_bavail'><code>f_bavail</code></td><td><div class='docblock'><p>Number of blocks available to non-root users</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.f_files'><code>f_files</code></td><td><div class='docblock'><p>Total number of inodes available on the filesystem</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.f_ffree'><code>f_ffree</code></td><td><div class='docblock'><p>Number of inodes available on the filesystem</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.f_favail'><code>f_favail</code></td><td><div class='docblock'><p>Number of inodes available to non-root users</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.f_fsid'><code>f_fsid</code></td><td><div class='docblock'><p>File System ID</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.f_flag'><code>f_flag</code></td><td><div class='docblock'><p>Mount Flags</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.f_namemax'><code>f_namemax</code></td><td><div class='docblock'><p>Maximum filename length</p>
+</div></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../../../nix/sys/statvfs/vfs/struct.Statvfs.html' title='nix::sys::statvfs::vfs::Statvfs'>Statvfs</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-9910' class='srclink' href='../../../../src/nix/sys/statvfs.rs.html#84-109' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.for_path' class='method'><code>fn <a href='#method.for_path' class='fnname'>for_path</a>&lt;P: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../../../../nix/trait.NixPath.html' title='nix::NixPath'>NixPath</a>&gt;(path: &amp;P) -&gt; <a class='type' href='../../../../nix/type.Result.html' title='nix::Result'>Result</a>&lt;<a class='struct' href='../../../../nix/sys/statvfs/vfs/struct.Statvfs.html' title='nix::sys::statvfs::vfs::Statvfs'>Statvfs</a>&gt;</code></h4>
+<div class='docblock'><p>Create a new <code>Statvfs</code> object and fill it with information about
+the mount that contains <code>path</code></p>
+</div><h4 id='method.update_with_path' class='method'><code>fn <a href='#method.update_with_path' class='fnname'>update_with_path</a>&lt;P: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../../../../nix/trait.NixPath.html' title='nix::NixPath'>NixPath</a>&gt;(&amp;mut self, path: &amp;P) -&gt; <a class='type' href='../../../../nix/type.Result.html' title='nix::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Replace information in this struct with information about <code>path</code></p>
+</div><h4 id='method.for_fd' class='method'><code>fn <a href='#method.for_fd' class='fnname'>for_fd</a>&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/std/sys/ext/io/trait.AsRawFd.html' title='std::sys::ext::io::AsRawFd'>AsRawFd</a>&gt;(fd: &amp;T) -&gt; <a class='type' href='../../../../nix/type.Result.html' title='nix::Result'>Result</a>&lt;<a class='struct' href='../../../../nix/sys/statvfs/vfs/struct.Statvfs.html' title='nix::sys::statvfs::vfs::Statvfs'>Statvfs</a>&gt;</code></h4>
+<div class='docblock'><p>Create a new <code>Statvfs</code> object and fill it with information from fd</p>
+</div><h4 id='method.update_with_fd' class='method'><code>fn <a href='#method.update_with_fd' class='fnname'>update_with_fd</a>&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/std/sys/ext/io/trait.AsRawFd.html' title='std::sys::ext::io::AsRawFd'>AsRawFd</a>&gt;(&amp;mut self, fd: &amp;T) -&gt; <a class='type' href='../../../../nix/type.Result.html' title='nix::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Replace information in this struct with information about <code>fd</code></p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../../../../nix/sys/statvfs/vfs/struct.Statvfs.html' title='nix::sys::statvfs::vfs::Statvfs'>Statvfs</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-9931' class='srclink' href='../../../../src/nix/sys/statvfs.rs.html#111-129' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></h4>
+<div class='docblock'><p>Create a statvfs object initialized to all zeros</p>
+</div></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../../../nix/sys/statvfs/vfs/struct.Statvfs.html' title='nix::sys::statvfs::vfs::Statvfs'>Statvfs</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-9877' class='srclink' href='../../../../src/nix/sys/statvfs.rs.html#53' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../../../nix/sys/statvfs/vfs/struct.Statvfs.html' title='nix::sys::statvfs::vfs::Statvfs'>Statvfs</a></code></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../../../../nix/sys/statvfs/vfs/struct.Statvfs.html' title='nix::sys::statvfs::vfs::Statvfs'>Statvfs</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-9892' class='srclink' href='../../../../src/nix/sys/statvfs.rs.html#53' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../../../nix/sys/statvfs/vfs/struct.Statvfs.html' title='nix::sys::statvfs::vfs::Statvfs'>Statvfs</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-9893' class='srclink' href='../../../../src/nix/sys/statvfs.rs.html#53' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../../";
+        window.currentCrate = "nix";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../../../jquery.js"></script>
+    <script src="../../../../main.js"></script>
+    
+    <script defer src="../../../../search-index.js"></script>
+</body>
+</html>

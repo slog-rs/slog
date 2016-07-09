@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-7113' class='srclink' href='../../src/serde/de/mod.rs.html#674-691' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-7244' class='srclink' href='../../src/serde/de/mod.rs.html#674-691' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait SeqVisitor {
     type <a href='#associatedtype.Error' class='type'>Error</a>: <a class='trait' href='../../serde/de/trait.Error.html' title='serde::de::Error'>Error</a>;
     fn <a href='#tymethod.visit' class='fnname'>visit</a>&lt;T&gt;(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;, Self::<a class='trait' href='../../serde/de/trait.SeqVisitor.html' title='serde::de::SeqVisitor'>Error</a>&gt; <span class='where'>where T: <a class='trait' href='../../serde/de/trait.Deserialize.html' title='serde::de::Deserialize'>Deserialize</a></span>;
@@ -75,8 +75,8 @@ are no more remaining items.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;I, T, E&gt; <a class='trait' href='../../serde/de/trait.SeqVisitor.html' title='serde::de::SeqVisitor'>SeqVisitor</a> for <a class='struct' href='../../serde/de/value/struct.SeqDeserializer.html' title='serde::de::value::SeqDeserializer'>SeqDeserializer</a>&lt;I, E&gt; <span class='where'>where I: <a class='trait' href='../../core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=T&gt;, T: <a class='trait' href='../../serde/de/value/trait.ValueDeserializer.html' title='serde::de::value::ValueDeserializer'>ValueDeserializer</a>&lt;E&gt;, E: <a class='trait' href='../../serde/de/trait.Error.html' title='serde::de::Error'>Error</a></span></code></li>
-<li><code>impl&lt;'a, V&gt; <a class='trait' href='../../serde/de/trait.SeqVisitor.html' title='serde::de::SeqVisitor'>SeqVisitor</a> for &amp;'a mut V <span class='where'>where V: <a class='trait' href='../../serde/de/trait.SeqVisitor.html' title='serde::de::SeqVisitor'>SeqVisitor</a></span></code></li>
+    <li><code>impl&lt;I, T, E&gt; SeqVisitor for <a class='struct' href='../../serde/de/value/struct.SeqDeserializer.html' title='serde::de::value::SeqDeserializer'>SeqDeserializer</a>&lt;I, E&gt; <span class='where'>where I: <a class='trait' href='../../core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a>&lt;Item=T&gt;, T: <a class='trait' href='../../serde/de/value/trait.ValueDeserializer.html' title='serde::de::value::ValueDeserializer'>ValueDeserializer</a>&lt;E&gt;, E: <a class='trait' href='../../serde/de/trait.Error.html' title='serde::de::Error'>Error</a></span></code></li>
+<li><code>impl&lt;'a, V&gt; SeqVisitor for &amp;'a mut V <span class='where'>where V: <a class='trait' href='../../serde/de/trait.SeqVisitor.html' title='serde::de::SeqVisitor'>SeqVisitor</a></span></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/serde/de/trait.SeqVisitor.js">
                  </script></section>
@@ -102,6 +102,8 @@ are no more remaining items.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

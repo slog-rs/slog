@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors['serde'] = [];
+implementors["libc"] = [];implementors["serde"] = [];implementors["void"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

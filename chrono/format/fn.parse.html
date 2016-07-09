@@ -47,8 +47,8 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-3495' class='srclink' href='../../src/chrono/format/parse.rs.html#206-341' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn parse&lt;'a, I&gt;(parsed: &amp;mut <a class='struct' href='../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a>, s: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, items: I) -&gt; <a class='type' href='../../chrono/format/type.ParseResult.html' title='chrono::format::ParseResult'>ParseResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; <span class='where'>where I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=<a class='enum' href='../../chrono/format/enum.Item.html' title='chrono::format::Item'>Item</a>&lt;'a&gt;&gt;</span></pre><div class='docblock'><p>Tries to parse given string into <code>parsed</code> with given formatting items.
+               </span><a id='src-3504' class='srclink' href='../../src/chrono/format/parse.rs.html#206-341' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn parse&lt;'a, I&gt;(parsed: &amp;mut <a class='struct' href='../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a>, s: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, items: I) -&gt; <a class='type' href='../../chrono/format/type.ParseResult.html' title='chrono::format::ParseResult'>ParseResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; <span class='where'>where I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a>&lt;Item=<a class='enum' href='../../chrono/format/enum.Item.html' title='chrono::format::Item'>Item</a>&lt;'a&gt;&gt;</span></pre><div class='docblock'><p>Tries to parse given string into <code>parsed</code> with given formatting items.
 Returns <code>Ok</code> when the entire string has been parsed (otherwise <code>parsed</code> should not be used).
 There should be no trailing string after parsing; use a stray <code>Item::Space</code> to trim whitespaces.</p>
 
@@ -85,6 +85,8 @@ so one can prepend any number of whitespace then any number of zeroes before num
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

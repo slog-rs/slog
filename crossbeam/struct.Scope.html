@@ -47,10 +47,11 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-903' class='srclink' href='../src/crossbeam/scoped.rs.html#11-13' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-899' class='srclink' href='../src/crossbeam/scoped.rs.html#11-13' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Scope&lt;'a&gt; {
     // some fields omitted
-}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;'a&gt; <a class='struct' href='../crossbeam/struct.Scope.html' title='crossbeam::Scope'>Scope</a>&lt;'a&gt;</code></h3><div class='impl-items'><h4 id='method.defer' class='method'><code>fn <a href='#method.defer' class='fnname'>defer</a>&lt;F&gt;(&amp;self, f: F) <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>() + 'a</span></code></h4>
+}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../crossbeam/struct.Scope.html' title='crossbeam::Scope'>Scope</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-928' class='srclink' href='../src/crossbeam/scoped.rs.html#66-243' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.defer' class='method'><code>fn <a href='#method.defer' class='fnname'>defer</a>&lt;F&gt;(&amp;self, f: F) <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>() + 'a</span></code></h4>
 <div class='docblock'><p>Schedule code to be executed when exiting the scope.</p>
 
 <p>This is akin to having a destructor on the stack, except that it is
@@ -163,8 +164,10 @@ than from <code>std::thread</code>:</p>
 });</pre>
 
 <p>Much more straightforward.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../crossbeam/struct.Scope.html' title='crossbeam::Scope'>Scope</a>&lt;'a&gt;</code></h3><div class='impl-items'><h4 id='method.drop' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
-</div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../crossbeam/struct.Scope.html' title='crossbeam::Scope'>Scope</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-962' class='srclink' href='../src/crossbeam/scoped.rs.html#258-262' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.drop' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>A method called when the value goes out of scope. <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -187,6 +190,8 @@ than from <code>std::thread</code>:</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

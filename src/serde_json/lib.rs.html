@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/serde_json-0.7.1/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.7.4/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -190,6 +190,10 @@
 <span id="146">146</span>
 <span id="147">147</span>
 <span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! JSON and serialization</span>
 <span class='doccomment'>//!</span>
@@ -209,7 +213,8 @@
 <span class='doccomment'>//! * `String`: equivalent to rust&#39;s `String`</span>
 <span class='doccomment'>//! * `Array`: equivalent to rust&#39;s `Vec&lt;T&gt;`, but also allowing objects of different types in the</span>
 <span class='doccomment'>//!    same array</span>
-<span class='doccomment'>//! * `Object`: equivalent to rust&#39;s `BTreeMap&lt;String, serde_json::Value&gt;`</span>
+<span class='doccomment'>//! * `Object`: equivalent to rust&#39;s `BTreeMap&lt;String, serde_json::Value&gt;`; set the</span>
+<span class='doccomment'>//!    `preserve_order` feature to use `LinkedHashMap&lt;String, serde_json::Value&gt;` instead</span>
 <span class='doccomment'>//! * `Null`</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! An object is a series of string keys mapping to values, in `&quot;key&quot;: value` format.  Arrays are</span>
@@ -312,6 +317,9 @@
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>num_traits</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>core</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>itoa</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;preserve_order&quot;</span>)]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>linked_hash_map</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>de</span>::{
     <span class='ident'>Deserializer</span>,
@@ -332,7 +340,7 @@
     <span class='ident'>to_string_pretty</span>,
     <span class='ident'>escape_str</span>,
 };
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>value</span>::{<span class='ident'>Value</span>, <span class='ident'>to_value</span>, <span class='ident'>from_value</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>value</span>::{<span class='ident'>Value</span>, <span class='ident'>Map</span>, <span class='ident'>to_value</span>, <span class='ident'>from_value</span>};
 
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>builder</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>de</span>;
@@ -363,6 +371,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

@@ -262,17 +262,31 @@
 <span id="218">218</span>
 <span id="219">219</span>
 <span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Drains</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Drains are responsible for filtering, formatting and writing the log records</span>
 <span class='doccomment'>//! into given destination.</span>
-<span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Level</span>};
-<span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>format</span>;
-<span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>logger</span>::<span class='ident'>RecordInfo</span>;
+<span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Level</span>;
+<span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>format</span>;
+<span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>logger</span>::<span class='ident'>RecordInfo</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>io</span>, <span class='ident'>str</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Mutex</span>;
-<span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>OwnedKeyValue</span>,<span class='ident'>BorrowedKeyValue</span>};
+<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>OwnedKeyValue</span>, <span class='ident'>BorrowedKeyValue</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>thread</span>;
 
@@ -280,9 +294,9 @@
 <span class='doccomment'>/// Drain for Loggers</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Implementing this trait allows writing own Drains</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Drain</span> : <span class='ident'>Send</span><span class='op'>+</span><span class='ident'>Sync</span> {
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Drain</span>: <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span> {
     <span class='doccomment'>/// Write one logging record</span>
-    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>info</span> : <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>], <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]);
+    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>], <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]);
 }
 
 
@@ -290,23 +304,26 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Uses mutex to serialize writes.</span>
 <span class='doccomment'>/// TODO: Add one that does not serialize?</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>W</span> : <span class='ident'>io</span>::<span class='ident'>Write</span>, <span class='ident'>F</span> : <span class='ident'>format</span>::<span class='ident'>Format</span><span class='op'>&gt;</span> {
-    <span class='ident'>io</span> : <span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>,
-    <span class='ident'>format</span> : <span class='ident'>F</span>,
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>io</span>::<span class='ident'>Write</span>, <span class='ident'>F</span>: <span class='ident'>format</span>::<span class='ident'>Format</span><span class='op'>&gt;</span> {
+    <span class='ident'>io</span>: <span class='ident'>Mutex</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>,
+    <span class='ident'>format</span>: <span class='ident'>F</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>W</span> : <span class='ident'>io</span>::<span class='ident'>Write</span>, <span class='ident'>F</span> : <span class='ident'>format</span>::<span class='ident'>Format</span><span class='op'>&gt;</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>W</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>io</span>::<span class='ident'>Write</span>, <span class='ident'>F</span>: <span class='ident'>format</span>::<span class='ident'>Format</span><span class='op'>&gt;</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>W</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Create new `Streamer` writing to `io` using `format`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>io</span> : <span class='ident'>W</span>, <span class='ident'>format</span> : <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>io</span>: <span class='ident'>W</span>, <span class='ident'>format</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>Streamer</span> {
             <span class='ident'>io</span>: <span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='ident'>io</span>),
-            <span class='ident'>format</span> : <span class='ident'>format</span>,
+            <span class='ident'>format</span>: <span class='ident'>format</span>,
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>W</span> : <span class='lifetime'>&#39;static</span><span class='op'>+</span><span class='ident'>io</span>::<span class='ident'>Write</span><span class='op'>+</span><span class='ident'>Send</span>, <span class='ident'>F</span> : <span class='ident'>format</span>::<span class='ident'>Format</span><span class='op'>+</span><span class='ident'>Send</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>W</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>info</span> : <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='ident'>logger_values</span> : <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>], <span class='ident'>values</span> : <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='op'>+</span> <span class='ident'>Send</span>, <span class='ident'>F</span>: <span class='ident'>format</span>::<span class='ident'>Format</span> <span class='op'>+</span> <span class='ident'>Send</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>W</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
+           <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
+           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>],
+           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) {
         <span class='kw'>let</span> <span class='ident'>formatted</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>format</span>.<span class='ident'>format</span>(<span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>);
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>io</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>io</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
@@ -318,16 +335,16 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Wraps a drain and passes records to it, only if their `RecordInfo`</span>
 <span class='doccomment'>/// satisifies a condition `cond`.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> {
-    <span class='ident'>drain</span> : <span class='ident'>D</span>,
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> {
+    <span class='ident'>drain</span>: <span class='ident'>D</span>,
     <span class='comment'>// eliminated dynamic dispatch, after rust learns `-&gt; impl Trait`</span>
-    <span class='ident'>cond</span> : <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>)<span class='op'>-&gt;</span><span class='ident'>bool</span><span class='op'>+</span><span class='lifetime'>&#39;static</span><span class='op'>+</span><span class='ident'>Send</span><span class='op'>+</span><span class='ident'>Sync</span><span class='op'>&gt;</span>,
+    <span class='ident'>cond</span>: <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span><span class='op'>&gt;</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Create Filter wrapping given `subdrain` and passing to it records</span>
     <span class='doccomment'>/// only the `cond` is true</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>F</span> : <span class='lifetime'>&#39;static</span><span class='op'>+</span><span class='ident'>Sync</span><span class='op'>+</span><span class='ident'>Send</span><span class='op'>+</span><span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>)<span class='op'>-&gt;</span><span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='ident'>drain</span> : <span class='ident'>D</span>, <span class='ident'>cond</span> : <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>F</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='ident'>drain</span>: <span class='ident'>D</span>, <span class='ident'>cond</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>Filter</span> {
             <span class='ident'>drain</span>: <span class='ident'>drain</span>,
             <span class='ident'>cond</span>: <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>cond</span>),
@@ -335,8 +352,11 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>info</span> : <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='ident'>logger_values</span> : <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>], <span class='ident'>values</span> : <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
+           <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
+           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>],
+           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) {
         <span class='kw'>if</span> (<span class='self'>self</span>.<span class='ident'>cond</span>)(<span class='kw-2'>&amp;</span><span class='ident'>info</span>) {
             <span class='self'>self</span>.<span class='ident'>drain</span>.<span class='ident'>log</span>(<span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>)
         }
@@ -351,14 +371,14 @@
 <span class='doccomment'>/// TODO: Remove this type. This drain is a special case of `Filter`, but</span>
 <span class='doccomment'>/// because `Filter` can not use static dispatch ATM due to Rust limitations</span>
 <span class='doccomment'>/// that will be lifted in the future, it is a standalone type.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> {
     <span class='ident'>level</span>: <span class='ident'>Level</span>,
-    <span class='ident'>drain</span> : <span class='ident'>D</span>,
+    <span class='ident'>drain</span>: <span class='ident'>D</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Create `FilterLevel`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>drain</span> : <span class='ident'>D</span>, <span class='ident'>level</span> : <span class='ident'>Level</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>drain</span>: <span class='ident'>D</span>, <span class='ident'>level</span>: <span class='ident'>Level</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>FilterLevel</span> {
             <span class='ident'>level</span>: <span class='ident'>level</span>,
             <span class='ident'>drain</span>: <span class='ident'>drain</span>,
@@ -366,8 +386,11 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>info</span> : <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='ident'>logger_values</span> : <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>], <span class='ident'>values</span> : <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
+           <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
+           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>],
+           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) {
         <span class='kw'>if</span> <span class='ident'>info</span>.<span class='ident'>level</span>.<span class='ident'>is_at_least</span>(<span class='self'>self</span>.<span class='ident'>level</span>) {
             <span class='self'>self</span>.<span class='ident'>drain</span>.<span class='ident'>log</span>(<span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>)
         }
@@ -375,15 +398,15 @@
 }
 
 <span class='doccomment'>/// Duplicate records into two drains</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span> : <span class='ident'>Drain</span>, <span class='ident'>D2</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> {
-    <span class='ident'>drain1</span> : <span class='ident'>D1</span>,
-    <span class='ident'>drain2</span> : <span class='ident'>D2</span>,
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span>: <span class='ident'>Drain</span>, <span class='ident'>D2</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> {
+    <span class='ident'>drain1</span>: <span class='ident'>D1</span>,
+    <span class='ident'>drain2</span>: <span class='ident'>D2</span>,
 }
 
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D1</span> : <span class='ident'>Drain</span>, <span class='ident'>D2</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span>, <span class='ident'>D2</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D1</span>: <span class='ident'>Drain</span>, <span class='ident'>D2</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span>, <span class='ident'>D2</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Create `Duplicate`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>drain1</span> : <span class='ident'>D1</span>, <span class='ident'>drain2</span> : <span class='ident'>D2</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>drain1</span>: <span class='ident'>D1</span>, <span class='ident'>drain2</span>: <span class='ident'>D2</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>Duplicate</span> {
             <span class='ident'>drain1</span>: <span class='ident'>drain1</span>,
             <span class='ident'>drain2</span>: <span class='ident'>drain2</span>,
@@ -391,17 +414,20 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D1</span> : <span class='ident'>Drain</span>, <span class='ident'>D2</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span>, <span class='ident'>D2</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>info</span> : <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='ident'>logger_values</span> : <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>], <span class='ident'>values</span> : <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D1</span>: <span class='ident'>Drain</span>, <span class='ident'>D2</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span>, <span class='ident'>D2</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
+           <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
+           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>],
+           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) {
         <span class='self'>self</span>.<span class='ident'>drain1</span>.<span class='ident'>log</span>(<span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>);
         <span class='self'>self</span>.<span class='ident'>drain2</span>.<span class='ident'>log</span>(<span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>);
     }
 }
 
-<span class='kw'>enum</span> <span class='ident'>AsyncIoMsg</span>{
+<span class='kw'>enum</span> <span class='ident'>AsyncIoMsg</span> {
     <span class='ident'>Bytes</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>),
     <span class='ident'>Flush</span>,
-    <span class='ident'>Eof</span>
+    <span class='ident'>Eof</span>,
 }
 
 <span class='doccomment'>/// Asynchronous io::Writer</span>
@@ -414,13 +440,13 @@
 <span class='doccomment'>/// Note: Dropping `AsyncIoWriter` waits for it&#39;s io-thread to finish.</span>
 <span class='doccomment'>/// If you can&#39;t tolerate the delay, make sure to use `Logger::</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>AsyncIoWriter</span> {
-    <span class='ident'>sender</span> : <span class='ident'>mpsc</span>::<span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>AsyncIoMsg</span><span class='op'>&gt;</span>,
-    <span class='ident'>join</span> : <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>thread</span>::<span class='ident'>JoinHandle</span><span class='op'>&lt;</span>()<span class='op'>&gt;&gt;</span>,
+    <span class='ident'>sender</span>: <span class='ident'>mpsc</span>::<span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>AsyncIoMsg</span><span class='op'>&gt;</span>,
+    <span class='ident'>join</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>thread</span>::<span class='ident'>JoinHandle</span><span class='op'>&lt;</span>()<span class='op'>&gt;&gt;</span>,
 }
 
 <span class='kw'>impl</span> <span class='ident'>AsyncIoWriter</span> {
     <span class='doccomment'>/// Create `AsyncIoWriter`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>W</span> : <span class='ident'>io</span>::<span class='ident'>Write</span><span class='op'>+</span><span class='ident'>Send</span><span class='op'>+</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='ident'>io</span> : <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='ident'>io</span>: <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
         <span class='kw'>let</span> <span class='ident'>join</span> <span class='op'>=</span> <span class='ident'>thread</span>::<span class='ident'>spawn</span>(<span class='kw'>move</span> <span class='op'>||</span> {
             <span class='kw'>loop</span> {
@@ -460,27 +486,29 @@
 }
 
 <span class='doccomment'>/// Create AsyncIoWriter</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>async</span><span class='op'>&lt;</span><span class='ident'>W</span> : <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span><span class='op'>&gt;</span>(<span class='ident'>io</span> : <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>AsyncIoWriter</span> {
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>async</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span><span class='op'>&gt;</span>(<span class='ident'>io</span>: <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>AsyncIoWriter</span> {
     <span class='ident'>AsyncIoWriter</span>::<span class='ident'>new</span>(<span class='ident'>io</span>)
 }
 
 <span class='doccomment'>/// Create Streamer drain</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>stream</span><span class='op'>&lt;</span><span class='ident'>W</span> : <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='op'>+</span> <span class='ident'>Send</span>, <span class='ident'>F</span> : <span class='ident'>format</span>::<span class='ident'>Format</span><span class='op'>&gt;</span>(<span class='ident'>io</span> : <span class='ident'>W</span>, <span class='ident'>format</span> : <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>W</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>stream</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='op'>+</span> <span class='ident'>Send</span>, <span class='ident'>F</span>: <span class='ident'>format</span>::<span class='ident'>Format</span><span class='op'>&gt;</span>(<span class='ident'>io</span>: <span class='ident'>W</span>, <span class='ident'>format</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>W</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='ident'>Streamer</span>::<span class='ident'>new</span>(<span class='ident'>io</span>, <span class='ident'>format</span>)
 }
 
 <span class='doccomment'>/// Filter by `cond` closure</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>filter</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span>, <span class='ident'>F</span> : <span class='lifetime'>&#39;static</span><span class='op'>+</span><span class='ident'>Send</span><span class='op'>+</span><span class='ident'>Sync</span><span class='op'>+</span><span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>)<span class='op'>-&gt;</span><span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='ident'>cond</span> : <span class='ident'>F</span>, <span class='ident'>d</span> : <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>filter</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span>, <span class='ident'>F</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span><span class='op'>&gt;</span>(<span class='ident'>cond</span>: <span class='ident'>F</span>,
+                                                                            <span class='ident'>d</span>: <span class='ident'>D</span>)
+                                                                            <span class='op'>-&gt;</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
     <span class='ident'>Filter</span>::<span class='ident'>new</span>(<span class='ident'>d</span>, <span class='ident'>cond</span>)
 }
 
 <span class='doccomment'>/// Filter by log level</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>filter_level</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span>(<span class='ident'>level</span> : <span class='ident'>Level</span>, <span class='ident'>d</span> : <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>filter_level</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span>(<span class='ident'>level</span>: <span class='ident'>Level</span>, <span class='ident'>d</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
     <span class='ident'>FilterLevel</span>::<span class='ident'>new</span>(<span class='ident'>d</span>, <span class='ident'>level</span>)
 }
 
 <span class='doccomment'>/// Create Duplicate drain</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span> : <span class='ident'>Drain</span>, <span class='ident'>D2</span> : <span class='ident'>Drain</span><span class='op'>&gt;</span>(<span class='ident'>d1</span> : <span class='ident'>D1</span>, <span class='ident'>d2</span> : <span class='ident'>D2</span>) <span class='op'>-&gt;</span> <span class='ident'>Duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span>, <span class='ident'>D2</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span>: <span class='ident'>Drain</span>, <span class='ident'>D2</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span>(<span class='ident'>d1</span>: <span class='ident'>D1</span>, <span class='ident'>d2</span>: <span class='ident'>D2</span>) <span class='op'>-&gt;</span> <span class='ident'>Duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span>, <span class='ident'>D2</span><span class='op'>&gt;</span> {
     <span class='ident'>Duplicate</span>::<span class='ident'>new</span>(<span class='ident'>d1</span>, <span class='ident'>d2</span>)
 }
 </pre>
@@ -507,6 +535,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

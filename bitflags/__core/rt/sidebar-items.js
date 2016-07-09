@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["begin_panic","This is the entry point of panicking for panic!() and assert!()."],["begin_panic_fmt","The entry point for panicking with a formatted message."]]});

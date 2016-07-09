@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/chrono-0.2.22/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.2.22/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -1153,9 +1153,9 @@
     <span class='kw'>fn</span> <span class='ident'>year_ce</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>bool</span>, <span class='ident'>u32</span>) {
         <span class='kw'>let</span> <span class='ident'>year</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>year</span>();
         <span class='kw'>if</span> <span class='ident'>year</span> <span class='op'>&lt;</span> <span class='number'>1</span> {
-            (<span class='boolval'>false</span>, (<span class='number'>1</span> <span class='op'>-</span> <span class='ident'>year</span>) <span class='kw'>as</span> <span class='ident'>u32</span>)
+            (<span class='boolvalue'>false</span>, (<span class='number'>1</span> <span class='op'>-</span> <span class='ident'>year</span>) <span class='kw'>as</span> <span class='ident'>u32</span>)
         } <span class='kw'>else</span> {
-            (<span class='boolval'>true</span>, <span class='ident'>year</span> <span class='kw'>as</span> <span class='ident'>u32</span>)
+            (<span class='boolvalue'>true</span>, <span class='ident'>year</span> <span class='kw'>as</span> <span class='ident'>u32</span>)
         }
     }
 
@@ -1187,37 +1187,37 @@
     <span class='doccomment'>/// Makes a new value with the year number changed.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when the resulting value would be invalid.</span>
-    <span class='kw'>fn</span> <span class='ident'>with_year</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>with_year</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Makes a new value with the month number (starting from 1) changed.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when the resulting value would be invalid.</span>
-    <span class='kw'>fn</span> <span class='ident'>with_month</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>month</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>with_month</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>month</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Makes a new value with the month number (starting from 0) changed.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when the resulting value would be invalid.</span>
-    <span class='kw'>fn</span> <span class='ident'>with_month0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>month0</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>with_month0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>month0</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Makes a new value with the day of month (starting from 1) changed.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when the resulting value would be invalid.</span>
-    <span class='kw'>fn</span> <span class='ident'>with_day</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>day</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>with_day</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>day</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Makes a new value with the day of month (starting from 0) changed.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when the resulting value would be invalid.</span>
-    <span class='kw'>fn</span> <span class='ident'>with_day0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>day0</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>with_day0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>day0</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Makes a new value with the day of year (starting from 1) changed.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when the resulting value would be invalid.</span>
-    <span class='kw'>fn</span> <span class='ident'>with_ordinal</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ordinal</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>with_ordinal</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ordinal</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Makes a new value with the day of year (starting from 0) changed.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when the resulting value would be invalid.</span>
-    <span class='kw'>fn</span> <span class='ident'>with_ordinal0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ordinal0</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>with_ordinal0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ordinal0</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Returns the number of days since January 1, 1 (Day 1) in the proleptic Gregorian calendar.</span>
     <span class='kw'>fn</span> <span class='ident'>num_days_from_ce</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
@@ -1265,22 +1265,22 @@
     <span class='doccomment'>/// Makes a new value with the hour number changed.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when the resulting value would be invalid.</span>
-    <span class='kw'>fn</span> <span class='ident'>with_hour</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>hour</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>with_hour</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>hour</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Makes a new value with the minute number changed.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when the resulting value would be invalid.</span>
-    <span class='kw'>fn</span> <span class='ident'>with_minute</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>min</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>with_minute</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>min</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Makes a new value with the second number changed.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when the resulting value would be invalid.</span>
-    <span class='kw'>fn</span> <span class='ident'>with_second</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>sec</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>with_second</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>sec</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Makes a new value with nanoseconds since the whole non-leap second changed.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when the resulting value would be invalid.</span>
-    <span class='kw'>fn</span> <span class='ident'>with_nanosecond</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>nano</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>Self</span><span class='op'>&gt;</span>;
+    <span class='kw'>fn</span> <span class='ident'>with_nanosecond</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>nano</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Returns the number of non-leap seconds past the last midnight.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -1339,6 +1339,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-4664' class='srclink' href='../src/rustc_serialize/serialize.rs.html#695-699' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-4690' class='srclink' href='../src/rustc_serialize/serialize.rs.html#695-699' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait EncoderHelpers: <a class='trait' href='../rustc_serialize/trait.Encoder.html' title='rustc_serialize::Encoder'>Encoder</a> {
     fn <a href='#tymethod.emit_from_vec' class='fnname'>emit_from_vec</a>&lt;T, F&gt;(&amp;mut self, v: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a>T<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, f: F) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, Self::Error&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;mut Self, &amp;T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, Self::Error&gt;</span>;
 }</pre>
@@ -56,7 +56,8 @@
         <h3 id='tymethod.emit_from_vec' class='method stab '><code>fn <a href='#tymethod.emit_from_vec' class='fnname'>emit_from_vec</a>&lt;T, F&gt;(&amp;mut self, v: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a>T<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, f: F) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, Self::Error&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;mut Self, &amp;T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, Self::Error&gt;</span></code></h3></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    </ul><script type="text/javascript" async
+    <li><code>impl&lt;S: <a class='trait' href='../rustc_serialize/trait.Encoder.html' title='rustc_serialize::Encoder'>Encoder</a>&gt; EncoderHelpers for S</code></li>
+</ul><script type="text/javascript" async
                          src="../implementors/rustc_serialize/trait.EncoderHelpers.js">
                  </script></section>
     <section id='search' class="content hidden"></section>
@@ -81,6 +82,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

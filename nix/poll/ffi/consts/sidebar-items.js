@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["POLLERR",""],["POLLHUP",""],["POLLIN",""],["POLLNVAL",""],["POLLOUT",""],["POLLPRI",""],["POLLRDBAND",""],["POLLRDNORM",""],["POLLWRBAND",""],["POLLWRNORM",""]],"struct":[["EventFlags",""]],"type":[["nfds_t",""]]});

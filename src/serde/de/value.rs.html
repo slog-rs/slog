@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-88ac128001ac3a9a/serde-0.7.10/src/de/value.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.7.10/src/de/value.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>value.rs.html -- source</title>
@@ -848,32 +848,32 @@
 
 <span class='kw'>impl</span> <span class='ident'>de</span>::<span class='ident'>Error</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>))]</span>
-    <span class='kw'>fn</span> <span class='ident'>custom</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='ident'>msg</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>Custom</span>(<span class='ident'>msg</span>.<span class='ident'>into</span>()) }
+    <span class='kw'>fn</span> <span class='ident'>custom</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='ident'>msg</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>Custom</span>(<span class='ident'>msg</span>.<span class='ident'>into</span>()) }
 
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>), <span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>)))]</span>
-    <span class='kw'>fn</span> <span class='ident'>custom</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span><span class='op'>&gt;&gt;</span>(<span class='ident'>msg</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>Custom</span>(<span class='ident'>msg</span>.<span class='ident'>into</span>()) }
+    <span class='kw'>fn</span> <span class='ident'>custom</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span><span class='op'>&gt;&gt;</span>(<span class='ident'>msg</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>Custom</span>(<span class='ident'>msg</span>.<span class='ident'>into</span>()) }
 
-    <span class='kw'>fn</span> <span class='ident'>end_of_stream</span>() <span class='op'>-&gt;</span> <span class='kw'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>EndOfStream</span> }
-    <span class='kw'>fn</span> <span class='ident'>invalid_type</span>(<span class='ident'>ty</span>: <span class='ident'>de</span>::<span class='ident'>Type</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>InvalidType</span>(<span class='ident'>ty</span>) }
+    <span class='kw'>fn</span> <span class='ident'>end_of_stream</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>EndOfStream</span> }
+    <span class='kw'>fn</span> <span class='ident'>invalid_type</span>(<span class='ident'>ty</span>: <span class='ident'>de</span>::<span class='ident'>Type</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>InvalidType</span>(<span class='ident'>ty</span>) }
 
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>))]</span>
-    <span class='kw'>fn</span> <span class='ident'>invalid_value</span>(<span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>InvalidValue</span>(<span class='ident'>msg</span>.<span class='ident'>to_owned</span>()) }
+    <span class='kw'>fn</span> <span class='ident'>invalid_value</span>(<span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>InvalidValue</span>(<span class='ident'>msg</span>.<span class='ident'>to_owned</span>()) }
 
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>), <span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>)))]</span>
-    <span class='kw'>fn</span> <span class='ident'>invalid_value</span>(<span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>InvalidValue</span>(<span class='string'>&quot;invalid value&quot;</span>) }
+    <span class='kw'>fn</span> <span class='ident'>invalid_value</span>(<span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>InvalidValue</span>(<span class='string'>&quot;invalid value&quot;</span>) }
 
-    <span class='kw'>fn</span> <span class='ident'>invalid_length</span>(<span class='ident'>len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>InvalidLength</span>(<span class='ident'>len</span>) }
+    <span class='kw'>fn</span> <span class='ident'>invalid_length</span>(<span class='ident'>len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>InvalidLength</span>(<span class='ident'>len</span>) }
 
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>))]</span>
-    <span class='kw'>fn</span> <span class='ident'>unknown_variant</span>(<span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>UnknownVariant</span>(<span class='ident'>String</span>::<span class='ident'>from</span>(<span class='ident'>variant</span>)) }
+    <span class='kw'>fn</span> <span class='ident'>unknown_variant</span>(<span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>UnknownVariant</span>(<span class='ident'>String</span>::<span class='ident'>from</span>(<span class='ident'>variant</span>)) }
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>))]</span>
-    <span class='kw'>fn</span> <span class='ident'>unknown_field</span>(<span class='ident'>field</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>UnknownField</span>(<span class='ident'>String</span>::<span class='ident'>from</span>(<span class='ident'>field</span>)) }
+    <span class='kw'>fn</span> <span class='ident'>unknown_field</span>(<span class='ident'>field</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>UnknownField</span>(<span class='ident'>String</span>::<span class='ident'>from</span>(<span class='ident'>field</span>)) }
 
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>), <span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>)))]</span>
-    <span class='kw'>fn</span> <span class='ident'>unknown_variant</span>(<span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>UnknownVariant</span>(<span class='string'>&quot;unknown variant&quot;</span>) }
+    <span class='kw'>fn</span> <span class='ident'>unknown_variant</span>(<span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>UnknownVariant</span>(<span class='string'>&quot;unknown variant&quot;</span>) }
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>), <span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>)))]</span>
-    <span class='kw'>fn</span> <span class='ident'>unknown_field</span>(<span class='ident'>field</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>UnknownField</span>(<span class='string'>&quot;unknown field&quot;</span>) }
-    <span class='kw'>fn</span> <span class='ident'>missing_field</span>(<span class='ident'>field</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>MissingField</span>(<span class='ident'>field</span>) }
+    <span class='kw'>fn</span> <span class='ident'>unknown_field</span>(<span class='ident'>field</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>UnknownField</span>(<span class='string'>&quot;unknown field&quot;</span>) }
+    <span class='kw'>fn</span> <span class='ident'>missing_field</span>(<span class='ident'>field</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='ident'>Error</span>::<span class='ident'>MissingField</span>(<span class='ident'>field</span>) }
 }
 
 <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
@@ -911,7 +911,7 @@
     <span class='kw'>type</span> <span class='ident'>Deserializer</span>: <span class='ident'>de</span>::<span class='ident'>Deserializer</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Convert this value into a deserializer.</span>
-    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>Deserializer</span>;
+    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Deserializer</span>;
 }
 
 <span class='comment'>///////////////////////////////////////////////////////////////////////////////</span>
@@ -934,13 +934,13 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span>,
     {
         <span class='ident'>visitor</span>.<span class='ident'>visit_unit</span>()
     }
 
-    <span class='kw'>fn</span> <span class='ident'>deserialize_option</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>deserialize_option</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span>,
     {
         <span class='ident'>visitor</span>.<span class='ident'>visit_none</span>()
@@ -969,7 +969,7 @@
         {
             <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-            <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+            <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
                 <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span>,
             {
                 <span class='kw'>match</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>take</span>() {
@@ -1016,7 +1016,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span>,
     {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>take</span>() {
@@ -1028,7 +1028,7 @@
     <span class='kw'>fn</span> <span class='ident'>deserialize_enum</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
                      <span class='ident'>_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
                      <span class='ident'>_variants</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>],
-                     <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                     <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>EnumVisitor</span>,
     {
         <span class='ident'>visitor</span>.<span class='ident'>visit</span>(<span class='self'>self</span>)
@@ -1040,13 +1040,13 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>visit_variant</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>visit_variant</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>de</span>::<span class='ident'>Deserialize</span>,
     {
         <span class='ident'>de</span>::<span class='ident'>Deserialize</span>::<span class='ident'>deserialize</span>(<span class='self'>self</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>visit_unit</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>visit_unit</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='prelude-val'>Ok</span>(())
     }
 }
@@ -1074,7 +1074,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span>,
     {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>take</span>() {
@@ -1086,7 +1086,7 @@
     <span class='kw'>fn</span> <span class='ident'>deserialize_enum</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
                      <span class='ident'>_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
                      <span class='ident'>_variants</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>],
-                     <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                     <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>EnumVisitor</span>,
     {
         <span class='ident'>visitor</span>.<span class='ident'>visit</span>(<span class='self'>self</span>)
@@ -1099,13 +1099,13 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>visit_variant</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>visit_variant</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>de</span>::<span class='ident'>Deserialize</span>,
     {
         <span class='ident'>de</span>::<span class='ident'>Deserialize</span>::<span class='ident'>deserialize</span>(<span class='self'>self</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>visit_unit</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>visit_unit</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='prelude-val'>Ok</span>(())
     }
 }
@@ -1123,7 +1123,7 @@
     <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>de</span>::<span class='ident'>Error</span>,
 {
     <span class='doccomment'>/// Construct a new `SeqDeserializer&lt;I&gt;`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>iter</span>: <span class='ident'>I</span>, <span class='ident'>len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>iter</span>: <span class='ident'>I</span>, <span class='ident'>len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>SeqDeserializer</span> {
             <span class='ident'>iter</span>: <span class='ident'>iter</span>,
             <span class='ident'>len</span>: <span class='ident'>len</span>,
@@ -1139,7 +1139,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span>,
     {
         <span class='ident'>visitor</span>.<span class='ident'>visit_seq</span>(<span class='self'>self</span>)
@@ -1153,7 +1153,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>visit</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>visit</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Deserialize</span>
     {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>next</span>() {
@@ -1166,7 +1166,7 @@
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>==</span> <span class='number'>0</span> {
             <span class='prelude-val'>Ok</span>(())
         } <span class='kw'>else</span> {
@@ -1188,7 +1188,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Deserializer</span> <span class='op'>=</span> <span class='ident'>SeqDeserializer</span><span class='op'>&lt;</span><span class='ident'>vec</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>E</span><span class='op'>&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>Deserializer</span> {
+    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Deserializer</span> {
         <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>len</span>();
         <span class='ident'>SeqDeserializer</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>into_iter</span>(), <span class='ident'>len</span>)
     }
@@ -1201,7 +1201,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Deserializer</span> <span class='op'>=</span> <span class='ident'>SeqDeserializer</span><span class='op'>&lt;</span><span class='ident'>btree_set</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>E</span><span class='op'>&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>Deserializer</span> {
+    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Deserializer</span> {
         <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>len</span>();
         <span class='ident'>SeqDeserializer</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>into_iter</span>(), <span class='ident'>len</span>)
     }
@@ -1214,7 +1214,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Deserializer</span> <span class='op'>=</span> <span class='ident'>SeqDeserializer</span><span class='op'>&lt;</span><span class='ident'>hash_set</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>E</span><span class='op'>&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>Deserializer</span> {
+    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Deserializer</span> {
         <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>len</span>();
         <span class='ident'>SeqDeserializer</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>into_iter</span>(), <span class='ident'>len</span>)
     }
@@ -1233,7 +1233,7 @@
           <span class='ident'>E</span>: <span class='ident'>de</span>::<span class='ident'>Error</span>,
 {
     <span class='doccomment'>/// Construct a new `SeqVisitorDeserializer&lt;V_, E&gt;`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>visitor</span>: <span class='ident'>V_</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>visitor</span>: <span class='ident'>V_</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>SeqVisitorDeserializer</span>{
             <span class='ident'>visitor</span>: <span class='ident'>visitor</span>,
             <span class='ident'>marker</span>: <span class='ident'>PhantomData</span>
@@ -1247,7 +1247,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='ident'>visitor</span>.<span class='ident'>visit_seq</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>visitor</span>)
     }
 }
@@ -1274,7 +1274,7 @@
           <span class='ident'>E</span>: <span class='ident'>de</span>::<span class='ident'>Error</span>,
 {
     <span class='doccomment'>/// Construct a new `MapDeserializer&lt;I, K, V&gt;`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>iter</span>: <span class='ident'>I</span>, <span class='ident'>len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>iter</span>: <span class='ident'>I</span>, <span class='ident'>len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>MapDeserializer</span> {
             <span class='ident'>iter</span>: <span class='ident'>iter</span>,
             <span class='ident'>value</span>: <span class='prelude-val'>None</span>,
@@ -1292,7 +1292,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V_</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V_</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V_</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V_</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V_</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V_</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V_</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span>,
     {
         <span class='ident'>visitor</span>.<span class='ident'>visit_map</span>(<span class='self'>self</span>)
@@ -1307,7 +1307,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>visit_key</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>visit_key</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>de</span>::<span class='ident'>Deserialize</span>,
     {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>next</span>() {
@@ -1321,7 +1321,7 @@
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>visit_value</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>visit_value</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>de</span>::<span class='ident'>Deserialize</span>,
     {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>value</span>.<span class='ident'>take</span>() {
@@ -1335,7 +1335,7 @@
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>len</span> <span class='op'>==</span> <span class='number'>0</span> {
             <span class='prelude-val'>Ok</span>(())
         } <span class='kw'>else</span> {
@@ -1358,7 +1358,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Deserializer</span> <span class='op'>=</span> <span class='ident'>MapDeserializer</span><span class='op'>&lt;</span><span class='ident'>btree_map</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>, <span class='ident'>K</span>, <span class='ident'>V</span>, <span class='ident'>E</span><span class='op'>&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>Deserializer</span> {
+    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Deserializer</span> {
         <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>len</span>();
         <span class='ident'>MapDeserializer</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>into_iter</span>(), <span class='ident'>len</span>)
     }
@@ -1372,7 +1372,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Deserializer</span> <span class='op'>=</span> <span class='ident'>MapDeserializer</span><span class='op'>&lt;</span><span class='ident'>hash_map</span>::<span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>, <span class='ident'>K</span>, <span class='ident'>V</span>, <span class='ident'>E</span><span class='op'>&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>Deserializer</span> {
+    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Deserializer</span> {
         <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>len</span>();
         <span class='ident'>MapDeserializer</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>into_iter</span>(), <span class='ident'>len</span>)
     }
@@ -1391,7 +1391,7 @@
           <span class='ident'>E</span>: <span class='ident'>de</span>::<span class='ident'>Error</span>,
 {
     <span class='doccomment'>/// Construct a new `MapVisitorDeserializer&lt;V_, E&gt;`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>visitor</span>: <span class='ident'>V_</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>visitor</span>: <span class='ident'>V_</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>MapVisitorDeserializer</span>{
             <span class='ident'>visitor</span>: <span class='ident'>visitor</span>,
             <span class='ident'>marker</span>: <span class='ident'>PhantomData</span>
@@ -1405,7 +1405,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
         <span class='ident'>visitor</span>.<span class='ident'>visit_map</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>visitor</span>)
     }
 }
@@ -1430,7 +1430,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span>,
     {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>take</span>() {
@@ -1449,7 +1449,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Deserializer</span> <span class='op'>=</span> <span class='ident'>ByteBufDeserializer</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Self</span>::<span class='ident'>Deserializer</span> {
+    <span class='kw'>fn</span> <span class='ident'>into_deserializer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Deserializer</span> {
         <span class='ident'>ByteBufDeserializer</span>(<span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='ident'>into</span>()), <span class='ident'>PhantomData</span>)
     }
 }
@@ -1464,7 +1464,7 @@
 {
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>E</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='ident'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>de</span>::<span class='ident'>Visitor</span>,
     {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>take</span>() {
@@ -1497,6 +1497,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

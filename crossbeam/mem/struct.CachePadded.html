@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-414' class='srclink' href='../../src/crossbeam/mem/cache_padded.rs.html#26-29' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-411' class='srclink' href='../../src/crossbeam/mem/cache_padded.rs.html#26-29' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct CachePadded&lt;T&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>Pad <code>T</code> to the length of a cacheline.</p>
@@ -62,17 +62,26 @@ architectures.</p>
 
 <p><strong>Warning</strong>: the wrapped data is never dropped; move out using <code>ptr::read</code>
 if you need to run dtors.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;T: <a class='trait' href='../../crossbeam/mem/trait.ZerosValid.html' title='crossbeam::mem::ZerosValid'>ZerosValid</a>&gt; <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.zeroed' class='method'><code>fn <a href='#method.zeroed' class='fnname'>zeroed</a>() -&gt; <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;T: <a class='trait' href='../../crossbeam/mem/trait.ZerosValid.html' title='crossbeam::mem::ZerosValid'>ZerosValid</a>&gt; <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-435' class='srclink' href='../../src/crossbeam/mem/cache_padded.rs.html#53-71' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.zeroed' class='method'><code>fn <a href='#method.zeroed' class='fnname'>zeroed</a>() -&gt; <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>A const fn equivalent to mem::zeroed().</p>
-</div></div><h3 class='impl'><code>impl&lt;T&gt; <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(t: T) -&gt; <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></h4>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-443' class='srclink' href='../../src/crossbeam/mem/cache_padded.rs.html#80-97' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(t: T) -&gt; <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Wrap <code>t</code> with cacheline padding.</p>
 
 <p><strong>Warning</strong>: the wrapped data is never dropped; move out using
 <code>ptr:read</code> if you need to run dtors.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></h3><div class='impl-items'></div><h3 class='impl'><code>impl&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></h3><div class='impl-items'></div><h3 class='impl'><code>impl&lt;T&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a> for <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='associatedtype.Target' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#associatedtype.Target' class='type'>Target</a> = T</code></h4>
-<h4 id='method.deref' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#tymethod.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;T</code></h4>
-</div><h3 class='impl'><code>impl&lt;T&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html' title='core::ops::DerefMut'>DerefMut</a> for <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.deref_mut' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html#tymethod.deref_mut' class='fnname'>deref_mut</a>(&amp;mut self) -&gt; &amp;mut T</code></h4>
-</div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-417' class='srclink' href='../../src/crossbeam/mem/cache_padded.rs.html#31' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-419' class='srclink' href='../../src/crossbeam/mem/cache_padded.rs.html#32' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a> for <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-450' class='srclink' href='../../src/crossbeam/mem/cache_padded.rs.html#99-105' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Target' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#associatedtype.Target' class='type'>Target</a> = T</code></h4>
+<div class='docblock'><p>The resulting type after dereferencing</p>
+</div><h4 id='method.deref' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#tymethod.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;T</code></h4>
+<div class='docblock'><p>The method called to dereference a value</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html' title='core::ops::DerefMut'>DerefMut</a> for <a class='struct' href='../../crossbeam/mem/struct.CachePadded.html' title='crossbeam::mem::CachePadded'>CachePadded</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-455' class='srclink' href='../../src/crossbeam/mem/cache_padded.rs.html#107-112' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.deref_mut' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html#tymethod.deref_mut' class='fnname'>deref_mut</a>(&amp;mut self) -&gt; &amp;mut T</code></h4>
+<div class='docblock'><p>The method called to mutably dereference a value</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -95,6 +104,8 @@ if you need to run dtors.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

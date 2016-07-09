@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["new","Create bunyan formatter"]]});

@@ -47,13 +47,14 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-507' class='srclink' href='../../src/crossbeam/sync/ms_queue.rs.html#16-19' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-508' class='srclink' href='../../src/crossbeam/sync/ms_queue.rs.html#16-19' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct MsQueue&lt;T&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A Michael-Scott lock-free queue, with support for blocking <code>pop</code>s.</p>
 
 <p>Usable with any number of producers and consumers.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;T&gt; <a class='struct' href='../../crossbeam/sync/struct.MsQueue.html' title='crossbeam::sync::MsQueue'>MsQueue</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../crossbeam/sync/struct.MsQueue.html' title='crossbeam::sync::MsQueue'>MsQueue</a>&lt;T&gt;</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='struct' href='../../crossbeam/sync/struct.MsQueue.html' title='crossbeam::sync::MsQueue'>MsQueue</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-535' class='srclink' href='../../src/crossbeam/sync/ms_queue.rs.html#54-305' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../crossbeam/sync/struct.MsQueue.html' title='crossbeam::sync::MsQueue'>MsQueue</a>&lt;T&gt;</code></h4>
 <div class='docblock'><p>Create a new, empty queue.</p>
 </div><h4 id='method.push' class='method'><code>fn <a href='#method.push' class='fnname'>push</a>(&amp;self, t: T)</code></h4>
 <div class='docblock'><p>Add <code>t</code> to the back of the queue, possibly waking up threads
@@ -67,7 +68,9 @@ blocked on <code>pop</code>.</p>
 </div><h4 id='method.pop' class='method'><code>fn <a href='#method.pop' class='fnname'>pop</a>(&amp;self) -&gt; T</code></h4>
 <div class='docblock'><p>Dequeue an element from the front of the queue, blocking if the queue is
 empty.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../../crossbeam/sync/struct.MsQueue.html' title='crossbeam::sync::MsQueue'>MsQueue</a>&lt;T&gt;</code></h3><div class='impl-items'></div><h3 class='impl'><code>impl&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../../crossbeam/sync/struct.MsQueue.html' title='crossbeam::sync::MsQueue'>MsQueue</a>&lt;T&gt;</code></h3><div class='impl-items'></div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../../crossbeam/sync/struct.MsQueue.html' title='crossbeam::sync::MsQueue'>MsQueue</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-531' class='srclink' href='../../src/crossbeam/sync/ms_queue.rs.html#51' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../../crossbeam/sync/struct.MsQueue.html' title='crossbeam::sync::MsQueue'>MsQueue</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-533' class='srclink' href='../../src/crossbeam/sync/ms_queue.rs.html#52' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -90,6 +93,8 @@ empty.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

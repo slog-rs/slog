@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-4689' class='srclink' href='../src/rustc_serialize/serialize.rs.html#716-720' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-4713' class='srclink' href='../src/rustc_serialize/serialize.rs.html#716-720' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait DecoderHelpers: <a class='trait' href='../rustc_serialize/trait.Decoder.html' title='rustc_serialize::Decoder'>Decoder</a> {
     fn <a href='#tymethod.read_to_vec' class='fnname'>read_to_vec</a>&lt;T, F&gt;(&amp;mut self, f: F) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;T&gt;, Self::Error&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;mut Self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;T, Self::Error&gt;</span>;
 }</pre>
@@ -56,7 +56,8 @@
         <h3 id='tymethod.read_to_vec' class='method stab '><code>fn <a href='#tymethod.read_to_vec' class='fnname'>read_to_vec</a>&lt;T, F&gt;(&amp;mut self, f: F) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;T&gt;, Self::Error&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;mut Self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;T, Self::Error&gt;</span></code></h3></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    </ul><script type="text/javascript" async
+    <li><code>impl&lt;D: <a class='trait' href='../rustc_serialize/trait.Decoder.html' title='rustc_serialize::Decoder'>Decoder</a>&gt; DecoderHelpers for D</code></li>
+</ul><script type="text/javascript" async
                          src="../implementors/rustc_serialize/trait.DecoderHelpers.js">
                  </script></section>
     <section id='search' class="content hidden"></section>
@@ -81,6 +82,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

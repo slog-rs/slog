@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-7133' class='srclink' href='../../src/serde/de/mod.rs.html#719-763' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-7264' class='srclink' href='../../src/serde/de/mod.rs.html#719-763' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait MapVisitor {
     type <a href='#associatedtype.Error' class='type'>Error</a>: <a class='trait' href='../../serde/de/trait.Error.html' title='serde::de::Error'>Error</a>;
     fn <a href='#tymethod.visit_key' class='fnname'>visit_key</a>&lt;K&gt;(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;K&gt;, Self::<a class='trait' href='../../serde/de/trait.MapVisitor.html' title='serde::de::MapVisitor'>Error</a>&gt; <span class='where'>where K: <a class='trait' href='../../serde/de/trait.Deserialize.html' title='serde::de::Deserialize'>Deserialize</a></span>;
@@ -81,8 +81,8 @@ more remaining items.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;I, K, V, E&gt; <a class='trait' href='../../serde/de/trait.MapVisitor.html' title='serde::de::MapVisitor'>MapVisitor</a> for <a class='struct' href='../../serde/de/value/struct.MapDeserializer.html' title='serde::de::value::MapDeserializer'>MapDeserializer</a>&lt;I, K, V, E&gt; <span class='where'>where I: <a class='trait' href='../../core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>K, V<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;, K: <a class='trait' href='../../serde/de/value/trait.ValueDeserializer.html' title='serde::de::value::ValueDeserializer'>ValueDeserializer</a>&lt;E&gt;, V: <a class='trait' href='../../serde/de/value/trait.ValueDeserializer.html' title='serde::de::value::ValueDeserializer'>ValueDeserializer</a>&lt;E&gt;, E: <a class='trait' href='../../serde/de/trait.Error.html' title='serde::de::Error'>Error</a></span></code></li>
-<li><code>impl&lt;'a, V_&gt; <a class='trait' href='../../serde/de/trait.MapVisitor.html' title='serde::de::MapVisitor'>MapVisitor</a> for &amp;'a mut V_ <span class='where'>where V_: <a class='trait' href='../../serde/de/trait.MapVisitor.html' title='serde::de::MapVisitor'>MapVisitor</a></span></code></li>
+    <li><code>impl&lt;I, K, V, E&gt; MapVisitor for <a class='struct' href='../../serde/de/value/struct.MapDeserializer.html' title='serde::de::value::MapDeserializer'>MapDeserializer</a>&lt;I, K, V, E&gt; <span class='where'>where I: <a class='trait' href='../../core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a>&lt;Item=<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>K, V<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;, K: <a class='trait' href='../../serde/de/value/trait.ValueDeserializer.html' title='serde::de::value::ValueDeserializer'>ValueDeserializer</a>&lt;E&gt;, V: <a class='trait' href='../../serde/de/value/trait.ValueDeserializer.html' title='serde::de::value::ValueDeserializer'>ValueDeserializer</a>&lt;E&gt;, E: <a class='trait' href='../../serde/de/trait.Error.html' title='serde::de::Error'>Error</a></span></code></li>
+<li><code>impl&lt;'a, V_&gt; MapVisitor for &amp;'a mut V_ <span class='where'>where V_: <a class='trait' href='../../serde/de/trait.MapVisitor.html' title='serde::de::MapVisitor'>MapVisitor</a></span></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/serde/de/trait.MapVisitor.js">
                  </script></section>
@@ -108,6 +108,8 @@ more remaining items.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

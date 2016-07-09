@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Errno` enum in crate `nix`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Errno">
+
+    <title>nix::errno::Errno - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>nix</a>::<wbr><a href='index.html'>errno</a></p><script>window.sidebarCurrent = {name: 'Errno', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content enum">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>nix</a>::<wbr><a href='index.html'>errno</a>::<wbr><a class='enum' href=''>Errno</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-195' class='srclink' href='../../src/nix/errno.rs.html#526-662' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum Errno {
+    UnknownErrno,
+    EPERM,
+    ENOENT,
+    ESRCH,
+    EINTR,
+    EIO,
+    ENXIO,
+    E2BIG,
+    ENOEXEC,
+    EBADF,
+    ECHILD,
+    EAGAIN,
+    ENOMEM,
+    EACCES,
+    EFAULT,
+    ENOTBLK,
+    EBUSY,
+    EEXIST,
+    EXDEV,
+    ENODEV,
+    ENOTDIR,
+    EISDIR,
+    EINVAL,
+    ENFILE,
+    EMFILE,
+    ENOTTY,
+    ETXTBSY,
+    EFBIG,
+    ENOSPC,
+    ESPIPE,
+    EROFS,
+    EMLINK,
+    EPIPE,
+    EDOM,
+    ERANGE,
+    EDEADLK,
+    ENAMETOOLONG,
+    ENOLCK,
+    ENOSYS,
+    ENOTEMPTY,
+    ELOOP,
+    ENOMSG,
+    EIDRM,
+    ECHRNG,
+    EL2NSYNC,
+    EL3HLT,
+    EL3RST,
+    ELNRNG,
+    EUNATCH,
+    ENOCSI,
+    EL2HLT,
+    EBADE,
+    EBADR,
+    EXFULL,
+    ENOANO,
+    EBADRQC,
+    EBADSLT,
+    EBFONT,
+    ENOSTR,
+    ENODATA,
+    ETIME,
+    ENOSR,
+    ENONET,
+    ENOPKG,
+    EREMOTE,
+    ENOLINK,
+    EADV,
+    ESRMNT,
+    ECOMM,
+    EPROTO,
+    EMULTIHOP,
+    EDOTDOT,
+    EBADMSG,
+    EOVERFLOW,
+    ENOTUNIQ,
+    EBADFD,
+    EREMCHG,
+    ELIBACC,
+    ELIBBAD,
+    ELIBSCN,
+    ELIBMAX,
+    ELIBEXEC,
+    EILSEQ,
+    ERESTART,
+    ESTRPIPE,
+    EUSERS,
+    ENOTSOCK,
+    EDESTADDRREQ,
+    EMSGSIZE,
+    EPROTOTYPE,
+    ENOPROTOOPT,
+    EPROTONOSUPPORT,
+    ESOCKTNOSUPPORT,
+    EOPNOTSUPP,
+    EPFNOSUPPORT,
+    EAFNOSUPPORT,
+    EADDRINUSE,
+    EADDRNOTAVAIL,
+    ENETDOWN,
+    ENETUNREACH,
+    ENETRESET,
+    ECONNABORTED,
+    ECONNRESET,
+    ENOBUFS,
+    EISCONN,
+    ENOTCONN,
+    ESHUTDOWN,
+    ETOOMANYREFS,
+    ETIMEDOUT,
+    ECONNREFUSED,
+    EHOSTDOWN,
+    EHOSTUNREACH,
+    EALREADY,
+    EINPROGRESS,
+    ESTALE,
+    EUCLEAN,
+    ENOTNAM,
+    ENAVAIL,
+    EISNAM,
+    EREMOTEIO,
+    EDQUOT,
+    ENOMEDIUM,
+    EMEDIUMTYPE,
+    ECANCELED,
+    ENOKEY,
+    EKEYEXPIRED,
+    EKEYREVOKED,
+    EKEYREJECTED,
+    EOWNERDEAD,
+    ENOTRECOVERABLE,
+    ERFKILL,
+    EHWPOISON,
+}</pre><h2 class='variants'>Variants</h2>
+<table class='variants_table'><tr><td id='variant.UnknownErrno'><code>UnknownErrno</code></td><td></td><td></td></tr><tr><td id='variant.EPERM'><code>EPERM</code></td><td></td><td></td></tr><tr><td id='variant.ENOENT'><code>ENOENT</code></td><td></td><td></td></tr><tr><td id='variant.ESRCH'><code>ESRCH</code></td><td></td><td></td></tr><tr><td id='variant.EINTR'><code>EINTR</code></td><td></td><td></td></tr><tr><td id='variant.EIO'><code>EIO</code></td><td></td><td></td></tr><tr><td id='variant.ENXIO'><code>ENXIO</code></td><td></td><td></td></tr><tr><td id='variant.E2BIG'><code>E2BIG</code></td><td></td><td></td></tr><tr><td id='variant.ENOEXEC'><code>ENOEXEC</code></td><td></td><td></td></tr><tr><td id='variant.EBADF'><code>EBADF</code></td><td></td><td></td></tr><tr><td id='variant.ECHILD'><code>ECHILD</code></td><td></td><td></td></tr><tr><td id='variant.EAGAIN'><code>EAGAIN</code></td><td></td><td></td></tr><tr><td id='variant.ENOMEM'><code>ENOMEM</code></td><td></td><td></td></tr><tr><td id='variant.EACCES'><code>EACCES</code></td><td></td><td></td></tr><tr><td id='variant.EFAULT'><code>EFAULT</code></td><td></td><td></td></tr><tr><td id='variant.ENOTBLK'><code>ENOTBLK</code></td><td></td><td></td></tr><tr><td id='variant.EBUSY'><code>EBUSY</code></td><td></td><td></td></tr><tr><td id='variant.EEXIST'><code>EEXIST</code></td><td></td><td></td></tr><tr><td id='variant.EXDEV'><code>EXDEV</code></td><td></td><td></td></tr><tr><td id='variant.ENODEV'><code>ENODEV</code></td><td></td><td></td></tr><tr><td id='variant.ENOTDIR'><code>ENOTDIR</code></td><td></td><td></td></tr><tr><td id='variant.EISDIR'><code>EISDIR</code></td><td></td><td></td></tr><tr><td id='variant.EINVAL'><code>EINVAL</code></td><td></td><td></td></tr><tr><td id='variant.ENFILE'><code>ENFILE</code></td><td></td><td></td></tr><tr><td id='variant.EMFILE'><code>EMFILE</code></td><td></td><td></td></tr><tr><td id='variant.ENOTTY'><code>ENOTTY</code></td><td></td><td></td></tr><tr><td id='variant.ETXTBSY'><code>ETXTBSY</code></td><td></td><td></td></tr><tr><td id='variant.EFBIG'><code>EFBIG</code></td><td></td><td></td></tr><tr><td id='variant.ENOSPC'><code>ENOSPC</code></td><td></td><td></td></tr><tr><td id='variant.ESPIPE'><code>ESPIPE</code></td><td></td><td></td></tr><tr><td id='variant.EROFS'><code>EROFS</code></td><td></td><td></td></tr><tr><td id='variant.EMLINK'><code>EMLINK</code></td><td></td><td></td></tr><tr><td id='variant.EPIPE'><code>EPIPE</code></td><td></td><td></td></tr><tr><td id='variant.EDOM'><code>EDOM</code></td><td></td><td></td></tr><tr><td id='variant.ERANGE'><code>ERANGE</code></td><td></td><td></td></tr><tr><td id='variant.EDEADLK'><code>EDEADLK</code></td><td></td><td></td></tr><tr><td id='variant.ENAMETOOLONG'><code>ENAMETOOLONG</code></td><td></td><td></td></tr><tr><td id='variant.ENOLCK'><code>ENOLCK</code></td><td></td><td></td></tr><tr><td id='variant.ENOSYS'><code>ENOSYS</code></td><td></td><td></td></tr><tr><td id='variant.ENOTEMPTY'><code>ENOTEMPTY</code></td><td></td><td></td></tr><tr><td id='variant.ELOOP'><code>ELOOP</code></td><td></td><td></td></tr><tr><td id='variant.ENOMSG'><code>ENOMSG</code></td><td></td><td></td></tr><tr><td id='variant.EIDRM'><code>EIDRM</code></td><td></td><td></td></tr><tr><td id='variant.ECHRNG'><code>ECHRNG</code></td><td></td><td></td></tr><tr><td id='variant.EL2NSYNC'><code>EL2NSYNC</code></td><td></td><td></td></tr><tr><td id='variant.EL3HLT'><code>EL3HLT</code></td><td></td><td></td></tr><tr><td id='variant.EL3RST'><code>EL3RST</code></td><td></td><td></td></tr><tr><td id='variant.ELNRNG'><code>ELNRNG</code></td><td></td><td></td></tr><tr><td id='variant.EUNATCH'><code>EUNATCH</code></td><td></td><td></td></tr><tr><td id='variant.ENOCSI'><code>ENOCSI</code></td><td></td><td></td></tr><tr><td id='variant.EL2HLT'><code>EL2HLT</code></td><td></td><td></td></tr><tr><td id='variant.EBADE'><code>EBADE</code></td><td></td><td></td></tr><tr><td id='variant.EBADR'><code>EBADR</code></td><td></td><td></td></tr><tr><td id='variant.EXFULL'><code>EXFULL</code></td><td></td><td></td></tr><tr><td id='variant.ENOANO'><code>ENOANO</code></td><td></td><td></td></tr><tr><td id='variant.EBADRQC'><code>EBADRQC</code></td><td></td><td></td></tr><tr><td id='variant.EBADSLT'><code>EBADSLT</code></td><td></td><td></td></tr><tr><td id='variant.EBFONT'><code>EBFONT</code></td><td></td><td></td></tr><tr><td id='variant.ENOSTR'><code>ENOSTR</code></td><td></td><td></td></tr><tr><td id='variant.ENODATA'><code>ENODATA</code></td><td></td><td></td></tr><tr><td id='variant.ETIME'><code>ETIME</code></td><td></td><td></td></tr><tr><td id='variant.ENOSR'><code>ENOSR</code></td><td></td><td></td></tr><tr><td id='variant.ENONET'><code>ENONET</code></td><td></td><td></td></tr><tr><td id='variant.ENOPKG'><code>ENOPKG</code></td><td></td><td></td></tr><tr><td id='variant.EREMOTE'><code>EREMOTE</code></td><td></td><td></td></tr><tr><td id='variant.ENOLINK'><code>ENOLINK</code></td><td></td><td></td></tr><tr><td id='variant.EADV'><code>EADV</code></td><td></td><td></td></tr><tr><td id='variant.ESRMNT'><code>ESRMNT</code></td><td></td><td></td></tr><tr><td id='variant.ECOMM'><code>ECOMM</code></td><td></td><td></td></tr><tr><td id='variant.EPROTO'><code>EPROTO</code></td><td></td><td></td></tr><tr><td id='variant.EMULTIHOP'><code>EMULTIHOP</code></td><td></td><td></td></tr><tr><td id='variant.EDOTDOT'><code>EDOTDOT</code></td><td></td><td></td></tr><tr><td id='variant.EBADMSG'><code>EBADMSG</code></td><td></td><td></td></tr><tr><td id='variant.EOVERFLOW'><code>EOVERFLOW</code></td><td></td><td></td></tr><tr><td id='variant.ENOTUNIQ'><code>ENOTUNIQ</code></td><td></td><td></td></tr><tr><td id='variant.EBADFD'><code>EBADFD</code></td><td></td><td></td></tr><tr><td id='variant.EREMCHG'><code>EREMCHG</code></td><td></td><td></td></tr><tr><td id='variant.ELIBACC'><code>ELIBACC</code></td><td></td><td></td></tr><tr><td id='variant.ELIBBAD'><code>ELIBBAD</code></td><td></td><td></td></tr><tr><td id='variant.ELIBSCN'><code>ELIBSCN</code></td><td></td><td></td></tr><tr><td id='variant.ELIBMAX'><code>ELIBMAX</code></td><td></td><td></td></tr><tr><td id='variant.ELIBEXEC'><code>ELIBEXEC</code></td><td></td><td></td></tr><tr><td id='variant.EILSEQ'><code>EILSEQ</code></td><td></td><td></td></tr><tr><td id='variant.ERESTART'><code>ERESTART</code></td><td></td><td></td></tr><tr><td id='variant.ESTRPIPE'><code>ESTRPIPE</code></td><td></td><td></td></tr><tr><td id='variant.EUSERS'><code>EUSERS</code></td><td></td><td></td></tr><tr><td id='variant.ENOTSOCK'><code>ENOTSOCK</code></td><td></td><td></td></tr><tr><td id='variant.EDESTADDRREQ'><code>EDESTADDRREQ</code></td><td></td><td></td></tr><tr><td id='variant.EMSGSIZE'><code>EMSGSIZE</code></td><td></td><td></td></tr><tr><td id='variant.EPROTOTYPE'><code>EPROTOTYPE</code></td><td></td><td></td></tr><tr><td id='variant.ENOPROTOOPT'><code>ENOPROTOOPT</code></td><td></td><td></td></tr><tr><td id='variant.EPROTONOSUPPORT'><code>EPROTONOSUPPORT</code></td><td></td><td></td></tr><tr><td id='variant.ESOCKTNOSUPPORT'><code>ESOCKTNOSUPPORT</code></td><td></td><td></td></tr><tr><td id='variant.EOPNOTSUPP'><code>EOPNOTSUPP</code></td><td></td><td></td></tr><tr><td id='variant.EPFNOSUPPORT'><code>EPFNOSUPPORT</code></td><td></td><td></td></tr><tr><td id='variant.EAFNOSUPPORT'><code>EAFNOSUPPORT</code></td><td></td><td></td></tr><tr><td id='variant.EADDRINUSE'><code>EADDRINUSE</code></td><td></td><td></td></tr><tr><td id='variant.EADDRNOTAVAIL'><code>EADDRNOTAVAIL</code></td><td></td><td></td></tr><tr><td id='variant.ENETDOWN'><code>ENETDOWN</code></td><td></td><td></td></tr><tr><td id='variant.ENETUNREACH'><code>ENETUNREACH</code></td><td></td><td></td></tr><tr><td id='variant.ENETRESET'><code>ENETRESET</code></td><td></td><td></td></tr><tr><td id='variant.ECONNABORTED'><code>ECONNABORTED</code></td><td></td><td></td></tr><tr><td id='variant.ECONNRESET'><code>ECONNRESET</code></td><td></td><td></td></tr><tr><td id='variant.ENOBUFS'><code>ENOBUFS</code></td><td></td><td></td></tr><tr><td id='variant.EISCONN'><code>EISCONN</code></td><td></td><td></td></tr><tr><td id='variant.ENOTCONN'><code>ENOTCONN</code></td><td></td><td></td></tr><tr><td id='variant.ESHUTDOWN'><code>ESHUTDOWN</code></td><td></td><td></td></tr><tr><td id='variant.ETOOMANYREFS'><code>ETOOMANYREFS</code></td><td></td><td></td></tr><tr><td id='variant.ETIMEDOUT'><code>ETIMEDOUT</code></td><td></td><td></td></tr><tr><td id='variant.ECONNREFUSED'><code>ECONNREFUSED</code></td><td></td><td></td></tr><tr><td id='variant.EHOSTDOWN'><code>EHOSTDOWN</code></td><td></td><td></td></tr><tr><td id='variant.EHOSTUNREACH'><code>EHOSTUNREACH</code></td><td></td><td></td></tr><tr><td id='variant.EALREADY'><code>EALREADY</code></td><td></td><td></td></tr><tr><td id='variant.EINPROGRESS'><code>EINPROGRESS</code></td><td></td><td></td></tr><tr><td id='variant.ESTALE'><code>ESTALE</code></td><td></td><td></td></tr><tr><td id='variant.EUCLEAN'><code>EUCLEAN</code></td><td></td><td></td></tr><tr><td id='variant.ENOTNAM'><code>ENOTNAM</code></td><td></td><td></td></tr><tr><td id='variant.ENAVAIL'><code>ENAVAIL</code></td><td></td><td></td></tr><tr><td id='variant.EISNAM'><code>EISNAM</code></td><td></td><td></td></tr><tr><td id='variant.EREMOTEIO'><code>EREMOTEIO</code></td><td></td><td></td></tr><tr><td id='variant.EDQUOT'><code>EDQUOT</code></td><td></td><td></td></tr><tr><td id='variant.ENOMEDIUM'><code>ENOMEDIUM</code></td><td></td><td></td></tr><tr><td id='variant.EMEDIUMTYPE'><code>EMEDIUMTYPE</code></td><td></td><td></td></tr><tr><td id='variant.ECANCELED'><code>ECANCELED</code></td><td></td><td></td></tr><tr><td id='variant.ENOKEY'><code>ENOKEY</code></td><td></td><td></td></tr><tr><td id='variant.EKEYEXPIRED'><code>EKEYEXPIRED</code></td><td></td><td></td></tr><tr><td id='variant.EKEYREVOKED'><code>EKEYREVOKED</code></td><td></td><td></td></tr><tr><td id='variant.EKEYREJECTED'><code>EKEYREJECTED</code></td><td></td><td></td></tr><tr><td id='variant.EOWNERDEAD'><code>EOWNERDEAD</code></td><td></td><td></td></tr><tr><td id='variant.ENOTRECOVERABLE'><code>ENOTRECOVERABLE</code></td><td></td><td></td></tr><tr><td id='variant.ERFKILL'><code>ERFKILL</code></td><td></td><td></td></tr><tr><td id='variant.EHWPOISON'><code>EHWPOISON</code></td><td></td><td></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='enum' href='../../nix/enum.Errno.html' title='nix::Errno'>Errno</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-27' class='srclink' href='../../src/nix/errno.rs.html#56-82' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.last' class='method'><code>fn <a href='#method.last' class='fnname'>last</a>() -&gt; Self</code></h4>
+<h4 id='method.desc' class='method'><code>fn <a href='#method.desc' class='fnname'>desc</a>(self) -&gt; &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></h4>
+<h4 id='method.from_i32' class='method'><code>fn <a href='#method.from_i32' class='fnname'>from_i32</a>(err: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>) -&gt; <a class='enum' href='../../nix/enum.Errno.html' title='nix::Errno'>Errno</a></code></h4>
+<h4 id='method.clear' class='method'><code>unsafe fn <a href='#method.clear' class='fnname'>clear</a>()</code></h4>
+<h4 id='method.result' class='method'><code>fn <a href='#method.result' class='fnname'>result</a>&lt;S: <a class='trait' href='../../nix/errno/trait.ErrnoSentinel.html' title='nix::errno::ErrnoSentinel'>ErrnoSentinel</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;S&gt;&gt;(value: S) -&gt; <a class='type' href='../../nix/type.Result.html' title='nix::Result'>Result</a>&lt;S&gt;</code></h4>
+<div class='docblock'><p>Returns <code>Ok(value)</code> if it does not contain the sentinel value. This
+should not be used when <code>-1</code> is not the errno sentinel value.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/std/error/trait.Error.html' title='std::error::Error'>Error</a> for <a class='enum' href='../../nix/enum.Errno.html' title='nix::Errno'>Errno</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-45' class='srclink' href='../../src/nix/errno.rs.html#102-106' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.description' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/std/error/trait.Error.html#tymethod.description' class='fnname'>description</a>(&amp;self) -&gt; &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></h4>
+<div class='docblock'><p>A short description of the error. <a href="https://doc.rust-lang.org/nightly/std/error/trait.Error.html#tymethod.description">Read more</a></p>
+</div><h4 id='method.cause' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/std/error/trait.Error.html#method.cause' class='fnname'>cause</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/error/trait.Error.html' title='std::error::Error'>Error</a>&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>The lower-level cause of this error, if any.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='enum' href='../../nix/enum.Errno.html' title='nix::Errno'>Errno</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-48' class='srclink' href='../../src/nix/errno.rs.html#108-112' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../../nix/enum.Errno.html' title='nix::Errno'>Errno</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-460' class='srclink' href='../../src/nix/errno.rs.html#525' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../../nix/enum.Errno.html' title='nix::Errno'>Errno</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-461' class='srclink' href='../../src/nix/errno.rs.html#525' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../nix/enum.Errno.html' title='nix::Errno'>Errno</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../../nix/enum.Errno.html' title='nix::Errno'>Errno</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-467' class='srclink' href='../../src/nix/errno.rs.html#525' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../../nix/enum.Errno.html' title='nix::Errno'>Errno</a></code></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../nix/enum.Errno.html' title='nix::Errno'>Errno</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-470' class='srclink' href='../../src/nix/errno.rs.html#525' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt-1' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "nix";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

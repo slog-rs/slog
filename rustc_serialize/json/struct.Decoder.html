@@ -47,13 +47,15 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-6640' class='srclink' href='../../src/rustc_serialize/json.rs.html#2010-2012' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-6614' class='srclink' href='../../src/rustc_serialize/json.rs.html#2010-2012' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Decoder {
     // some fields omitted
 }</pre><div class='docblock'><p>A structure to decode JSON to values in rust.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../../rustc_serialize/json/struct.Decoder.html' title='rustc_serialize::json::Decoder'>Decoder</a></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(json: <a class='enum' href='../../rustc_serialize/json/enum.Json.html' title='rustc_serialize::json::Json'>Json</a>) -&gt; <a class='struct' href='../../rustc_serialize/json/struct.Decoder.html' title='rustc_serialize::json::Decoder'>Decoder</a></code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../rustc_serialize/json/struct.Decoder.html' title='rustc_serialize::json::Decoder'>Decoder</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-6616' class='srclink' href='../../src/rustc_serialize/json.rs.html#2014-2019' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(json: <a class='enum' href='../../rustc_serialize/json/enum.Json.html' title='rustc_serialize::json::Json'>Json</a>) -&gt; <a class='struct' href='../../rustc_serialize/json/struct.Decoder.html' title='rustc_serialize::json::Decoder'>Decoder</a></code></h4>
 <div class='docblock'><p>Creates a new decoder instance for decoding the specified JSON value.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl <a class='trait' href='../../rustc_serialize/trait.Decoder.html' title='rustc_serialize::Decoder'>Decoder</a> for <a class='struct' href='../../rustc_serialize/json/struct.Decoder.html' title='rustc_serialize::json::Decoder'>Decoder</a></code></h3><div class='impl-items'><h4 id='associatedtype.Error' class='type'><code>type <a href='../../rustc_serialize/trait.Decoder.html#associatedtype.Error' class='type'>Error</a> = <a class='enum' href='../../rustc_serialize/json/enum.DecoderError.html' title='rustc_serialize::json::DecoderError'>DecoderError</a></code></h4>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../rustc_serialize/trait.Decoder.html' title='rustc_serialize::Decoder'>Decoder</a> for <a class='struct' href='../../rustc_serialize/json/struct.Decoder.html' title='rustc_serialize::json::Decoder'>Decoder</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-6624' class='srclink' href='../../src/rustc_serialize/json.rs.html#2087-2345' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Error' class='type'><code>type <a href='../../rustc_serialize/trait.Decoder.html#associatedtype.Error' class='type'>Error</a> = <a class='enum' href='../../rustc_serialize/json/enum.DecoderError.html' title='rustc_serialize::json::DecoderError'>DecoderError</a></code></h4>
 <h4 id='method.read_nil' class='method'><code>fn <a href='../../rustc_serialize/trait.Decoder.html#tymethod.read_nil' class='fnname'>read_nil</a>(&amp;mut self) -&gt; <a class='type' href='../../rustc_serialize/json/type.DecodeResult.html' title='rustc_serialize::json::DecodeResult'>DecodeResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
 <h4 id='method.read_usize' class='method'><code>fn <a href='../../rustc_serialize/trait.Decoder.html#tymethod.read_usize' class='fnname'>read_usize</a>(&amp;mut self) -&gt; <a class='type' href='../../rustc_serialize/json/type.DecodeResult.html' title='rustc_serialize::json::DecodeResult'>DecodeResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;</code></h4>
 <h4 id='method.read_u8' class='method'><code>fn <a href='../../rustc_serialize/trait.Decoder.html#tymethod.read_u8' class='fnname'>read_u8</a>(&amp;mut self) -&gt; <a class='type' href='../../rustc_serialize/json/type.DecodeResult.html' title='rustc_serialize::json::DecodeResult'>DecodeResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code></h4>
@@ -111,6 +113,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

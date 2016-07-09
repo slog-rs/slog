@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/serde_json/lib.rs.html#1-148' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/serde_json/lib.rs.html#1-152' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>JSON and serialization</p>
 
 <h1 id='what-is-json' class='section-header'><a href='#what-is-json'>What is JSON?</a></h1>
@@ -66,7 +66,8 @@ details):</p>
 <li><code>String</code>: equivalent to rust&#39;s <code>String</code></li>
 <li><code>Array</code>: equivalent to rust&#39;s <code>Vec&lt;T&gt;</code>, but also allowing objects of different types in the
 same array</li>
-<li><code>Object</code>: equivalent to rust&#39;s <code>BTreeMap&lt;String, serde_json::Value&gt;</code></li>
+<li><code>Object</code>: equivalent to rust&#39;s <code>BTreeMap&lt;String, serde_json::Value&gt;</code>; set the
+<code>preserve_order</code> feature to use <code>LinkedHashMap&lt;String, serde_json::Value&gt;</code> instead</li>
 <li><code>Null</code></li>
 </ul>
 
@@ -159,7 +160,7 @@ functions described above.  You can also use the <code>json::Serializer</code> o
     <span class='comment'>// foo: 13 (u64)</span>
 }</pre>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
-<table><tr><td><code>pub use self::de::{<a class='struct' href='../serde_json/de/struct.Deserializer.html' title='serde_json::de::Deserializer'>Deserializer</a>, <a class='struct' href='../serde_json/de/struct.StreamDeserializer.html' title='serde_json::de::StreamDeserializer'>StreamDeserializer</a>, <a class='fn' href='../serde_json/de/fn.from_iter.html' title='serde_json::de::from_iter'>from_iter</a>, <a class='fn' href='../serde_json/de/fn.from_reader.html' title='serde_json::de::from_reader'>from_reader</a>, <a class='fn' href='../serde_json/de/fn.from_slice.html' title='serde_json::de::from_slice'>from_slice</a>, <a class='fn' href='../serde_json/de/fn.from_str.html' title='serde_json::de::from_str'>from_str</a>};</code></td></tr><tr><td><code>pub use self::error::{<a class='enum' href='../serde_json/error/enum.Error.html' title='serde_json::error::Error'>Error</a>, <a class='enum' href='../serde_json/error/enum.ErrorCode.html' title='serde_json::error::ErrorCode'>ErrorCode</a>, <a class='type' href='../serde_json/error/type.Result.html' title='serde_json::error::Result'>Result</a>};</code></td></tr><tr><td><code>pub use self::ser::{<a class='struct' href='../serde_json/ser/struct.Serializer.html' title='serde_json::ser::Serializer'>Serializer</a>, <a class='fn' href='../serde_json/ser/fn.to_writer.html' title='serde_json::ser::to_writer'>to_writer</a>, <a class='fn' href='../serde_json/ser/fn.to_writer_pretty.html' title='serde_json::ser::to_writer_pretty'>to_writer_pretty</a>, <a class='fn' href='../serde_json/ser/fn.to_vec.html' title='serde_json::ser::to_vec'>to_vec</a>, <a class='fn' href='../serde_json/ser/fn.to_vec_pretty.html' title='serde_json::ser::to_vec_pretty'>to_vec_pretty</a>, <a class='fn' href='../serde_json/ser/fn.to_string.html' title='serde_json::ser::to_string'>to_string</a>, <a class='fn' href='../serde_json/ser/fn.to_string_pretty.html' title='serde_json::ser::to_string_pretty'>to_string_pretty</a>, <a class='fn' href='../serde_json/ser/fn.escape_str.html' title='serde_json::ser::escape_str'>escape_str</a>};</code></td></tr><tr><td><code>pub use self::value::{<a class='enum' href='../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a>, <a class='fn' href='../serde_json/value/fn.to_value.html' title='serde_json::value::to_value'>to_value</a>, <a class='fn' href='../serde_json/value/fn.from_value.html' title='serde_json::value::from_value'>from_value</a>};</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table><tr><td><code>pub use self::de::{<a class='struct' href='../serde_json/de/struct.Deserializer.html' title='serde_json::de::Deserializer'>Deserializer</a>, <a class='struct' href='../serde_json/de/struct.StreamDeserializer.html' title='serde_json::de::StreamDeserializer'>StreamDeserializer</a>, <a class='fn' href='../serde_json/de/fn.from_iter.html' title='serde_json::de::from_iter'>from_iter</a>, <a class='fn' href='../serde_json/de/fn.from_reader.html' title='serde_json::de::from_reader'>from_reader</a>, <a class='fn' href='../serde_json/de/fn.from_slice.html' title='serde_json::de::from_slice'>from_slice</a>, <a class='fn' href='../serde_json/de/fn.from_str.html' title='serde_json::de::from_str'>from_str</a>};</code></td></tr><tr><td><code>pub use self::error::{<a class='enum' href='../serde_json/error/enum.Error.html' title='serde_json::error::Error'>Error</a>, <a class='enum' href='../serde_json/error/enum.ErrorCode.html' title='serde_json::error::ErrorCode'>ErrorCode</a>, <a class='type' href='../serde_json/error/type.Result.html' title='serde_json::error::Result'>Result</a>};</code></td></tr><tr><td><code>pub use self::ser::{<a class='struct' href='../serde_json/ser/struct.Serializer.html' title='serde_json::ser::Serializer'>Serializer</a>, <a class='fn' href='../serde_json/ser/fn.to_writer.html' title='serde_json::ser::to_writer'>to_writer</a>, <a class='fn' href='../serde_json/ser/fn.to_writer_pretty.html' title='serde_json::ser::to_writer_pretty'>to_writer_pretty</a>, <a class='fn' href='../serde_json/ser/fn.to_vec.html' title='serde_json::ser::to_vec'>to_vec</a>, <a class='fn' href='../serde_json/ser/fn.to_vec_pretty.html' title='serde_json::ser::to_vec_pretty'>to_vec_pretty</a>, <a class='fn' href='../serde_json/ser/fn.to_string.html' title='serde_json::ser::to_string'>to_string</a>, <a class='fn' href='../serde_json/ser/fn.to_string_pretty.html' title='serde_json::ser::to_string_pretty'>to_string_pretty</a>, <a class='fn' href='../serde_json/ser/fn.escape_str.html' title='serde_json::ser::escape_str'>escape_str</a>};</code></td></tr><tr><td><code>pub use self::value::{<a class='enum' href='../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a>, <a class='type' href='../serde_json/value/type.Map.html' title='serde_json::value::Map'>Map</a>, <a class='fn' href='../serde_json/value/fn.to_value.html' title='serde_json::value::to_value'>to_value</a>, <a class='fn' href='../serde_json/value/fn.from_value.html' title='serde_json::value::from_value'>from_value</a>};</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='mod' href='builder/index.html'
@@ -218,6 +219,8 @@ functions described above.  You can also use the <code>json::Serializer</code> o
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 

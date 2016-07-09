@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Json","ToJson formatter"],["Terminal","Terminal formatting with optional color support"]],"trait":[["Format","Format record information"]]});
+initSidebarItems({"struct":[["Json","ToJson formatter"],["JsonBuilder","JSON formatter builder"],["Terminal","Terminal formatting with optional color support"]],"trait":[["Format","Format record information"]]});

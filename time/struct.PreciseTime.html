@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-960' class='srclink' href='../src/time/lib.rs.html#193' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-952' class='srclink' href='../src/time/lib.rs.html#193' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct PreciseTime(_);</pre><div class='docblock'><p>An opaque structure representing a moment in time.</p>
 
 <p>The only operation that can be performed on a <code>PreciseTime</code> is the
@@ -64,7 +64,8 @@ calculation of the <code>Duration</code> of time that lies between them.</p>
 <span class='kw'>while</span> <span class='ident'>start</span>.<span class='ident'>to</span>(<span class='ident'>PreciseTime</span>::<span class='ident'>now</span>()) <span class='op'>&lt;</span> <span class='ident'>Duration</span>::<span class='ident'>seconds</span>(<span class='number'>1</span>) {
     <span class='ident'>do_some_work</span>();
 }</pre>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../time/struct.PreciseTime.html' title='time::PreciseTime'>PreciseTime</a></code></h3><div class='impl-items'><h4 id='method.now' class='method'><code>fn <a href='#method.now' class='fnname'>now</a>() -&gt; <a class='struct' href='../time/struct.PreciseTime.html' title='time::PreciseTime'>PreciseTime</a></code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../time/struct.PreciseTime.html' title='time::PreciseTime'>PreciseTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-960' class='srclink' href='../src/time/lib.rs.html#195-221' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.now' class='method'><code>fn <a href='#method.now' class='fnname'>now</a>() -&gt; <a class='struct' href='../time/struct.PreciseTime.html' title='time::PreciseTime'>PreciseTime</a></code></h4>
 <div class='docblock'><p>Returns a <code>PreciseTime</code> representing the current moment in time.</p>
 </div><h4 id='method.to' class='method'><code>fn <a href='#method.to' class='fnname'>to</a>(&amp;self, later: <a class='struct' href='../time/struct.PreciseTime.html' title='time::PreciseTime'>PreciseTime</a>) -&gt; <a class='struct' href='../time/struct.Duration.html' title='time::Duration'>Duration</a></code></h4>
 <div class='docblock'><p>Returns a <code>Duration</code> representing the span of time from the value of
@@ -76,9 +77,13 @@ is unspecified.</p>
 
 <p>If <code>later</code> represents a time more than 293 years after <code>self</code>, the
 result of this method is unspecified.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../time/struct.PreciseTime.html' title='time::PreciseTime'>PreciseTime</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../time/struct.PreciseTime.html' title='time::PreciseTime'>PreciseTime</a></code></h4>
-<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../time/struct.PreciseTime.html' title='time::PreciseTime'>PreciseTime</a></code></h3><div class='impl-items'></div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../time/struct.PreciseTime.html' title='time::PreciseTime'>PreciseTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-955' class='srclink' href='../src/time/lib.rs.html#192' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../time/struct.PreciseTime.html' title='time::PreciseTime'>PreciseTime</a></code></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../time/struct.PreciseTime.html' title='time::PreciseTime'>PreciseTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-959' class='srclink' href='../src/time/lib.rs.html#192' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -101,6 +106,8 @@ result of this method is unspecified.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
