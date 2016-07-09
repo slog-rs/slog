@@ -8,7 +8,7 @@ endif
 
 default: $(DEFAULT_TARGET)
 
-ALL_TARGETS += build $(EXAMPLES) test doc
+ALL_TARGETS += build $(EXAMPLES) test doc extra
 ifneq ($(RELEASE),)
 $(info RELEASE BUILD: $(PKG_NAME))
 CARGO_FLAGS += --release
@@ -18,6 +18,7 @@ $(info DEBUG BUILD: $(PKG_NAME); use `RELEASE=true make [args]` for release buil
 endif
 
 EXAMPLES = $(shell cd examples 2>/dev/null && ls *.rs 2>/dev/null | sed -e 's/.rs$$//g' )
+EXTRAS = $(shell cd extra 2>/dev/null && ls 2>/dev/null)
 
 all: $(ALL_TARGETS)
 
@@ -48,6 +49,14 @@ longtest:
 .PHONY: $(EXAMPLES)
 $(EXAMPLES):
 	cargo build --example $@ $(CARGO_FLAGS)
+
+.PHONY: extra
+extra: $(EXTRAS)
+
+.PHONY: $(EXTRAS)
+$(EXTRAS):
+	cd "extra/$@"; cargo build $(CARGO_FLAGS)
+	cd "extra/$@"; cargo test $(CARGO_FLAGS)
 
 .PHONY: doc
 doc: FORCE

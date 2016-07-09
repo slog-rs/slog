@@ -23,7 +23,6 @@ pub struct Json {
     values : Vec<OwnedKeyValue>,
 }
 
-
 impl Json {
     /// Create new `Json` format.
     ///
@@ -46,12 +45,62 @@ impl Json {
         }
     }
 
+    /// Build a JSON formatter with custom settings
+    pub fn build() -> JsonBuilder {
+        JsonBuilder::new()
+    }
+
     /// Create new `Json` format that does not add
     /// newlines after each record.
     pub fn new_nonewline() -> Self {
         let mut json = Json::new();
         json.newlines = false;
         json
+    }
+}
+
+/// JSON formatter builder
+///
+/// Create with `Json::build`.
+pub struct JsonBuilder {
+    newlines : bool,
+    values : Vec<OwnedKeyValue>,
+}
+
+impl JsonBuilder {
+    fn new() -> Self {
+        JsonBuilder {
+            newlines: true,
+            values: vec!(),
+        }
+    }
+
+    /// Build `JSON` format
+    ///
+    /// This consumes the builder.
+    pub fn build(self) -> Json {
+        Json {
+            values: self.values,
+            newlines: self.newlines,
+        }
+    }
+
+    /// Set writing a newline after ever log record
+    pub fn set_newlines(&mut self, enabled : bool) -> &mut Self {
+        self.newlines = enabled;
+        self
+    }
+
+    /// Add custom values to be printed with this formatter
+    pub fn add_key_values(&mut self, values : &[OwnedKeyValue]) -> &mut Self {
+        self.values.extend_from_slice(values);
+        self
+    }
+
+    /// Add custom values to be printed with this formatter
+    pub fn add_key_value(&mut self, value : OwnedKeyValue) -> &mut Self {
+        self.values.push(value);
+        self
     }
 }
 
