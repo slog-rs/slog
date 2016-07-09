@@ -1,8 +1,8 @@
 [package]
-name = "slog-json"
+name = "slog-term"
 version = "0.1.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
-description = "Json formatter for slog-rs"
+description = "Unix terminal drain for slog-rs"
 keywords = ["slog", "logging", "json"]
 license = "MPL-2.0"
 documentation = "https://dpc.github.io/slog-rs/"
@@ -13,6 +13,5 @@ readme = "README.md"
 
 [dependencies]
 slog = { version = "0.4.0", path = "../.." }
-slog-serde = { version = "0.1.0", path = "../serde"}
-serde_json = "0.7.1"
-
+isatty = "0.1.1"
+ansi_term = "0.7.2"

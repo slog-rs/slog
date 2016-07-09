@@ -13,10 +13,9 @@ readme = "README.md"
 
 [dependencies]
 crossbeam = "0.2.9"
-isatty = "0.1.1"
-ansi_term = "0.7.2"
 chrono = "0.2.22"
 rustc-serialize = "0.3.19"
 
 [dev-dependencies]
 slog-json = { version = "0.1.0", path = "extra/json" }
+slog-term = { version = "0.1.0", path = "extra/term" }

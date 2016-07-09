@@ -11,7 +11,6 @@ use super::{OwnedKeyValue, BorrowedKeyValue};
 use std::sync::mpsc;
 use std::thread;
 
-///
 /// Drain for Loggers
 ///
 /// Implementing this trait allows writing own Drains
@@ -20,6 +19,15 @@ pub trait Drain: Send + Sync {
     fn log(&self, info: &RecordInfo, &[OwnedKeyValue], &[BorrowedKeyValue]);
 }
 
+/// Drain discarding everything
+pub struct Discard;
+
+impl Drain for Discard {
+    fn log(&self,
+           _: &RecordInfo,
+           _: &[OwnedKeyValue],
+           _: &[BorrowedKeyValue]) { }
+}
 
 /// Drain formating records and writing them to a byte-stream (io::Write)
 ///
@@ -214,6 +222,11 @@ pub fn async<W: io::Write + Send + 'static>(io: W) -> AsyncIoWriter {
 /// Create Streamer drain
 pub fn stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> Streamer<W, F> {
     Streamer::new(io, format)
+}
+
+/// Create a Discard drain
+pub fn discard() -> Discard {
+    Discard
 }
 
 /// Filter by `cond` closure

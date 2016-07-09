@@ -16,7 +16,10 @@ pub enum Level {
 }
 
 impl Level {
-    fn as_str(&self) -> &'static str {
+    /// Convert to short string
+    ///
+    /// Currently a 4 char string.
+    pub fn as_short_str(&self) -> &'static str {
         match *self {
             Level::Critical => "CRIT",
             Level::Error => "ERRO",
@@ -43,13 +46,13 @@ impl Level {
 
 impl fmt::Display for Level {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.as_str())
+        write!(f, "{}", self.as_short_str())
     }
 }
 
 impl Level {
     /// Returns true if `self` is at least `level` logging level
-    fn is_at_least(&self, level : Self) -> bool {
+    pub fn is_at_least(&self, level : Self) -> bool {
         self.as_int() <= level.as_int()
     }
 }

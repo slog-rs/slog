@@ -2,7 +2,7 @@
 name = "slog-bunyan"
 version = "0.1.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
-description = "Structured, composable logging for Rust"
+description = "Bunyan formatter for slog-rs"
 keywords = ["log", "logging", "structured", "hierarchical"]
 license = "MPL-2.0"
 documentation = "https://dpc.github.io/slog-rs/"

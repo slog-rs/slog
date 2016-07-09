@@ -85,8 +85,6 @@
 #![warn(missing_docs)]
 
 extern crate crossbeam;
-extern crate isatty;
-extern crate ansi_term;
 extern crate chrono;
 extern crate rustc_serialize as serialize;
 

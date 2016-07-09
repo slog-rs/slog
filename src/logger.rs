@@ -13,10 +13,7 @@
 use super::{DrainRef, OwnedKeyValue, Level, BorrowedKeyValue};
 use std::sync::Arc;
 use crossbeam::sync::ArcCell;
-use std::io;
-use super::format;
 
-use isatty::stderr_isatty;
 use drain;
 
 use chrono;
@@ -53,14 +50,7 @@ impl Logger {
             ArcCell::new(
                 Arc::new(
                     Box::new(
-                        drain::Streamer::new(
-                            io::stderr(),
-                            if stderr_isatty() {
-                                format::Terminal::colored()
-                            } else {
-                                format::Terminal::plain()
-                            }
-                            )
+                        drain::discard()
                         ) as Box<drain::Drain>
                     )
                 )

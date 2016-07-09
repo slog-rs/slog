@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate slog;
 extern crate slog_json;
+extern crate slog_term;
 
 use slog::*;
 use std::thread;
@@ -24,6 +25,9 @@ fn main() {
     //
     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
     let root = Logger::new_root(o!("version" => VERSION, "build-id" => "8dfljdf"));
+
+    // Set drains to specify the output format and destination.
+    root.set_drain(slog_term::async_stderr());
 
     // Build logging context as data becomes available.
     //
