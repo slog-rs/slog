@@ -101,6 +101,22 @@ To report a bug or ask for features use [github issues][issues].
 [issues]: //github.com/dpc/slog-rs/issues
 [log15]: //github.com/inconshreveable/log15
 
+## Features
+
+* easy to use
+* hierarchal loggers
+* lazily evaluated values
+* drains
+	* filtering drains
+	* asynchronous writer
+	* more to come (syslog, network)
+	* first-class custom implementations support
+* output formatting
+	* terminal (with color support)
+	* Json
+		* Bunyan (`./extra/bunyan`)
+	* first-class custom implementations support
+
 ## Building & running
 
 If you need to install Rust (come on, you should have done that long time ago!), use [rustup][rustup].
