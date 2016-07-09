@@ -17,15 +17,13 @@ fn get_hostname() -> String {
     match nix::unistd::gethostname(&mut buf) {
         Ok(()) => {
             // TODO: BUG: use locale to known encoding?
-            String::from_utf8_lossy(
-                buf.split(|&b| b == 0).next().unwrap_or(&buf)
-            ).to_string()
-        },
+            String::from_utf8_lossy(buf.split(|&b| b == 0).next().unwrap_or(&buf)).to_string()
+        }
         Err(_) => "n/a".to_string(),
     }
 }
 
-fn level_to_string(level : Level) -> i8 {
+fn level_to_string(level: Level) -> i8 {
     match level {
         Level::Critical => 60,
         Level::Error => 50,
@@ -40,8 +38,7 @@ fn level_to_string(level : Level) -> i8 {
 pub fn new() -> Json {
     let mut b = Json::build();
     b.set_newlines(true)
-        .add_key_values(
-            o!(
+     .add_key_values(o!(
                 "pid" => nix::unistd::getpid() as usize,
                 "host" => get_hostname(),
                 "time" => |rinfo : &RecordInfo| {
@@ -56,8 +53,7 @@ pub fn new() -> Json {
                 "msg" => |rinfo : &RecordInfo| {
                     rinfo.msg.clone()
                 }
-            )
-        );
+            ));
     b.build()
 }
 
@@ -79,17 +75,14 @@ mod test {
 
         let info = RecordInfo {
             ts: dt,
-            level : Level::Info,
-            msg : "message".to_string(),
+            level: Level::Info,
+            msg: "message".to_string(),
         };
 
-        assert_eq!(
-            formatter.format(&info, &[], &[]),
-            "{\"pid\":".to_string() +
-                &nix::unistd::getpid().to_string() +
-            ",\"host\":\"" +
-            &get_hostname() +
-            "\",\"time\":\"2014-07-08T09:10:11+00:00\",\"level\":30,\"name\":\"slog-rs\",\"v\":0,\"msg\":\"message\"}\n"
-        );
+        assert_eq!(formatter.format(&info, &[], &[]),
+                   "{\"pid\":".to_string() + &nix::unistd::getpid().to_string() + ",\"host\":\"" +
+                   &get_hostname() +
+                   "\",\"time\":\"2014-07-08T09:10:11+00:00\",\"level\":30,\"name\":\"slog-rs\",\
+                    \"v\":0,\"msg\":\"message\"}\n");
     }
 }

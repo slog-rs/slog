@@ -91,7 +91,7 @@ extern crate ansi_term;
 extern crate rustc_serialize as serialize;
 extern crate chrono;
 
-use std::sync::{Arc};
+use std::sync::Arc;
 use crossbeam::sync::ArcCell;
 use std::fmt;
 
@@ -160,5 +160,3 @@ type DrainRef = Arc<ArcCell<Box<Drain>>>;
 pub type OwnedKeyValue = (&'static str, Arc<ser::SyncSerialize>);
 /// Key value pair that can be part of each logging record
 pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
-
-

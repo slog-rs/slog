@@ -1,17 +1,21 @@
 use super::logger::RecordInfo;
-use super::ser::{SerdeSerializer};
+use super::ser::SerdeSerializer;
 use super::Level;
 
-use super::{BorrowedKeyValue,OwnedKeyValue};
+use super::{BorrowedKeyValue, OwnedKeyValue};
 use std::fmt::Write;
 
 use serde_json;
 use ansi_term::Colour;
 
 /// Format record information
-pub trait Format : Send+Sync+Sized {
+pub trait Format: Send + Sync + Sized {
     /// Format one logging record into `String`
-    fn format(&self, info : &RecordInfo, logger_values : &[OwnedKeyValue], record_values : &[BorrowedKeyValue]) -> String;
+    fn format(&self,
+              info: &RecordInfo,
+              logger_values: &[OwnedKeyValue],
+              record_values: &[BorrowedKeyValue])
+              -> String;
 }
 
 
@@ -19,8 +23,8 @@ pub trait Format : Send+Sync+Sized {
 ///
 /// Each record will be printed as a Json map.
 pub struct Json {
-    newlines : bool,
-    values : Vec<OwnedKeyValue>,
+    newlines: bool,
+    values: Vec<OwnedKeyValue>,
 }
 
 impl Json {
@@ -30,8 +34,8 @@ impl Json {
     /// and custom records.
     pub fn new() -> Self {
         Json {
-            newlines : true,
-            values : o!(
+            newlines: true,
+            values: o!(
                 "ts" => |rinfo : &RecordInfo| {
                     rinfo.ts.to_rfc3339()
                 },
@@ -41,7 +45,8 @@ impl Json {
                 "msg" => |rinfo : &RecordInfo| {
                     rinfo.msg.clone()
                 }
-                ).to_vec()
+                )
+                        .to_vec(),
         }
     }
 
@@ -63,15 +68,15 @@ impl Json {
 ///
 /// Create with `Json::build`.
 pub struct JsonBuilder {
-    newlines : bool,
-    values : Vec<OwnedKeyValue>,
+    newlines: bool,
+    values: Vec<OwnedKeyValue>,
 }
 
 impl JsonBuilder {
     fn new() -> Self {
         JsonBuilder {
             newlines: true,
-            values: vec!(),
+            values: vec![],
         }
     }
 
@@ -86,27 +91,31 @@ impl JsonBuilder {
     }
 
     /// Set writing a newline after ever log record
-    pub fn set_newlines(&mut self, enabled : bool) -> &mut Self {
+    pub fn set_newlines(&mut self, enabled: bool) -> &mut Self {
         self.newlines = enabled;
         self
     }
 
     /// Add custom values to be printed with this formatter
-    pub fn add_key_values(&mut self, values : &[OwnedKeyValue]) -> &mut Self {
+    pub fn add_key_values(&mut self, values: &[OwnedKeyValue]) -> &mut Self {
         self.values.extend_from_slice(values);
         self
     }
 
     /// Add custom values to be printed with this formatter
-    pub fn add_key_value(&mut self, value : OwnedKeyValue) -> &mut Self {
+    pub fn add_key_value(&mut self, value: OwnedKeyValue) -> &mut Self {
         self.values.push(value);
         self
     }
 }
 
 impl Format for Json {
-    fn format(&self, rinfo : &RecordInfo, logger_values : &[OwnedKeyValue], record_values : &[BorrowedKeyValue]) -> String {
-        let mut serializer = serde_json::Serializer::new(vec!());
+    fn format(&self,
+              rinfo: &RecordInfo,
+              logger_values: &[OwnedKeyValue],
+              record_values: &[BorrowedKeyValue])
+              -> String {
+        let mut serializer = serde_json::Serializer::new(vec![]);
         {
             let mut serializer = &mut SerdeSerializer(&mut serializer);
             for &(ref k, ref v) in self.values.iter() {
@@ -141,26 +150,22 @@ impl Format for Json {
 
 /// Terminal formatting with optional color support
 pub struct Terminal {
-    color : bool,
+    color: bool,
 }
 
 impl Terminal {
     /// New Terminal format that prints using color
     pub fn colored() -> Self {
-        Terminal {
-            color: true,
-        }
+        Terminal { color: true }
     }
 
     /// New Terminal format that prints without using color
     pub fn plain() -> Self {
-        Terminal {
-            color: false,
-        }
+        Terminal { color: false }
     }
 }
 
-fn severity_to_color(lvl : Level) -> u8 {
+fn severity_to_color(lvl: Level) -> u8 {
     match lvl {
         Level::Critical => 35,
         Level::Error => 31,
@@ -172,20 +177,24 @@ fn severity_to_color(lvl : Level) -> u8 {
 }
 
 impl Format for Terminal {
-    fn format(&self, info : &RecordInfo, logger_values : &[OwnedKeyValue], values : &[BorrowedKeyValue]) -> String {
+    fn format(&self,
+              info: &RecordInfo,
+              logger_values: &[OwnedKeyValue],
+              values: &[BorrowedKeyValue])
+              -> String {
         let color = Colour::Fixed(severity_to_color(info.level));
 
         let mut s = String::new();
 
-        let _ = write!(s, "{:?}[{}] {}",
-               info.ts,
-               if self.color {
-                   color.paint(info.level.as_str()).to_string()
-               } else {
-                   info.level.as_str().to_owned()
-               },
-               info.msg
-               );
+        let _ = write!(s,
+                       "{:?}[{}] {}",
+                       info.ts,
+                       if self.color {
+                           color.paint(info.level.as_str()).to_string()
+                       } else {
+                           info.level.as_str().to_owned()
+                       },
+                       info.msg);
 
 
         for &(ref k, ref v) in logger_values {
@@ -193,7 +202,7 @@ impl Format for Terminal {
             v.serialize(info, k, &mut s);
         }
 
-        for &(k,v) in values {
+        for &(k, v) in values {
             let _ = write!(s, ", ");
             v.serialize(info, k, &mut s);
         }

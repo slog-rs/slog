@@ -13,7 +13,7 @@
 use super::{DrainRef, OwnedKeyValue, Level, BorrowedKeyValue};
 use std::sync::Arc;
 use crossbeam::sync::ArcCell;
-use std::{io};
+use std::io;
 use super::format;
 
 use isatty::stderr_isatty;
@@ -48,7 +48,7 @@ impl Logger {
     /// fn main() {
     ///     let root = slog::Logger::new_root(o!("key1" => "value1", "key2" => "value2"));
     /// }
-    pub fn new_root(values : &[OwnedKeyValue]) -> Logger {
+    pub fn new_root(values: &[OwnedKeyValue]) -> Logger {
         let drain = Arc::new(
             ArcCell::new(
                 Arc::new(
@@ -65,7 +65,7 @@ impl Logger {
                     )
                 )
             );
-        Logger{
+        Logger {
             inner: Arc::new(LoggerInner {
                 drain: drain,
                 values: values.to_vec(),
@@ -91,10 +91,10 @@ impl Logger {
     ///     let log = root.new(o!("key" => "value"));
     /// }
 
-    pub fn new(&self, values : &[OwnedKeyValue]) -> Logger {
+    pub fn new(&self, values: &[OwnedKeyValue]) -> Logger {
         let mut new_values = self.inner.values.clone();
         new_values.extend_from_slice(values);
-        Logger{
+        Logger {
             inner: Arc::new(LoggerInner {
                 drain: self.inner.drain.clone(),
                 values: new_values,
@@ -103,7 +103,7 @@ impl Logger {
     }
 
     /// Set the drain for logger and it's hierarchy
-    pub fn set_drain<D : drain::Drain>(&self, drain : D) {
+    pub fn set_drain<D: drain::Drain>(&self, drain: D) {
         let _ = self.inner.drain.set(Arc::new(Box::new(drain)));
     }
 
@@ -111,14 +111,14 @@ impl Logger {
     ///
     /// As the drains are shared between threads, and might still be
     /// referenced `Arc`s are being used to reference-count them.
-    pub fn swap_drain(&self, drain : Arc<Box<drain::Drain>>) -> Arc<Box<drain::Drain>> {
+    pub fn swap_drain(&self, drain: Arc<Box<drain::Drain>>) -> Arc<Box<drain::Drain>> {
         self.inner.drain.set(drain)
     }
 
     /// Log one logging record
     ///
     /// Use specific logging functions instead.
-    pub fn log<'a>(&'a self, lvl : Level, msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+    pub fn log<'a>(&'a self, lvl: Level, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
 
         let info = RecordInfo {
             ts: chrono::UTC::now(),
@@ -132,42 +132,42 @@ impl Logger {
     /// Log critical level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn critical<'a>(&'a self,  msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+    pub fn critical<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Critical, msg, values);
     }
 
     /// Log error level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn error<'a>(&'a self,  msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+    pub fn error<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Error, msg, values);
     }
 
     /// Log warning level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn warn<'a>(&'a self,  msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+    pub fn warn<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Warning, msg, values);
     }
 
     /// Log info level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn info<'a>(&'a self,  msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+    pub fn info<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Info, msg, values);
     }
 
     /// Log debug level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn debug<'a>(&'a self,  msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+    pub fn debug<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Debug, msg, values);
     }
 
     /// Log trace level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn trace<'a>(&'a self,  msg : &'a str, values : &'a[BorrowedKeyValue<'a>]) {
+    pub fn trace<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Trace, msg, values);
     }
 }
@@ -175,9 +175,9 @@ impl Logger {
 /// Common information about a logging record
 pub struct RecordInfo {
     /// Timestamp
-    pub ts : chrono::DateTime<chrono::UTC>,
+    pub ts: chrono::DateTime<chrono::UTC>,
     /// Logging level
-    pub level : Level,
+    pub level: Level,
     /// Message
-    pub msg : String,
+    pub msg: String,
 }
