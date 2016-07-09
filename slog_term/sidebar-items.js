@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["async_stderr","Asynchronos drain to `stderr`"],["async_stdout","Asynchronous drain to `stdout`"],["format_colored","Short for `Format::colored()`"],["format_plain","Short for `Format::plain()`"],["stderr","Drain to `stderr`"],["stdout","Drain to `stdout`"]],"struct":[["Format","Format formatting with optional color support"]]});
