@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `Json` struct in crate `slog`.">
+    <meta name="description" content="API documentation for the Rust `Json` struct in crate `slog_json`.">
     <meta name="keywords" content="rust, rustlang, rust-lang, Json">
 
-    <title>slog::format::Json - Rust</title>
+    <title>slog_json::Json - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
     
 
     
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>slog</a>::<wbr><a href='index.html'>format</a></p><script>window.sidebarCurrent = {name: 'Json', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>slog_json</a></p><script>window.sidebarCurrent = {name: 'Json', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,29 +43,32 @@
     </nav>
 
     <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>slog</a>::<wbr><a href='index.html'>format</a>::<wbr><a class='struct' href=''>Json</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>slog_json</a>::<wbr><a class='struct' href=''>Json</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-685' class='srclink' href='../../src/slog/format/mod.rs.html#25-28' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-20' class='srclink' href='../src/slog_json/lib.rs.html#31-34' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Json {
     // some fields omitted
 }</pre><div class='docblock'><p>ToJson formatter</p>
 
 <p>Each record will be printed as a Json map.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../slog/format/struct.Json.html' title='slog::format::Json'>Json</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-688' class='srclink' href='../../src/slog/format/mod.rs.html#30-65' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../slog_json/struct.Json.html' title='slog_json::Json'>Json</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-23' class='srclink' href='../src/slog_json/lib.rs.html#36-73' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; Self</code></h4>
 <div class='docblock'><p>Create new <code>Json</code> format.</p>
 
-<p>TODO: Add a builder pattern to configure newlines,
-and custom records.</p>
-</div><h4 id='method.build' class='method'><code>fn <a href='#method.build' class='fnname'>build</a>() -&gt; <a class='struct' href='../../slog/format/struct.JsonBuilder.html' title='slog::format::JsonBuilder'>JsonBuilder</a></code></h4>
+<p>It comes with some default fields (<code>ts</code>, <code>level</code>, <code>msg</code>)
+and uses newlines.</p>
+
+<p>Use <code>Json::build()</code> to build a custom Json formatter from
+scratch.</p>
+</div><h4 id='method.build' class='method'><code>fn <a href='#method.build' class='fnname'>build</a>() -&gt; <a class='struct' href='../slog_json/struct.JsonBuilder.html' title='slog_json::JsonBuilder'>JsonBuilder</a></code></h4>
 <div class='docblock'><p>Build a JSON formatter with custom settings</p>
 </div><h4 id='method.new_nonewline' class='method'><code>fn <a href='#method.new_nonewline' class='fnname'>new_nonewline</a>() -&gt; Self</code></h4>
 <div class='docblock'><p>Create new <code>Json</code> format that does not add
 newlines after each record.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../slog/format/trait.Format.html' title='slog::format::Format'>Format</a> for <a class='struct' href='../../slog/format/struct.Json.html' title='slog::format::Json'>Json</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-716' class='srclink' href='../../src/slog/format/mod.rs.html#112-149' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.format' class='method'><code>fn <a href='../../slog/format/trait.Format.html#tymethod.format' class='fnname'>format</a>(&amp;self, rinfo: &amp;<a class='struct' href='../../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a>, logger_values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, record_values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../../slog/type.BorrowedKeyValue.html' title='slog::BorrowedKeyValue'>BorrowedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../slog/format/trait.Format.html' title='slog::format::Format'>Format</a> for <a class='struct' href='../slog_json/struct.Json.html' title='slog_json::Json'>Json</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-51' class='srclink' href='../src/slog_json/lib.rs.html#120-157' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.format' class='method'><code>fn <a href='../slog/format/trait.Format.html#tymethod.format' class='fnname'>format</a>(&amp;self, rinfo: &amp;<a class='struct' href='../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a>, logger_values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, record_values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../slog/type.BorrowedKeyValue.html' title='slog::BorrowedKeyValue'>BorrowedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
 <div class='docblock'><p>Format one logging record into <code>String</code></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -121,13 +124,13 @@ newlines after each record.</p>
     
 
     <script>
-        window.rootPath = "../../";
-        window.currentCrate = "slog";
+        window.rootPath = "../";
+        window.currentCrate = "slog_json";
         window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
     
-    <script defer src="../../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

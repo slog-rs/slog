@@ -47,12 +47,13 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog/lib.rs.html#1-162' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog/lib.rs.html#1-160' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='slog----structured-composable-logging-for-rust' class='section-header'><a href='#slog----structured-composable-logging-for-rust'>Slog -  Structured, composable logging for Rust</a></h1>
 <pre class='rust rust-example-rendered'>
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog_json</span>;
 
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='op'>*</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>thread</span>;
@@ -108,7 +109,7 @@
             <span class='ident'>drain</span>::<span class='ident'>stream</span>(
                 <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>stderr</span>(),
                 <span class='comment'>// multiple outputs formats are supported</span>
-                <span class='ident'>format</span>::<span class='ident'>Json</span>::<span class='ident'>new</span>(),
+                <span class='ident'>slog_json</span>::<span class='ident'>new</span>(),
                 ),
             ),
         );

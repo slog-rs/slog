@@ -202,13 +202,12 @@
 <span id="158">158</span>
 <span id="159">159</span>
 <span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//! #[macro_use]</span>
 <span class='doccomment'>//! extern crate slog;</span>
+<span class='doccomment'>//! extern crate slog_json;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! use slog::*;</span>
 <span class='doccomment'>//! use std::thread;</span>
@@ -264,7 +263,7 @@
 <span class='doccomment'>//!             drain::stream(</span>
 <span class='doccomment'>//!                 std::io::stderr(),</span>
 <span class='doccomment'>//!                 // multiple outputs formats are supported</span>
-<span class='doccomment'>//!                 format::Json::new(),</span>
+<span class='doccomment'>//!                 slog_json::new(),</span>
 <span class='doccomment'>//!                 ),</span>
 <span class='doccomment'>//!             ),</span>
 <span class='doccomment'>//!         );</span>
@@ -291,12 +290,9 @@
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>missing_docs</span>)]</span>
 
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>crossbeam</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde_json</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>isatty</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>ansi_term</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span> <span class='kw'>as</span> <span class='ident'>serialize</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>chrono</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span> <span class='kw'>as</span> <span class='ident'>serialize</span>;
+
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
 <span class='kw'>use</span> <span class='ident'>crossbeam</span>::<span class='ident'>sync</span>::<span class='ident'>ArcCell</span>;

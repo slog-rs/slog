@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `stdout_isatty` fn in crate `isatty`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, stdout_isatty">
+    <meta name="description" content="API documentation for the Rust `JsonBuilder` struct in crate `slog_json`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, JsonBuilder">
 
-    <title>isatty::stdout_isatty - Rust</title>
+    <title>slog_json::JsonBuilder - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>isatty</a></p><script>window.sidebarCurrent = {name: 'stdout_isatty', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>slog_json</a></p><script>window.sidebarCurrent = {name: 'JsonBuilder', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,13 +42,29 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>isatty</a>::<wbr><a class='fn' href=''>stdout_isatty</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>slog_json</a>::<wbr><a class='struct' href=''>JsonBuilder</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-4' class='srclink' href='../src/isatty/lib.rs.html#3-5' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn stdout_isatty() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></pre></section>
+               </span><a id='src-35' class='srclink' href='../src/slog_json/lib.rs.html#78-81' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct JsonBuilder {
+    // some fields omitted
+}</pre><div class='docblock'><p>JSON formatter builder</p>
+
+<p>Create with <code>Json::build</code>.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../slog_json/struct.JsonBuilder.html' title='slog_json::JsonBuilder'>JsonBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-38' class='srclink' href='../src/slog_json/lib.rs.html#83-118' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.build' class='method'><code>fn <a href='#method.build' class='fnname'>build</a>(self) -&gt; <a class='struct' href='../slog_json/struct.Json.html' title='slog_json::Json'>Json</a></code></h4>
+<div class='docblock'><p>Build <code>JSON</code> format</p>
+
+<p>This consumes the builder.</p>
+</div><h4 id='method.set_newlines' class='method'><code>fn <a href='#method.set_newlines' class='fnname'>set_newlines</a>(&amp;mut self, enabled: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; &amp;mut Self</code></h4>
+<div class='docblock'><p>Set writing a newline after ever log record</p>
+</div><h4 id='method.add_key_values' class='method'><code>fn <a href='#method.add_key_values' class='fnname'>add_key_values</a>(&amp;mut self, values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; &amp;mut Self</code></h4>
+<div class='docblock'><p>Add custom values to be printed with this formatter</p>
+</div><h4 id='method.add_key_value' class='method'><code>fn <a href='#method.add_key_value' class='fnname'>add_key_value</a>(&amp;mut self, value: <a class='type' href='../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>) -&gt; &amp;mut Self</code></h4>
+<div class='docblock'><p>Add custom values to be printed with this formatter</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -103,7 +119,7 @@
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "isatty";
+        window.currentCrate = "slog_json";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>

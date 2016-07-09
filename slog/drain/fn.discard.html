@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `JsonBuilder` struct in crate `slog`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, JsonBuilder">
+    <meta name="description" content="API documentation for the Rust `discard` fn in crate `slog`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, discard">
 
-    <title>slog::format::JsonBuilder - Rust</title>
+    <title>slog::drain::discard - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>slog</a>::<wbr><a href='index.html'>format</a></p><script>window.sidebarCurrent = {name: 'JsonBuilder', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='../index.html'>slog</a>::<wbr><a href='index.html'>drain</a></p><script>window.sidebarCurrent = {name: 'discard', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,29 +42,14 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>slog</a>::<wbr><a href='index.html'>format</a>::<wbr><a class='struct' href=''>JsonBuilder</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content fn">
+<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>slog</a>::<wbr><a href='index.html'>drain</a>::<wbr><a class='fn' href=''>discard</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-700' class='srclink' href='../../src/slog/format/mod.rs.html#70-73' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct JsonBuilder {
-    // some fields omitted
-}</pre><div class='docblock'><p>JSON formatter builder</p>
-
-<p>Create with <code>Json::build</code>.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../slog/format/struct.JsonBuilder.html' title='slog::format::JsonBuilder'>JsonBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-703' class='srclink' href='../../src/slog/format/mod.rs.html#75-110' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.build' class='method'><code>fn <a href='#method.build' class='fnname'>build</a>(self) -&gt; <a class='struct' href='../../slog/format/struct.Json.html' title='slog::format::Json'>Json</a></code></h4>
-<div class='docblock'><p>Build <code>JSON</code> format</p>
-
-<p>This consumes the builder.</p>
-</div><h4 id='method.set_newlines' class='method'><code>fn <a href='#method.set_newlines' class='fnname'>set_newlines</a>(&amp;mut self, enabled: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; &amp;mut Self</code></h4>
-<div class='docblock'><p>Set writing a newline after ever log record</p>
-</div><h4 id='method.add_key_values' class='method'><code>fn <a href='#method.add_key_values' class='fnname'>add_key_values</a>(&amp;mut self, values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; &amp;mut Self</code></h4>
-<div class='docblock'><p>Add custom values to be printed with this formatter</p>
-</div><h4 id='method.add_key_value' class='method'><code>fn <a href='#method.add_key_value' class='fnname'>add_key_value</a>(&amp;mut self, value: <a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>) -&gt; &amp;mut Self</code></h4>
-<div class='docblock'><p>Add custom values to be printed with this formatter</p>
-</div></div></section>
+               </span><a id='src-140' class='srclink' href='../../src/slog/drain.rs.html#228-230' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn discard() -&gt; <a class='struct' href='../../slog/drain/struct.Discard.html' title='slog::drain::Discard'>Discard</a></pre><div class='docblock'><p>Create a Discard drain</p>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

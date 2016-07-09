@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `ANSIStrings` struct in crate `ansi_term`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, ANSIStrings">
+    <meta name="description" content="API documentation for the Rust `slog_json` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, slog_json">
 
-    <title>ansi_term::ANSIStrings - Rust</title>
+    <title>slog_json - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>ansi_term</a></p><script>window.sidebarCurrent = {name: 'ANSIStrings', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'slog_json', ty: 'mod', relpath: '../'};</script>
     </nav>
 
     <nav class="sub">
@@ -42,18 +42,44 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>ansi_term</a>::<wbr><a class='struct' href=''>ANSIStrings</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>slog_json</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-369' class='srclink' href='../src/ansi_term/lib.rs.html#637' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct ANSIStrings&lt;'a&gt;(pub <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'a [</a><a class='struct' href='../ansi_term/struct.ANSIString.html' title='ansi_term::ANSIString'>ANSIString</a>&lt;'a&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>);</pre><div class='docblock'><p>A set of <code>ANSIString</code>s collected together, in order to be written with a
-minimum of control characters.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='struct' href='../ansi_term/struct.ANSIStrings.html' title='ansi_term::ANSIStrings'>ANSIStrings</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-373' class='srclink' href='../src/ansi_term/lib.rs.html#639-673' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
-<div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div></section>
+               </span><a id='src-0' class='srclink' href='../src/slog_json/lib.rs.html#1-167' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p><a href="https://www.npmjs.com/package/bunyan">Bunyan</a> formatting for <code>slog-rs</code></p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Json.html'
+                                  title='slog_json::Json'>Json</a></td>
+                           <td class='docblock short'>
+                                <p>ToJson formatter</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.JsonBuilder.html'
+                                  title='slog_json::JsonBuilder'>JsonBuilder</a></td>
+                           <td class='docblock short'>
+                                <p>JSON formatter builder</p>
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.build.html'
+                                  title='slog_json::build'>build</a></td>
+                           <td class='docblock short'>
+                                <p>Short for <code>Json::build()</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.new.html'
+                                  title='slog_json::new'>new</a></td>
+                           <td class='docblock short'>
+                                <p>Short for <code>Json::new()</code></p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -108,7 +134,7 @@ minimum of control characters.</p>
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "ansi_term";
+        window.currentCrate = "slog_json";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>

@@ -130,6 +130,7 @@
 <span id="86">86</span>
 <span id="87">87</span>
 <span id="88">88</span>
+<span id="89">89</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! [Bunyan](https://www.npmjs.com/package/bunyan) formatting for `slog-rs`</span>
 
@@ -139,8 +140,9 @@
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>nix</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>chrono</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog_json</span>;
 
-<span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>format</span>::<span class='ident'>Json</span>;
+<span class='kw'>use</span> <span class='ident'>slog_json</span>::<span class='ident'>Json</span>;
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>logger</span>::<span class='ident'>RecordInfo</span>;
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>Level</span>;
 
