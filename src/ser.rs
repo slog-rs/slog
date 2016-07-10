@@ -1,4 +1,4 @@
-use std::fmt::Write;
+use std::io;
 use serialize::hex::ToHex;
 
 use super::logger::RecordInfo;
@@ -148,7 +148,7 @@ impl<S: Serialize, F: 'static + Sync + Send + Fn(&RecordInfo) -> S> Serialize fo
 impl<S: Serialize, F: 'static + Sync + Send + Fn(&RecordInfo) -> S> SyncSerialize for F {}
 
 
-impl Serializer for String {
+impl<W : io::Write+?Sized> Serializer for W {
     fn emit_none(&mut self, key: &str) {
         write!(self, "{}: {}", key, "None").unwrap()
     }
@@ -208,3 +208,65 @@ impl Serializer for String {
         write!(self, "{}: {}", key, val).unwrap()
     }
 }
+/*
+impl<'a> Serializer for &'a io::Write {
+    fn emit_none(&mut self, key: &str) {
+        write!(self, "{}: {}", key, "None").unwrap()
+    }
+    fn emit_unit(&mut self, key: &str) {
+        write!(self, "{}: ()", key, ).unwrap()
+    }
+
+    fn emit_bool(&mut self, key: &str, val: bool) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+
+    fn emit_char(&mut self, key: &str, val: char) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+    fn emit_bytes(&mut self, key: &str, val: &[u8]) {
+        write!(self, "{}: {}", key, val.to_hex()).unwrap()
+    }
+
+    fn emit_usize(&mut self, key: &str, val: usize) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+    fn emit_isize(&mut self, key: &str, val: isize) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+
+    fn emit_u8(&mut self, key: &str, val: u8) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+    fn emit_i8(&mut self, key: &str, val: i8) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+    fn emit_u16(&mut self, key: &str, val: u16) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+    fn emit_i16(&mut self, key: &str, val: i16) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+    fn emit_u32(&mut self, key: &str, val: u32) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+    fn emit_i32(&mut self, key: &str, val: i32) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+    fn emit_f32(&mut self, key: &str, val: f32) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+    fn emit_u64(&mut self, key: &str, val: u64) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+    fn emit_i64(&mut self, key: &str, val: i64) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+    fn emit_f64(&mut self, key: &str, val: f64) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+    fn emit_str(&mut self, key: &str, val: &str) {
+        write!(self, "{}: {}", key, val).unwrap()
+    }
+}
+*/

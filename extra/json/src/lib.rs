@@ -24,8 +24,9 @@ extern crate slog;
 extern crate slog_serde;
 extern crate serde_json;
 
-use slog_serde::SerdeSerializer;
+use std::io;
 
+use slog_serde::SerdeSerializer;
 use slog::logger::RecordInfo;
 use slog::{Level, OwnedKeyValue, BorrowedKeyValue};
 use slog::format::Format;
@@ -136,13 +137,16 @@ impl JsonBuilder {
 
 impl Format for Json {
     fn format(&self,
+              io : &mut io::Write,
               rinfo: &RecordInfo,
               logger_values: &[OwnedKeyValue],
-              record_values: &[BorrowedKeyValue])
-              -> String {
-        let mut serializer = serde_json::Serializer::new(vec![]);
+              record_values: &[BorrowedKeyValue]) {
+        let _ = write!(io, "{{");
+        let mut serializer = serde_json::Serializer::new(io);
         {
             let mut serializer = &mut SerdeSerializer(&mut serializer);
+
+
             for &(ref k, ref v) in self.values.iter() {
                 v.serialize(rinfo, k, serializer);
             }
@@ -154,22 +158,8 @@ impl Format for Json {
                 v.serialize(rinfo, k, serializer);
             }
         }
-
-        // TODO: Optimize this part
-        let mut inner_bytes = serializer.into_inner();
-        {
-            let empty = inner_bytes.is_empty();
-            if empty {
-                inner_bytes.push(',' as u8);
-            }
-        }
-        let inner_str = String::from_utf8_lossy(&inner_bytes);
-
-        if self.newlines {
-            format!("{{{}}}\n", &inner_str[1..])
-        } else {
-            format!("{{{}}}", &inner_str[1..])
-        }
+        let mut io = serializer.into_inner();
+        let _ = write!(io, "}}");
     }
 }
 

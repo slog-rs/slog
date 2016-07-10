@@ -5,7 +5,7 @@
 use super::Level;
 use super::format;
 use super::logger::RecordInfo;
-use std::{io, str};
+use std::io;
 use std::sync::Mutex;
 use super::{OwnedKeyValue, BorrowedKeyValue};
 use std::sync::mpsc;
@@ -53,10 +53,8 @@ impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
            values: &[BorrowedKeyValue]) {
-        let formatted = self.format.format(info, logger_values, values);
-
         let mut io = self.io.lock().unwrap();
-        let _ = write!(io, "{}", formatted);
+        self.format.format(&mut *io, info, logger_values, values);
     }
 }
 

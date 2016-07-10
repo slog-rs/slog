@@ -98,7 +98,10 @@ mod test {
             msg: "message".to_string(),
         };
 
-        assert_eq!(formatter.format(&info, &[], &[]),
+        let mut v = vec!();
+        formatter.format(&mut v, &info, &[], &[]);
+
+        assert_eq!(String::from_utf8_lossy(&v),
                    "{\"pid\":".to_string() + &nix::unistd::getpid().to_string() + ",\"host\":\"" +
                    &get_hostname() +
                    "\",\"time\":\"2014-07-08T09:10:11+00:00\",\"level\":30,\"name\":\"slog-rs\",\

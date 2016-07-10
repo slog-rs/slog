@@ -20,7 +20,6 @@ extern crate isatty;
 extern crate ansi_term;
 
 use std::io;
-use std::fmt::Write;
 
 use ansi_term::Colour;
 use isatty::{stderr_isatty, stdout_isatty};
@@ -60,15 +59,13 @@ fn severity_to_color(lvl: Level) -> u8 {
 
 impl SlogFormat for Format {
     fn format(&self,
+              mut io : &mut io::Write,
               info: &RecordInfo,
               logger_values: &[OwnedKeyValue],
-              values: &[BorrowedKeyValue])
-              -> String {
+              values: &[BorrowedKeyValue]) {
         let color = Colour::Fixed(severity_to_color(info.level));
 
-        let mut s = String::new();
-
-        let _ = write!(s,
+        let _ = write!(io,
                        "{:?}[{}] {}",
                        info.ts,
                        if self.color {
@@ -80,18 +77,16 @@ impl SlogFormat for Format {
 
 
         for &(ref k, ref v) in logger_values {
-            let _ = write!(s, ", ");
-            v.serialize(info, k, &mut s);
+            let _ = write!(io, ", ");
+            v.serialize(info, k, &mut io);
         }
 
         for &(k, v) in values {
-            let _ = write!(s, ", ");
-            v.serialize(info, k, &mut s);
+            let _ = write!(io, ", ");
+            v.serialize(info, k, &mut io);
         }
 
-        s.push_str("\n");
-
-        s
+        let _ = write!(io, "\n");
     }
 }
 
