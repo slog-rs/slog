@@ -24,6 +24,9 @@ fn main() {
     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
     let root = Logger::new_root(o!("version" => VERSION, "build-id" => "8dfljdf"));
 
+    // Set drains to specify the output format and destination.
+    root.set_drain(slog_term::async_stderr());
+
     // Build logging context as data becomes available.
     //
     // Create child loggers from existing ones. Children clone `key: value`
@@ -53,7 +56,7 @@ fn main() {
         drain::filter_level(
             Level::Info,
             drain::stream(
-                std::io::stderr(),
+                drain::async(std::io::stderr()),
                 // multiple outputs formats are supported
                 slog_json::new(),
                 ),

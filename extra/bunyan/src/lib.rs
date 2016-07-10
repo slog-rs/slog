@@ -1,5 +1,23 @@
 //! [Bunyan](https://www.npmjs.com/package/bunyan) formatting for `slog-rs`
-
+//!
+//! ```
+//! #[macro_use]
+//! extern crate slog;
+//! extern crate slog_bunyan;
+//!
+//! use slog::*;
+//!
+//! fn main() {
+//!     let root = Logger::new_root(o!("build-id" => "8dfljdf"));
+//!
+//!     root.set_drain(
+//!             drain::stream(
+//!                 std::io::stderr(),
+//!                 slog_bunyan::new()
+//!                 )
+//!             );
+//! }
+//! ```
 #![warn(missing_docs)]
 
 #[macro_use]

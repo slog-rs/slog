@@ -26,6 +26,13 @@ all: $(ALL_TARGETS)
 run test build clean:
 	cargo $@ $(CARGO_FLAGS)
 
+test-all:
+	cargo test $(CARGO_FLAGS)
+	cd "extra/term"; cargo test $(CARGO_FLAGS)
+	cd "extra/serde"; cargo test $(CARGO_FLAGS)
+	cd "extra/json"; cargo test $(CARGO_FLAGS)
+	cd "extra/bunyan"; cargo test $(CARGO_FLAGS)
+
 check:
 	$(info Running check; use `make build` to actually build)
 	cargo $@ $(CARGO_FLAGS)
@@ -61,6 +68,9 @@ $(EXTRAS):
 .PHONY: doc
 doc: FORCE
 	cargo doc -p slog
+	cd "extra/term"; cargo doc -p slog-term
+	cd "extra/serde"; cargo doc -p slog-serde
+	cd "extra/json"; cargo doc -p slog-json
 	cd "extra/bunyan"; cargo doc -p slog-bunyan
 
 .PHONY: publishdoc

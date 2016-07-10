@@ -1,5 +1,22 @@
 //! [Bunyan](https://www.npmjs.com/package/bunyan) formatting for `slog-rs`
-
+//!
+//! ```
+//! #[macro_use]
+//! extern crate slog;
+//! extern crate slog_json;
+//!
+//! use slog::*;
+//!
+//! fn main() {
+//!     let root = Logger::new_root(o!("build-id" => "8dfljdf"));
+//!     root.set_drain(
+//!             drain::stream(
+//!                 std::io::stderr(),
+//!                 slog_json::new()
+//!                 )
+//!             );
+//! }
+//! ```
 #![warn(missing_docs)]
 
 #[macro_use]
@@ -25,7 +42,7 @@ fn level_to_string(level: Level) -> &'static str {
     }
 }
 
-/// ToJson formatter
+/// Json formatter
 ///
 /// Each record will be printed as a Json map.
 pub struct Json {
@@ -58,7 +75,7 @@ impl Json {
         }
     }
 
-    /// Build a JSON formatter with custom settings
+    /// Build a Json formatter with custom settings
     pub fn build() -> JsonBuilder {
         JsonBuilder::new()
     }
@@ -72,7 +89,7 @@ impl Json {
     }
 }
 
-/// JSON formatter builder
+/// Json formatter builder
 ///
 /// Create with `Json::build`.
 pub struct JsonBuilder {
@@ -88,7 +105,7 @@ impl JsonBuilder {
         }
     }
 
-    /// Build `JSON` format
+    /// Build `Json` format
     ///
     /// This consumes the builder.
     pub fn build(self) -> Json {

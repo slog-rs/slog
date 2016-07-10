@@ -1,5 +1,17 @@
 //! Unix terminal formatter for slog-rs
-
+//!
+//! ```
+//! #[macro_use]
+//! extern crate slog;
+//! extern crate slog_term;
+//!
+//! use slog::*;
+//!
+//! fn main() {
+//!     let root = Logger::new_root(o!("build-id" => "8dfljdf"));
+//!     root.set_drain(slog_term::async_stderr());
+//! }
+//! ```
 #![warn(missing_docs)]
 
 #[macro_use]
@@ -16,22 +28,22 @@ use isatty::{stderr_isatty, stdout_isatty};
 use slog::logger::RecordInfo;
 use slog::drain::{Streamer, AsyncIoWriter};
 use slog::{Level, OwnedKeyValue, BorrowedKeyValue};
-use slog::format::Format;
+use slog::format::Format as SlogFormat;
 
-/// Terminal formatting with optional color support
-pub struct Terminal {
+/// Format formatting with optional color support
+pub struct Format {
     color: bool,
 }
 
-impl Terminal {
-    /// New Terminal format that prints using color
+impl Format {
+    /// New Format format that prints using color
     pub fn colored() -> Self {
-        Terminal { color: true }
+        Format { color: true }
     }
 
-    /// New Terminal format that prints without using color
+    /// New Format format that prints without using color
     pub fn plain() -> Self {
-        Terminal { color: false }
+        Format { color: false }
     }
 }
 
@@ -46,7 +58,7 @@ fn severity_to_color(lvl: Level) -> u8 {
     }
 }
 
-impl Format for Terminal {
+impl SlogFormat for Format {
     fn format(&self,
               info: &RecordInfo,
               logger_values: &[OwnedKeyValue],
@@ -83,14 +95,14 @@ impl Format for Terminal {
     }
 }
 
-/// Short for `Terminal::colored()`
-pub fn format_colored() -> Terminal {
-    Terminal::colored()
+/// Short for `Format::colored()`
+pub fn format_colored() -> Format {
+    Format::colored()
 }
 
-/// Short for `Terminal::plain()`
-pub fn format_plain() -> Terminal {
-    Terminal::plain()
+/// Short for `Format::plain()`
+pub fn format_plain() -> Format {
+    Format::plain()
 }
 
 
@@ -98,13 +110,13 @@ pub fn format_plain() -> Terminal {
 /// Drain to `stdout`
 ///
 /// Automatically using color if printing to tty
-pub fn stdout() -> Streamer<io::Stdout, Terminal> {
+pub fn stdout() -> Streamer<io::Stdout, Format> {
     Streamer::new(
         io::stdout(),
         if stdout_isatty() {
-            Terminal::colored()
+            Format::colored()
         } else {
-            Terminal::plain()
+            Format::plain()
         }
     )
 }
@@ -112,13 +124,13 @@ pub fn stdout() -> Streamer<io::Stdout, Terminal> {
 /// Drain to `stderr`
 ///
 /// Automatically using color if output goes to tty
-pub fn stderr() -> Streamer<io::Stderr, Terminal> {
+pub fn stderr() -> Streamer<io::Stderr, Format> {
     Streamer::new(
         io::stderr(),
         if stderr_isatty() {
-            Terminal::colored()
+            Format::colored()
         } else {
-            Terminal::plain()
+            Format::plain()
         }
     )
 }
@@ -126,13 +138,13 @@ pub fn stderr() -> Streamer<io::Stderr, Terminal> {
 /// Asynchronous drain to `stdout`
 ///
 /// Automatically using color if printing to tty
-pub fn async_stdout() -> Streamer<AsyncIoWriter, Terminal> {
+pub fn async_stdout() -> Streamer<AsyncIoWriter, Format> {
     Streamer::new(
         AsyncIoWriter::new(io::stdout()),
         if stdout_isatty() {
-            Terminal::colored()
+            Format::colored()
         } else {
-            Terminal::plain()
+            Format::plain()
         }
     )
 }
@@ -140,13 +152,13 @@ pub fn async_stdout() -> Streamer<AsyncIoWriter, Terminal> {
 /// Asynchronos drain to `stderr`
 ///
 /// Automatically using color if output goes to tty
-pub fn async_stderr() -> Streamer<AsyncIoWriter, Terminal> {
+pub fn async_stderr() -> Streamer<AsyncIoWriter, Format> {
     Streamer::new(
         AsyncIoWriter::new(io::stderr()),
         if stderr_isatty() {
-            Terminal::colored()
+            Format::colored()
         } else {
-            Terminal::plain()
+            Format::plain()
         }
     )
 }
