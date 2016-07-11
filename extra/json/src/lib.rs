@@ -1,4 +1,4 @@
-//! [Bunyan](https://www.npmjs.com/package/bunyan) formatting for `slog-rs`
+//! Json formatter for `slog-rs`
 //!
 //! ```
 //! #[macro_use]

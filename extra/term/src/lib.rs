@@ -1,4 +1,4 @@
-//! Unix terminal formatter for slog-rs
+//! Unix terminal formatter and drain for slog-rs
 //!
 //! ```
 //! #[macro_use]

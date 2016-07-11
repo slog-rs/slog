@@ -109,16 +109,15 @@ To report a bug or ask for features use [github issues][issues].
 * easy to use
 * hierarchal loggers
 * lazily evaluated values
-* drains
-	* filtering drains
-	* asynchronous writer
+* extensible: first-class custom implementations
+* drains & output formatting
+	* filtering
+	* multiple outputs
+	* asynchronous IO writing
+	* terminal output, with color support (`slog-term` crate)
+	* Json (`slog-json` crate)
+		* Bunyan (`slog-bunyan` crate)
 	* more to come (syslog, network)
-	* first-class custom implementations support
-* output formatting
-	* terminal (with color support)
-	* Json (`./extra/json`)
-		* Bunyan (`./extra/bunyan`)
-	* first-class custom implementations support
 
 ## Building & running
 

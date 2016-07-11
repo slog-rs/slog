@@ -1,6 +1,6 @@
 [package]
 name = "slog"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Structured, composable logging for Rust"
 keywords = ["log", "logging", "structured", "hierarchical"]
@@ -17,5 +17,5 @@ chrono = "0.2.22"
 rustc-serialize = "0.3.19"
 
 [dev-dependencies]
-slog-json = { version = "0.1.0", path = "extra/json" }
-slog-term = { version = "0.1.0", path = "extra/term" }
+slog-json = { version = "0.5.0", path = "extra/json" }
+slog-term = { version = "0.5.0", path = "extra/term" }
