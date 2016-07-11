@@ -226,6 +226,36 @@
 <span id="182">182</span>
 <span id="183">183</span>
 <span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! [Bunyan](https://www.npmjs.com/package/bunyan) formatting for `slog-rs`</span>
 <span class='doccomment'>//!</span>
@@ -253,8 +283,9 @@
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog_serde</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde_json</span>;
 
-<span class='kw'>use</span> <span class='ident'>slog_serde</span>::<span class='ident'>SerdeSerializer</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 
+<span class='kw'>use</span> <span class='ident'>slog_serde</span>::<span class='ident'>SerdeSerializer</span>;
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>logger</span>::<span class='ident'>RecordInfo</span>;
 <span class='kw'>use</span> <span class='ident'>slog</span>::{<span class='ident'>Level</span>, <span class='ident'>OwnedKeyValue</span>, <span class='ident'>BorrowedKeyValue</span>};
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>format</span>::<span class='ident'>Format</span>;
@@ -363,15 +394,55 @@
     }
 }
 
+<span class='comment'>// TODO: Get rid of after</span>
+<span class='comment'>// https://github.com/serde-rs/serde/issues/386</span>
+<span class='comment'>// is implemented</span>
+<span class='kw'>struct</span> <span class='ident'>SkipFirstByte</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span> {
+    <span class='ident'>first</span> : <span class='ident'>bool</span>,
+    <span class='ident'>io</span> : <span class='ident'>W</span>,
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>W</span> : <span class='ident'>io</span>::<span class='ident'>Write</span><span class='op'>&gt;</span> <span class='ident'>SkipFirstByte</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>io</span> : <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+        <span class='ident'>SkipFirstByte</span> {
+            <span class='ident'>first</span>: <span class='boolvalue'>true</span>,
+            <span class='ident'>io</span>: <span class='ident'>io</span>,
+        }
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>into_inner</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>W</span> {
+        <span class='self'>self</span>.<span class='ident'>io</span>
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>W</span> : <span class='ident'>io</span>::<span class='ident'>Write</span><span class='op'>&gt;</span> <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='kw'>for</span> <span class='ident'>SkipFirstByte</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
+        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>first</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ident'>buf</span>.<span class='ident'>is_empty</span>(){
+            <span class='self'>self</span>.<span class='ident'>first</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>.<span class='ident'>write_all</span>(<span class='kw-2'>&amp;</span><span class='ident'>buf</span>[<span class='number'>1</span>..]));
+        } <span class='kw'>else</span> {
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>.<span class='ident'>write_all</span>(<span class='ident'>buf</span>))
+        }
+        <span class='prelude-val'>Ok</span>(<span class='ident'>buf</span>.<span class='ident'>len</span>())
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>flush</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='self'>self</span>.<span class='ident'>io</span>.<span class='ident'>flush</span>()
+    }
+
+}
+
 <span class='kw'>impl</span> <span class='ident'>Format</span> <span class='kw'>for</span> <span class='ident'>Json</span> {
     <span class='kw'>fn</span> <span class='ident'>format</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
+              <span class='ident'>io</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>io</span>::<span class='ident'>Write</span>,
               <span class='ident'>rinfo</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
               <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>],
-              <span class='ident'>record_values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>])
-              <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>serializer</span> <span class='op'>=</span> <span class='ident'>serde_json</span>::<span class='ident'>Serializer</span>::<span class='ident'>new</span>(<span class='macro'>vec</span><span class='macro'>!</span>[]);
+              <span class='ident'>record_values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) {
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>io</span>, <span class='string'>&quot;{{&quot;</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>serializer</span> <span class='op'>=</span> <span class='ident'>serde_json</span>::<span class='ident'>Serializer</span>::<span class='ident'>new</span>(<span class='ident'>SkipFirstByte</span>::<span class='ident'>new</span>(<span class='ident'>io</span>));
         {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>serializer</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>SerdeSerializer</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>serializer</span>);
+
             <span class='kw'>for</span> <span class='kw-2'>&amp;</span>(<span class='kw-2'>ref</span> <span class='ident'>k</span>, <span class='kw-2'>ref</span> <span class='ident'>v</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>values</span>.<span class='ident'>iter</span>() {
                 <span class='ident'>v</span>.<span class='ident'>serialize</span>(<span class='ident'>rinfo</span>, <span class='ident'>k</span>, <span class='ident'>serializer</span>);
             }
@@ -383,21 +454,10 @@
                 <span class='ident'>v</span>.<span class='ident'>serialize</span>(<span class='ident'>rinfo</span>, <span class='ident'>k</span>, <span class='ident'>serializer</span>);
             }
         }
-
-        <span class='comment'>// TODO: Optimize this part</span>
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>inner_bytes</span> <span class='op'>=</span> <span class='ident'>serializer</span>.<span class='ident'>into_inner</span>();
-        {
-            <span class='kw'>let</span> <span class='ident'>empty</span> <span class='op'>=</span> <span class='ident'>inner_bytes</span>.<span class='ident'>is_empty</span>();
-            <span class='kw'>if</span> <span class='ident'>empty</span> {
-                <span class='ident'>inner_bytes</span>.<span class='ident'>push</span>(<span class='string'>&#39;,&#39;</span> <span class='kw'>as</span> <span class='ident'>u8</span>);
-            }
-        }
-        <span class='kw'>let</span> <span class='ident'>inner_str</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>from_utf8_lossy</span>(<span class='kw-2'>&amp;</span><span class='ident'>inner_bytes</span>);
-
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>io</span> <span class='op'>=</span> <span class='ident'>serializer</span>.<span class='ident'>into_inner</span>().<span class='ident'>into_inner</span>();
+        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>io</span>.<span class='ident'>write_all</span>(<span class='string'>&quot;}&quot;</span>.<span class='ident'>as_bytes</span>());
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>newlines</span> {
-            <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{{{}}}\n&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>inner_str</span>[<span class='number'>1</span>..])
-        } <span class='kw'>else</span> {
-            <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{{{}}}&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>inner_str</span>[<span class='number'>1</span>..])
+            <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>io</span>.<span class='ident'>write_all</span>(<span class='string'>&quot;\n&quot;</span>.<span class='ident'>as_bytes</span>());
         }
     }
 }

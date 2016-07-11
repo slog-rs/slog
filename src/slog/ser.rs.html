@@ -252,8 +252,70 @@
 <span id="208">208</span>
 <span id="209">209</span>
 <span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
 </pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Write</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 <span class='kw'>use</span> <span class='ident'>serialize</span>::<span class='ident'>hex</span>::<span class='ident'>ToHex</span>;
 
 <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>logger</span>::<span class='ident'>RecordInfo</span>;
@@ -403,7 +465,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Serialize</span>, <span class='ident'>F</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Sync</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>) <span class='op'>-&gt;</span> <span class='ident'>S</span><span class='op'>&gt;</span> <span class='ident'>SyncSerialize</span> <span class='kw'>for</span> <span class='ident'>F</span> {}
 
 
-<span class='kw'>impl</span> <span class='ident'>Serializer</span> <span class='kw'>for</span> <span class='ident'>String</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>W</span> : <span class='ident'>io</span>::<span class='ident'>Write</span><span class='op'>+</span>?<span class='ident'>Sized</span><span class='op'>&gt;</span> <span class='ident'>Serializer</span> <span class='kw'>for</span> <span class='ident'>W</span> {
     <span class='kw'>fn</span> <span class='ident'>emit_none</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
         <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='string'>&quot;None&quot;</span>).<span class='ident'>unwrap</span>()
     }
@@ -463,6 +525,68 @@
         <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='string'>&quot;{}: {}&quot;</span>, <span class='ident'>key</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
     }
 }
+<span class='comment'>/*
+impl&lt;&#39;a&gt; Serializer for &amp;&#39;a io::Write {
+    fn emit_none(&amp;mut self, key: &amp;str) {
+        write!(self, &quot;{}: {}&quot;, key, &quot;None&quot;).unwrap()
+    }
+    fn emit_unit(&amp;mut self, key: &amp;str) {
+        write!(self, &quot;{}: ()&quot;, key, ).unwrap()
+    }
+
+    fn emit_bool(&amp;mut self, key: &amp;str, val: bool) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+
+    fn emit_char(&amp;mut self, key: &amp;str, val: char) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+    fn emit_bytes(&amp;mut self, key: &amp;str, val: &amp;[u8]) {
+        write!(self, &quot;{}: {}&quot;, key, val.to_hex()).unwrap()
+    }
+
+    fn emit_usize(&amp;mut self, key: &amp;str, val: usize) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+    fn emit_isize(&amp;mut self, key: &amp;str, val: isize) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+
+    fn emit_u8(&amp;mut self, key: &amp;str, val: u8) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+    fn emit_i8(&amp;mut self, key: &amp;str, val: i8) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+    fn emit_u16(&amp;mut self, key: &amp;str, val: u16) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+    fn emit_i16(&amp;mut self, key: &amp;str, val: i16) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+    fn emit_u32(&amp;mut self, key: &amp;str, val: u32) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+    fn emit_i32(&amp;mut self, key: &amp;str, val: i32) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+    fn emit_f32(&amp;mut self, key: &amp;str, val: f32) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+    fn emit_u64(&amp;mut self, key: &amp;str, val: u64) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+    fn emit_i64(&amp;mut self, key: &amp;str, val: i64) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+    fn emit_f64(&amp;mut self, key: &amp;str, val: f64) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+    fn emit_str(&amp;mut self, key: &amp;str, val: &amp;str) {
+        write!(self, &quot;{}: {}&quot;, key, val).unwrap()
+    }
+}
+*/</span>
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
