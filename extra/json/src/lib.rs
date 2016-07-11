@@ -135,6 +135,44 @@ impl JsonBuilder {
     }
 }
 
+// TODO: Get rid of after
+// https://github.com/serde-rs/serde/issues/386
+// is implemented
+struct SkipFirstByte<W> {
+    first : bool,
+    io : W,
+}
+
+impl<W : io::Write> SkipFirstByte<W> {
+    fn new(io : W) -> Self {
+        SkipFirstByte {
+            first: true,
+            io: io,
+        }
+    }
+
+    fn into_inner(self) -> W {
+        self.io
+    }
+}
+
+impl<W : io::Write> io::Write for SkipFirstByte<W> {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        if self.first && !buf.is_empty(){
+            self.first = false;
+            try!(self.io.write_all(&buf[1..]));
+        } else {
+            try!(self.io.write_all(buf))
+        }
+        Ok(buf.len())
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        self.io.flush()
+    }
+
+}
+
 impl Format for Json {
     fn format(&self,
               io : &mut io::Write,
@@ -142,10 +180,9 @@ impl Format for Json {
               logger_values: &[OwnedKeyValue],
               record_values: &[BorrowedKeyValue]) {
         let _ = write!(io, "{{");
-        let mut serializer = serde_json::Serializer::new(io);
+        let mut serializer = serde_json::Serializer::new(SkipFirstByte::new(io));
         {
             let mut serializer = &mut SerdeSerializer(&mut serializer);
-
 
             for &(ref k, ref v) in self.values.iter() {
                 v.serialize(rinfo, k, serializer);
@@ -158,8 +195,11 @@ impl Format for Json {
                 v.serialize(rinfo, k, serializer);
             }
         }
-        let mut io = serializer.into_inner();
-        let _ = write!(io, "}}");
+        let mut io = serializer.into_inner().into_inner();
+        let _ = io.write_all("}".as_bytes());
+        if self.newlines {
+            let _ = io.write_all("\n".as_bytes());
+        }
     }
 }
 
