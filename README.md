@@ -14,6 +14,39 @@
   <strong><a href="//dpc.github.io/slog-rs/">Documentation</a></strong>
 </p>
 
+## Introduction
+
+Structured, composable logging for [Rust][rust].
+
+Inspired by [log15] for Go.
+
+Read [Documentation](//dpc.github.io/slog-rs/) for details and features.
+
+If you want to say hi, or need help use [#dpc gitter.im][dpc gitter].
+
+To report a bug or ask for features use [github issues][issues].
+
+[rust]: http://rust-lang.org
+[dpc gitter]: https://gitter.im/dpc/dpc
+[issues]: //github.com/dpc/slog-rs/issues
+[log15]: //github.com/inconshreveable/log15
+
+## Features
+
+* easy to use
+* hierarchical loggers
+* lazily evaluated values
+* modular and extensible
+* drains & output formatting
+	* filtering
+	* multiple outputs
+	* asynchronous IO writing
+	* terminal output, with color support (`slog-term` crate)
+	* Json (`slog-json` crate)
+		* Bunyan (`slog-bunyan` crate)
+	* more to come (syslog, network), easy to write new ones
+
+![slog-rs terminal output](http://i.imgur.com/IUe80gU.png)
 
 ## Code snippet
 
@@ -85,41 +118,6 @@ fn main() {
 
 See `examples/features.rs` for full code.
 
-## Introduction
-
-Structured, composable logging for [Rust][rust]. Work in progress, but usable
-already.
-
-Heavily inspired by [log15] for Go, which I liked so much, that I want it in
-Rust too.
-
-Read [Documentation](//dpc.github.io/slog-rs/) for details and features.
-
-If you want to say hi, or need help use [#dpc gitter.im][dpc gitter].
-
-To report a bug or ask for features use [github issues][issues].
-
-[rust]: http://rust-lang.org
-[dpc gitter]: https://gitter.im/dpc/dpc
-[issues]: //github.com/dpc/slog-rs/issues
-[log15]: //github.com/inconshreveable/log15
-
-## Features
-
-* easy to use
-* hierarchical loggers
-* lazily evaluated values
-* extensible: first-class custom implementations
-* drains & output formatting
-	* filtering
-	* multiple outputs
-	* asynchronous IO writing
-	* terminal output, with color support (`slog-term` crate)
-	* Json (`slog-json` crate)
-		* Bunyan (`slog-bunyan` crate)
-	* more to come (syslog, network)
-
-![slog-rs terminal output](http://i.imgur.com/IUe80gU.png)
 
 ## Building & running
 
