@@ -18,8 +18,10 @@
 extern crate slog;
 extern crate isatty;
 extern crate ansi_term;
+extern crate rustc_serialize;
 
 use std::io;
+use rustc_serialize::hex::ToHex;
 
 use ansi_term::Colour;
 use isatty::{stderr_isatty, stdout_isatty};
@@ -48,43 +50,155 @@ impl Format {
 
 fn severity_to_color(lvl: Level) -> u8 {
     match lvl {
-        Level::Critical => 35,
-        Level::Error => 31,
-        Level::Warning => 33,
-        Level::Info => 32,
-        Level::Debug => 36,
-        Level::Trace => 0,
+        Level::Critical => 1,
+        Level::Error => 9,
+        Level::Warning => 3,
+        Level::Info => 2,
+        Level::Debug => 10,
+        Level::Trace => 11,
+    }
+}
+
+struct Serializer<W> {
+    io : W,
+    key : ansi_term::Style,
+}
+
+impl<W : io::Write> Serializer<W> {
+    fn new(io : W, color : bool) -> Self {
+        Serializer {
+            io: io,
+            key: if color {
+                ansi_term::Style::new().bold()
+            } else {
+                ansi_term::Style::new()
+            }
+        }
+    }
+
+    fn maybe_comma(&mut self) {
+        // since we don't use it for first element, add comma
+        // unconditionally
+        write!(self.io, ", ").unwrap()
+    }
+
+    fn into_inner(self) -> W {
+        self.io
+    }
+}
+
+impl<W : io::Write> slog::ser::Serializer for Serializer<W> {
+    fn emit_none(&mut self, key: &str) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}", self.key.paint(key), "None").unwrap()
+    }
+    fn emit_unit(&mut self, key: &str) {
+        self.maybe_comma();
+        write!(self.io, "{}: ()", self.key.paint(key) ).unwrap()
+    }
+
+    fn emit_bool(&mut self, key: &str, val: bool) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}", self.key.paint(key), val).unwrap()
+    }
+
+    fn emit_char(&mut self, key: &str, val: char) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}", self.key.paint(key), val).unwrap()
+    }
+    fn emit_bytes(&mut self, key: &str, val: &[u8]) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val.to_hex()).unwrap()
+    }
+
+    fn emit_usize(&mut self, key: &str, val: usize) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    }
+    fn emit_isize(&mut self, key: &str, val: isize) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    }
+
+    fn emit_u8(&mut self, key: &str, val: u8) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    }
+    fn emit_i8(&mut self, key: &str, val: i8) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    }
+    fn emit_u16(&mut self, key: &str, val: u16) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    }
+    fn emit_i16(&mut self, key: &str, val: i16) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    }
+    fn emit_u32(&mut self, key: &str, val: u32) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    }
+    fn emit_i32(&mut self, key: &str, val: i32) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    }
+    fn emit_f32(&mut self, key: &str, val: f32) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    }
+    fn emit_u64(&mut self, key: &str, val: u64) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    }
+    fn emit_i64(&mut self, key: &str, val: i64) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    }
+    fn emit_f64(&mut self, key: &str, val: f64) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    }
+    fn emit_str(&mut self, key: &str, val: &str) {
+        self.maybe_comma();
+        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
     }
 }
 
 impl SlogFormat for Format {
     fn format(&self,
-              mut io : &mut io::Write,
+              io : &mut io::Write,
               info: &RecordInfo,
               logger_values: &[OwnedKeyValue],
               values: &[BorrowedKeyValue]) {
-        let color = Colour::Fixed(severity_to_color(info.level));
+        let level_color = Colour::Fixed(severity_to_color(info.level));
+        let bold = ansi_term::Style::new().bold();
 
-        let _ = write!(io,
-                       "{:?}[{}] {}",
-                       info.ts,
-                       if self.color {
-                           color.paint(info.level.as_short_str()).to_string()
-                       } else {
-                           info.level.as_short_str().to_owned()
-                       },
-                       info.msg);
+        if self.color {
+            let _ = write!(io,
+                           "{} {} {}",
+                           info.ts.format("%b %d %H:%M:%S%.3f"),
+                           level_color.paint(info.level.as_short_str()),
+                           bold.paint(info.msg.clone()).to_string());
+        } else {
+            let _ = write!(io,
+                           "{} {} {}",
+                           info.ts.format("%b %d %H:%M:%S%.3f"),
+                           info.level.as_short_str(),
+                           info.msg);
+        }
 
+        let mut serializer = Serializer::new(io, self.color);
 
         for &(ref k, ref v) in logger_values {
-            let _ = write!(io, ", ");
-            v.serialize(info, k, &mut io);
+            v.serialize(info, k, &mut serializer);
         }
 
         for &(k, v) in values {
-            let _ = write!(io, ", ");
-            v.serialize(info, k, &mut io);
+            v.serialize(info, k, &mut serializer);
         }
+        let mut io = serializer.into_inner();
 
         let _ = write!(io, "\n");
     }
