@@ -45,7 +45,7 @@ bench:
 	cargo $@ $(filter-out --release,$(CARGO_FLAGS))
 
 .PHONY: travistest
-travistest: test
+travistest: test-all
 
 .PHONY: longtest
 longtest:
