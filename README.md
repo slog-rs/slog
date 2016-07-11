@@ -119,6 +119,8 @@ To report a bug or ask for features use [github issues][issues].
 		* Bunyan (`slog-bunyan` crate)
 	* more to come (syslog, network)
 
+![slog-rs terminal output](http://i.imgur.com/IUe80gU.png)
+
 ## Building & running
 
 If you need to install Rust (come on, you should have done that long time ago!), use [rustup][rustup].
