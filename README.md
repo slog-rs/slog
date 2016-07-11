@@ -107,7 +107,7 @@ To report a bug or ask for features use [github issues][issues].
 ## Features
 
 * easy to use
-* hierarchal loggers
+* hierarchical loggers
 * lazily evaluated values
 * extensible: first-class custom implementations
 * drains & output formatting
