@@ -47,6 +47,8 @@ To report a bug or ask for features use [github issues][issues].
 		* Bunyan (`slog-bunyan` crate)
 	* more to come (syslog, network), easy to write new ones
 
+### Terminal output example
+
 ![slog-rs terminal output](http://i.imgur.com/IUe80gU.png)
 
 ## Code snippet
