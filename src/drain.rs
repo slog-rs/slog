@@ -53,8 +53,12 @@ impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
            values: &[BorrowedKeyValue]) {
-        let mut io = self.io.lock().unwrap();
-        self.format.format(&mut *io, info, logger_values, values);
+        let mut buf = vec!();
+        self.format.format(&mut buf, info, logger_values, values);
+        {
+            let mut io = self.io.lock().unwrap();
+            io.write_all(&buf).unwrap();
+        }
     }
 }
 
@@ -212,12 +216,12 @@ impl Drop for AsyncIoWriter {
     }
 }
 
-/// Create AsyncIoWriter
+/// Create `AsyncIoWriter`
 pub fn async<W: io::Write + Send + 'static>(io: W) -> AsyncIoWriter {
     AsyncIoWriter::new(io)
 }
 
-/// Create Streamer drain
+/// Create `Streamer` drain
 pub fn stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> Streamer<W, F> {
     Streamer::new(io, format)
 }
