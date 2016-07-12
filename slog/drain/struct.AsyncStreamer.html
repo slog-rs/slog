@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `FilterLevel` struct in crate `slog`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, FilterLevel">
+    <meta name="description" content="API documentation for the Rust `AsyncStreamer` struct in crate `slog`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, AsyncStreamer">
 
-    <title>slog::drain::FilterLevel - Rust</title>
+    <title>slog::drain::AsyncStreamer - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>slog</a>::<wbr><a href='index.html'>drain</a></p><script>window.sidebarCurrent = {name: 'FilterLevel', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='../index.html'>slog</a>::<wbr><a href='index.html'>drain</a></p><script>window.sidebarCurrent = {name: 'AsyncStreamer', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,25 +43,22 @@
     </nav>
 
     <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>slog</a>::<wbr><a href='index.html'>drain</a>::<wbr><a class='struct' href=''>FilterLevel</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>slog</a>::<wbr><a href='index.html'>drain</a>::<wbr><a class='struct' href=''>AsyncStreamer</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-88' class='srclink' href='../../src/slog/drain.rs.html#139-142' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct FilterLevel&lt;D: <a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a>&gt; {
+               </span><a id='src-52' class='srclink' href='../../src/slog/drain.rs.html#70-73' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct AsyncStreamer&lt;F: <a class='trait' href='../../slog/format/trait.Format.html' title='slog::format::Format'>Format</a>&gt; {
     // some fields omitted
-}</pre><div class='docblock'><p>Record log level filter</p>
+}</pre><div class='docblock'><p>Drain formating records and writing them to a byte-stream (io::Write)
+asynchronously.</p>
 
-<p>Wraps a drain and passes records to it, only
-if their level is at least given level.</p>
-
-<p>TODO: Remove this type. This drain is a special case of <code>Filter</code>, but
-because <code>Filter</code> can not use static dispatch ATM due to Rust limitations
-that will be lifted in the future, it is a standalone type.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;D: <a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a>&gt; <a class='struct' href='../../slog/drain/struct.FilterLevel.html' title='slog::drain::FilterLevel'>FilterLevel</a>&lt;D&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-92' class='srclink' href='../../src/slog/drain.rs.html#144-152' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(drain: D, level: <a class='enum' href='../../slog/enum.Level.html' title='slog::Level'>Level</a>) -&gt; Self</code></h4>
-<div class='docblock'><p>Create <code>FilterLevel</code></p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;D: <a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a>&gt; <a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a> for <a class='struct' href='../../slog/drain/struct.FilterLevel.html' title='slog::drain::FilterLevel'>FilterLevel</a>&lt;D&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-97' class='srclink' href='../../src/slog/drain.rs.html#154-163' title='goto source code'>[src]</a></span></h3>
+<p>Internally, new thread will be spawned taking care of actually writing
+the data.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;F: <a class='trait' href='../../slog/format/trait.Format.html' title='slog::format::Format'>Format</a>&gt; <a class='struct' href='../../slog/drain/struct.AsyncStreamer.html' title='slog::drain::AsyncStreamer'>AsyncStreamer</a>&lt;F&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-56' class='srclink' href='../../src/slog/drain.rs.html#75-83' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;W: <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + 'static&gt;(io: W, format: F) -&gt; Self</code></h4>
+<div class='docblock'><p>Create new <code>AsyncStreamer</code> writing to <code>io</code> using <code>format</code></p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;F: <a class='trait' href='../../slog/format/trait.Format.html' title='slog::format::Format'>Format</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>&gt; <a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a> for <a class='struct' href='../../slog/drain/struct.AsyncStreamer.html' title='slog::drain::AsyncStreamer'>AsyncStreamer</a>&lt;F&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-62' class='srclink' href='../../src/slog/drain.rs.html#85-97' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.log' class='method'><code>fn <a href='../../slog/drain/trait.Drain.html#tymethod.log' class='fnname'>log</a>(&amp;self, info: &amp;<a class='struct' href='../../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a>, logger_values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../../slog/type.BorrowedKeyValue.html' title='slog::BorrowedKeyValue'>BorrowedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
 <div class='docblock'><p>Write one logging record</p>
 </div></div></section>

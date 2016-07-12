@@ -347,7 +347,7 @@
 <span class='kw'>use</span> <span class='ident'>isatty</span>::{<span class='ident'>stderr_isatty</span>, <span class='ident'>stdout_isatty</span>};
 
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>logger</span>::<span class='ident'>RecordInfo</span>;
-<span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>drain</span>::{<span class='ident'>Streamer</span>, <span class='ident'>AsyncIoWriter</span>};
+<span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>drain</span>::{<span class='ident'>Streamer</span>, <span class='ident'>AsyncStreamer</span>};
 <span class='kw'>use</span> <span class='ident'>slog</span>::{<span class='ident'>Level</span>, <span class='ident'>OwnedKeyValue</span>, <span class='ident'>BorrowedKeyValue</span>};
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>format</span>::<span class='ident'>Format</span> <span class='kw'>as</span> <span class='ident'>SlogFormat</span>;
 
@@ -567,9 +567,9 @@
 <span class='doccomment'>/// Asynchronous drain to `stdout`</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Automatically using color if printing to tty</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>async_stdout</span>() <span class='op'>-&gt;</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>AsyncIoWriter</span>, <span class='ident'>Format</span><span class='op'>&gt;</span> {
-    <span class='ident'>Streamer</span>::<span class='ident'>new</span>(
-        <span class='ident'>AsyncIoWriter</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>stdout</span>()),
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>async_stdout</span>() <span class='op'>-&gt;</span> <span class='ident'>AsyncStreamer</span><span class='op'>&lt;</span><span class='ident'>Format</span><span class='op'>&gt;</span> {
+    <span class='ident'>AsyncStreamer</span>::<span class='ident'>new</span>(
+        <span class='ident'>io</span>::<span class='ident'>stdout</span>(),
         <span class='kw'>if</span> <span class='ident'>stdout_isatty</span>() {
             <span class='ident'>Format</span>::<span class='ident'>colored</span>()
         } <span class='kw'>else</span> {
@@ -581,9 +581,9 @@
 <span class='doccomment'>/// Asynchronos drain to `stderr`</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Automatically using color if output goes to tty</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>async_stderr</span>() <span class='op'>-&gt;</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>AsyncIoWriter</span>, <span class='ident'>Format</span><span class='op'>&gt;</span> {
-    <span class='ident'>Streamer</span>::<span class='ident'>new</span>(
-        <span class='ident'>AsyncIoWriter</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>stderr</span>()),
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>async_stderr</span>() <span class='op'>-&gt;</span> <span class='ident'>AsyncStreamer</span><span class='op'>&lt;</span><span class='ident'>Format</span><span class='op'>&gt;</span> {
+    <span class='ident'>AsyncStreamer</span>::<span class='ident'>new</span>(
+        <span class='ident'>io</span>::<span class='ident'>stderr</span>(),
         <span class='kw'>if</span> <span class='ident'>stderr_isatty</span>() {
             <span class='ident'>Format</span>::<span class='ident'>colored</span>()
         } <span class='kw'>else</span> {
