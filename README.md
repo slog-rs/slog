@@ -37,6 +37,7 @@ To report a bug or ask for features use [github issues][issues].
 * hierarchical loggers
 * lazily evaluated values
 * modular and extensible
+* traditional logging (`info!(...)`) handling (`slog-stdlog` crate)
 * drains & output formatting
 	* filtering
 	* multiple outputs

@@ -8,7 +8,7 @@ use super::logger::RecordInfo;
 /// Loggers require values in key-value pairs to
 /// implement this trait.
 ///
-pub trait Serialize: Send + Sync + 'static {
+pub trait Serialize: Send + Sync {
     /// Serialize self into `Serializer`
     ///
     /// Structs implementing this trait should generally
@@ -73,6 +73,14 @@ impl Serialize for str {
     }
 }
 
+impl<'a> Serialize for &'a str {
+    fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) {
+        serializer.emit_str(key, self)
+    }
+}
+
+impl SyncSerialize for &'static str {}
+
 impl Serialize for [u8] {
     fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) {
         serializer.emit_bytes(key, self)
@@ -99,8 +107,7 @@ impl<T: Serialize> Serialize for Option<T> {
     }
 }
 
-
-impl<T: Serialize> SyncSerialize for Option<T> {}
+impl<T: Serialize+'static> SyncSerialize for Option<T> {}
 
 impl Serialize for String {
     fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) {
@@ -119,11 +126,10 @@ macro_rules! impl_serialize_for{
             }
         }
 
-        impl SyncSerialize for $t where $t : Send+Sync { }
+        impl SyncSerialize for $t where $t : Send+Sync+'static { }
     };
 }
 
-impl_serialize_for!(&'static str, emit_str);
 impl_serialize_for!(usize, emit_usize);
 impl_serialize_for!(isize, emit_isize);
 impl_serialize_for!(bool, emit_bool);
@@ -139,7 +145,7 @@ impl_serialize_for!(u64, emit_u64);
 impl_serialize_for!(i64, emit_i64);
 impl_serialize_for!(f64, emit_f64);
 
-impl<S: Serialize, F: 'static + Sync + Send + Fn(&RecordInfo) -> S> Serialize for F {
+impl<S: Serialize, F: Sync + Send + Fn(&RecordInfo) -> S> Serialize for F {
     fn serialize(&self, rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) {
         (*self)(rinfo).serialize(rinfo, key, serializer)
     }
