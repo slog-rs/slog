@@ -53,11 +53,45 @@ impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
            values: &[BorrowedKeyValue]) {
-        let mut buf = vec!();
+        let mut buf = Vec::with_capacity(128);
         self.format.format(&mut buf, info, logger_values, values);
         {
             let mut io = self.io.lock().unwrap();
             io.write_all(&buf).unwrap();
+        }
+    }
+}
+
+/// Drain formating records and writing them to a byte-stream (io::Write)
+/// asynchronously.
+///
+/// Internally, new thread will be spawned taking care of actually writing
+/// the data.
+pub struct AsyncStreamer<F: format::Format> {
+    format: F,
+    io : Mutex<AsyncIoWriter>,
+}
+
+impl<F: format::Format> AsyncStreamer<F> {
+    /// Create new `AsyncStreamer` writing to `io` using `format`
+    pub fn new<W: io::Write+Send+'static>(io: W, format: F) -> Self {
+        AsyncStreamer {
+            io: Mutex::new(AsyncIoWriter::new(io)),
+            format: format,
+        }
+    }
+}
+
+impl<F: format::Format + Send> Drain for AsyncStreamer<F> {
+    fn log(&self,
+           info: &RecordInfo,
+           logger_values: &[OwnedKeyValue],
+           values: &[BorrowedKeyValue]) {
+        let mut buf = Vec::with_capacity(128);
+        self.format.format(&mut buf, info, logger_values, values);
+        {
+            let mut io = self.io.lock().unwrap();
+            io.write_nocopy(buf);
         }
     }
 }
@@ -163,6 +197,8 @@ enum AsyncIoMsg {
 
 /// Asynchronous io::Writer
 ///
+/// TODO: Publish as a different create / use existing one?
+///
 /// Wraps an `io::Writer` and writes to it in separate thread
 /// using channel to send the data.
 ///
@@ -170,7 +206,7 @@ enum AsyncIoMsg {
 ///
 /// Note: Dropping `AsyncIoWriter` waits for it's io-thread to finish.
 /// If you can't tolerate the delay, make sure to use `Logger::
-pub struct AsyncIoWriter {
+struct AsyncIoWriter {
     sender: mpsc::Sender<AsyncIoMsg>,
     join: Option<thread::JoinHandle<()>>,
 }
@@ -194,6 +230,14 @@ impl AsyncIoWriter {
             join: Some(join),
         }
     }
+
+    /// Write data to IO, without copying
+    ///
+    /// As an optimization, when `buf` is already an owned
+    /// `Vec`, it can be sent over channel without copying.
+    pub fn write_nocopy(&mut self, buf: Vec<u8>) {
+        let _ = self.sender.send(AsyncIoMsg::Bytes(buf)).unwrap();
+    }
 }
 
 impl io::Write for AsyncIoWriter {
@@ -216,13 +260,13 @@ impl Drop for AsyncIoWriter {
     }
 }
 
-/// Create `AsyncIoWriter`
-pub fn async<W: io::Write + Send + 'static>(io: W) -> AsyncIoWriter {
-    AsyncIoWriter::new(io)
-}
-
 /// Create `Streamer` drain
 pub fn stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> Streamer<W, F> {
+    Streamer::new(io, format)
+}
+
+/// Create `AsyncStreamer` drain
+pub fn async_stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> Streamer<W, F> {
     Streamer::new(io, format)
 }
 

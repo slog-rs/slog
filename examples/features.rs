@@ -57,8 +57,8 @@ fn main() {
         // drains are composable
         drain::filter_level(
             Level::Info,
-            drain::stream(
-                drain::async(std::io::stderr()),
+            drain::async_stream(
+                std::io::stderr(),
                 // multiple outputs formats are supported
                 slog_json::new(),
                 ),

@@ -27,7 +27,7 @@ use ansi_term::Colour;
 use isatty::{stderr_isatty, stdout_isatty};
 
 use slog::logger::RecordInfo;
-use slog::drain::{Streamer, AsyncIoWriter};
+use slog::drain::{Streamer, AsyncStreamer};
 use slog::{Level, OwnedKeyValue, BorrowedKeyValue};
 use slog::format::Format as SlogFormat;
 
@@ -247,9 +247,9 @@ pub fn stderr() -> Streamer<io::Stderr, Format> {
 /// Asynchronous drain to `stdout`
 ///
 /// Automatically using color if printing to tty
-pub fn async_stdout() -> Streamer<AsyncIoWriter, Format> {
-    Streamer::new(
-        AsyncIoWriter::new(io::stdout()),
+pub fn async_stdout() -> AsyncStreamer<Format> {
+    AsyncStreamer::new(
+        io::stdout(),
         if stdout_isatty() {
             Format::colored()
         } else {
@@ -261,9 +261,9 @@ pub fn async_stdout() -> Streamer<AsyncIoWriter, Format> {
 /// Asynchronos drain to `stderr`
 ///
 /// Automatically using color if output goes to tty
-pub fn async_stderr() -> Streamer<AsyncIoWriter, Format> {
-    Streamer::new(
-        AsyncIoWriter::new(io::stderr()),
+pub fn async_stderr() -> AsyncStreamer<Format> {
+    AsyncStreamer::new(
+        io::stderr(),
         if stderr_isatty() {
             Format::colored()
         } else {
