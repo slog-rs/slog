@@ -8,6 +8,8 @@ script:
   - make travistest
 
 env:
+  global:
+    - RUST_BACKTRACE=1
   matrix:
     -
     - RELEASE=true
