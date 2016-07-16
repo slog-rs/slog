@@ -45,7 +45,8 @@ To report a bug or ask for features use [github issues][issues].
 	* terminal output, with color support (`slog-term` crate)
 	* Json (`slog-json` crate)
 		* Bunyan (`slog-bunyan` crate)
-	* more to come (syslog, network), easy to write new ones
+	* syslog (`slog-syslog` crate)
+	* support for first class custom ones
 
 ### Terminal output example
 

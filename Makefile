@@ -72,6 +72,7 @@ doc: FORCE
 	cd "extra/serde"; cargo doc -p slog-serde
 	cd "extra/json"; cargo doc -p slog-json
 	cd "extra/bunyan"; cargo doc -p slog-bunyan
+	cd "extra/syslog"; cargo doc -p slog-syslog
 
 .PHONY: publishdoc
 publishdoc:
