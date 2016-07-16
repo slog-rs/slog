@@ -2,7 +2,7 @@
 //!
 //! WARNING: This crate needs some improvements.
 //!
-//! ```
+//! ```norust
 //! #[macro_use]
 //! extern crate slog;
 //! extern crate slog_syslog;
