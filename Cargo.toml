@@ -23,4 +23,5 @@ slog-json = { version = "0.5.0", path = "extra/json" }
 slog-term = { version = "0.5.0", path = "extra/term" }
 slog-stdlog = { version = "0.5.0", path = "extra/stdlog" }
 slog-syslog = { version = "0.5.0", path = "extra/syslog" }
-log = "*"
+slog-bunyan = { version = "0.5.0", path = "extra/bunyan" }
+log = "0.3.6"
