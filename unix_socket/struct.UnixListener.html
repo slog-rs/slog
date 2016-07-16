@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `UnixListener` struct in crate `unix_socket`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, UnixListener">
+
+    <title>unix_socket::UnixListener - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>unix_socket</a></p><script>window.sidebarCurrent = {name: 'UnixListener', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>unix_socket</a>::<wbr><a class='struct' href=''>UnixListener</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-242' class='srclink' href='../src/unix_socket/lib.rs.html#526-528' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct UnixListener {
+    // some fields omitted
+}</pre><div class='docblock'><p>A structure representing a Unix domain socket server.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>thread</span>;
+<span class='kw'>use</span> <span class='ident'>unix_socket</span>::{<span class='ident'>UnixStream</span>, <span class='ident'>UnixListener</span>};
+
+<span class='kw'>fn</span> <span class='ident'>handle_client</span>(<span class='ident'>stream</span>: <span class='ident'>UnixStream</span>) {
+    <span class='comment'>// ...</span>
+}
+
+<span class='kw'>let</span> <span class='ident'>listener</span> <span class='op'>=</span> <span class='ident'>UnixListener</span>::<span class='ident'>bind</span>(<span class='string'>&quot;/path/to/the/socket&quot;</span>).<span class='ident'>unwrap</span>();
+
+<span class='comment'>// accept connections and process them, spawning a new thread for each one</span>
+<span class='kw'>for</span> <span class='ident'>stream</span> <span class='kw'>in</span> <span class='ident'>listener</span>.<span class='ident'>incoming</span>() {
+    <span class='kw'>match</span> <span class='ident'>stream</span> {
+        <span class='prelude-val'>Ok</span>(<span class='ident'>stream</span>) <span class='op'>=&gt;</span> {
+            <span class='comment'>/* connection succeeded */</span>
+            <span class='ident'>thread</span>::<span class='ident'>spawn</span>(<span class='op'>||</span> <span class='ident'>handle_client</span>(<span class='ident'>stream</span>));
+        }
+        <span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> {
+            <span class='comment'>/* connection failed */</span>
+            <span class='kw'>break</span>;
+        }
+    }
+}
+
+<span class='comment'>// close the listener socket</span>
+<span class='ident'>drop</span>(<span class='ident'>listener</span>);</pre>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../unix_socket/struct.UnixListener.html' title='unix_socket::UnixListener'>UnixListener</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-250' class='srclink' href='../src/unix_socket/lib.rs.html#541-596' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.bind' class='method'><code>fn <a href='#method.bind' class='fnname'>bind</a>&lt;P: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;&gt;(path: P) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='struct' href='../unix_socket/struct.UnixListener.html' title='unix_socket::UnixListener'>UnixListener</a>&gt;</code></h4>
+<div class='docblock'><p>Creates a new <code>UnixListener</code> which will be bound to the specified
+socket.</p>
+
+<p>Linux provides, as a nonportable extension, a separate &quot;abstract&quot;
+address namespace as opposed to filesystem-based addressing. If <code>path</code>
+begins with a null byte, it will be interpreted as an &quot;abstract&quot;
+address. Otherwise, it will be interpreted as a &quot;pathname&quot; address,
+corresponding to a path on the filesystem.</p>
+</div><h4 id='method.accept' class='method'><code>fn <a href='#method.accept' class='fnname'>accept</a>(&amp;self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='struct' href='../unix_socket/struct.UnixStream.html' title='unix_socket::UnixStream'>UnixStream</a>&gt;</code></h4>
+<div class='docblock'><p>Accepts a new incoming connection to this listener.</p>
+</div><h4 id='method.try_clone' class='method'><code>fn <a href='#method.try_clone' class='fnname'>try_clone</a>(&amp;self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='struct' href='../unix_socket/struct.UnixListener.html' title='unix_socket::UnixListener'>UnixListener</a>&gt;</code></h4>
+<div class='docblock'><p>Create a new independently owned handle to the underlying socket.</p>
+
+<p>The returned <code>UnixListener</code> is a reference to the same socket that this
+object references. Both handles can be used to accept incoming
+connections and options set on one listener will affect the other.</p>
+</div><h4 id='method.local_addr' class='method'><code>fn <a href='#method.local_addr' class='fnname'>local_addr</a>(&amp;self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='struct' href='../unix_socket/struct.SocketAddr.html' title='unix_socket::SocketAddr'>SocketAddr</a>&gt;</code></h4>
+<div class='docblock'><p>Returns the socket address of the local half of this connection.</p>
+</div><h4 id='method.incoming' class='method'><code>fn <a href='#method.incoming' class='fnname'>incoming</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='struct' href='../unix_socket/struct.Incoming.html' title='unix_socket::Incoming'>Incoming</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>Returns an iterator over incoming connections.</p>
+
+<p>The iterator will never return <code>None</code>.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../unix_socket/struct.UnixListener.html' title='unix_socket::UnixListener'>UnixListener</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-244' class='srclink' href='../src/unix_socket/lib.rs.html#530-539' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, fmt: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/std/sys/ext/io/trait.AsRawFd.html' title='std::sys::ext::io::AsRawFd'>AsRawFd</a> for <a class='struct' href='../unix_socket/struct.UnixListener.html' title='unix_socket::UnixListener'>UnixListener</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-281' class='srclink' href='../src/unix_socket/lib.rs.html#598-602' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.as_raw_fd' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/std/sys/ext/io/trait.AsRawFd.html#tymethod.as_raw_fd' class='fnname'>as_raw_fd</a>(&amp;self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/sys/ext/io/type.RawFd.html' title='std::sys::ext::io::RawFd'>RawFd</a></code></h4>
+<div class='docblock'><p>Extracts the raw file descriptor. <a href="https://doc.rust-lang.org/nightly/std/sys/ext/io/trait.AsRawFd.html#tymethod.as_raw_fd">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/std/sys/ext/io/trait.FromRawFd.html' title='std::sys::ext::io::FromRawFd'>FromRawFd</a> for <a class='struct' href='../unix_socket/struct.UnixListener.html' title='unix_socket::UnixListener'>UnixListener</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-284' class='srclink' href='../src/unix_socket/lib.rs.html#606-612' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>Requires the <code>from_raw_fd</code> feature (enabled by default).</p>
+</div><div class='impl-items'><h4 id='method.from_raw_fd' class='method'><code>unsafe fn <a href='https://doc.rust-lang.org/nightly/std/sys/ext/io/trait.FromRawFd.html#tymethod.from_raw_fd' class='fnname'>from_raw_fd</a>(fd: <a class='type' href='https://doc.rust-lang.org/nightly/std/sys/ext/io/type.RawFd.html' title='std::sys::ext::io::RawFd'>RawFd</a>) -&gt; <a class='struct' href='../unix_socket/struct.UnixListener.html' title='unix_socket::UnixListener'>UnixListener</a></code></h4>
+<div class='docblock'><p>Constructs a new instances of <code>Self</code> from the given raw file descriptor. <a href="https://doc.rust-lang.org/nightly/std/sys/ext/io/trait.FromRawFd.html#tymethod.from_raw_fd">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html' title='core::iter::traits::IntoIterator'>IntoIterator</a> for &amp;'a <a class='struct' href='../unix_socket/struct.UnixListener.html' title='unix_socket::UnixListener'>UnixListener</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-287' class='srclink' href='../src/unix_socket/lib.rs.html#614-621' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Item' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.Item' class='type'>Item</a> = <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='struct' href='../unix_socket/struct.UnixStream.html' title='unix_socket::UnixStream'>UnixStream</a>&gt;</code></h4>
+<div class='docblock'><p>The type of the elements being iterated over.</p>
+</div><h4 id='associatedtype.IntoIter' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#associatedtype.IntoIter' class='type'>IntoIter</a> = <a class='struct' href='../unix_socket/struct.Incoming.html' title='unix_socket::Incoming'>Incoming</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>Which kind of iterator are we turning this into?</p>
+</div><h4 id='method.into_iter' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#tymethod.into_iter' class='fnname'>into_iter</a>(self) -&gt; <a class='struct' href='../unix_socket/struct.Incoming.html' title='unix_socket::Incoming'>Incoming</a>&lt;'a&gt;</code></h4>
+<div class='docblock'><p>Creates an iterator from a value. <a href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html#tymethod.into_iter">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "unix_socket";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

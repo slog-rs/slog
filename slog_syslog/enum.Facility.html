@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Facility` enum in crate `slog_syslog`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Facility">
+
+    <title>slog_syslog::Facility - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>slog_syslog</a></p><script>window.sidebarCurrent = {name: 'Facility', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content enum">
+<h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>slog_syslog</a>::<wbr><a class='enum' href=''>Facility</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-20' class='srclink' href='../syslog/facility/enum.Facility.html?gotosrc=20' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum Facility {
+    LOG_KERN,
+    LOG_USER,
+    LOG_MAIL,
+    LOG_DAEMON,
+    LOG_AUTH,
+    LOG_SYSLOG,
+    LOG_LPR,
+    LOG_NEWS,
+    LOG_UUCP,
+    LOG_CRON,
+    LOG_AUTHPRIV,
+    LOG_FTP,
+    LOG_LOCAL0,
+    LOG_LOCAL1,
+    LOG_LOCAL2,
+    LOG_LOCAL3,
+    LOG_LOCAL4,
+    LOG_LOCAL5,
+    LOG_LOCAL6,
+    LOG_LOCAL7,
+}</pre><h2 class='variants'>Variants</h2>
+<table class='variants_table'><tr><td id='variant.LOG_KERN'><code>LOG_KERN</code></td><td></td><td></td></tr><tr><td id='variant.LOG_USER'><code>LOG_USER</code></td><td></td><td></td></tr><tr><td id='variant.LOG_MAIL'><code>LOG_MAIL</code></td><td></td><td></td></tr><tr><td id='variant.LOG_DAEMON'><code>LOG_DAEMON</code></td><td></td><td></td></tr><tr><td id='variant.LOG_AUTH'><code>LOG_AUTH</code></td><td></td><td></td></tr><tr><td id='variant.LOG_SYSLOG'><code>LOG_SYSLOG</code></td><td></td><td></td></tr><tr><td id='variant.LOG_LPR'><code>LOG_LPR</code></td><td></td><td></td></tr><tr><td id='variant.LOG_NEWS'><code>LOG_NEWS</code></td><td></td><td></td></tr><tr><td id='variant.LOG_UUCP'><code>LOG_UUCP</code></td><td></td><td></td></tr><tr><td id='variant.LOG_CRON'><code>LOG_CRON</code></td><td></td><td></td></tr><tr><td id='variant.LOG_AUTHPRIV'><code>LOG_AUTHPRIV</code></td><td></td><td></td></tr><tr><td id='variant.LOG_FTP'><code>LOG_FTP</code></td><td></td><td></td></tr><tr><td id='variant.LOG_LOCAL0'><code>LOG_LOCAL0</code></td><td></td><td></td></tr><tr><td id='variant.LOG_LOCAL1'><code>LOG_LOCAL1</code></td><td></td><td></td></tr><tr><td id='variant.LOG_LOCAL2'><code>LOG_LOCAL2</code></td><td></td><td></td></tr><tr><td id='variant.LOG_LOCAL3'><code>LOG_LOCAL3</code></td><td></td><td></td></tr><tr><td id='variant.LOG_LOCAL4'><code>LOG_LOCAL4</code></td><td></td><td></td></tr><tr><td id='variant.LOG_LOCAL5'><code>LOG_LOCAL5</code></td><td></td><td></td></tr><tr><td id='variant.LOG_LOCAL6'><code>LOG_LOCAL6</code></td><td></td><td></td></tr><tr><td id='variant.LOG_LOCAL7'><code>LOG_LOCAL7</code></td><td></td><td></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html' title='core::str::FromStr'>FromStr</a> for <a class='enum' href='../slog_syslog/enum.Facility.html' title='slog_syslog::Facility'>Facility</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Err' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html#associatedtype.Err' class='type'>Err</a> = <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a></code></h4>
+<h4 id='method.from_str' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html#tymethod.from_str' class='fnname'>from_str</a>(s: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='enum' href='../slog_syslog/enum.Facility.html' title='slog_syslog::Facility'>Facility</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+</div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../slog_syslog/enum.Facility.html' title='slog_syslog::Facility'>Facility</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../slog_syslog/enum.Facility.html' title='slog_syslog::Facility'>Facility</a></code></h4>
+</div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../slog_syslog/enum.Facility.html' title='slog_syslog::Facility'>Facility</a></code></span><span class='out-of-band'></span></h3>
+<div class='impl-items'></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "slog_syslog";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
