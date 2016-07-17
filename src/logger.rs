@@ -10,7 +10,7 @@
 //!
 //! Loggers form hierarchies sharing a drain. Setting a drain on
 //! any logger will change it on all loggers in given hierarchy.
-use super::{DrainRef, OwnedKeyValue, Level, BorrowedKeyValue};
+use super::{OwnedKeyValue, Level, BorrowedKeyValue};
 use std::sync::Arc;
 use crossbeam::sync::ArcCell;
 
@@ -19,7 +19,7 @@ use drain;
 use chrono;
 
 struct LoggerInner {
-    drain: DrainRef,
+    drain:  Arc<ArcCell<Box<drain::Drain>>>,
     values: Vec<OwnedKeyValue>,
 }
 
@@ -116,7 +116,8 @@ impl Logger {
             level: lvl,
         };
 
-        self.inner.drain.get().log(&info, self.inner.values.as_slice(), values);
+        // By default errors in loggers are ignored
+        let _ = self.inner.drain.get().log(&info, self.inner.values.as_slice(), values);
     }
 
     /// Log critical level record
@@ -170,4 +171,15 @@ pub struct RecordInfo {
     pub level: Level,
     /// Message
     pub msg: String,
+}
+
+impl RecordInfo {
+    /// Create a new `RecordInfo` with a current timestamp
+    pub fn new(level : Level, msg : String) -> Self {
+        RecordInfo {
+            ts:  chrono::UTC::now(),
+            level: level,
+            msg: msg
+        }
+    }
 }

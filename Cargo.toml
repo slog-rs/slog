@@ -17,6 +17,7 @@ readme = "README.md"
 crossbeam = "0.2.9"
 chrono = "0.2.22"
 rustc-serialize = "0.3.19"
+error-chain = "*"
 
 [dev-dependencies]
 slog-json = { version = "0.5.0", path = "extra/json" }

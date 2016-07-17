@@ -76,10 +76,11 @@ impl<W : io::Write> Serializer<W> {
         }
     }
 
-    fn maybe_comma(&mut self) {
+    fn maybe_comma(&mut self) -> std::io::Result<()> {
         // since we don't use it for first element, add comma
         // unconditionally
-        write!(self.io, ", ").unwrap()
+        try!(write!(self.io, ", "));
+        Ok(())
     }
 
     fn into_inner(self) -> W {
@@ -88,81 +89,99 @@ impl<W : io::Write> Serializer<W> {
 }
 
 impl<W : io::Write> slog::ser::Serializer for Serializer<W> {
-    fn emit_none(&mut self, key: &str) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}", self.key.paint(key), "None").unwrap()
+    fn emit_none(&mut self, key: &str) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}", self.key.paint(key), "None"));
+        Ok(())
     }
-    fn emit_unit(&mut self, key: &str) {
-        self.maybe_comma();
-        write!(self.io, "{}: ()", self.key.paint(key) ).unwrap()
-    }
-
-    fn emit_bool(&mut self, key: &str, val: bool) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}", self.key.paint(key), val).unwrap()
+    fn emit_unit(&mut self, key: &str) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: ()", self.key.paint(key)));
+        Ok(())
     }
 
-    fn emit_char(&mut self, key: &str, val: char) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}", self.key.paint(key), val).unwrap()
-    }
-    fn emit_bytes(&mut self, key: &str, val: &[u8]) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val.to_hex()).unwrap()
+    fn emit_bool(&mut self, key: &str, val: bool) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}", self.key.paint(key), val));
+        Ok(())
     }
 
-    fn emit_usize(&mut self, key: &str, val: usize) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    fn emit_char(&mut self, key: &str, val: char) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}", self.key.paint(key), val));
+        Ok(())
     }
-    fn emit_isize(&mut self, key: &str, val: isize) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    fn emit_bytes(&mut self, key: &str, val: &[u8]) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val.to_hex()));
+        Ok(())
     }
 
-    fn emit_u8(&mut self, key: &str, val: u8) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    fn emit_usize(&mut self, key: &str, val: usize) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
     }
-    fn emit_i8(&mut self, key: &str, val: i8) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    fn emit_isize(&mut self, key: &str, val: isize) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
     }
-    fn emit_u16(&mut self, key: &str, val: u16) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+
+    fn emit_u8(&mut self, key: &str, val: u8) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
     }
-    fn emit_i16(&mut self, key: &str, val: i16) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    fn emit_i8(&mut self, key: &str, val: i8) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
     }
-    fn emit_u32(&mut self, key: &str, val: u32) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    fn emit_u16(&mut self, key: &str, val: u16) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
     }
-    fn emit_i32(&mut self, key: &str, val: i32) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    fn emit_i16(&mut self, key: &str, val: i16) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
     }
-    fn emit_f32(&mut self, key: &str, val: f32) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    fn emit_u32(&mut self, key: &str, val: u32) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
     }
-    fn emit_u64(&mut self, key: &str, val: u64) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    fn emit_i32(&mut self, key: &str, val: i32) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
     }
-    fn emit_i64(&mut self, key: &str, val: i64) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    fn emit_f32(&mut self, key: &str, val: f32) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
     }
-    fn emit_f64(&mut self, key: &str, val: f64) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    fn emit_u64(&mut self, key: &str, val: u64)-> slog::ser::Result<()>  {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
     }
-    fn emit_str(&mut self, key: &str, val: &str) {
-        self.maybe_comma();
-        write!(self.io, "{}: {}",  self.key.paint(key), val).unwrap()
+    fn emit_i64(&mut self, key: &str, val: i64) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
+    }
+    fn emit_f64(&mut self, key: &str, val: f64) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
+    }
+    fn emit_str(&mut self, key: &str, val: &str) -> slog::ser::Result<()> {
+        try!(self.maybe_comma());
+        try!(write!(self.io, "{}: {}",  self.key.paint(key), val));
+        Ok(())
     }
 }
 
@@ -171,36 +190,38 @@ impl SlogFormat for Format {
               io : &mut io::Write,
               info: &RecordInfo,
               logger_values: &[OwnedKeyValue],
-              values: &[BorrowedKeyValue]) {
+              values: &[BorrowedKeyValue]) -> slog::format::Result<()> {
         let level_color = Colour::Fixed(severity_to_color(info.level));
         let bold = ansi_term::Style::new().bold();
 
         if self.color {
-            let _ = write!(io,
+            let _ = try!(write!(io,
                            "{} {} {}",
                            info.ts.format("%b %d %H:%M:%S%.3f"),
                            level_color.paint(info.level.as_short_str()),
-                           bold.paint(info.msg.clone()).to_string());
+                           bold.paint(info.msg.clone()).to_string()));
         } else {
-            let _ = write!(io,
+            let _ = try!(write!(io,
                            "{} {} {}",
                            info.ts.format("%b %d %H:%M:%S%.3f"),
                            info.level.as_short_str(),
-                           info.msg);
+                           info.msg));
         }
 
         let mut serializer = Serializer::new(io, self.color);
 
         for &(ref k, ref v) in logger_values {
-            v.serialize(info, k, &mut serializer);
+            try!(v.serialize(info, k, &mut serializer));
         }
 
         for &(k, v) in values {
-            v.serialize(info, k, &mut serializer);
+            try!(v.serialize(info, k, &mut serializer));
         }
         let mut io = serializer.into_inner();
 
-        let _ = write!(io, "\n");
+        let _ = try!(write!(io, "\n"));
+
+        Ok(())
     }
 }
 

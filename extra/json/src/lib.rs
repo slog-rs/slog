@@ -31,6 +31,7 @@ use slog::logger::RecordInfo;
 use slog::{Level, OwnedKeyValue, BorrowedKeyValue};
 use slog::format::Format;
 use slog::Level::*;
+use slog::format;
 
 fn level_to_string(level: Level) -> &'static str {
     match level {
@@ -178,28 +179,29 @@ impl Format for Json {
               io : &mut io::Write,
               rinfo: &RecordInfo,
               logger_values: &[OwnedKeyValue],
-              record_values: &[BorrowedKeyValue]) {
-        let _ = write!(io, "{{");
+              record_values: &[BorrowedKeyValue]) -> format::Result<()> {
+        let _ = try!(write!(io, "{{"));
         let mut serializer = serde_json::Serializer::new(SkipFirstByte::new(io));
         {
             let mut serializer = &mut SerdeSerializer(&mut serializer);
 
             for &(ref k, ref v) in self.values.iter() {
-                v.serialize(rinfo, k, serializer);
+                try!(v.serialize(rinfo, k, serializer));
             }
             for &(ref k, ref v) in logger_values.iter() {
-                v.serialize(rinfo, k, serializer);
+                try!(v.serialize(rinfo, k, serializer));
             }
 
             for &(ref k, ref v) in record_values.iter() {
-                v.serialize(rinfo, k, serializer);
+                try!(v.serialize(rinfo, k, serializer));
             }
         }
         let mut io = serializer.into_inner().into_inner();
-        let _ = io.write_all("}".as_bytes());
+        let _ = try!(io.write_all("}".as_bytes()));
         if self.newlines {
-            let _ = io.write_all("\n".as_bytes());
+            let _ = try!(io.write_all("\n".as_bytes()));
         }
+        Ok(())
     }
 }
 

@@ -92,9 +92,10 @@ extern crate crossbeam;
 extern crate chrono;
 extern crate rustc_serialize as serialize;
 
+#[macro_use]
+extern crate error_chain;
 
 use std::sync::Arc;
-use crossbeam::sync::ArcCell;
 use std::fmt;
 
 /// Convenience function for building `&[OwnedKeyValue]`
@@ -141,7 +142,6 @@ macro_rules! b(
 
 /// Drains - logging outputs
 pub mod drain;
-use drain::*;
 
 /// Logger - logging handle
 pub mod logger;
@@ -155,8 +155,6 @@ pub mod format;
 pub use logger::Logger;
 
 include!("_level.rs");
-
-type DrainRef = Arc<ArcCell<Box<Drain>>>;
 
 /// Key value pair that can be owned by `Logger`
 pub type OwnedKeyValue = (&'static str, Arc<ser::SyncSerialize>);

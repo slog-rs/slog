@@ -2,21 +2,57 @@
 //!
 //! Drains are responsible for filtering, formatting and writing the log records
 //! into given destination.
+use std::io;
+use std::sync::Mutex;
+use std::sync::mpsc;
+use std::thread;
+
 use super::Level;
 use super::format;
 use super::logger::RecordInfo;
-use std::io;
-use std::sync::Mutex;
 use super::{OwnedKeyValue, BorrowedKeyValue};
-use std::sync::mpsc;
-use std::thread;
+
+#[allow(missing_docs)]
+mod error {
+    use super::super::format;
+    use std::io;
+
+    error_chain! {
+        types {
+            Error, ErrorKind, ChainErr, Result;
+        }
+        links {
+            format::Error, format::ErrorKind, Format;
+        }
+        foreign_links {
+            io::Error, Io, "io error";
+        }
+        errors {
+            SendError {
+                description("sending to another thread failed")
+                    display("sending to another thread failed")
+            }
+            LockError {
+                description("locking mutex failed")
+                    display("locking mutex failed")
+            }
+            FailoverExhausted {
+                description("failover drains exhausted")
+                    display("failover drains exhausted")
+            }
+
+        }
+    }
+}
+
+pub use self::error::{Error, Result, ErrorKind};
 
 /// Drain for Loggers
 ///
 /// Implementing this trait allows writing own Drains
 pub trait Drain: Send + Sync {
     /// Write one logging record
-    fn log(&self, info: &RecordInfo, &[OwnedKeyValue], &[BorrowedKeyValue]);
+    fn log(&self, info: &RecordInfo, &[OwnedKeyValue], &[BorrowedKeyValue]) -> Result<()>;
 }
 
 /// Drain discarding everything
@@ -26,7 +62,7 @@ impl Drain for Discard {
     fn log(&self,
            _: &RecordInfo,
            _: &[OwnedKeyValue],
-           _: &[BorrowedKeyValue]) { }
+           _: &[BorrowedKeyValue]) -> Result<()> { Ok(()) }
 }
 
 /// Drain formating records and writing them to a byte-stream (io::Write)
@@ -52,13 +88,14 @@ impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer
     fn log(&self,
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
-           values: &[BorrowedKeyValue]) {
+           values: &[BorrowedKeyValue]) -> Result<()> {
         let mut buf = Vec::with_capacity(128);
-        self.format.format(&mut buf, info, logger_values, values);
+        try!(self.format.format(&mut buf, info, logger_values, values));
         {
-            let mut io = self.io.lock().unwrap();
-            io.write_all(&buf).unwrap();
+            let mut io = try!(self.io.lock().map_err(|_| -> Error { ErrorKind::LockError.into()}));
+            try!(io.write_all(&buf));
         }
+        Ok(())
     }
 }
 
@@ -86,13 +123,14 @@ impl<F: format::Format + Send> Drain for AsyncStreamer<F> {
     fn log(&self,
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
-           values: &[BorrowedKeyValue]) {
+           values: &[BorrowedKeyValue]) -> Result<()> {
         let mut buf = Vec::with_capacity(128);
-        self.format.format(&mut buf, info, logger_values, values);
+        try!(self.format.format(&mut buf, info, logger_values, values));
         {
-            let mut io = self.io.lock().unwrap();
-            io.write_nocopy(buf);
+            let mut io = try!(self.io.lock().map_err(|_| -> Error { ErrorKind::LockError.into()}));
+            try!(io.write_nocopy(buf));
         }
+        Ok(())
     }
 }
 
@@ -121,9 +159,11 @@ impl<D: Drain> Drain for Filter<D> {
     fn log(&self,
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
-           values: &[BorrowedKeyValue]) {
+           values: &[BorrowedKeyValue]) -> Result<()> {
         if (self.cond)(&info) {
             self.drain.log(info, logger_values, values)
+        } else {
+            Ok(())
         }
     }
 }
@@ -155,9 +195,11 @@ impl<D: Drain> Drain for FilterLevel<D> {
     fn log(&self,
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
-           values: &[BorrowedKeyValue]) {
+           values: &[BorrowedKeyValue]) -> Result<()> {
         if info.level.is_at_least(self.level) {
             self.drain.log(info, logger_values, values)
+        } else {
+            Ok(())
         }
     }
 }
@@ -183,11 +225,51 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
     fn log(&self,
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
-           values: &[BorrowedKeyValue]) {
-        self.drain1.log(info, logger_values, values);
-        self.drain2.log(info, logger_values, values);
+           values: &[BorrowedKeyValue]) -> Result<()> {
+        let res1 = self.drain1.log(info, logger_values, values);
+        let res2 = self.drain2.log(info, logger_values, values);
+
+        // TODO: Don't discard e2 in case of two errors at once?
+        match (res1, res2) {
+            (Ok(_), Ok(_)) => Ok(()),
+            (Ok(_), Err(e)) => Err(e),
+            (Err(e), Ok(_)) => Err(e),
+            (Err(e1), Err(_)) => Err(e1),
+        }
     }
 }
+
+/// Failover drain
+///
+/// Log everything to logger `D1`, but in case of it reporting error,
+/// try logging to `D2`. If it also returned an error, forward it up.
+pub struct Failover<D1: Drain, D2: Drain> {
+    drain1: D1,
+    drain2: D2,
+}
+
+impl<D1: Drain, D2: Drain> Failover<D1, D2> {
+    /// Create `Failover`
+    pub fn new(drain1: D1, drain2: D2) -> Self {
+        Failover {
+            drain1: drain1,
+            drain2: drain2,
+        }
+    }
+}
+
+impl<D1: Drain, D2: Drain> Drain for Failover<D1, D2> {
+    fn log(&self,
+        info: &RecordInfo,
+        logger_values: &[OwnedKeyValue],
+        values: &[BorrowedKeyValue]) -> Result<()> {
+            match self.drain1.log(info, logger_values, values) {
+                Ok(_) => Ok(()),
+                Err(_) => self.drain2.log(info, logger_values, values),
+            }
+        }
+    }
+
 
 enum AsyncIoMsg {
     Bytes(Vec<u8>),
@@ -235,8 +317,12 @@ impl AsyncIoWriter {
     ///
     /// As an optimization, when `buf` is already an owned
     /// `Vec`, it can be sent over channel without copying.
-    pub fn write_nocopy(&mut self, buf: Vec<u8>) {
-        let _ = self.sender.send(AsyncIoMsg::Bytes(buf)).unwrap();
+    pub fn write_nocopy(&mut self, buf: Vec<u8>) -> Result<()> {
+        try!(
+            self.sender.send(AsyncIoMsg::Bytes(buf))
+                .map_err(|_| -> Error {ErrorKind::SendError.into()})
+        );
+        Ok(())
     }
 }
 
@@ -290,4 +376,9 @@ pub fn filter_level<D: Drain>(level: Level, d: D) -> FilterLevel<D> {
 /// Create Duplicate drain
 pub fn duplicate<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Duplicate<D1, D2> {
     Duplicate::new(d1, d2)
+}
+
+/// Create Failover drain
+pub fn failover<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Failover<D1, D2> {
+    Failover::new(d1, d2)
 }

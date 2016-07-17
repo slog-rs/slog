@@ -99,7 +99,7 @@ mod test {
         };
 
         let mut v = vec!();
-        formatter.format(&mut v, &info, &[], &[]);
+        formatter.format(&mut v, &info, &[], &[]).unwrap();
 
         assert_eq!(String::from_utf8_lossy(&v),
                    "{\"pid\":".to_string() + &nix::unistd::getpid().to_string() + ",\"host\":\"" +
