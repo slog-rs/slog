@@ -47,20 +47,22 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-246' class='srclink' href='../../src/slog/logger.rs.html#166-173' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-441' class='srclink' href='../../src/slog/src/logger.rs.html#167-174' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct RecordInfo {
     pub ts: <a class='struct' href='../../chrono/datetime/struct.DateTime.html' title='chrono::datetime::DateTime'>DateTime</a>&lt;<a class='struct' href='../../chrono/offset/utc/struct.UTC.html' title='chrono::offset::utc::UTC'>UTC</a>&gt;,
     pub level: <a class='enum' href='../../slog/enum.Level.html' title='slog::Level'>Level</a>,
     pub msg: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>,
 }</pre><div class='docblock'><p>Common information about a logging record</p>
-</div><h2 class='fields'>Fields</h2>
-<table><tr class='stab '>
-                             <td id='structfield.ts'><code>ts</code></td><td><div class='docblock'><p>Timestamp</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.level'><code>level</code></td><td><div class='docblock'><p>Logging level</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.msg'><code>msg</code></td><td><div class='docblock'><p>Message</p>
-</div></td></tr></table></section>
+</div><h2 class='fields'>Fields</h2><span id='structfield.ts' class='structfield'><code>ts: <a class='struct' href='../../chrono/datetime/struct.DateTime.html' title='chrono::datetime::DateTime'>DateTime</a>&lt;<a class='struct' href='../../chrono/offset/utc/struct.UTC.html' title='chrono::offset::utc::UTC'>UTC</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Timestamp</p>
+</div><span id='structfield.level' class='structfield'><code>level: <a class='enum' href='../../slog/enum.Level.html' title='slog::Level'>Level</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>Logging level</p>
+</div><span id='structfield.msg' class='structfield'><code>msg: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>Message</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-445' class='srclink' href='../../src/slog/src/logger.rs.html#176-185' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(level: <a class='enum' href='../../slog/enum.Level.html' title='slog::Level'>Level</a>, msg: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>) -&gt; Self</code></h4>
+<div class='docblock'><p>Create a new <code>RecordInfo</code> with a current timestamp</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

@@ -47,27 +47,27 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog_syslog/src/lib.rs.html#1-205' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog_syslog/src/lib.rs.html#1-229' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Syslog drain for slog-rs</p>
 
 <p>WARNING: This crate needs some improvements.</p>
 
-<pre class='rust rust-example-rendered'>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog_syslog</span>;
+<pre><code class="language-norust">#[macro_use]
+extern crate slog;
+extern crate slog_syslog;
 
-<span class='kw'>use</span> <span class='ident'>slog</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>slog_syslog</span>::<span class='ident'>Facility</span>;
+use slog::*;
+use slog_syslog::Facility;
 
-<span class='kw'>fn</span> <span class='ident'>main</span>() {
-    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>Logger</span>::<span class='ident'>new_root</span>(<span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;build-id&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;8dfljdf&quot;</span>));
-    <span class='ident'>root</span>.<span class='ident'>set_drain</span>(
-            <span class='ident'>slog_syslog</span>::<span class='ident'>unix_3164</span>(
-                <span class='ident'>Facility</span>::<span class='ident'>LOG_USER</span>,
+fn main() {
+    let root = Logger::new_root(o!(&quot;build-id&quot; =&gt; &quot;8dfljdf&quot;));
+    root.set_drain(
+            slog_syslog::unix_3164(
+                Facility::LOG_USER,
                 )
             );
-}</pre>
+}
+</code></pre>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>

@@ -2005,11 +2005,11 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>set_time_zone</span>() <span class='op'>-&gt;</span> <span class='ident'>TzReset</span> {
-        <span class='ident'>set_time_zone_la_or_london</span>(<span class='boolvalue'>false</span>)
+        <span class='ident'>set_time_zone_la_or_london</span>(<span class='bool-val'>false</span>)
     }
 
     <span class='kw'>fn</span> <span class='ident'>set_time_zone_london_dst</span>() <span class='op'>-&gt;</span> <span class='ident'>TzReset</span> {
-        <span class='ident'>set_time_zone_la_or_london</span>(<span class='boolvalue'>true</span>)
+        <span class='ident'>set_time_zone_la_or_london</span>(<span class='bool-val'>true</span>)
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -2184,7 +2184,7 @@
                 <span class='comment'>// oneway tests are used when reformatting the parsed Tm</span>
                 <span class='comment'>// back into a string can generate a different string</span>
                 <span class='comment'>// from the original (i.e. leading zeroes)</span>
-                <span class='boolvalue'>true</span>
+                <span class='bool-val'>true</span>
               },
               <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;{:?},  s={:?}, format={:?}&quot;</span>, <span class='ident'>e</span>, <span class='ident'>s</span>, <span class='ident'>format</span>)
             }

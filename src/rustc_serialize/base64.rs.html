@@ -572,15 +572,15 @@
 
 <span class='doccomment'>/// Configuration for RFC 4648 standard base64 encoding</span>
 <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>STANDARD</span>: <span class='ident'>Config</span> <span class='op'>=</span>
-    <span class='ident'>Config</span> {<span class='ident'>char_set</span>: <span class='ident'>Standard</span>, <span class='ident'>newline</span>: <span class='ident'>Newline</span>::<span class='ident'>CRLF</span>, <span class='ident'>pad</span>: <span class='boolvalue'>true</span>, <span class='ident'>line_length</span>: <span class='prelude-val'>None</span>};
+    <span class='ident'>Config</span> {<span class='ident'>char_set</span>: <span class='ident'>Standard</span>, <span class='ident'>newline</span>: <span class='ident'>Newline</span>::<span class='ident'>CRLF</span>, <span class='ident'>pad</span>: <span class='bool-val'>true</span>, <span class='ident'>line_length</span>: <span class='prelude-val'>None</span>};
 
 <span class='doccomment'>/// Configuration for RFC 4648 base64url encoding</span>
 <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>URL_SAFE</span>: <span class='ident'>Config</span> <span class='op'>=</span>
-    <span class='ident'>Config</span> {<span class='ident'>char_set</span>: <span class='ident'>UrlSafe</span>, <span class='ident'>newline</span>: <span class='ident'>Newline</span>::<span class='ident'>CRLF</span>, <span class='ident'>pad</span>: <span class='boolvalue'>false</span>, <span class='ident'>line_length</span>: <span class='prelude-val'>None</span>};
+    <span class='ident'>Config</span> {<span class='ident'>char_set</span>: <span class='ident'>UrlSafe</span>, <span class='ident'>newline</span>: <span class='ident'>Newline</span>::<span class='ident'>CRLF</span>, <span class='ident'>pad</span>: <span class='bool-val'>false</span>, <span class='ident'>line_length</span>: <span class='prelude-val'>None</span>};
 
 <span class='doccomment'>/// Configuration for RFC 2045 MIME base64 encoding</span>
 <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>MIME</span>: <span class='ident'>Config</span> <span class='op'>=</span>
-    <span class='ident'>Config</span> {<span class='ident'>char_set</span>: <span class='ident'>Standard</span>, <span class='ident'>newline</span>: <span class='ident'>Newline</span>::<span class='ident'>CRLF</span>, <span class='ident'>pad</span>: <span class='boolvalue'>true</span>, <span class='ident'>line_length</span>: <span class='prelude-val'>Some</span>(<span class='number'>76</span>)};
+    <span class='ident'>Config</span> {<span class='ident'>char_set</span>: <span class='ident'>Standard</span>, <span class='ident'>newline</span>: <span class='ident'>Newline</span>::<span class='ident'>CRLF</span>, <span class='ident'>pad</span>: <span class='bool-val'>true</span>, <span class='ident'>line_length</span>: <span class='prelude-val'>Some</span>(<span class='number'>76</span>)};
 
 <span class='kw'>static</span> <span class='ident'>STANDARD_CHARS</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span>[<span class='ident'>u8</span>] <span class='op'>=</span> <span class='string'>b&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ\
                                         abcdefghijklmnopqrstuvwxyz\
@@ -921,8 +921,8 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_to_base64_padding</span>() {
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;f&quot;</span>.<span class='ident'>as_bytes</span>().<span class='ident'>to_base64</span>(<span class='ident'>Config</span> {<span class='ident'>pad</span>: <span class='boolvalue'>false</span>, ..<span class='ident'>STANDARD</span>}), <span class='string'>&quot;Zg&quot;</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;fo&quot;</span>.<span class='ident'>as_bytes</span>().<span class='ident'>to_base64</span>(<span class='ident'>Config</span> {<span class='ident'>pad</span>: <span class='boolvalue'>false</span>, ..<span class='ident'>STANDARD</span>}), <span class='string'>&quot;Zm8&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;f&quot;</span>.<span class='ident'>as_bytes</span>().<span class='ident'>to_base64</span>(<span class='ident'>Config</span> {<span class='ident'>pad</span>: <span class='bool-val'>false</span>, ..<span class='ident'>STANDARD</span>}), <span class='string'>&quot;Zg&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;fo&quot;</span>.<span class='ident'>as_bytes</span>().<span class='ident'>to_base64</span>(<span class='ident'>Config</span> {<span class='ident'>pad</span>: <span class='bool-val'>false</span>, ..<span class='ident'>STANDARD</span>}), <span class='string'>&quot;Zm8&quot;</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

@@ -236,19 +236,19 @@
 
     <span class='macro'>cfg_if</span><span class='macro'>!</span> {
         <span class='kw'>if</span> <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>foo</span>)]</span> {
-            <span class='kw'>fn</span> <span class='ident'>works2</span>() <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='boolvalue'>false</span> }
+            <span class='kw'>fn</span> <span class='ident'>works2</span>() <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='bool-val'>false</span> }
         } <span class='kw'>else</span> <span class='kw'>if</span> <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> {
-            <span class='kw'>fn</span> <span class='ident'>works2</span>() <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='boolvalue'>true</span> }
+            <span class='kw'>fn</span> <span class='ident'>works2</span>() <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='bool-val'>true</span> }
         } <span class='kw'>else</span> {
-            <span class='kw'>fn</span> <span class='ident'>works2</span>() <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='boolvalue'>false</span> }
+            <span class='kw'>fn</span> <span class='ident'>works2</span>() <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='bool-val'>false</span> }
         }
     }
 
     <span class='macro'>cfg_if</span><span class='macro'>!</span> {
         <span class='kw'>if</span> <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>foo</span>)]</span> {
-            <span class='kw'>fn</span> <span class='ident'>works3</span>() <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='boolvalue'>false</span> }
+            <span class='kw'>fn</span> <span class='ident'>works3</span>() <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='bool-val'>false</span> }
         } <span class='kw'>else</span> {
-            <span class='kw'>fn</span> <span class='ident'>works3</span>() <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='boolvalue'>true</span> }
+            <span class='kw'>fn</span> <span class='ident'>works3</span>() <span class='op'>-&gt;</span> <span class='ident'>bool</span> { <span class='bool-val'>true</span> }
         }
     }
 

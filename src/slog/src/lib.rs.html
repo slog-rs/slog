@@ -204,8 +204,6 @@
 <span id="160">160</span>
 <span id="161">161</span>
 <span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 <span class='doccomment'>//!</span>
@@ -301,9 +299,10 @@
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>chrono</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span> <span class='kw'>as</span> <span class='ident'>serialize</span>;
 
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>error_chain</span>;
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
-<span class='kw'>use</span> <span class='ident'>crossbeam</span>::<span class='ident'>sync</span>::<span class='ident'>ArcCell</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 
 <span class='doccomment'>/// Convenience function for building `&amp;[OwnedKeyValue]`</span>
@@ -350,7 +349,6 @@
 
 <span class='doccomment'>/// Drains - logging outputs</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>drain</span>;
-<span class='kw'>use</span> <span class='ident'>drain</span>::<span class='op'>*</span>;
 
 <span class='doccomment'>/// Logger - logging handle</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>logger</span>;
@@ -364,8 +362,6 @@
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>logger</span>::<span class='ident'>Logger</span>;
 
 <span class='macro'>include</span><span class='macro'>!</span>(<span class='string'>&quot;_level.rs&quot;</span>);
-
-<span class='kw'>type</span> <span class='ident'>DrainRef</span> <span class='op'>=</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>ArcCell</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>;
 
 <span class='doccomment'>/// Key value pair that can be owned by `Logger`</span>
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>OwnedKeyValue</span> <span class='op'>=</span> (<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>ser</span>::<span class='ident'>SyncSerialize</span><span class='op'>&gt;</span>);

@@ -267,7 +267,7 @@
         <span class='ident'>midnight</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>datetime</span><span class='op'>|</span> <span class='ident'>Date</span>::<span class='ident'>from_utc</span>(<span class='op'>*</span><span class='ident'>local</span>, <span class='ident'>datetime</span>.<span class='ident'>offset</span>().<span class='ident'>clone</span>()))
     }
     <span class='kw'>fn</span> <span class='ident'>from_local_datetime</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>local</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDateTime</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>Local</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>timespec</span> <span class='op'>=</span> <span class='ident'>datetime_to_timespec</span>(<span class='ident'>local</span>, <span class='boolvalue'>true</span>);
+        <span class='kw'>let</span> <span class='ident'>timespec</span> <span class='op'>=</span> <span class='ident'>datetime_to_timespec</span>(<span class='ident'>local</span>, <span class='bool-val'>true</span>);
         <span class='ident'>LocalResult</span>::<span class='ident'>Single</span>(<span class='ident'>tm_to_datetime</span>(<span class='ident'>stdtime</span>::<span class='ident'>at</span>(<span class='ident'>timespec</span>)))
     }
 
@@ -276,7 +276,7 @@
         <span class='ident'>Date</span>::<span class='ident'>from_utc</span>(<span class='op'>*</span><span class='ident'>utc</span>, <span class='ident'>midnight</span>.<span class='ident'>offset</span>().<span class='ident'>clone</span>())
     }
     <span class='kw'>fn</span> <span class='ident'>from_utc_datetime</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>utc</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDateTime</span>) <span class='op'>-&gt;</span> <span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='ident'>Local</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>timespec</span> <span class='op'>=</span> <span class='ident'>datetime_to_timespec</span>(<span class='ident'>utc</span>, <span class='boolvalue'>false</span>);
+        <span class='kw'>let</span> <span class='ident'>timespec</span> <span class='op'>=</span> <span class='ident'>datetime_to_timespec</span>(<span class='ident'>utc</span>, <span class='bool-val'>false</span>);
         <span class='ident'>tm_to_datetime</span>(<span class='ident'>stdtime</span>::<span class='ident'>at</span>(<span class='ident'>timespec</span>))
     }
 }

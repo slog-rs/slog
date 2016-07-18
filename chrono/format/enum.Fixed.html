@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2279' class='srclink' href='../../src/chrono/format/mod.rs.html#99-157' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-2299' class='srclink' href='../../src/chrono/format/mod.rs.html#99-157' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum Fixed {
     ShortMonthName,
     LongMonthName,
@@ -71,61 +71,61 @@
 <p>They have their own rules of formatting and parsing.
 Otherwise noted, they print in the specified cases but parse case-insensitively.</p>
 </div><h2 class='variants'>Variants</h2>
-<table class='variants_table'><tr><td id='variant.ShortMonthName'><code>ShortMonthName</code></td><td><div class='docblock'><p>Abbreviated month names.</p>
+<span id='variant.ShortMonthName' class='variant'><code>ShortMonthName</code></span><div class='docblock'><p>Abbreviated month names.</p>
 
 <p>Prints a three-letter-long name in the title case, reads the same name in any case.</p>
-</div></td><td></td></tr><tr><td id='variant.LongMonthName'><code>LongMonthName</code></td><td><div class='docblock'><p>Full month names.</p>
+</div><span id='variant.LongMonthName' class='variant'><code>LongMonthName</code></span><div class='docblock'><p>Full month names.</p>
 
 <p>Prints a full name in the title case, reads either a short or full name in any case.</p>
-</div></td><td></td></tr><tr><td id='variant.ShortWeekdayName'><code>ShortWeekdayName</code></td><td><div class='docblock'><p>Abbreviated day of the week names.</p>
+</div><span id='variant.ShortWeekdayName' class='variant'><code>ShortWeekdayName</code></span><div class='docblock'><p>Abbreviated day of the week names.</p>
 
 <p>Prints a three-letter-long name in the title case, reads the same name in any case.</p>
-</div></td><td></td></tr><tr><td id='variant.LongWeekdayName'><code>LongWeekdayName</code></td><td><div class='docblock'><p>Full day of the week names.</p>
+</div><span id='variant.LongWeekdayName' class='variant'><code>LongWeekdayName</code></span><div class='docblock'><p>Full day of the week names.</p>
 
 <p>Prints a full name in the title case, reads either a short or full name in any case.</p>
-</div></td><td></td></tr><tr><td id='variant.LowerAmPm'><code>LowerAmPm</code></td><td><div class='docblock'><p>AM/PM.</p>
+</div><span id='variant.LowerAmPm' class='variant'><code>LowerAmPm</code></span><div class='docblock'><p>AM/PM.</p>
 
 <p>Prints in lower case, reads in any case.</p>
-</div></td><td></td></tr><tr><td id='variant.UpperAmPm'><code>UpperAmPm</code></td><td><div class='docblock'><p>AM/PM.</p>
+</div><span id='variant.UpperAmPm' class='variant'><code>UpperAmPm</code></span><div class='docblock'><p>AM/PM.</p>
 
 <p>Prints in upper case, reads in any case.</p>
-</div></td><td></td></tr><tr><td id='variant.Nanosecond'><code>Nanosecond</code></td><td><div class='docblock'><p>An optional dot plus one or more digits for left-aligned nanoseconds.
+</div><span id='variant.Nanosecond' class='variant'><code>Nanosecond</code></span><div class='docblock'><p>An optional dot plus one or more digits for left-aligned nanoseconds.
 May print nothing, 3, 6 or 9 digits according to the available accuracy.
 See also <code>Numeric::Nanosecond</code>.</p>
-</div></td><td></td></tr><tr><td id='variant.Nanosecond3'><code>Nanosecond3</code></td><td><div class='docblock'><p>Fixed prescision at Nanosecond3 where 3 is the left aligned accuracy.</p>
-</div></td><td></td></tr><tr><td id='variant.Nanosecond6'><code>Nanosecond6</code></td><td><div class='docblock'><p>Fixed prescision at Nanosecond6 where 6 is the left aligned accuracy.</p>
-</div></td><td></td></tr><tr><td id='variant.Nanosecond9'><code>Nanosecond9</code></td><td><div class='docblock'><p>Fixed prescision at Nanosecond9 where 9 is the left aligned accuracy.</p>
-</div></td><td></td></tr><tr><td id='variant.TimezoneName'><code>TimezoneName</code></td><td><div class='docblock'><p>Timezone name.</p>
+</div><span id='variant.Nanosecond3' class='variant'><code>Nanosecond3</code></span><div class='docblock'><p>Fixed prescision at Nanosecond3 where 3 is the left aligned accuracy.</p>
+</div><span id='variant.Nanosecond6' class='variant'><code>Nanosecond6</code></span><div class='docblock'><p>Fixed prescision at Nanosecond6 where 6 is the left aligned accuracy.</p>
+</div><span id='variant.Nanosecond9' class='variant'><code>Nanosecond9</code></span><div class='docblock'><p>Fixed prescision at Nanosecond9 where 9 is the left aligned accuracy.</p>
+</div><span id='variant.TimezoneName' class='variant'><code>TimezoneName</code></span><div class='docblock'><p>Timezone name.</p>
 
 <p>It does not support parsing, its use in the parser is an immediate failure.</p>
-</div></td><td></td></tr><tr><td id='variant.TimezoneOffsetColon'><code>TimezoneOffsetColon</code></td><td><div class='docblock'><p>Offset from the local time to UTC (<code>+09:00</code> or <code>-04:00</code> or <code>+00:00</code>).</p>
+</div><span id='variant.TimezoneOffsetColon' class='variant'><code>TimezoneOffsetColon</code></span><div class='docblock'><p>Offset from the local time to UTC (<code>+09:00</code> or <code>-04:00</code> or <code>+00:00</code>).</p>
 
 <p>In the parser, the colon can be omitted and/or surrounded with any amount of whitespaces.
 The offset is limited from <code>-24:00</code> to <code>+24:00</code>, which is same to <code>FixedOffset</code>&#39;s range.</p>
-</div></td><td></td></tr><tr><td id='variant.TimezoneOffsetColonZ'><code>TimezoneOffsetColonZ</code></td><td><div class='docblock'><p>Offset from the local time to UTC (<code>+09:00</code> or <code>-04:00</code> or <code>Z</code>).</p>
+</div><span id='variant.TimezoneOffsetColonZ' class='variant'><code>TimezoneOffsetColonZ</code></span><div class='docblock'><p>Offset from the local time to UTC (<code>+09:00</code> or <code>-04:00</code> or <code>Z</code>).</p>
 
 <p>In the parser, the colon can be omitted and/or surrounded with any amount of whitespaces,
 and <code>Z</code> can be either in upper case or in lower case.
 The offset is limited from <code>-24:00</code> to <code>+24:00</code>, which is same to <code>FixedOffset</code>&#39;s range.</p>
-</div></td><td></td></tr><tr><td id='variant.TimezoneOffset'><code>TimezoneOffset</code></td><td><div class='docblock'><p>Same to <code>TimezoneOffsetColon</code> but prints no colon. Parsing allows an optional colon.</p>
-</div></td><td></td></tr><tr><td id='variant.TimezoneOffsetZ'><code>TimezoneOffsetZ</code></td><td><div class='docblock'><p>Same to <code>TimezoneOffsetColonZ</code> but prints no colon. Parsing allows an optional colon.</p>
-</div></td><td></td></tr><tr><td id='variant.RFC2822'><code>RFC2822</code></td><td><div class='docblock'><p>RFC 2822 date and time syntax. Commonly used for email and MIME date and time.</p>
-</div></td><td></td></tr><tr><td id='variant.RFC3339'><code>RFC3339</code></td><td><div class='docblock'><p>RFC 3339 &amp; ISO 8601 date and time syntax.</p>
-</div></td><td></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../chrono/format/enum.Fixed.html' title='chrono::format::Fixed'>Fixed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2297' class='srclink' href='../../src/chrono/format/mod.rs.html#98' title='goto source code'>[src]</a></span></h3>
+</div><span id='variant.TimezoneOffset' class='variant'><code>TimezoneOffset</code></span><div class='docblock'><p>Same to <code>TimezoneOffsetColon</code> but prints no colon. Parsing allows an optional colon.</p>
+</div><span id='variant.TimezoneOffsetZ' class='variant'><code>TimezoneOffsetZ</code></span><div class='docblock'><p>Same to <code>TimezoneOffsetColonZ</code> but prints no colon. Parsing allows an optional colon.</p>
+</div><span id='variant.RFC2822' class='variant'><code>RFC2822</code></span><div class='docblock'><p>RFC 2822 date and time syntax. Commonly used for email and MIME date and time.</p>
+</div><span id='variant.RFC3339' class='variant'><code>RFC3339</code></span><div class='docblock'><p>RFC 3339 &amp; ISO 8601 date and time syntax.</p>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../chrono/format/enum.Fixed.html' title='chrono::format::Fixed'>Fixed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2265' class='srclink' href='../../src/chrono/format/mod.rs.html#98' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='enum' href='../../chrono/format/enum.Fixed.html' title='chrono::format::Fixed'>Fixed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2318' class='srclink' href='../../src/chrono/format/mod.rs.html#98' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../../chrono/format/enum.Fixed.html' title='chrono::format::Fixed'>Fixed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2321' class='srclink' href='../../src/chrono/format/mod.rs.html#98' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='enum' href='../../chrono/format/enum.Fixed.html' title='chrono::format::Fixed'>Fixed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2286' class='srclink' href='../../src/chrono/format/mod.rs.html#98' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../../chrono/format/enum.Fixed.html' title='chrono::format::Fixed'>Fixed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2289' class='srclink' href='../../src/chrono/format/mod.rs.html#98' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../chrono/format/enum.Fixed.html' title='chrono::format::Fixed'>Fixed</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
 </div><h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../../chrono/format/enum.Fixed.html' title='chrono::format::Fixed'>Fixed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2327' class='srclink' href='../../src/chrono/format/mod.rs.html#98' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../../chrono/format/enum.Fixed.html' title='chrono::format::Fixed'>Fixed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2295' class='srclink' href='../../src/chrono/format/mod.rs.html#98' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../../chrono/format/enum.Fixed.html' title='chrono::format::Fixed'>Fixed</a></code></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../../chrono/format/enum.Fixed.html' title='chrono::format::Fixed'>Fixed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2330' class='srclink' href='../../src/chrono/format/mod.rs.html#98' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../../chrono/format/enum.Fixed.html' title='chrono::format::Fixed'>Fixed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2298' class='srclink' href='../../src/chrono/format/mod.rs.html#98' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 

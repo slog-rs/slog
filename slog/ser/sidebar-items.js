@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["Serialize","Value that can be serialized"],["Serializer","Serializer"],["SyncSerialize","Value that can be serialized and stored in logger itself."]]});
+initSidebarItems({"enum":[["ErrorKind",""]],"struct":[["Error",""]],"trait":[["Serialize","Value that can be serialized"],["Serializer","Serializer"],["SyncSerialize","Value that can be serialized and stored in logger itself."]],"type":[["Result",""]]});

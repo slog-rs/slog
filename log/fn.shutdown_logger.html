@@ -47,8 +47,8 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-256' class='srclink' href='../src/log/lib.rs.html#706-708' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn shutdown_logger() -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='trait' href='../log/trait.Log.html' title='log::Log'>Log</a>&gt;, <a class='struct' href='../log/struct.ShutdownLoggerError.html' title='log::ShutdownLoggerError'>ShutdownLoggerError</a>&gt;</pre><div class='docblock'><p>Shuts down the global logger.</p>
+               </span><a id='src-255' class='srclink' href='../src/log/lib.rs.html#706-708' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn shutdown_logger() -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='trait' href='../log/trait.Log.html' title='log::Log'>Log</a>&gt;,&nbsp;<a class='struct' href='../log/struct.ShutdownLoggerError.html' title='log::ShutdownLoggerError'>ShutdownLoggerError</a>&gt;</pre><div class='docblock'><p>Shuts down the global logger.</p>
 
 <p>This function may only be called once in the lifetime of a program, and may
 not be called before <code>set_logger</code>. Once the global logger has been shut

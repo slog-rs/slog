@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2533' class='srclink' href='../../src/nix/mqueue.rs.html#122-127' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-2504' class='srclink' href='../../src/nix/mqueue.rs.html#122-127' title='goto source code'>[src]</a></span></h1>
 <pre class='rust fn'>pub fn mq_setattr(mqd: <a class='type' href='../../nix/mqueue/type.MQd.html' title='nix::mqueue::MQd'>MQd</a>, newattr: &amp;<a class='struct' href='../../nix/mqueue/struct.MqAttr.html' title='nix::mqueue::MqAttr'>MqAttr</a>) -&gt; <a class='type' href='../../nix/type.Result.html' title='nix::Result'>Result</a>&lt;<a class='struct' href='../../nix/mqueue/struct.MqAttr.html' title='nix::mqueue::MqAttr'>MqAttr</a>&gt;</pre><div class='docblock'><p>Set the attributes of the message queue. Only <code>O_NONBLOCK</code> can be set, everything else will be ignored
 Returns the old attributes
 It is recommend to use the <code>mq_set_nonblock()</code> and <code>mq_remove_nonblock()</code> convenience functions as they are easier to use</p>

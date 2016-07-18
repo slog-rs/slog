@@ -1153,9 +1153,9 @@
     <span class='kw'>fn</span> <span class='ident'>year_ce</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>bool</span>, <span class='ident'>u32</span>) {
         <span class='kw'>let</span> <span class='ident'>year</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>year</span>();
         <span class='kw'>if</span> <span class='ident'>year</span> <span class='op'>&lt;</span> <span class='number'>1</span> {
-            (<span class='boolvalue'>false</span>, (<span class='number'>1</span> <span class='op'>-</span> <span class='ident'>year</span>) <span class='kw'>as</span> <span class='ident'>u32</span>)
+            (<span class='bool-val'>false</span>, (<span class='number'>1</span> <span class='op'>-</span> <span class='ident'>year</span>) <span class='kw'>as</span> <span class='ident'>u32</span>)
         } <span class='kw'>else</span> {
-            (<span class='boolvalue'>true</span>, <span class='ident'>year</span> <span class='kw'>as</span> <span class='ident'>u32</span>)
+            (<span class='bool-val'>true</span>, <span class='ident'>year</span> <span class='kw'>as</span> <span class='ident'>u32</span>)
         }
     }
 

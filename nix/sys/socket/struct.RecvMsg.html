@@ -47,17 +47,16 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-5828' class='srclink' href='../../../src/nix/sys/socket/mod.rs.html#121-127' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-5758' class='srclink' href='../../../src/nix/sys/socket/mod.rs.html#121-127' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct RecvMsg&lt;'a&gt; {
     pub bytes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,
     pub address: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../../../nix/sys/socket/enum.SockAddr.html' title='nix::sys::socket::SockAddr'>SockAddr</a>&gt;,
     pub flags: <a class='struct' href='../../../nix/sys/socket/struct.MsgFlags.html' title='nix::sys::socket::MsgFlags'>MsgFlags</a>,
     // some fields omitted
-}</pre><h2 class='fields'>Fields</h2>
-<table><tr class='stab '>
-                             <td id='structfield.bytes'><code>bytes</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.address'><code>address</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.flags'><code>flags</code></td><td></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../../../nix/sys/socket/struct.RecvMsg.html' title='nix::sys::socket::RecvMsg'>RecvMsg</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-5834' class='srclink' href='../../../src/nix/sys/socket/mod.rs.html#129-135' title='goto source code'>[src]</a></span></h3>
+}</pre><h2 class='fields'>Fields</h2><span id='structfield.bytes' class='structfield'><code>bytes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code>
+                           </span><span class='stab '></span><span id='structfield.address' class='structfield'><code>address: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../../../nix/sys/socket/enum.SockAddr.html' title='nix::sys::socket::SockAddr'>SockAddr</a>&gt;</code>
+                           </span><span class='stab '></span><span id='structfield.flags' class='structfield'><code>flags: <a class='struct' href='../../../nix/sys/socket/struct.MsgFlags.html' title='nix::sys::socket::MsgFlags'>MsgFlags</a></code>
+                           </span><span class='stab '></span><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../../../nix/sys/socket/struct.RecvMsg.html' title='nix::sys::socket::RecvMsg'>RecvMsg</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-5764' class='srclink' href='../../../src/nix/sys/socket/mod.rs.html#129-135' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.cmsgs' class='method'><code>fn <a href='#method.cmsgs' class='fnname'>cmsgs</a>(&amp;self) -&gt; <a class='struct' href='../../../nix/sys/socket/struct.CmsgIterator.html' title='nix::sys::socket::CmsgIterator'>CmsgIterator</a></code></h4>
 <div class='docblock'><p>Iterate over the valid control messages pointed to by this
 msghdr.</p>

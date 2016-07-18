@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2758' class='srclink' href='../../../src/chrono/format/parsed.rs.html#32-83' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-2878' class='srclink' href='../../../src/chrono/format/parsed.rs.html#32-83' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Parsed {
     pub year: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;,
     pub year_div_100: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;,
@@ -77,58 +77,57 @@ It may or may not check for the range constraint immediately (for efficiency rea
 <li><code>to_*</code> methods try to make a concrete date and time value out of set fields.
 It fully checks any remaining out-of-range conditions and inconsistent/impossible fields,</li>
 </ul>
-</div><h2 class='fields'>Fields</h2>
-<table><tr class='stab '>
-                             <td id='structfield.year'><code>year</code></td><td><div class='docblock'><p>Year. This can be negative unlike <code>year_{div,mod}_100</code> fields.</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.year_div_100'><code>year_div_100</code></td><td><div class='docblock'><p>Year divided by 100. Implies that the year is &gt;= 1 BCE when set.</p>
+</div><h2 class='fields'>Fields</h2><span id='structfield.year' class='structfield'><code>year: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Year. This can be negative unlike <code>year_{div,mod}_100</code> fields.</p>
+</div><span id='structfield.year_div_100' class='structfield'><code>year_div_100: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Year divided by 100. Implies that the year is &gt;= 1 BCE when set.</p>
 
 <p>Due to the common usage, if this field is missing but <code>year_mod_100</code> is present,
 it is inferred to 19 when <code>year_mod_100 &gt;= 70</code> and 20 otherwise.</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.year_mod_100'><code>year_mod_100</code></td><td><div class='docblock'><p>Year modulo 100. Implies that the year is &gt;= 1 BCE when set.</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.isoyear'><code>isoyear</code></td><td><div class='docblock'><p>Year in the ISO week date. This can be negative unlike <code>isoyear_{div,mod}_100</code> fields.</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.isoyear_div_100'><code>isoyear_div_100</code></td><td><div class='docblock'><p>Year in the ISO week date, divided by 100. Implies that the year is &gt;= 1 BCE when set.</p>
+</div><span id='structfield.year_mod_100' class='structfield'><code>year_mod_100: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Year modulo 100. Implies that the year is &gt;= 1 BCE when set.</p>
+</div><span id='structfield.isoyear' class='structfield'><code>isoyear: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Year in the ISO week date. This can be negative unlike <code>isoyear_{div,mod}_100</code> fields.</p>
+</div><span id='structfield.isoyear_div_100' class='structfield'><code>isoyear_div_100: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Year in the ISO week date, divided by 100. Implies that the year is &gt;= 1 BCE when set.</p>
 
 <p>Due to the common usage, if this field is missing but <code>isoyear_mod_100</code> is present,
 it is inferred to 19 when <code>isoyear_mod_100 &gt;= 70</code> and 20 otherwise.</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.isoyear_mod_100'><code>isoyear_mod_100</code></td><td><div class='docblock'><p>Year in the ISO week date, modulo 100. Implies that the year is &gt;= 1 BCE when set.</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.month'><code>month</code></td><td><div class='docblock'><p>Month (1--12).</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.week_from_sun'><code>week_from_sun</code></td><td><div class='docblock'><p>Week number, where the week 1 starts at the first Sunday of January.
+</div><span id='structfield.isoyear_mod_100' class='structfield'><code>isoyear_mod_100: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Year in the ISO week date, modulo 100. Implies that the year is &gt;= 1 BCE when set.</p>
+</div><span id='structfield.month' class='structfield'><code>month: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Month (1--12).</p>
+</div><span id='structfield.week_from_sun' class='structfield'><code>week_from_sun: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Week number, where the week 1 starts at the first Sunday of January.
 (0--53, 1--53 or 1--52 depending on the year).</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.week_from_mon'><code>week_from_mon</code></td><td><div class='docblock'><p>Week number, where the week 1 starts at the first Monday of January.
+</div><span id='structfield.week_from_mon' class='structfield'><code>week_from_mon: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Week number, where the week 1 starts at the first Monday of January.
 (0--53, 1--53 or 1--52 depending on the year).</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.isoweek'><code>isoweek</code></td><td><div class='docblock'><p>ISO week number (1--52 or 1--53 depending on the year).</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.weekday'><code>weekday</code></td><td><div class='docblock'><p>Day of the week.</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.ordinal'><code>ordinal</code></td><td><div class='docblock'><p>Day of the year (1--365 or 1--366 depending on the year).</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.day'><code>day</code></td><td><div class='docblock'><p>Day of the month (1--28, 1--29, 1--30 or 1--31 depending on the month).</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.hour_div_12'><code>hour_div_12</code></td><td><div class='docblock'><p>Hour number divided by 12 (0--1). 0 indicates AM and 1 indicates PM.</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.hour_mod_12'><code>hour_mod_12</code></td><td><div class='docblock'><p>Hour number modulo 12 (0--11).</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.minute'><code>minute</code></td><td><div class='docblock'><p>Minute number (0--59).</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.second'><code>second</code></td><td><div class='docblock'><p>Second number (0--60, accounting for leap seconds).</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.nanosecond'><code>nanosecond</code></td><td><div class='docblock'><p>The number of nanoseconds since the whole second (0--999,999,999).</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.timestamp'><code>timestamp</code></td><td><div class='docblock'><p>The number of non-leap seconds since January 1, 1970 0:00:00 UTC.</p>
+</div><span id='structfield.isoweek' class='structfield'><code>isoweek: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>ISO week number (1--52 or 1--53 depending on the year).</p>
+</div><span id='structfield.weekday' class='structfield'><code>weekday: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../../../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Day of the week.</p>
+</div><span id='structfield.ordinal' class='structfield'><code>ordinal: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Day of the year (1--365 or 1--366 depending on the year).</p>
+</div><span id='structfield.day' class='structfield'><code>day: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Day of the month (1--28, 1--29, 1--30 or 1--31 depending on the month).</p>
+</div><span id='structfield.hour_div_12' class='structfield'><code>hour_div_12: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Hour number divided by 12 (0--1). 0 indicates AM and 1 indicates PM.</p>
+</div><span id='structfield.hour_mod_12' class='structfield'><code>hour_mod_12: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Hour number modulo 12 (0--11).</p>
+</div><span id='structfield.minute' class='structfield'><code>minute: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Minute number (0--59).</p>
+</div><span id='structfield.second' class='structfield'><code>second: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Second number (0--60, accounting for leap seconds).</p>
+</div><span id='structfield.nanosecond' class='structfield'><code>nanosecond: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>The number of nanoseconds since the whole second (0--999,999,999).</p>
+</div><span id='structfield.timestamp' class='structfield'><code>timestamp: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>The number of non-leap seconds since January 1, 1970 0:00:00 UTC.</p>
 
 <p>This can be off by one if <code>second</code> is 60 (a leap second).</p>
-</div></td></tr><tr class='stab '>
-                             <td id='structfield.offset'><code>offset</code></td><td><div class='docblock'><p>Offset from the local time to UTC, in seconds.</p>
-</div></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2919' class='srclink' href='../../../src/chrono/format/parsed.rs.html#96-594' title='goto source code'>[src]</a></span></h3>
+</div><span id='structfield.offset' class='structfield'><code>offset: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>Offset from the local time to UTC, in seconds.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2904' class='srclink' href='../../../src/chrono/format/parsed.rs.html#96-594' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a></code></h4>
 <div class='docblock'><p>Returns the initial value of parsed parts.</p>
 </div><h4 id='method.set_year' class='method'><code>fn <a href='#method.set_year' class='fnname'>set_year</a>(&amp;mut self, value: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a>) -&gt; <a class='type' href='../../../chrono/format/type.ParseResult.html' title='chrono::format::ParseResult'>ParseResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
@@ -215,7 +214,7 @@ Either way those fields have to be consistent to each other.</p>
 <p>This method is able to determine the combined date and time
 from date and time fields or a single <code>timestamp</code> field, plus a time zone offset.
 Either way those fields have to be consistent to each other.</p>
-</div><h4 id='method.to_datetime_with_timezone' class='method'><code>fn <a href='#method.to_datetime_with_timezone' class='fnname'>to_datetime_with_timezone</a>&lt;Tz: <a class='trait' href='../../../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>TimeZone</a>&gt;(&amp;self, tz: &amp;Tz) -&gt; <a class='type' href='../../../chrono/format/type.ParseResult.html' title='chrono::format::ParseResult'>ParseResult</a>&lt;<a class='struct' href='../../../chrono/datetime/struct.DateTime.html' title='chrono::datetime::DateTime'>DateTime</a>&lt;Tz&gt;&gt;</code></h4>
+</div><h4 id='method.to_datetime_with_timezone' class='method'><code>fn <a href='#method.to_datetime_with_timezone' class='fnname'>to_datetime_with_timezone</a>&lt;Tz:&nbsp;<a class='trait' href='../../../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>TimeZone</a>&gt;(&amp;self, tz: &amp;Tz) -&gt; <a class='type' href='../../../chrono/format/type.ParseResult.html' title='chrono::format::ParseResult'>ParseResult</a>&lt;<a class='struct' href='../../../chrono/datetime/struct.DateTime.html' title='chrono::datetime::DateTime'>DateTime</a>&lt;Tz&gt;&gt;</code></h4>
 <div class='docblock'><p>Returns a parsed timezone-aware date and time out of given fields,
 with an additional <code>TimeZone</code> used to interpret and validate the local date.</p>
 
@@ -223,15 +222,15 @@ with an additional <code>TimeZone</code> used to interpret and validate the loca
 from date and time fields or a single <code>timestamp</code> field, plus a time zone offset.
 Either way those fields have to be consistent to each other.
 If parsed fields include an UTC offset, it also has to be consistent to <code>offset</code>.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2779' class='srclink' href='../../../src/chrono/format/parsed.rs.html#31' title='goto source code'>[src]</a></span></h3>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2743' class='srclink' href='../../../src/chrono/format/parsed.rs.html#31' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2804' class='srclink' href='../../../src/chrono/format/parsed.rs.html#31' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2768' class='srclink' href='../../../src/chrono/format/parsed.rs.html#31' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
 </div><h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2891' class='srclink' href='../../../src/chrono/format/parsed.rs.html#31' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2855' class='srclink' href='../../../src/chrono/format/parsed.rs.html#31' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a></code></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>

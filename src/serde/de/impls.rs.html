@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.7.13/src/de/impls.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.7.14/src/de/impls.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>impls.rs.html -- source</title>
@@ -1351,8 +1351,8 @@
         <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
     {
         <span class='kw'>match</span> <span class='ident'>s</span>.<span class='ident'>trim_matches</span>(::<span class='ident'>utils</span>::<span class='ident'>Pattern_White_Space</span>) {
-            <span class='string'>&quot;true&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='boolvalue'>true</span>),
-            <span class='string'>&quot;false&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='boolvalue'>false</span>),
+            <span class='string'>&quot;true&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='bool-val'>true</span>),
+            <span class='string'>&quot;false&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='bool-val'>false</span>),
             _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Type</span>::<span class='ident'>Bool</span>)),
         }
     }

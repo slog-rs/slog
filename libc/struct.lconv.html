@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1244' class='srclink' href='../src/libc/macros.rs.html#42' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-1239' class='srclink' href='../src/libc/macros.rs.html#42' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct lconv {
     pub decimal_point: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a>,
     pub thousands_sep: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a>,
@@ -73,37 +73,36 @@
     pub int_n_sep_by_space: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a>,
     pub int_p_sign_posn: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a>,
     pub int_n_sign_posn: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a>,
-}</pre><h2 class='fields'>Fields</h2>
-<table><tr class='stab '>
-                             <td id='structfield.decimal_point'><code>decimal_point</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.thousands_sep'><code>thousands_sep</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.grouping'><code>grouping</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.int_curr_symbol'><code>int_curr_symbol</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.currency_symbol'><code>currency_symbol</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.mon_decimal_point'><code>mon_decimal_point</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.mon_thousands_sep'><code>mon_thousands_sep</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.mon_grouping'><code>mon_grouping</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.positive_sign'><code>positive_sign</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.negative_sign'><code>negative_sign</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.int_frac_digits'><code>int_frac_digits</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.frac_digits'><code>frac_digits</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.p_cs_precedes'><code>p_cs_precedes</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.p_sep_by_space'><code>p_sep_by_space</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.n_cs_precedes'><code>n_cs_precedes</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.n_sep_by_space'><code>n_sep_by_space</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.p_sign_posn'><code>p_sign_posn</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.n_sign_posn'><code>n_sign_posn</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.int_p_cs_precedes'><code>int_p_cs_precedes</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.int_p_sep_by_space'><code>int_p_sep_by_space</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.int_n_cs_precedes'><code>int_n_cs_precedes</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.int_n_sep_by_space'><code>int_n_sep_by_space</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.int_p_sign_posn'><code>int_p_sign_posn</code></td><td></td></tr><tr class='stab '>
-                             <td id='structfield.int_n_sign_posn'><code>int_n_sign_posn</code></td><td></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../libc/struct.lconv.html' title='libc::lconv'>lconv</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1269' class='srclink' href='../src/libc/macros.rs.html#44' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../libc/struct.lconv.html' title='libc::lconv'>lconv</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1270' class='srclink' href='../src/libc/macros.rs.html#45-47' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='../core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../libc/struct.lconv.html' title='libc::lconv'>lconv</a></code></h4>
-<div class='docblock'><p>Returns a copy of the value. <a href="../core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><code>fn <a href='../core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
-<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="../core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+}</pre><h2 class='fields'>Fields</h2><span id='structfield.decimal_point' class='structfield'><code>decimal_point: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.thousands_sep' class='structfield'><code>thousands_sep: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.grouping' class='structfield'><code>grouping: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.int_curr_symbol' class='structfield'><code>int_curr_symbol: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.currency_symbol' class='structfield'><code>currency_symbol: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.mon_decimal_point' class='structfield'><code>mon_decimal_point: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.mon_thousands_sep' class='structfield'><code>mon_thousands_sep: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.mon_grouping' class='structfield'><code>mon_grouping: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.positive_sign' class='structfield'><code>positive_sign: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.negative_sign' class='structfield'><code>negative_sign: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.int_frac_digits' class='structfield'><code>int_frac_digits: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.frac_digits' class='structfield'><code>frac_digits: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.p_cs_precedes' class='structfield'><code>p_cs_precedes: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.p_sep_by_space' class='structfield'><code>p_sep_by_space: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.n_cs_precedes' class='structfield'><code>n_cs_precedes: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.n_sep_by_space' class='structfield'><code>n_sep_by_space: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.p_sign_posn' class='structfield'><code>p_sign_posn: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.n_sign_posn' class='structfield'><code>n_sign_posn: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.int_p_cs_precedes' class='structfield'><code>int_p_cs_precedes: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.int_p_sep_by_space' class='structfield'><code>int_p_sep_by_space: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.int_n_cs_precedes' class='structfield'><code>int_n_cs_precedes: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.int_n_sep_by_space' class='structfield'><code>int_n_sep_by_space: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.int_p_sign_posn' class='structfield'><code>int_p_sign_posn: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><span id='structfield.int_n_sign_posn' class='structfield'><code>int_n_sign_posn: <a class='type' href='../libc/type.c_char.html' title='libc::c_char'>c_char</a></code>
+                           </span><span class='stab '></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../libc/struct.lconv.html' title='libc::lconv'>lconv</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1264' class='srclink' href='../src/libc/macros.rs.html#44' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../libc/struct.lconv.html' title='libc::lconv'>lconv</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1265' class='srclink' href='../src/libc/macros.rs.html#45-47' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../libc/struct.lconv.html' title='libc::lconv'>lconv</a></code></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 

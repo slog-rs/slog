@@ -4312,8 +4312,8 @@
         <span class='kw'>match</span> (<span class='self'>self</span>, <span class='ident'>other</span>) {
             (<span class='kw-2'>&amp;</span><span class='ident'>SyntaxError</span>(<span class='ident'>msg0</span>, <span class='ident'>line0</span>, <span class='ident'>col0</span>), <span class='kw-2'>&amp;</span><span class='ident'>SyntaxError</span>(<span class='ident'>msg1</span>, <span class='ident'>line1</span>, <span class='ident'>col1</span>)) <span class='op'>=&gt;</span>
                 <span class='ident'>msg0</span> <span class='op'>==</span> <span class='ident'>msg1</span> <span class='op'>&amp;&amp;</span> <span class='ident'>line0</span> <span class='op'>==</span> <span class='ident'>line1</span> <span class='op'>&amp;&amp;</span> <span class='ident'>col0</span> <span class='op'>==</span> <span class='ident'>col1</span>,
-            (<span class='kw-2'>&amp;</span><span class='ident'>IoError</span>(_), _) <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
-            (_, <span class='kw-2'>&amp;</span><span class='ident'>IoError</span>(_)) <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+            (<span class='kw-2'>&amp;</span><span class='ident'>IoError</span>(_), _) <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
+            (_, <span class='kw-2'>&amp;</span><span class='ident'>IoError</span>(_)) <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
         }
     }
 }
@@ -4580,7 +4580,7 @@
                 <span class='ident'>curr_indent</span>: <span class='number'>0</span>,
                 <span class='ident'>indent</span>: <span class='number'>2</span>,
             },
-            <span class='ident'>is_emitting_map_key</span>: <span class='boolvalue'>false</span>,
+            <span class='ident'>is_emitting_map_key</span>: <span class='bool-val'>false</span>,
         }
     }
 
@@ -4590,7 +4590,7 @@
         <span class='ident'>Encoder</span> {
             <span class='ident'>writer</span>: <span class='ident'>writer</span>,
             <span class='ident'>format</span>: <span class='ident'>EncodingFormat</span>::<span class='ident'>Compact</span>,
-            <span class='ident'>is_emitting_map_key</span>: <span class='boolvalue'>false</span>,
+            <span class='ident'>is_emitting_map_key</span>: <span class='bool-val'>false</span>,
         }
     }
 
@@ -4898,9 +4898,9 @@
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>writer</span>, <span class='string'>&quot;\n&quot;</span>));
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>spaces</span>(<span class='self'>self</span>.<span class='ident'>writer</span>, <span class='ident'>curr_indent</span>));
         }
-        <span class='self'>self</span>.<span class='ident'>is_emitting_map_key</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+        <span class='self'>self</span>.<span class='ident'>is_emitting_map_key</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>f</span>(<span class='self'>self</span>));
-        <span class='self'>self</span>.<span class='ident'>is_emitting_map_key</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+        <span class='self'>self</span>.<span class='ident'>is_emitting_map_key</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
         <span class='prelude-val'>Ok</span>(())
     }
 
@@ -5081,32 +5081,32 @@
     <span class='doccomment'>/// Returns true if the Json value is a Number. Returns false otherwise.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_number</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>Json</span>::<span class='ident'>I64</span>(_) <span class='op'>|</span> <span class='ident'>Json</span>::<span class='ident'>U64</span>(_) <span class='op'>|</span> <span class='ident'>Json</span>::<span class='ident'>F64</span>(_) <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
-            _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+            <span class='ident'>Json</span>::<span class='ident'>I64</span>(_) <span class='op'>|</span> <span class='ident'>Json</span>::<span class='ident'>U64</span>(_) <span class='op'>|</span> <span class='ident'>Json</span>::<span class='ident'>F64</span>(_) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
+            _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
         }
     }
 
     <span class='doccomment'>/// Returns true if the Json value is a i64. Returns false otherwise.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_i64</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>Json</span>::<span class='ident'>I64</span>(_) <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
-            _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+            <span class='ident'>Json</span>::<span class='ident'>I64</span>(_) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
+            _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
         }
     }
 
     <span class='doccomment'>/// Returns true if the Json value is a u64. Returns false otherwise.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_u64</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>Json</span>::<span class='ident'>U64</span>(_) <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
-            _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+            <span class='ident'>Json</span>::<span class='ident'>U64</span>(_) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
+            _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
         }
     }
 
     <span class='doccomment'>/// Returns true if the Json value is a f64. Returns false otherwise.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_f64</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>Json</span>::<span class='ident'>F64</span>(_) <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
-            _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+            <span class='ident'>Json</span>::<span class='ident'>F64</span>(_) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
+            _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
         }
     }
 
@@ -5275,32 +5275,32 @@
 
     <span class='doccomment'>/// Compares this stack with an array of StackElements.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_equal_to</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>StackElement</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>len</span>() <span class='op'>!=</span> <span class='ident'>rhs</span>.<span class='ident'>len</span>() { <span class='kw'>return</span> <span class='boolvalue'>false</span>; }
+        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>len</span>() <span class='op'>!=</span> <span class='ident'>rhs</span>.<span class='ident'>len</span>() { <span class='kw'>return</span> <span class='bool-val'>false</span>; }
         <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='ident'>rhs</span>.<span class='ident'>len</span>() {
-            <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>get</span>(<span class='ident'>i</span>) <span class='op'>!=</span> <span class='ident'>rhs</span>[<span class='ident'>i</span>] { <span class='kw'>return</span> <span class='boolvalue'>false</span>; }
+            <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>get</span>(<span class='ident'>i</span>) <span class='op'>!=</span> <span class='ident'>rhs</span>[<span class='ident'>i</span>] { <span class='kw'>return</span> <span class='bool-val'>false</span>; }
         }
-        <span class='kw'>return</span> <span class='boolvalue'>true</span>;
+        <span class='kw'>return</span> <span class='bool-val'>true</span>;
     }
 
     <span class='doccomment'>/// Returns true if the bottom-most elements of this stack are the same as</span>
     <span class='doccomment'>/// the ones passed as parameter.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>starts_with</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>StackElement</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>len</span>() <span class='op'>&lt;</span> <span class='ident'>rhs</span>.<span class='ident'>len</span>() { <span class='kw'>return</span> <span class='boolvalue'>false</span>; }
+        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>len</span>() <span class='op'>&lt;</span> <span class='ident'>rhs</span>.<span class='ident'>len</span>() { <span class='kw'>return</span> <span class='bool-val'>false</span>; }
         <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='ident'>rhs</span>.<span class='ident'>len</span>() {
-            <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>get</span>(<span class='ident'>i</span>) <span class='op'>!=</span> <span class='ident'>rhs</span>[<span class='ident'>i</span>] { <span class='kw'>return</span> <span class='boolvalue'>false</span>; }
+            <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>get</span>(<span class='ident'>i</span>) <span class='op'>!=</span> <span class='ident'>rhs</span>[<span class='ident'>i</span>] { <span class='kw'>return</span> <span class='bool-val'>false</span>; }
         }
-        <span class='kw'>return</span> <span class='boolvalue'>true</span>;
+        <span class='kw'>return</span> <span class='bool-val'>true</span>;
     }
 
     <span class='doccomment'>/// Returns true if the top-most elements of this stack are the same as</span>
     <span class='doccomment'>/// the ones passed as parameter.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ends_with</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>StackElement</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>len</span>() <span class='op'>&lt;</span> <span class='ident'>rhs</span>.<span class='ident'>len</span>() { <span class='kw'>return</span> <span class='boolvalue'>false</span>; }
+        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>len</span>() <span class='op'>&lt;</span> <span class='ident'>rhs</span>.<span class='ident'>len</span>() { <span class='kw'>return</span> <span class='bool-val'>false</span>; }
         <span class='kw'>let</span> <span class='ident'>offset</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='ident'>rhs</span>.<span class='ident'>len</span>();
         <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='ident'>rhs</span>.<span class='ident'>len</span>() {
-            <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>get</span>(<span class='ident'>i</span> <span class='op'>+</span> <span class='ident'>offset</span>) <span class='op'>!=</span> <span class='ident'>rhs</span>[<span class='ident'>i</span>] { <span class='kw'>return</span> <span class='boolvalue'>false</span>; }
+            <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>get</span>(<span class='ident'>i</span> <span class='op'>+</span> <span class='ident'>offset</span>) <span class='op'>!=</span> <span class='ident'>rhs</span>[<span class='ident'>i</span>] { <span class='kw'>return</span> <span class='bool-val'>false</span>; }
         }
-        <span class='kw'>return</span> <span class='boolvalue'>true</span>;
+        <span class='kw'>return</span> <span class='bool-val'>true</span>;
     }
 
     <span class='doccomment'>/// Returns the top-most element (if any).</span>
@@ -5344,10 +5344,10 @@
 
     <span class='comment'>// Used by Parser to test whether the top-most element is an index.</span>
     <span class='kw'>fn</span> <span class='ident'>last_is_index</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>is_empty</span>() { <span class='kw'>return</span> <span class='boolvalue'>false</span>; }
+        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>is_empty</span>() { <span class='kw'>return</span> <span class='bool-val'>false</span>; }
         <span class='kw'>return</span> <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>last</span>().<span class='ident'>unwrap</span>() {
-            <span class='ident'>InternalIndex</span>(_) <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
-            _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+            <span class='ident'>InternalIndex</span>(_) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
+            _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
         }
     }
 
@@ -5453,11 +5453,11 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>parse_number</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>JsonEvent</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>neg</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>neg</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
 
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>ch_is</span>(<span class='string'>&#39;-&#39;</span>) {
             <span class='self'>self</span>.<span class='ident'>bump</span>();
-            <span class='ident'>neg</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+            <span class='ident'>neg</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
         }
 
         <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>parse_u64</span>() {
@@ -5571,13 +5571,13 @@
         <span class='self'>self</span>.<span class='ident'>bump</span>();
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>exp</span> <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>neg_exp</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>neg_exp</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
 
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>ch_is</span>(<span class='string'>&#39;+&#39;</span>) {
             <span class='self'>self</span>.<span class='ident'>bump</span>();
         } <span class='kw'>else</span> <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>ch_is</span>(<span class='string'>&#39;-&#39;</span>) {
             <span class='self'>self</span>.<span class='ident'>bump</span>();
-            <span class='ident'>neg_exp</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+            <span class='ident'>neg_exp</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
         }
 
         <span class='comment'>// Make sure a digit follows the exponent place.</span>
@@ -5626,7 +5626,7 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>parse_str</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>string</span>::<span class='ident'>String</span>, <span class='ident'>ParserError</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>escape</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>escape</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>string</span>::<span class='ident'>String</span>::<span class='ident'>new</span>();
 
         <span class='kw'>loop</span> {
@@ -5674,9 +5674,9 @@
                     },
                     _ <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error</span>(<span class='ident'>InvalidEscape</span>),
                 }
-                <span class='ident'>escape</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+                <span class='ident'>escape</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
             } <span class='kw'>else</span> <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>ch_is</span>(<span class='string'>&#39;\\&#39;</span>) {
-                <span class='ident'>escape</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+                <span class='ident'>escape</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
             } <span class='kw'>else</span> {
                 <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>ch</span> {
                     <span class='prelude-val'>Some</span>(<span class='string'>&#39;&quot;&#39;</span>) <span class='op'>=&gt;</span> {
@@ -5727,7 +5727,7 @@
                 <span class='ident'>ParseObjectComma</span> <span class='op'>=&gt;</span> {
                     <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>pop</span>();
                     <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>ch_is</span>(<span class='string'>&#39;,&#39;</span>) {
-                        <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='ident'>ParseObject</span>(<span class='boolvalue'>false</span>);
+                        <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='ident'>ParseObject</span>(<span class='bool-val'>false</span>);
                         <span class='self'>self</span>.<span class='ident'>bump</span>();
                     } <span class='kw'>else</span> {
                         <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>parse_object_end</span>();
@@ -5744,8 +5744,8 @@
         <span class='kw'>let</span> <span class='ident'>val</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>parse_value</span>();
         <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>val</span> {
             <span class='ident'>Error</span>(_) <span class='op'>=&gt;</span> <span class='ident'>ParseFinished</span>,
-            <span class='ident'>ArrayStart</span> <span class='op'>=&gt;</span> <span class='ident'>ParseArray</span>(<span class='boolvalue'>true</span>),
-            <span class='ident'>ObjectStart</span> <span class='op'>=&gt;</span> <span class='ident'>ParseObject</span>(<span class='boolvalue'>true</span>),
+            <span class='ident'>ArrayStart</span> <span class='op'>=&gt;</span> <span class='ident'>ParseArray</span>(<span class='bool-val'>true</span>),
+            <span class='ident'>ObjectStart</span> <span class='op'>=&gt;</span> <span class='ident'>ParseObject</span>(<span class='bool-val'>true</span>),
             _ <span class='op'>=&gt;</span> <span class='ident'>ParseBeforeFinish</span>,
         };
         <span class='kw'>return</span> <span class='ident'>val</span>;
@@ -5773,8 +5773,8 @@
             <span class='kw'>let</span> <span class='ident'>val</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>parse_value</span>();
             <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>val</span> {
                 <span class='ident'>Error</span>(_) <span class='op'>=&gt;</span> <span class='ident'>ParseFinished</span>,
-                <span class='ident'>ArrayStart</span> <span class='op'>=&gt;</span> <span class='ident'>ParseArray</span>(<span class='boolvalue'>true</span>),
-                <span class='ident'>ObjectStart</span> <span class='op'>=&gt;</span> <span class='ident'>ParseObject</span>(<span class='boolvalue'>true</span>),
+                <span class='ident'>ArrayStart</span> <span class='op'>=&gt;</span> <span class='ident'>ParseArray</span>(<span class='bool-val'>true</span>),
+                <span class='ident'>ObjectStart</span> <span class='op'>=&gt;</span> <span class='ident'>ParseObject</span>(<span class='bool-val'>true</span>),
                 _ <span class='op'>=&gt;</span> <span class='ident'>ParseArrayComma</span>,
             };
             <span class='ident'>val</span>
@@ -5784,7 +5784,7 @@
     <span class='kw'>fn</span> <span class='ident'>parse_array_comma_or_end</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>JsonEvent</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>ch_is</span>(<span class='string'>&#39;,&#39;</span>) {
             <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>bump_index</span>();
-            <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='ident'>ParseArray</span>(<span class='boolvalue'>false</span>);
+            <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='ident'>ParseArray</span>(<span class='bool-val'>false</span>);
             <span class='self'>self</span>.<span class='ident'>bump</span>();
             <span class='prelude-val'>None</span>
         } <span class='kw'>else</span> <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>ch_is</span>(<span class='string'>&#39;]&#39;</span>) {
@@ -5851,8 +5851,8 @@
 
         <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>val</span> {
             <span class='ident'>Error</span>(_) <span class='op'>=&gt;</span> <span class='ident'>ParseFinished</span>,
-            <span class='ident'>ArrayStart</span> <span class='op'>=&gt;</span> <span class='ident'>ParseArray</span>(<span class='boolvalue'>true</span>),
-            <span class='ident'>ObjectStart</span> <span class='op'>=&gt;</span> <span class='ident'>ParseObject</span>(<span class='boolvalue'>true</span>),
+            <span class='ident'>ArrayStart</span> <span class='op'>=&gt;</span> <span class='ident'>ParseArray</span>(<span class='bool-val'>true</span>),
+            <span class='ident'>ObjectStart</span> <span class='op'>=&gt;</span> <span class='ident'>ParseObject</span>(<span class='bool-val'>true</span>),
             _ <span class='op'>=&gt;</span> <span class='ident'>ParseObjectComma</span>,
         };
         <span class='kw'>return</span> <span class='ident'>val</span>;
@@ -5880,8 +5880,8 @@
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>eof</span>() { <span class='kw'>return</span> <span class='self'>self</span>.<span class='ident'>error_event</span>(<span class='ident'>EOFWhileParsingValue</span>); }
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>ch_or_null</span>() {
             <span class='string'>&#39;n&#39;</span> <span class='op'>=&gt;</span> { <span class='self'>self</span>.<span class='ident'>parse_ident</span>(<span class='string'>&quot;ull&quot;</span>, <span class='ident'>NullValue</span>) }
-            <span class='string'>&#39;t&#39;</span> <span class='op'>=&gt;</span> { <span class='self'>self</span>.<span class='ident'>parse_ident</span>(<span class='string'>&quot;rue&quot;</span>, <span class='ident'>BooleanValue</span>(<span class='boolvalue'>true</span>)) }
-            <span class='string'>&#39;f&#39;</span> <span class='op'>=&gt;</span> { <span class='self'>self</span>.<span class='ident'>parse_ident</span>(<span class='string'>&quot;alse&quot;</span>, <span class='ident'>BooleanValue</span>(<span class='boolvalue'>false</span>)) }
+            <span class='string'>&#39;t&#39;</span> <span class='op'>=&gt;</span> { <span class='self'>self</span>.<span class='ident'>parse_ident</span>(<span class='string'>&quot;rue&quot;</span>, <span class='ident'>BooleanValue</span>(<span class='bool-val'>true</span>)) }
+            <span class='string'>&#39;f&#39;</span> <span class='op'>=&gt;</span> { <span class='self'>self</span>.<span class='ident'>parse_ident</span>(<span class='string'>&quot;alse&quot;</span>, <span class='ident'>BooleanValue</span>(<span class='bool-val'>false</span>)) }
             <span class='string'>&#39;0&#39;</span> ... <span class='string'>&#39;9&#39;</span> <span class='op'>|</span> <span class='string'>&#39;-&#39;</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>parse_number</span>(),
             <span class='string'>&#39;&quot;&#39;</span> <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>parse_str</span>() {
                 <span class='prelude-val'>Ok</span>(<span class='ident'>s</span>) <span class='op'>=&gt;</span> <span class='ident'>StringValue</span>(<span class='ident'>s</span>),
@@ -6293,8 +6293,8 @@
         <span class='ident'>F</span>: <span class='ident'>FnMut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Decoder</span>, <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>DecodeResult</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
     {
         <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>pop</span>()) {
-            <span class='ident'>Json</span>::<span class='ident'>Null</span> <span class='op'>=&gt;</span> <span class='ident'>f</span>(<span class='self'>self</span>, <span class='boolvalue'>false</span>),
-            <span class='ident'>value</span> <span class='op'>=&gt;</span> { <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>push</span>(<span class='ident'>value</span>); <span class='ident'>f</span>(<span class='self'>self</span>, <span class='boolvalue'>true</span>) }
+            <span class='ident'>Json</span>::<span class='ident'>Null</span> <span class='op'>=&gt;</span> <span class='ident'>f</span>(<span class='self'>self</span>, <span class='bool-val'>false</span>),
+            <span class='ident'>value</span> <span class='op'>=&gt;</span> { <span class='self'>self</span>.<span class='ident'>stack</span>.<span class='ident'>push</span>(<span class='ident'>value</span>); <span class='ident'>f</span>(<span class='self'>self</span>, <span class='bool-val'>true</span>) }
         }
     }
 
@@ -6689,11 +6689,11 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_write_bool</span>() {
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>).<span class='ident'>to_string</span>(), <span class='string'>&quot;true&quot;</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>).<span class='ident'>pretty</span>().<span class='ident'>to_string</span>(), <span class='string'>&quot;true&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Boolean</span>(<span class='bool-val'>true</span>).<span class='ident'>to_string</span>(), <span class='string'>&quot;true&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Boolean</span>(<span class='bool-val'>true</span>).<span class='ident'>pretty</span>().<span class='ident'>to_string</span>(), <span class='string'>&quot;true&quot;</span>);
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Boolean</span>(<span class='boolvalue'>false</span>).<span class='ident'>to_string</span>(), <span class='string'>&quot;false&quot;</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Boolean</span>(<span class='boolvalue'>false</span>).<span class='ident'>pretty</span>().<span class='ident'>to_string</span>(), <span class='string'>&quot;false&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Boolean</span>(<span class='bool-val'>false</span>).<span class='ident'>to_string</span>(), <span class='string'>&quot;false&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Boolean</span>(<span class='bool-val'>false</span>).<span class='ident'>pretty</span>().<span class='ident'>to_string</span>(), <span class='string'>&quot;false&quot;</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -6701,9 +6701,9 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[]).<span class='ident'>to_string</span>(), <span class='string'>&quot;[]&quot;</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[]).<span class='ident'>pretty</span>().<span class='ident'>to_string</span>(), <span class='string'>&quot;[]&quot;</span>);
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>)]).<span class='ident'>to_string</span>(), <span class='string'>&quot;[true]&quot;</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Boolean</span>(<span class='bool-val'>true</span>)]).<span class='ident'>to_string</span>(), <span class='string'>&quot;[true]&quot;</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(
-            <span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>)]).<span class='ident'>pretty</span>().<span class='ident'>to_string</span>(),
+            <span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Boolean</span>(<span class='bool-val'>true</span>)]).<span class='ident'>pretty</span>().<span class='ident'>to_string</span>(),
             <span class='string'>&quot;\
             [\n  \
                 true\n\
@@ -6711,7 +6711,7 @@
         );
 
         <span class='kw'>let</span> <span class='ident'>long_test_array</span> <span class='op'>=</span> <span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
-            <span class='ident'>Boolean</span>(<span class='boolvalue'>false</span>),
+            <span class='ident'>Boolean</span>(<span class='bool-val'>false</span>),
             <span class='ident'>Null</span>,
             <span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>String</span>(<span class='string'>&quot;foo\nbar&quot;</span>.<span class='ident'>to_string</span>()), <span class='ident'>F64</span>(<span class='number'>3.5</span>)])]);
 
@@ -6738,12 +6738,12 @@
 
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(
             <span class='ident'>mk_object</span>(<span class='kw-2'>&amp;</span>[
-                (<span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>))
+                (<span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Boolean</span>(<span class='bool-val'>true</span>))
             ]).<span class='ident'>to_string</span>(),
             <span class='string'>&quot;{\&quot;a\&quot;:true}&quot;</span>
         );
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(
-            <span class='ident'>mk_object</span>(<span class='kw-2'>&amp;</span>[(<span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>))]).<span class='ident'>pretty</span>().<span class='ident'>to_string</span>(),
+            <span class='ident'>mk_object</span>(<span class='kw-2'>&amp;</span>[(<span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Boolean</span>(<span class='bool-val'>true</span>))]).<span class='ident'>pretty</span>().<span class='ident'>to_string</span>(),
             <span class='string'>&quot;\
             {\n  \
                 \&quot;a\&quot;: true\n\
@@ -6782,7 +6782,7 @@
         );
 
         <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>mk_object</span>(<span class='kw-2'>&amp;</span>[
-            (<span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>)),
+            (<span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Boolean</span>(<span class='bool-val'>true</span>)),
             (<span class='string'>&quot;b&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
                 <span class='ident'>mk_object</span>(<span class='kw-2'>&amp;</span>[(<span class='string'>&quot;c&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>String</span>(<span class='string'>&quot;\x0c\r&quot;</span>.<span class='ident'>to_string</span>()))]),
                 <span class='ident'>mk_object</span>(<span class='kw-2'>&amp;</span>[(<span class='string'>&quot;d&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>String</span>(<span class='string'>&quot;&quot;</span>.<span class='ident'>to_string</span>()))])
@@ -6876,11 +6876,11 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;faz&quot;</span>),  <span class='prelude-val'>Err</span>(<span class='ident'>SyntaxError</span>(<span class='ident'>InvalidSyntax</span>, <span class='number'>1</span>, <span class='number'>3</span>)));
 
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;null&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Null</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;true&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>)));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;false&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Boolean</span>(<span class='boolvalue'>false</span>)));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;true&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Boolean</span>(<span class='bool-val'>true</span>)));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;false&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Boolean</span>(<span class='bool-val'>false</span>)));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot; null &quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Null</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot; true &quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>)));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot; false &quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Boolean</span>(<span class='boolvalue'>false</span>)));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot; true &quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Boolean</span>(<span class='bool-val'>true</span>)));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot; false &quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Boolean</span>(<span class='bool-val'>false</span>)));
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -6889,10 +6889,10 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, ());
 
         <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>bool</span> <span class='op'>=</span> <span class='kw'>super</span>::<span class='ident'>decode</span>(<span class='string'>&quot;true&quot;</span>).<span class='ident'>unwrap</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='boolvalue'>true</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='bool-val'>true</span>);
 
         <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>bool</span> <span class='op'>=</span> <span class='kw'>super</span>::<span class='ident'>decode</span>(<span class='string'>&quot;false&quot;</span>).<span class='ident'>unwrap</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='boolvalue'>false</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='bool-val'>false</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -7023,8 +7023,8 @@
 
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;[]&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[])));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;[ ]&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[])));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;[true]&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>)])));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;[ false ]&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Boolean</span>(<span class='boolvalue'>false</span>)])));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;[true]&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Boolean</span>(<span class='bool-val'>true</span>)])));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;[ false ]&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Boolean</span>(<span class='bool-val'>false</span>)])));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;[null]&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Null</span>])));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;[3, 1]&quot;</span>),
                      <span class='prelude-val'>Ok</span>(<span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>U64</span>(<span class='number'>3</span>), <span class='ident'>U64</span>(<span class='number'>1</span>)])));
@@ -7043,7 +7043,7 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[()]);
 
         <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>bool</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='kw'>super</span>::<span class='ident'>decode</span>(<span class='string'>&quot;[true]&quot;</span>).<span class='ident'>unwrap</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='boolvalue'>true</span>]);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='bool-val'>true</span>]);
 
         <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>isize</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='kw'>super</span>::<span class='ident'>decode</span>(<span class='string'>&quot;[3, 1]&quot;</span>).<span class='ident'>unwrap</span>();
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>3</span>, <span class='number'>1</span>]);
@@ -7094,16 +7094,16 @@
                       <span class='string'>&quot;{ \&quot;a\&quot;: null, \&quot;b\&quot; : true }&quot;</span>).<span class='ident'>unwrap</span>(),
                   <span class='ident'>mk_object</span>(<span class='kw-2'>&amp;</span>[
                       (<span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Null</span>),
-                      (<span class='string'>&quot;b&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>))]));
+                      (<span class='string'>&quot;b&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Boolean</span>(<span class='bool-val'>true</span>))]));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;\n{ \&quot;a\&quot;: null, \&quot;b\&quot; : true }\n&quot;</span>).<span class='ident'>unwrap</span>(),
                   <span class='ident'>mk_object</span>(<span class='kw-2'>&amp;</span>[
                       (<span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Null</span>),
-                      (<span class='string'>&quot;b&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>))]));
+                      (<span class='string'>&quot;b&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Boolean</span>(<span class='bool-val'>true</span>))]));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(
                       <span class='string'>&quot;{\&quot;a\&quot; : 1.0 ,\&quot;b\&quot;: [ true ]}&quot;</span>).<span class='ident'>unwrap</span>(),
                   <span class='ident'>mk_object</span>(<span class='kw-2'>&amp;</span>[
                       (<span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>F64</span>(<span class='number'>1.0</span>)),
-                      (<span class='string'>&quot;b&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>)]))
+                      (<span class='string'>&quot;b&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Boolean</span>(<span class='bool-val'>true</span>)]))
                   ]));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Json</span>::<span class='ident'>from_str</span>(
                       <span class='string'>&quot;{\
@@ -7117,7 +7117,7 @@
                   <span class='ident'>mk_object</span>(<span class='kw-2'>&amp;</span>[
                       (<span class='string'>&quot;a&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>F64</span>(<span class='number'>1.0</span>)),
                       (<span class='string'>&quot;b&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Array</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
-                          <span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>),
+                          <span class='ident'>Boolean</span>(<span class='bool-val'>true</span>),
                           <span class='ident'>String</span>(<span class='string'>&quot;foo\nbar&quot;</span>.<span class='ident'>to_string</span>()),
                           <span class='ident'>mk_object</span>(<span class='kw-2'>&amp;</span>[
                               (<span class='string'>&quot;c&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>mk_object</span>(<span class='kw-2'>&amp;</span>[(<span class='string'>&quot;d&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>Null</span>)]))
@@ -7397,7 +7397,7 @@
     <span class='kw'>fn</span> <span class='ident'>test_as_boolean</span>(){
         <span class='kw'>let</span> <span class='ident'>json_value</span> <span class='op'>=</span> <span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='string'>&quot;false&quot;</span>).<span class='ident'>unwrap</span>();
         <span class='kw'>let</span> <span class='ident'>json_bool</span> <span class='op'>=</span> <span class='ident'>json_value</span>.<span class='ident'>as_boolean</span>();
-        <span class='kw'>let</span> <span class='ident'>expected_bool</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+        <span class='kw'>let</span> <span class='ident'>expected_bool</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>json_bool</span>.<span class='ident'>is_some</span>() <span class='op'>&amp;&amp;</span> <span class='ident'>json_bool</span>.<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='ident'>expected_bool</span>);
     }
 
@@ -7419,7 +7419,7 @@
     <span class='kw'>fn</span> <span class='ident'>test_encode_hashmap_with_numeric_key</span>() {
         <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>hm</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='ident'>bool</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>hm</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='boolvalue'>true</span>);
+        <span class='ident'>hm</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='bool-val'>true</span>);
         <span class='kw'>let</span> <span class='ident'>json_str</span> <span class='op'>=</span> <span class='kw'>super</span>::<span class='ident'>as_pretty_json</span>(<span class='kw-2'>&amp;</span><span class='ident'>hm</span>).<span class='ident'>to_string</span>();
         <span class='kw'>match</span> <span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>json_str</span>) {
             <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Unable to parse json_str: {}&quot;</span>, <span class='ident'>json_str</span>),
@@ -7436,7 +7436,7 @@
     <span class='kw'>fn</span> <span class='ident'>test_prettyencode_hashmap_with_numeric_key</span>() {
         <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>hm</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='ident'>bool</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>hm</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='boolvalue'>true</span>);
+        <span class='ident'>hm</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='bool-val'>true</span>);
         <span class='kw'>let</span> <span class='ident'>json_str</span> <span class='op'>=</span> <span class='kw'>super</span>::<span class='ident'>as_pretty_json</span>(<span class='kw-2'>&amp;</span><span class='ident'>hm</span>).<span class='ident'>to_string</span>();
         <span class='kw'>match</span> <span class='ident'>Json</span>::<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>json_str</span>) {
             <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Unable to parse json_str: {}&quot;</span>, <span class='ident'>json_str</span>),
@@ -7573,8 +7573,8 @@
                   (<span class='ident'>ArrayEnd</span>,              <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;array&quot;</span>)]),
                   (<span class='ident'>ArrayStart</span>,            <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;idents&quot;</span>)]),
                     (<span class='ident'>NullValue</span>,           <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;idents&quot;</span>), <span class='ident'>Index</span>(<span class='number'>0</span>)]),
-                    (<span class='ident'>BooleanValue</span>(<span class='boolvalue'>true</span>),  <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;idents&quot;</span>), <span class='ident'>Index</span>(<span class='number'>1</span>)]),
-                    (<span class='ident'>BooleanValue</span>(<span class='boolvalue'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;idents&quot;</span>), <span class='ident'>Index</span>(<span class='number'>2</span>)]),
+                    (<span class='ident'>BooleanValue</span>(<span class='bool-val'>true</span>),  <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;idents&quot;</span>), <span class='ident'>Index</span>(<span class='number'>1</span>)]),
+                    (<span class='ident'>BooleanValue</span>(<span class='bool-val'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;idents&quot;</span>), <span class='ident'>Index</span>(<span class='number'>2</span>)]),
                   (<span class='ident'>ArrayEnd</span>,              <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;idents&quot;</span>)]),
                 (<span class='ident'>ObjectEnd</span>,               <span class='macro'>vec</span><span class='macro'>!</span>[]),
             ]
@@ -7624,7 +7624,7 @@
             <span class='macro'>vec</span><span class='macro'>!</span>[
                 (<span class='ident'>ObjectStart</span>,           <span class='macro'>vec</span><span class='macro'>!</span>[]),
                   (<span class='ident'>NullValue</span>,           <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;a&quot;</span>)]),
-                  (<span class='ident'>BooleanValue</span>(<span class='boolvalue'>true</span>),  <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;b&quot;</span>)]),
+                  (<span class='ident'>BooleanValue</span>(<span class='bool-val'>true</span>),  <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;b&quot;</span>)]),
                 (<span class='ident'>ObjectEnd</span>,             <span class='macro'>vec</span><span class='macro'>!</span>[]),
             ]
         );
@@ -7634,7 +7634,7 @@
                 (<span class='ident'>ObjectStart</span>,           <span class='macro'>vec</span><span class='macro'>!</span>[]),
                   (<span class='ident'>F64Value</span>(<span class='number'>1.0</span>),       <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;a&quot;</span>)]),
                   (<span class='ident'>ArrayStart</span>,          <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;b&quot;</span>)]),
-                    (<span class='ident'>BooleanValue</span>(<span class='boolvalue'>true</span>),<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;b&quot;</span>), <span class='ident'>Index</span>(<span class='number'>0</span>)]),
+                    (<span class='ident'>BooleanValue</span>(<span class='bool-val'>true</span>),<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;b&quot;</span>), <span class='ident'>Index</span>(<span class='number'>0</span>)]),
                   (<span class='ident'>ArrayEnd</span>,            <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;b&quot;</span>)]),
                 (<span class='ident'>ObjectEnd</span>,             <span class='macro'>vec</span><span class='macro'>!</span>[]),
             ]
@@ -7653,7 +7653,7 @@
                 (<span class='ident'>ObjectStart</span>,                   <span class='macro'>vec</span><span class='macro'>!</span>[]),
                   (<span class='ident'>F64Value</span>(<span class='number'>1.0</span>),               <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;a&quot;</span>)]),
                   (<span class='ident'>ArrayStart</span>,                  <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;b&quot;</span>)]),
-                    (<span class='ident'>BooleanValue</span>(<span class='boolvalue'>true</span>),        <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;b&quot;</span>), <span class='ident'>Index</span>(<span class='number'>0</span>)]),
+                    (<span class='ident'>BooleanValue</span>(<span class='bool-val'>true</span>),        <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;b&quot;</span>), <span class='ident'>Index</span>(<span class='number'>0</span>)]),
                     (<span class='ident'>StringValue</span>(<span class='string'>&quot;foo\nbar&quot;</span>.<span class='ident'>to_string</span>()),  <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;b&quot;</span>), <span class='ident'>Index</span>(<span class='number'>1</span>)]),
                     (<span class='ident'>ObjectStart</span>,               <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;b&quot;</span>), <span class='ident'>Index</span>(<span class='number'>2</span>)]),
                       (<span class='ident'>ObjectStart</span>,             <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Key</span>(<span class='string'>&quot;b&quot;</span>), <span class='ident'>Index</span>(<span class='number'>2</span>), <span class='ident'>Key</span>(<span class='string'>&quot;c&quot;</span>)]),
@@ -7687,7 +7687,7 @@
             <span class='string'>&quot;[true]&quot;</span>,
             <span class='macro'>vec</span><span class='macro'>!</span>[
                 (<span class='ident'>ArrayStart</span>,             <span class='macro'>vec</span><span class='macro'>!</span>[]),
-                    (<span class='ident'>BooleanValue</span>(<span class='boolvalue'>true</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Index</span>(<span class='number'>0</span>)]),
+                    (<span class='ident'>BooleanValue</span>(<span class='bool-val'>true</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Index</span>(<span class='number'>0</span>)]),
                 (<span class='ident'>ArrayEnd</span>,               <span class='macro'>vec</span><span class='macro'>!</span>[]),
             ]
         );
@@ -7695,7 +7695,7 @@
             <span class='string'>&quot;[ false ]&quot;</span>,
             <span class='macro'>vec</span><span class='macro'>!</span>[
                 (<span class='ident'>ArrayStart</span>,              <span class='macro'>vec</span><span class='macro'>!</span>[]),
-                    (<span class='ident'>BooleanValue</span>(<span class='boolvalue'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Index</span>(<span class='number'>0</span>)]),
+                    (<span class='ident'>BooleanValue</span>(<span class='bool-val'>false</span>), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Index</span>(<span class='number'>0</span>)]),
                 (<span class='ident'>ArrayEnd</span>,                <span class='macro'>vec</span><span class='macro'>!</span>[]),
             ]
         );
@@ -7759,8 +7759,8 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_read_identifiers_streaming</span>() {
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Parser</span>::<span class='ident'>new</span>(<span class='string'>&quot;null&quot;</span>.<span class='ident'>chars</span>()).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>NullValue</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Parser</span>::<span class='ident'>new</span>(<span class='string'>&quot;true&quot;</span>.<span class='ident'>chars</span>()).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>BooleanValue</span>(<span class='boolvalue'>true</span>)));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Parser</span>::<span class='ident'>new</span>(<span class='string'>&quot;false&quot;</span>.<span class='ident'>chars</span>()).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>BooleanValue</span>(<span class='boolvalue'>false</span>)));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Parser</span>::<span class='ident'>new</span>(<span class='string'>&quot;true&quot;</span>.<span class='ident'>chars</span>()).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>BooleanValue</span>(<span class='bool-val'>true</span>)));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Parser</span>::<span class='ident'>new</span>(<span class='string'>&quot;false&quot;</span>.<span class='ident'>chars</span>()).<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>BooleanValue</span>(<span class='bool-val'>false</span>)));
 
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>last_event</span>(<span class='string'>&quot;n&quot;</span>),    <span class='ident'>Error</span>(<span class='ident'>SyntaxError</span>(<span class='ident'>InvalidSyntax</span>, <span class='number'>1</span>, <span class='number'>2</span>)));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>last_event</span>(<span class='string'>&quot;nul&quot;</span>),  <span class='ident'>Error</span>(<span class='ident'>SyntaxError</span>(<span class='ident'>InvalidSyntax</span>, <span class='number'>1</span>, <span class='number'>4</span>)));
@@ -7859,8 +7859,8 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(().<span class='ident'>to_json</span>(), <span class='ident'>Null</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>f32</span>::<span class='ident'>INFINITY</span>.<span class='ident'>to_json</span>(), <span class='ident'>Null</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>f64</span>::<span class='ident'>NAN</span>.<span class='ident'>to_json</span>(), <span class='ident'>Null</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='boolvalue'>true</span>.<span class='ident'>to_json</span>(), <span class='ident'>Boolean</span>(<span class='boolvalue'>true</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='boolvalue'>false</span>.<span class='ident'>to_json</span>(), <span class='ident'>Boolean</span>(<span class='boolvalue'>false</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='bool-val'>true</span>.<span class='ident'>to_json</span>(), <span class='ident'>Boolean</span>(<span class='bool-val'>true</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='bool-val'>false</span>.<span class='ident'>to_json</span>(), <span class='ident'>Boolean</span>(<span class='bool-val'>false</span>));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;abc&quot;</span>.<span class='ident'>to_json</span>(), <span class='ident'>String</span>(<span class='string'>&quot;abc&quot;</span>.<span class='ident'>to_string</span>()));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;abc&quot;</span>.<span class='ident'>to_string</span>().<span class='ident'>to_json</span>(), <span class='ident'>String</span>(<span class='string'>&quot;abc&quot;</span>.<span class='ident'>to_string</span>()));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>1</span>, <span class='number'>2</span>).<span class='ident'>to_json</span>(), <span class='ident'>array2</span>);
@@ -7888,7 +7888,7 @@
         <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Hash</span>, <span class='ident'>RustcEncodable</span>)]</span>
         <span class='kw'>struct</span> <span class='ident'>ArbitraryType</span>(<span class='ident'>u32</span>);
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>hm</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>ArbitraryType</span>, <span class='ident'>bool</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>hm</span>.<span class='ident'>insert</span>(<span class='ident'>ArbitraryType</span>(<span class='number'>1</span>), <span class='boolvalue'>true</span>);
+        <span class='ident'>hm</span>.<span class='ident'>insert</span>(<span class='ident'>ArbitraryType</span>(<span class='number'>1</span>), <span class='bool-val'>true</span>);
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>mem_buf</span> <span class='op'>=</span> <span class='ident'>string</span>::<span class='ident'>String</span>::<span class='ident'>new</span>();
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>encoder</span> <span class='op'>=</span> <span class='ident'>Encoder</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>mem_buf</span>);
         <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>hm</span>.<span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>encoder</span>);

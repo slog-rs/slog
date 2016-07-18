@@ -489,8 +489,8 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_child</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>ForkResult</span>::<span class='ident'>Child</span> <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
-            _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>
+            <span class='ident'>ForkResult</span>::<span class='ident'>Child</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
+            _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>
         }
     }
 
@@ -741,10 +741,10 @@
         <span class='comment'>// ENOTTY means `fd` is a valid file descriptor, but not a TTY, so</span>
         <span class='comment'>// we return `Ok(false)`</span>
         <span class='kw'>if</span> <span class='ident'>libc</span>::<span class='ident'>isatty</span>(<span class='ident'>fd</span>) <span class='op'>==</span> <span class='number'>1</span> {
-            <span class='prelude-val'>Ok</span>(<span class='boolvalue'>true</span>)
+            <span class='prelude-val'>Ok</span>(<span class='bool-val'>true</span>)
         } <span class='kw'>else</span> {
             <span class='kw'>match</span> <span class='ident'>Errno</span>::<span class='ident'>last</span>() {
-                <span class='ident'>Errno</span>::<span class='ident'>ENOTTY</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='boolvalue'>false</span>),
+                <span class='ident'>Errno</span>::<span class='ident'>ENOTTY</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='bool-val'>false</span>),
                 <span class='ident'>err</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>Sys</span>(<span class='ident'>err</span>)),
             }
         }

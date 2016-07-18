@@ -247,12 +247,36 @@
 <span id="203">203</span>
 <span id="204">204</span>
 <span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Syslog drain for slog-rs</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! WARNING: This crate needs some improvements.</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! ```norust</span>
 <span class='doccomment'>//! #[macro_use]</span>
 <span class='doccomment'>//! extern crate slog;</span>
 <span class='doccomment'>//! extern crate slog_syslog;</span>
@@ -280,6 +304,7 @@
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>format</span>;
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>format</span>::<span class='ident'>Format</span>;
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>drain</span>;
+<span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>;
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>Level</span>;
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='ident'>Serializer</span>;
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>logger</span>::<span class='ident'>RecordInfo</span>;
@@ -325,14 +350,18 @@
     <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
            <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
            <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>],
-           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) {
+           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>drain</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>128</span>);
-        <span class='self'>self</span>.<span class='ident'>format</span>.<span class='ident'>format</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>);
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>format</span>.<span class='ident'>format</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>));
         <span class='kw'>let</span> <span class='ident'>sever</span> <span class='op'>=</span> <span class='ident'>level_to_severity</span>(<span class='ident'>info</span>.<span class='ident'>level</span>);
         {
-            <span class='kw'>let</span> <span class='ident'>io</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>io</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
-            <span class='ident'>io</span>.<span class='ident'>send</span>(<span class='ident'>sever</span>, <span class='kw-2'>&amp;</span><span class='ident'>String</span>::<span class='ident'>from_utf8_lossy</span>(<span class='kw-2'>&amp;</span><span class='ident'>buf</span>)).<span class='ident'>unwrap</span>();
+            <span class='kw'>let</span> <span class='ident'>io</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>.<span class='ident'>lock</span>()
+                              .<span class='ident'>map_err</span>(
+                                  <span class='op'>|</span>_<span class='op'>|</span> <span class='op'>-&gt;</span> <span class='ident'>drain</span>::<span class='ident'>Error</span> { <span class='ident'>drain</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>LockError</span>.<span class='ident'>into</span>()}
+                              ));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>io</span>.<span class='ident'>send</span>(<span class='ident'>sever</span>, <span class='kw-2'>&amp;</span><span class='ident'>String</span>::<span class='ident'>from_utf8_lossy</span>(<span class='kw-2'>&amp;</span><span class='ident'>buf</span>)));
         }
+        <span class='prelude-val'>Ok</span>(())
     }
 }
 
@@ -351,19 +380,20 @@
               <span class='ident'>io</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>io</span>::<span class='ident'>Write</span>,
               <span class='ident'>rinfo</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
               <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>OwnedKeyValue</span>],
-              <span class='ident'>record_values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) {
+              <span class='ident'>record_values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>format</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ser</span> <span class='op'>=</span> <span class='ident'>KSV</span>::<span class='ident'>new</span>(<span class='ident'>io</span>, <span class='string'>&quot;=&quot;</span>.<span class='ident'>into</span>());
         {
             <span class='kw'>for</span> <span class='kw-2'>&amp;</span>(<span class='kw-2'>ref</span> <span class='ident'>k</span>, <span class='kw-2'>ref</span> <span class='ident'>v</span>) <span class='kw'>in</span> <span class='ident'>logger_values</span>.<span class='ident'>iter</span>() {
-                <span class='ident'>v</span>.<span class='ident'>serialize</span>(<span class='ident'>rinfo</span>, <span class='ident'>k</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ser</span>);
-                <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>ser</span>.<span class='ident'>io</span>().<span class='ident'>write_all</span>(<span class='string'>&quot; &quot;</span>.<span class='ident'>as_bytes</span>());
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>v</span>.<span class='ident'>serialize</span>(<span class='ident'>rinfo</span>, <span class='ident'>k</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ser</span>));
+                <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>ser</span>.<span class='ident'>io</span>().<span class='ident'>write_all</span>(<span class='string'>&quot; &quot;</span>.<span class='ident'>as_bytes</span>()));
             }
 
             <span class='kw'>for</span> <span class='kw-2'>&amp;</span>(<span class='kw-2'>ref</span> <span class='ident'>k</span>, <span class='kw-2'>ref</span> <span class='ident'>v</span>) <span class='kw'>in</span> <span class='ident'>record_values</span>.<span class='ident'>iter</span>() {
-                <span class='ident'>v</span>.<span class='ident'>serialize</span>(<span class='ident'>rinfo</span>, <span class='ident'>k</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ser</span>);
-                <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>ser</span>.<span class='ident'>io</span>().<span class='ident'>write_all</span>(<span class='string'>&quot; &quot;</span>.<span class='ident'>as_bytes</span>());
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>v</span>.<span class='ident'>serialize</span>(<span class='ident'>rinfo</span>, <span class='ident'>k</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ser</span>));
+                <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>ser</span>.<span class='ident'>io</span>().<span class='ident'>write_all</span>(<span class='string'>&quot; &quot;</span>.<span class='ident'>as_bytes</span>()));
             }
         }
+        <span class='prelude-val'>Ok</span>(())
     }
 }
 
@@ -387,63 +417,81 @@
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>W</span> : <span class='ident'>io</span>::<span class='ident'>Write</span><span class='op'>&gt;</span> <span class='ident'>Serializer</span> <span class='kw'>for</span> <span class='ident'>KSV</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>emit_none</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='string'>&quot;None&quot;</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_none</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='string'>&quot;None&quot;</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_unit</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>key</span>).<span class='ident'>unwrap</span>()
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>emit_bool</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>bool</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_unit</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>key</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
 
-    <span class='kw'>fn</span> <span class='ident'>emit_char</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>char</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
-    }
-    <span class='kw'>fn</span> <span class='ident'>emit_bytes</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>.<span class='ident'>to_hex</span>()).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_bool</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>bool</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
 
-    <span class='kw'>fn</span> <span class='ident'>emit_usize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>usize</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_char</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>char</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_isize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>isize</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_bytes</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>])  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>.<span class='ident'>to_hex</span>()));
+        <span class='prelude-val'>Ok</span>(())
     }
 
-    <span class='kw'>fn</span> <span class='ident'>emit_u8</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u8</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_usize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>usize</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_i8</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i8</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_isize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>isize</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_u16</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u16</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+
+    <span class='kw'>fn</span> <span class='ident'>emit_u8</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u8</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_i16</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i16</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_i8</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i8</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_u32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u32</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_u16</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u16</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_i32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i32</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_i16</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i16</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_f32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>f32</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_u32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u32</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_u64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u64</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_i32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i32</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_i64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i64</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_f32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>f32</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_f64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>f64</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_u64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u64</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_str</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>).<span class='ident'>unwrap</span>()
+    <span class='kw'>fn</span> <span class='ident'>emit_i64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i64</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
+    }
+    <span class='kw'>fn</span> <span class='ident'>emit_f64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>f64</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
+    }
+    <span class='kw'>fn</span> <span class='ident'>emit_str</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>)  <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}{}{}&quot;</span>, <span class='ident'>key</span>, <span class='self'>self</span>.<span class='ident'>separator</span>, <span class='ident'>val</span>));
+        <span class='prelude-val'>Ok</span>(())
     }
 }
 

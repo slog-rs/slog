@@ -392,7 +392,7 @@
     <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>fmt</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;b</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>PadAdapter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> {
         <span class='ident'>PadAdapter</span> {
             <span class='ident'>fmt</span>: <span class='ident'>fmt</span>,
-            <span class='ident'>on_newline</span>: <span class='boolvalue'>false</span>,
+            <span class='ident'>on_newline</span>: <span class='bool-val'>false</span>,
         }
     }
 }
@@ -406,11 +406,11 @@
 
             <span class='kw'>let</span> <span class='ident'>split</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>s</span>.<span class='ident'>find</span>(<span class='string'>&#39;\n&#39;</span>) {
                 <span class='prelude-val'>Some</span>(<span class='ident'>pos</span>) <span class='op'>=&gt;</span> {
-                    <span class='self'>self</span>.<span class='ident'>on_newline</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+                    <span class='self'>self</span>.<span class='ident'>on_newline</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
                     <span class='ident'>pos</span> <span class='op'>+</span> <span class='number'>1</span>
                 }
                 <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                    <span class='self'>self</span>.<span class='ident'>on_newline</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+                    <span class='self'>self</span>.<span class='ident'>on_newline</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
                     <span class='ident'>s</span>.<span class='ident'>len</span>()
                 }
             };
@@ -439,7 +439,7 @@
         <span class='ident'>DebugStruct</span> {
             <span class='ident'>fmt</span>: <span class='ident'>fmt</span>,
             <span class='ident'>result</span>: <span class='ident'>result</span>,
-            <span class='ident'>has_fields</span>: <span class='boolvalue'>false</span>,
+            <span class='ident'>has_fields</span>: <span class='bool-val'>false</span>,
         }
     }
 
@@ -460,7 +460,7 @@
             }
         });
 
-        <span class='self'>self</span>.<span class='ident'>has_fields</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+        <span class='self'>self</span>.<span class='ident'>has_fields</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
         <span class='self'>self</span>
     }
 
@@ -499,7 +499,7 @@
         <span class='ident'>DebugTuple</span> {
             <span class='ident'>fmt</span>: <span class='ident'>fmt</span>,
             <span class='ident'>result</span>: <span class='ident'>result</span>,
-            <span class='ident'>has_fields</span>: <span class='boolvalue'>false</span>,
+            <span class='ident'>has_fields</span>: <span class='bool-val'>false</span>,
         }
     }
 
@@ -520,7 +520,7 @@
             }
         });
 
-        <span class='self'>self</span>.<span class='ident'>has_fields</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+        <span class='self'>self</span>.<span class='ident'>has_fields</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
         <span class='self'>self</span>
     }
 
@@ -563,7 +563,7 @@
             }
         });
 
-        <span class='self'>self</span>.<span class='ident'>has_fields</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+        <span class='self'>self</span>.<span class='ident'>has_fields</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
     }
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>finish</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
@@ -590,7 +590,7 @@
             <span class='ident'>inner</span>: <span class='ident'>DebugInner</span> {
                 <span class='ident'>fmt</span>: <span class='ident'>fmt</span>,
                 <span class='ident'>result</span>: <span class='ident'>result</span>,
-                <span class='ident'>has_fields</span>: <span class='boolvalue'>false</span>,
+                <span class='ident'>has_fields</span>: <span class='bool-val'>false</span>,
             }
         }
     }
@@ -623,7 +623,7 @@
             <span class='ident'>inner</span>: <span class='ident'>DebugInner</span> {
                 <span class='ident'>fmt</span>: <span class='ident'>fmt</span>,
                 <span class='ident'>result</span>: <span class='ident'>result</span>,
-                <span class='ident'>has_fields</span>: <span class='boolvalue'>false</span>,
+                <span class='ident'>has_fields</span>: <span class='bool-val'>false</span>,
             }
         }
     }
@@ -657,7 +657,7 @@
         <span class='ident'>DebugMap</span> {
             <span class='ident'>fmt</span>: <span class='ident'>fmt</span>,
             <span class='ident'>result</span>: <span class='ident'>result</span>,
-            <span class='ident'>has_fields</span>: <span class='boolvalue'>false</span>,
+            <span class='ident'>has_fields</span>: <span class='bool-val'>false</span>,
         }
     }
 
@@ -674,7 +674,7 @@
             }
         });
 
-        <span class='self'>self</span>.<span class='ident'>has_fields</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+        <span class='self'>self</span>.<span class='ident'>has_fields</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
         <span class='self'>self</span>
     }
 

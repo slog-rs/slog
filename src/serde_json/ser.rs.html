@@ -783,7 +783,7 @@
         <span class='ident'>Serializer</span> {
             <span class='ident'>writer</span>: <span class='ident'>writer</span>,
             <span class='ident'>formatter</span>: <span class='ident'>formatter</span>,
-            <span class='ident'>first</span>: <span class='boolvalue'>false</span>,
+            <span class='ident'>first</span>: <span class='bool-val'>false</span>,
         }
     }
 
@@ -912,7 +912,7 @@
                           <span class='ident'>_variant_index</span>: <span class='ident'>usize</span>,
                           <span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>open</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='string'>b&#39;{&#39;</span>));
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>comma</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='boolvalue'>true</span>));
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>comma</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='bool-val'>true</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>serialize_str</span>(<span class='ident'>variant</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>colon</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>writer</span>.<span class='ident'>write_all</span>(<span class='string'>b&quot;[]&quot;</span>));
@@ -928,7 +928,7 @@
         <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>ser</span>::<span class='ident'>Serialize</span>,
     {
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>open</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='string'>b&#39;{&#39;</span>));
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>comma</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='boolvalue'>true</span>));
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>comma</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='bool-val'>true</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>serialize_str</span>(<span class='ident'>variant</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>colon</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>value</span>.<span class='ident'>serialize</span>(<span class='self'>self</span>));
@@ -946,7 +946,7 @@
             _ <span class='op'>=&gt;</span> {
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>open</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='string'>b&#39;[&#39;</span>));
 
-                <span class='self'>self</span>.<span class='ident'>first</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+                <span class='self'>self</span>.<span class='ident'>first</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
 
                 <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(()) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>visitor</span>.<span class='ident'>visit</span>(<span class='self'>self</span>)) { }
 
@@ -965,7 +965,7 @@
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>ser</span>::<span class='ident'>SeqVisitor</span>,
     {
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>open</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='string'>b&#39;{&#39;</span>));
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>comma</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='boolvalue'>true</span>));
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>comma</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='bool-val'>true</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>serialize_str</span>(<span class='ident'>variant</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>colon</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>serialize_seq</span>(<span class='ident'>visitor</span>));
@@ -979,7 +979,7 @@
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>comma</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='self'>self</span>.<span class='ident'>first</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>value</span>.<span class='ident'>serialize</span>(<span class='self'>self</span>));
 
-        <span class='self'>self</span>.<span class='ident'>first</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+        <span class='self'>self</span>.<span class='ident'>first</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
 
         <span class='prelude-val'>Ok</span>(())
     }
@@ -995,7 +995,7 @@
             _ <span class='op'>=&gt;</span> {
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>open</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='string'>b&#39;{&#39;</span>));
 
-                <span class='self'>self</span>.<span class='ident'>first</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
+                <span class='self'>self</span>.<span class='ident'>first</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
 
                 <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(()) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>visitor</span>.<span class='ident'>visit</span>(<span class='self'>self</span>)) { }
 
@@ -1013,7 +1013,7 @@
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>ser</span>::<span class='ident'>MapVisitor</span>,
     {
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>open</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='string'>b&#39;{&#39;</span>));
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>comma</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='boolvalue'>true</span>));
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>comma</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='bool-val'>true</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>serialize_str</span>(<span class='ident'>variant</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>colon</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>serialize_map</span>(<span class='ident'>visitor</span>));
@@ -1032,7 +1032,7 @@
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>formatter</span>.<span class='ident'>colon</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>value</span>.<span class='ident'>serialize</span>(<span class='self'>self</span>));
 
-        <span class='self'>self</span>.<span class='ident'>first</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+        <span class='self'>self</span>.<span class='ident'>first</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
 
         <span class='prelude-val'>Ok</span>(())
     }

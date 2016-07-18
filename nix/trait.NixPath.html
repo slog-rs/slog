@@ -47,14 +47,14 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-10259' class='srclink' href='../src/nix/lib.rs.html#140-145' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-10129' class='srclink' href='../src/nix/lib.rs.html#140-145' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait NixPath {
     fn <a href='#tymethod.len' class='fnname'>len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>;
-    fn <a href='#tymethod.with_nix_path' class='fnname'>with_nix_path</a>&lt;T, F&gt;(&amp;self, f: F) -&gt; <a class='type' href='../nix/type.Result.html' title='nix::Result'>Result</a>&lt;T&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>(&amp;<a class='struct' href='https://doc.rust-lang.org/nightly/std/ffi/c_str/struct.CStr.html' title='std::ffi::c_str::CStr'>CStr</a>) -&gt; T</span>;
+    fn <a href='#tymethod.with_nix_path' class='fnname'>with_nix_path</a>&lt;T,&nbsp;F&gt;(&amp;self, f: F) -&gt; <a class='type' href='../nix/type.Result.html' title='nix::Result'>Result</a>&lt;T&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>(&amp;<a class='struct' href='https://doc.rust-lang.org/nightly/std/ffi/c_str/struct.CStr.html' title='std::ffi::c_str::CStr'>CStr</a>) -&gt; T</span>;
 }</pre>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.len' class='method stab '><code>fn <a href='#tymethod.len' class='fnname'>len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h3><h3 id='tymethod.with_nix_path' class='method stab '><code>fn <a href='#tymethod.with_nix_path' class='fnname'>with_nix_path</a>&lt;T, F&gt;(&amp;self, f: F) -&gt; <a class='type' href='../nix/type.Result.html' title='nix::Result'>Result</a>&lt;T&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>(&amp;<a class='struct' href='https://doc.rust-lang.org/nightly/std/ffi/c_str/struct.CStr.html' title='std::ffi::c_str::CStr'>CStr</a>) -&gt; T</span></code></h3></div>
+        <h3 id='tymethod.len' class='method stab '><code>fn <a href='#tymethod.len' class='fnname'>len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h3><h3 id='tymethod.with_nix_path' class='method stab '><code>fn <a href='#tymethod.with_nix_path' class='fnname'>with_nix_path</a>&lt;T,&nbsp;F&gt;(&amp;self, f: F) -&gt; <a class='type' href='../nix/type.Result.html' title='nix::Result'>Result</a>&lt;T&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>(&amp;<a class='struct' href='https://doc.rust-lang.org/nightly/std/ffi/c_str/struct.CStr.html' title='std::ffi::c_str::CStr'>CStr</a>) -&gt; T</span></code></h3></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
     <li><code>impl NixPath for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></li>
@@ -63,7 +63,7 @@
 <li><code>impl NixPath for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></li>
 <li><code>impl NixPath for <a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a></code></li>
 <li><code>impl NixPath for <a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html' title='std::path::PathBuf'>PathBuf</a></code></li>
-<li><code>impl&lt;'a, NP: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../nix/trait.NixPath.html' title='nix::NixPath'>NixPath</a>&gt; NixPath for <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;'a NP&gt;</code></li>
+<li><code>impl&lt;'a,&nbsp;NP:&nbsp;?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../nix/trait.NixPath.html' title='nix::NixPath'>NixPath</a>&gt; NixPath for <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;'a NP&gt;</code></li>
 </ul><script type="text/javascript" async
                          src="../implementors/nix/trait.NixPath.js">
                  </script></section>

@@ -594,7 +594,7 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Node</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>is_data</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>Payload</span>::<span class='ident'>Data</span>(_) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>payload</span> { <span class='boolvalue'>true</span> } <span class='kw'>else</span> { <span class='boolvalue'>false</span> }
+        <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>Payload</span>::<span class='ident'>Data</span>(_) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>payload</span> { <span class='bool-val'>true</span> } <span class='kw'>else</span> { <span class='bool-val'>false</span> }
     }
 }
 
@@ -722,7 +722,7 @@
                         <span class='kw'>unsafe</span> {
                             <span class='comment'>// signal the thread</span>
                             (<span class='op'>*</span><span class='ident'>signal</span>).<span class='ident'>data</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>cache</span>.<span class='ident'>into_data</span>());
-                            (<span class='op'>*</span><span class='ident'>signal</span>).<span class='ident'>ready</span>.<span class='ident'>store</span>(<span class='boolvalue'>true</span>, <span class='ident'>Relaxed</span>);
+                            (<span class='op'>*</span><span class='ident'>signal</span>).<span class='ident'>ready</span>.<span class='ident'>store</span>(<span class='bool-val'>true</span>, <span class='ident'>Relaxed</span>);
                             (<span class='op'>*</span><span class='ident'>signal</span>).<span class='ident'>thread</span>.<span class='ident'>unpark</span>();
                             <span class='ident'>guard</span>.<span class='ident'>unlinked</span>(<span class='ident'>head</span>);
                             <span class='kw'>return</span>;
@@ -763,12 +763,12 @@
 
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>next</span>) <span class='op'>=</span> <span class='ident'>head</span>.<span class='ident'>next</span>.<span class='ident'>load</span>(<span class='ident'>Acquire</span>, <span class='kw-2'>&amp;</span><span class='ident'>guard</span>) {
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>Payload</span>::<span class='ident'>Data</span>(_) <span class='op'>=</span> <span class='ident'>next</span>.<span class='ident'>payload</span> {
-                <span class='boolvalue'>false</span>
+                <span class='bool-val'>false</span>
             } <span class='kw'>else</span> {
-                <span class='boolvalue'>true</span>
+                <span class='bool-val'>true</span>
             }
         } <span class='kw'>else</span> {
-            <span class='boolvalue'>true</span>
+            <span class='bool-val'>true</span>
         }
     }
 
@@ -808,7 +808,7 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>signal</span> <span class='op'>=</span> <span class='ident'>Signal</span> {
             <span class='ident'>thread</span>: <span class='ident'>thread</span>::<span class='ident'>current</span>(),
             <span class='ident'>data</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>ready</span>: <span class='ident'>AtomicBool</span>::<span class='ident'>new</span>(<span class='boolvalue'>false</span>),
+            <span class='ident'>ready</span>: <span class='ident'>AtomicBool</span>::<span class='ident'>new</span>(<span class='bool-val'>false</span>),
         };
 
         <span class='comment'>// Go ahead and allocate the blocked node; chances are, we&#39;ll need it.</span>

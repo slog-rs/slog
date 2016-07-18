@@ -47,8 +47,8 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-290' class='srclink' href='../../../src/num_traits/ops/checked.rs.html#5-9' title='goto source code'>[src]</a></span></h1>
-<pre class='rust trait'>pub trait CheckedAdd: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Add.html' title='core::ops::Add'>Add</a>&lt;Self, Output=Self&gt; {
+               </span><a id='src-285' class='srclink' href='../../../src/num_traits/ops/checked.rs.html#5-9' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait CheckedAdd: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Add.html' title='core::ops::Add'>Add</a>&lt;Self,&nbsp;Output=Self&gt; {
     fn <a href='#tymethod.checked_add' class='fnname'>checked_add</a>(&amp;self, v: &amp;Self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;;
 }</pre><div class='docblock'><p>Performs addition that returns <code>None</code> instead of wrapping around on
 overflow.</p>
