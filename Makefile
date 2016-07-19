@@ -73,6 +73,7 @@ doc: FORCE
 	cd "crates/json"; cargo doc -p slog-json
 	cd "crates/bunyan"; cargo doc -p slog-bunyan
 	cd "crates/syslog"; cargo doc -p slog-syslog
+	cd "crates/stdlog"; cargo doc -p slog-stdlog
 
 .PHONY: publishdoc
 publishdoc:

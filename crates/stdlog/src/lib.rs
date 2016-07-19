@@ -3,6 +3,7 @@
 //! This crate allows setting one of `slog` `Logger`s
 //! as a global handler of Rust de facto standard logging statements
 //! (eg ``info!(...)``) provided by `log` create.
+//!
 //! ```
 //! #[macro_use]
 //! extern crate slog;
