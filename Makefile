@@ -8,7 +8,7 @@ endif
 
 default: $(DEFAULT_TARGET)
 
-ALL_TARGETS += build $(EXAMPLES) test doc extra
+ALL_TARGETS += build $(EXAMPLES) test doc crates
 ifneq ($(RELEASE),)
 $(info RELEASE BUILD: $(PKG_NAME))
 CARGO_FLAGS += --release
@@ -18,7 +18,7 @@ $(info DEBUG BUILD: $(PKG_NAME); use `RELEASE=true make [args]` for release buil
 endif
 
 EXAMPLES = $(shell cd examples 2>/dev/null && ls *.rs 2>/dev/null | sed -e 's/.rs$$//g' )
-EXTRAS = $(shell cd extra 2>/dev/null && ls 2>/dev/null)
+CRATES = $(shell cd crates 2>/dev/null && ls 2>/dev/null)
 
 all: $(ALL_TARGETS)
 
@@ -28,10 +28,10 @@ run test build clean:
 
 test-all:
 	cargo test $(CARGO_FLAGS)
-	cd "extra/term"; cargo test $(CARGO_FLAGS)
-	cd "extra/serde"; cargo test $(CARGO_FLAGS)
-	cd "extra/json"; cargo test $(CARGO_FLAGS)
-	cd "extra/bunyan"; cargo test $(CARGO_FLAGS)
+	cd "crates/term"; cargo test $(CARGO_FLAGS)
+	cd "crates/serde"; cargo test $(CARGO_FLAGS)
+	cd "crates/json"; cargo test $(CARGO_FLAGS)
+	cd "crates/bunyan"; cargo test $(CARGO_FLAGS)
 
 check:
 	$(info Running check; use `make build` to actually build)
@@ -57,22 +57,22 @@ longtest:
 $(EXAMPLES):
 	cargo build --example $@ $(CARGO_FLAGS)
 
-.PHONY: extra
-extra: $(EXTRAS)
+.PHONY: crates
+crates: $(CRATES)
 
-.PHONY: $(EXTRAS)
-$(EXTRAS):
-	cd "extra/$@"; cargo build $(CARGO_FLAGS)
-	cd "extra/$@"; cargo test $(CARGO_FLAGS)
+.PHONY: $(CRATES)
+$(CRATES):
+	cd "crates/$@"; cargo build $(CARGO_FLAGS)
+	cd "crates/$@"; cargo test $(CARGO_FLAGS)
 
 .PHONY: doc
 doc: FORCE
 	cargo doc -p slog
-	cd "extra/term"; cargo doc -p slog-term
-	cd "extra/serde"; cargo doc -p slog-serde
-	cd "extra/json"; cargo doc -p slog-json
-	cd "extra/bunyan"; cargo doc -p slog-bunyan
-	cd "extra/syslog"; cargo doc -p slog-syslog
+	cd "crates/term"; cargo doc -p slog-term
+	cd "crates/serde"; cargo doc -p slog-serde
+	cd "crates/json"; cargo doc -p slog-json
+	cd "crates/bunyan"; cargo doc -p slog-bunyan
+	cd "crates/syslog"; cargo doc -p slog-syslog
 
 .PHONY: publishdoc
 publishdoc:
