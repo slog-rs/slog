@@ -48,6 +48,26 @@ To report a bug or ask for features use [github issues][issues].
 	* syslog (`slog-syslog` crate)
 	* support for first class custom ones
 
+### Advantages over `log` create
+
+* **composable** and **extensible** logging drains - You can easily log messages
+  to different destinations, in different formats, using different filtering
+  rules. Building new drains and new output formats is very easy.
+* drains are **run-time swappable** - Send a signal to your program and start
+  logging everything to a file for run-time production debugging. Send another
+  one when you're done to return to normal operation. Build your own flexible
+  scenarios easily.
+* **non-global** - Hierarchical loggers carry information about context of
+  logging. When logging an error condition, you want to know which resource was
+  being handled, on which instance of your service, using which source code
+  build, talking with what peer, etc. In standard `log` you would have to repeat
+  this information in every log statement. In `slog` it will happen
+  automatically.
+* both **human and machine readable** - By keeping the key-value data format,
+  meaning of logging data is preserved. Dump your logging to a JSON file, and
+  send it to your data-mining system for further analysis.
+* **lazy evaluation** and **asynchronous** IO included
+
 ### Terminal output example
 
 ![slog-rs terminal output](http://i.imgur.com/IUe80gU.png)
