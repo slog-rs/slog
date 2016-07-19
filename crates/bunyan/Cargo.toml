@@ -8,7 +8,7 @@ license = "MPL-2.0"
 documentation = "https://dpc.github.io/slog-rs/"
 homepage = "https://github.com/dpc/slog-rs"
 repository = "https://github.com/dpc/slog-rs"
-readme = "README.md"
+readme = "../../README.md"
 
 
 [dependencies]
