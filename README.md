@@ -1,4 +1,4 @@
-# slog-rs - Structured, composable logging for Rust
+# slog-rs - Structured, composable logging for [Rust][rust]
 
 <p align="center">
   <a href="https://travis-ci.org/dpc/slog-rs">
@@ -16,22 +16,9 @@
 
 ## Introduction
 
-Structured, composable logging for [Rust][rust].
-
 Inspired by [log15] for Go.
 
-Read [Documentation](//dpc.github.io/slog-rs/) for details and features.
-
-If you want to say hi, or need help use [#dpc gitter.im][dpc gitter].
-
-To report a bug or ask for features use [github issues][issues].
-
-[rust]: http://rust-lang.org
-[dpc gitter]: https://gitter.im/dpc/dpc
-[issues]: //github.com/dpc/slog-rs/issues
-[log15]: //github.com/inconshreveable/log15
-
-## Features
+### Features
 
 * easy to use
 * hierarchical loggers
@@ -74,7 +61,9 @@ To report a bug or ask for features use [github issues][issues].
 
 ![slog-rs terminal output](http://i.imgur.com/IUe80gU.png)
 
-## Code snippet
+## Using & help
+
+### Code snippet
 
 ``` rust
 fn main() {
@@ -145,13 +134,24 @@ fn main() {
 See `examples/features.rs` for full code.
 
 
-## Building & running
+Read [Documentation](//dpc.github.io/slog-rs/) for details and features.
+
+If you want to say hi, or need help use [#dpc gitter.im][dpc gitter].
+
+To report a bug or ask for features use [github issues][issues].
+
+[rust]: http://rust-lang.org
+[dpc gitter]: https://gitter.im/dpc/dpc
+[issues]: //github.com/dpc/slog-rs/issues
+[log15]: //github.com/inconshreveable/log15
+
+### Building & running
 
 If you need to install Rust (come on, you should have done that long time ago!), use [rustup][rustup].
 
 [rustup]: https://www.rustup.rs
 
-### In your project
+#### In your project
 
 In Cargo.toml:
 
