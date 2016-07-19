@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/num-traits-0.1.32/src/float.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/num-traits-0.1.33/src/float.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>float.rs.html -- source</title>
@@ -1168,6 +1168,7 @@
 <span id="1124">1124</span>
 <span id="1125">1125</span>
 <span id="1126">1126</span>
+<span id="1127">1127</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Neg</span>;
@@ -2174,6 +2175,7 @@
                 <span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span><span class='op'>&gt;</span>::<span class='ident'>min</span>(<span class='self'>self</span>, <span class='ident'>other</span>)
             }
 
+            <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>deprecated</span>)]</span>
             <span class='kw'>fn</span> <span class='ident'>abs_sub</span>(<span class='self'>self</span>, <span class='ident'>other</span>: <span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
                 <span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span><span class='op'>&gt;</span>::<span class='ident'>abs_sub</span>(<span class='self'>self</span>, <span class='ident'>other</span>)
             }

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.12/src/unix/notbsd/linux/other/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.14/src/unix/notbsd/linux/other/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -577,6 +577,9 @@
 <span id="533">533</span>
 <span id="534">534</span>
 <span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
 </pre><pre class='rust '>
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>fsblkcnt_t</span> <span class='op'>=</span> ::<span class='ident'>c_ulong</span>;
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>fsfilcnt_t</span> <span class='op'>=</span> ::<span class='ident'>c_ulong</span>;
@@ -1008,6 +1011,9 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETOWN</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>8</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETLK</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>6</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>F_SETLKW</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>7</span>;
+
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SEEK_DATA</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>3</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SEEK_HOLE</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>4</span>;
 
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SFD_NONBLOCK</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x0800</span>;
 

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/num-traits-0.1.32/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/num-traits-0.1.33/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -275,6 +275,8 @@
 <span id="231">231</span>
 <span id="232">232</span>
 <span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2013-2014 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -292,12 +294,13 @@
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>bounds</span>::<span class='ident'>Bounded</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>float</span>::<span class='ident'>Float</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>identities</span>::{<span class='ident'>Zero</span>, <span class='ident'>One</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>identities</span>::{<span class='ident'>Zero</span>, <span class='ident'>One</span>, <span class='ident'>zero</span>, <span class='ident'>one</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ops</span>::<span class='ident'>checked</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ops</span>::<span class='ident'>saturating</span>::<span class='ident'>Saturating</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>sign</span>::{<span class='ident'>Signed</span>, <span class='ident'>Unsigned</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>sign</span>::{<span class='ident'>Signed</span>, <span class='ident'>Unsigned</span>, <span class='ident'>abs</span>, <span class='ident'>abs_sub</span>, <span class='ident'>signum</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>cast</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>int</span>::<span class='ident'>PrimInt</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>pow</span>::{<span class='ident'>pow</span>, <span class='ident'>checked_pow</span>};
 
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>identities</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>sign</span>;
@@ -306,6 +309,7 @@
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>float</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>cast</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>int</span>;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>pow</span>;
 
 <span class='doccomment'>/// The base trait for numeric types</span>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Num</span>: <span class='ident'>PartialEq</span> <span class='op'>+</span> <span class='ident'>Zero</span> <span class='op'>+</span> <span class='ident'>One</span>

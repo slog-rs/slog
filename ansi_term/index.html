@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/ansi_term/lib.rs.html#1-823' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/ansi_term/lib.rs.html#1-896' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>This is a library for controlling colours and formatting, such as
 red bold text or blue underlined text, on ANSI terminals.</p>
 
@@ -108,7 +108,18 @@ an empty <code>Style</code> value:</p>
 <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Yellow on blue: {}&quot;</span>, <span class='ident'>Yellow</span>.<span class='ident'>on</span>(<span class='ident'>Blue</span>).<span class='ident'>paint</span>(<span class='string'>&quot;wow!&quot;</span>));</pre>
 
 <p>The complete list of styles you can use are: <code>bold</code>, <code>dimmed</code>, <code>italic</code>,
-<code>underline</code>, <code>blink</code>, <code>reverse</code>, <code>hidden</code>, and <code>on</code> for background colours.</p>
+<code>underline</code>, <code>blink</code>, <code>reverse</code>, <code>hidden</code>, <code>strikethrough</code>, and <code>on</code> for
+background colours.</p>
+
+<p>In some cases, you may find it easier to change the foreground on an
+existing <code>Style</code> rather than starting from the appropriate <code>Colour</code>.
+You can do this using the <code>fg</code> method:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Style</span>;
+<span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::{<span class='ident'>Blue</span>, <span class='ident'>Cyan</span>, <span class='ident'>Yellow</span>};
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Yellow on blue: {}&quot;</span>, <span class='ident'>Style</span>::<span class='ident'>new</span>().<span class='ident'>on</span>(<span class='ident'>Blue</span>).<span class='ident'>fg</span>(<span class='ident'>Yellow</span>).<span class='ident'>paint</span>(<span class='string'>&quot;yow!&quot;</span>));
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Also yellow on blue: {}&quot;</span>, <span class='ident'>Cyan</span>.<span class='ident'>on</span>(<span class='ident'>Blue</span>).<span class='ident'>fg</span>(<span class='ident'>Yellow</span>).<span class='ident'>paint</span>(<span class='string'>&quot;zow!&quot;</span>));</pre>
 
 <p>Finally, you can turn a <code>Colour</code> into a <code>Style</code> with the <code>normal</code> method.
 This will produce the exact same <code>ANSIString</code> as if you just used the
@@ -138,6 +149,13 @@ included wherever you would use a <code>Colour</code>:</p>
 standard colour variants. There’s nothing stopping you from using these as
 <code>Fixed</code> colours instead, but there’s nothing to be gained by doing so
 either.</p>
+
+<p>You can also access full 24-bit color by using the <code>RGB</code> colour variant,
+which takes separate <code>u8</code> arguments for red, green, and blue:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::<span class='ident'>RGB</span>;
+<span class='ident'>RGB</span>(<span class='number'>70</span>, <span class='number'>130</span>, <span class='number'>180</span>).<span class='ident'>paint</span>(<span class='string'>&quot;Steel blue&quot;</span>);</pre>
 
 <h2 id='combining-successive-coloured-strings' class='section-header'><a href='#combining-successive-coloured-strings'>Combining successive coloured strings</a></h2>
 <p>The benefit of writing ANSI escape codes to the terminal is that they
@@ -176,7 +194,8 @@ the result of the <code>format!</code> call, using the same mechanism as some
 statically-available <code>&amp;str</code> slices. Secondly, that the <code>ANSIStrings</code> value
 works in the same way as its singular counterpart, with a <code>Display</code>
 implementation that only performs the formatting when required.</p>
-</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<table><tr><td><code>pub use <a class='enum' href='../ansi_term/enum.Colour.html' title='ansi_term::Colour'>Colour</a> as Color;</code></td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.ANSIString.html'

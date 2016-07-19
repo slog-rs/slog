@@ -1,1 +1,0 @@
-initSidebarItems({"trait":[["Signed","Useful functions for signed numbers (i.e. numbers that can be negative)."],["Unsigned","A trait for values which cannot be negative"]]});

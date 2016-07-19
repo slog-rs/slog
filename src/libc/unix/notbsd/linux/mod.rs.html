@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.12/src/unix/notbsd/linux/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.14/src/unix/notbsd/linux/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -694,6 +694,10 @@
 <span id="650">650</span>
 <span id="651">651</span>
 <span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Linux-specific definitions for linux-like values</span>
 
@@ -950,7 +954,15 @@
 
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>FILENAME_MAX</span>: ::<span class='ident'>c_uint</span> <span class='op'>=</span> <span class='number'>4096</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>L_tmpnam</span>: ::<span class='ident'>c_uint</span> <span class='op'>=</span> <span class='number'>20</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>_PC_LINK_MAX</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>_PC_MAX_CANON</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>_PC_MAX_INPUT</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>_PC_NAME_MAX</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>3</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>_PC_PATH_MAX</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>4</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>_PC_PIPE_BUF</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>5</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>_PC_CHOWN_RESTRICTED</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>6</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>_PC_NO_TRUNC</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>7</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>_PC_VDISABLE</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>8</span>;
 
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>_SC_ARG_MAX</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>_SC_CHILD_MAX</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
@@ -1174,10 +1186,6 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>CPU_EQUAL</span>(<span class='ident'>set1</span>: <span class='kw-2'>&amp;</span><span class='ident'>cpu_set_t</span>, <span class='ident'>set2</span>: <span class='kw-2'>&amp;</span><span class='ident'>cpu_set_t</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='ident'>set1</span>.<span class='ident'>bits</span> <span class='op'>==</span> <span class='ident'>set2</span>.<span class='ident'>bits</span>
     }
-}
-
-<span class='kw'>extern</span> {
-    <span class='kw'>static</span> <span class='kw-2'>mut</span> <span class='ident'>program_invocation_short_name</span>: <span class='op'>*</span><span class='kw-2'>mut</span> ::<span class='ident'>c_char</span>;
 }
 
 <span class='kw'>extern</span> {

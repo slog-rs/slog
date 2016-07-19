@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.12/src/unix/notbsd/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/libc-0.2.14/src/unix/notbsd/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -906,6 +906,18 @@
 <span id="862">862</span>
 <span id="863">863</span>
 <span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>dox</span>::<span class='ident'>mem</span>;
 
@@ -1410,6 +1422,8 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>EPOLL_CTL_MOD</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>3</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>EPOLL_CTL_DEL</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>2</span>;
 
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>EPOLL_CLOEXEC</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x80000</span>;
+
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>MNT_DETACH</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x2</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>MNT_EXPIRE</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x4</span>;
 
@@ -1536,7 +1550,16 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CLONE_NEWNET</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x40000000</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CLONE_IO</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x80000000</span>;
 
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>WNOHANG</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>1</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>WNOHANG</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x00000001</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>WUNTRACED</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x00000002</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>WSTOPPED</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='ident'>WUNTRACED</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>WEXITED</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x00000004</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>WCONTINUED</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x00000008</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>WNOWAIT</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x01000000</span>;
+
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>__WNOTHREAD</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x20000000</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>__WALL</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x40000000</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>__WCLONE</span>: ::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0x80000000</span>;
 
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SPLICE_F_MOVE</span>: ::<span class='ident'>c_uint</span> <span class='op'>=</span> <span class='number'>0x01</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SPLICE_F_NONBLOCK</span>: ::<span class='ident'>c_uint</span> <span class='op'>=</span> <span class='number'>0x02</span>;
@@ -1649,6 +1672,7 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sched_get_priority_max</span>(<span class='ident'>policy</span>: ::<span class='ident'>c_int</span>) <span class='op'>-&gt;</span> ::<span class='ident'>c_int</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sched_get_priority_min</span>(<span class='ident'>policy</span>: ::<span class='ident'>c_int</span>) <span class='op'>-&gt;</span> ::<span class='ident'>c_int</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>epoll_create</span>(<span class='ident'>size</span>: ::<span class='ident'>c_int</span>) <span class='op'>-&gt;</span> ::<span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>epoll_create1</span>(<span class='ident'>flags</span>: ::<span class='ident'>c_int</span>) <span class='op'>-&gt;</span> ::<span class='ident'>c_int</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>epoll_ctl</span>(<span class='ident'>epfd</span>: ::<span class='ident'>c_int</span>,
                      <span class='ident'>op</span>: ::<span class='ident'>c_int</span>,
                      <span class='ident'>fd</span>: ::<span class='ident'>c_int</span>,
