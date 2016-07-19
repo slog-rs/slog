@@ -47,29 +47,27 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog_stdlog/src/lib.rs.html#1-96' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog_stdlog/src/lib.rs.html#1-97' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Standard Rust log crate adapter to slog-rs</p>
 
 <p>This crate allows setting one of <code>slog</code> <code>Logger</code>s
 as a global handler of Rust de facto standard logging statements
-(eg <code>info!(...)</code>) provided by <code>log</code> create.
-```</p>
+(eg <code>info!(...)</code>) provided by <code>log</code> create.</p>
 
-<h1 id='macro_use' class='section-header'><a href='#macro_use'>[macro_use]</a></h1>
-<p>extern crate slog;</p>
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog_stdlog</span>;
 
-<h1 id='macro_use-1' class='section-header'><a href='#macro_use-1'>[macro_use]</a></h1>
-<p>extern crate log;
-extern crate slog_stdlog;</p>
+<span class='kw'>use</span> <span class='ident'>slog</span>::<span class='op'>*</span>;
 
-<p>use slog::*;</p>
-
-<p>fn main() {
-    let root = Logger::new_root(o!(&quot;build-id&quot; =&gt; &quot;8dfljdf&quot;));
-    slog_stdlog::set_logger(root).unwrap();
-    info!(&quot;standard logging redirected to slog&quot;);
-}
-```</p>
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>Logger</span>::<span class='ident'>new_root</span>(<span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;build-id&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;8dfljdf&quot;</span>));
+    <span class='ident'>slog_stdlog</span>::<span class='ident'>set_logger</span>(<span class='ident'>root</span>).<span class='ident'>unwrap</span>();
+    <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;standard logging redirected to slog&quot;</span>);
+}</pre>
 </div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
