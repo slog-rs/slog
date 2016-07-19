@@ -37,7 +37,9 @@ To report a bug or ask for features use [github issues][issues].
 * hierarchical loggers
 * lazily evaluated values
 * modular and extensible
-* traditional logging (`info!(...)`) handling (`slog-stdlog` crate)
+	* small core create with multiple addon crates (`./crates/`) - compile only
+	what you're actually using
+* standard `log` crate logging support (`slog-stdlog` crate)
 * drains & output formatting
 	* filtering
 	* multiple outputs
@@ -66,7 +68,7 @@ To report a bug or ask for features use [github issues][issues].
 * both **human and machine readable** - By keeping the key-value data format,
   meaning of logging data is preserved. Dump your logging to a JSON file, and
   send it to your data-mining system for further analysis.
-* **lazy evaluation** and **asynchronous** IO included
+* **lazy evaluation** and **asynchronous IO** included
 
 ### Terminal output example
 
