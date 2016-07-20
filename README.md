@@ -37,7 +37,7 @@ Inspired by [log15] for Go.
 	* syslog (`slog-syslog` crate)
 	* support for first class custom ones
 
-### Advantages over `log` create
+### Advantages over `log` crate
 
 * **composable** and **extensible** logging drains - You can easily log messages
   to different destinations, in different formats, using different filtering
