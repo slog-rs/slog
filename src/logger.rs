@@ -19,7 +19,7 @@ use drain;
 use chrono;
 
 struct LoggerInner {
-    drain:  Arc<ArcCell<Box<drain::Drain>>>,
+    drain: Arc<ArcCell<Box<drain::Drain>>>,
     values: Vec<OwnedKeyValue>,
 }
 
@@ -46,15 +46,8 @@ impl Logger {
     ///     let root = slog::Logger::new_root(o!("key1" => "value1", "key2" => "value2"));
     /// }
     pub fn new_root(values: &[OwnedKeyValue]) -> Logger {
-        let drain = Arc::new(
-            ArcCell::new(
-                Arc::new(
-                    Box::new(
-                        drain::discard()
-                        ) as Box<drain::Drain>
-                    )
-                )
-            );
+        let drain =
+            Arc::new(ArcCell::new(Arc::new(Box::new(drain::discard()) as Box<drain::Drain>)));
         Logger {
             inner: Arc::new(LoggerInner {
                 drain: drain,
@@ -175,11 +168,11 @@ pub struct RecordInfo {
 
 impl RecordInfo {
     /// Create a new `RecordInfo` with a current timestamp
-    pub fn new(level : Level, msg : String) -> Self {
+    pub fn new(level: Level, msg: String) -> Self {
         RecordInfo {
-            ts:  chrono::UTC::now(),
+            ts: chrono::UTC::now(),
             level: level,
-            msg: msg
+            msg: msg,
         }
     }
 }

@@ -29,9 +29,9 @@ pub use self::error::{Error, Result, ErrorKind};
 pub trait Format: Send + Sync + Sized {
     /// Format one logging record and write into `io`
     fn format(&self,
-              io : &mut io::Write,
+              io: &mut io::Write,
               info: &RecordInfo,
               logger_values: &[OwnedKeyValue],
-              record_values: &[BorrowedKeyValue]) -> Result<()>
-              ;
+              record_values: &[BorrowedKeyValue])
+              -> Result<()>;
 }

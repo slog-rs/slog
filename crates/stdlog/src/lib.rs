@@ -28,21 +28,19 @@ extern crate log;
 use log::LogMetadata;
 
 
-use slog::{Level};
+use slog::Level;
 
 struct Logger {
-    logger : slog::Logger,
+    logger: slog::Logger,
 }
 
 impl Logger {
-    fn new(logger : slog::Logger) -> Self {
-        Logger {
-            logger: logger,
-        }
+    fn new(logger: slog::Logger) -> Self {
+        Logger { logger: logger }
     }
 }
 
-fn log_to_slog_level(level : log::LogLevel) -> Level {
+fn log_to_slog_level(level: log::LogLevel) -> Level {
     match level {
         log::LogLevel::Trace => Level::Trace,
         log::LogLevel::Debug => Level::Debug,
@@ -57,7 +55,7 @@ impl log::Log for Logger {
         true
     }
 
-    fn log(&self, r : &log::LogRecord) {
+    fn log(&self, r: &log::LogRecord) {
         let level = log_to_slog_level(r.metadata().level());
 
         let msg = &format!("{}", r.args());
@@ -66,12 +64,12 @@ impl log::Log for Logger {
         let file = r.location().file();
         let line = r.location().line();
         {
-            self.logger.log(level, msg,
+            self.logger.log(level,
+                            msg,
                             &[("target", &target),
-                               ("module", &module),
-                               ("file", &file),
-                               ("line", &line)]
-                           );
+                              ("module", &module),
+                              ("file", &file),
+                              ("line", &line)]);
         }
     }
 }
@@ -79,7 +77,7 @@ impl log::Log for Logger {
 /// Set a `slog::Logger` as a global `log` create handler
 ///
 /// This will forward all `log` records to `slog` logger.
-pub fn set_logger(logger : slog::Logger) -> Result<(), log::SetLoggerError> {
+pub fn set_logger(logger: slog::Logger) -> Result<(), log::SetLoggerError> {
     log::set_logger(|max_log_level| {
         max_log_level.set(log::LogLevelFilter::max());
         Box::new(Logger::new(logger))
@@ -89,7 +87,9 @@ pub fn set_logger(logger : slog::Logger) -> Result<(), log::SetLoggerError> {
 /// Set a `slog::Logger` as a global `log` create handler
 ///
 /// This will forward `log` records that satisfy `log_level_filter` to `slog` logger.
-pub fn set_logger_level(logger : slog::Logger, log_level_filter : log::LogLevelFilter) -> Result<(), log::SetLoggerError> {
+pub fn set_logger_level(logger: slog::Logger,
+                        log_level_filter: log::LogLevelFilter)
+                        -> Result<(), log::SetLoggerError> {
     log::set_logger(|max_log_level| {
         max_log_level.set(log_level_filter);
         Box::new(Logger::new(logger))

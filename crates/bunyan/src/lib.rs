@@ -57,7 +57,7 @@ fn level_to_string(level: Level) -> i8 {
 pub fn new() -> Json {
     let mut b = Json::build();
     b.set_newlines(true)
-     .add_key_values(o!(
+        .add_key_values(o!(
                 "pid" => nix::unistd::getpid() as usize,
                 "host" => get_hostname(),
                 "time" => |rinfo : &RecordInfo| {
@@ -98,7 +98,7 @@ mod test {
             msg: "message".to_string(),
         };
 
-        let mut v = vec!();
+        let mut v = vec![];
         formatter.format(&mut v, &info, &[], &[]).unwrap();
 
         assert_eq!(String::from_utf8_lossy(&v),

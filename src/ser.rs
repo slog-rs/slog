@@ -66,27 +66,27 @@ pub trait Serializer {
     /// Emit i8
     fn emit_i8(&mut self, key: &str, val: i8) -> Result<()>;
     /// Emit u16
-                                                        fn emit_u16(&mut self, key: &str, val: u16) -> Result<()>;
+    fn emit_u16(&mut self, key: &str, val: u16) -> Result<()>;
     /// Emit i16
-                                                        fn emit_i16(&mut self, key: &str, val: i16) -> Result<()>;
+    fn emit_i16(&mut self, key: &str, val: i16) -> Result<()>;
     /// Emit u32
-                                                        fn emit_u32(&mut self, key: &str, val: u32) -> Result<()>;
+    fn emit_u32(&mut self, key: &str, val: u32) -> Result<()>;
     /// Emit i32
-                                                        fn emit_i32(&mut self, key: &str, val: i32) -> Result<()>;
+    fn emit_i32(&mut self, key: &str, val: i32) -> Result<()>;
     /// Emit f32
-                                                        fn emit_f32(&mut self, key: &str, val: f32) -> Result<()>;
+    fn emit_f32(&mut self, key: &str, val: f32) -> Result<()>;
     /// Emit u64
-                                                        fn emit_u64(&mut self, key: &str, val: u64) -> Result<()>;
+    fn emit_u64(&mut self, key: &str, val: u64) -> Result<()>;
     /// Emit i64
-                                                        fn emit_i64(&mut self, key: &str, val: i64) -> Result<()>;
+    fn emit_i64(&mut self, key: &str, val: i64) -> Result<()>;
     /// Emit f64
-                                                        fn emit_f64(&mut self, key: &str, val: f64) -> Result<()>;
+    fn emit_f64(&mut self, key: &str, val: f64) -> Result<()>;
     /// Emit usize
-                                                        fn emit_usize(&mut self, key: &str, val: usize) -> Result<()>;
+    fn emit_usize(&mut self, key: &str, val: usize) -> Result<()>;
     /// Emit isize
-                                                        fn emit_isize(&mut self, key: &str, val: isize) -> Result<()>;
+    fn emit_isize(&mut self, key: &str, val: isize) -> Result<()>;
     /// Emit str
-                                                        fn emit_str(&mut self, key: &str, val: &str) -> Result<()>;
+    fn emit_str(&mut self, key: &str, val: &str) -> Result<()>;
 }
 
 impl Serialize for str {
@@ -129,7 +129,7 @@ impl<T: Serialize> Serialize for Option<T> {
     }
 }
 
-impl<T: Serialize+'static> SyncSerialize for Option<T> {}
+impl<T: Serialize + 'static> SyncSerialize for Option<T> {}
 
 impl Serialize for String {
     fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
@@ -143,7 +143,8 @@ impl SyncSerialize for String {}
 macro_rules! impl_serialize_for{
     ($t:ty, $f:ident) => {
         impl Serialize for $t {
-            fn serialize(&self, _rinfo : &RecordInfo, key : &str, serializer : &mut Serializer) -> Result<()> {
+            fn serialize(&self, _rinfo : &RecordInfo, key : &str, serializer : &mut Serializer)
+                         -> Result<()> {
                 serializer.$f(key, *self)
             }
         }
@@ -176,7 +177,7 @@ impl<S: Serialize, F: Sync + Send + Fn(&RecordInfo) -> S> Serialize for F {
 impl<S: Serialize, F: 'static + Sync + Send + Fn(&RecordInfo) -> S> SyncSerialize for F {}
 
 
-impl<W : io::Write+?Sized> Serializer for W {
+impl<W: io::Write + ?Sized> Serializer for W {
     fn emit_none(&mut self, key: &str) -> Result<()> {
         try!(write!(self, "{}: {}", key, "None"));
         Ok(())

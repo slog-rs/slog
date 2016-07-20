@@ -73,7 +73,8 @@ impl Json {
                 "msg" => |rinfo : &RecordInfo| {
                     rinfo.msg.clone()
                 }
-                ).to_vec(),
+                )
+                .to_vec(),
         }
     }
 
@@ -140,12 +141,12 @@ impl JsonBuilder {
 // https://github.com/serde-rs/serde/issues/386
 // is implemented
 struct SkipFirstByte<W> {
-    first : bool,
-    io : W,
+    first: bool,
+    io: W,
 }
 
-impl<W : io::Write> SkipFirstByte<W> {
-    fn new(io : W) -> Self {
+impl<W: io::Write> SkipFirstByte<W> {
+    fn new(io: W) -> Self {
         SkipFirstByte {
             first: true,
             io: io,
@@ -157,9 +158,9 @@ impl<W : io::Write> SkipFirstByte<W> {
     }
 }
 
-impl<W : io::Write> io::Write for SkipFirstByte<W> {
+impl<W: io::Write> io::Write for SkipFirstByte<W> {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        if self.first && !buf.is_empty(){
+        if self.first && !buf.is_empty() {
             self.first = false;
             try!(self.io.write_all(&buf[1..]));
         } else {
@@ -171,15 +172,15 @@ impl<W : io::Write> io::Write for SkipFirstByte<W> {
     fn flush(&mut self) -> io::Result<()> {
         self.io.flush()
     }
-
 }
 
 impl Format for Json {
     fn format(&self,
-              io : &mut io::Write,
+              io: &mut io::Write,
               rinfo: &RecordInfo,
               logger_values: &[OwnedKeyValue],
-              record_values: &[BorrowedKeyValue]) -> format::Result<()> {
+              record_values: &[BorrowedKeyValue])
+              -> format::Result<()> {
         let _ = try!(write!(io, "{{"));
         let mut serializer = serde_json::Serializer::new(SkipFirstByte::new(io));
         {
