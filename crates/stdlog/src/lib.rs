@@ -26,17 +26,16 @@ extern crate slog;
 extern crate log;
 
 use log::LogMetadata;
-
+use std::sync;
 
 use slog::Level;
 
-struct Logger {
-    logger: slog::Logger,
-}
+// TODO: Change this to use thread local copies
+struct Logger(sync::Mutex<slog::Logger>);
 
 impl Logger {
     fn new(logger: slog::Logger) -> Self {
-        Logger { logger: logger }
+        Logger ( sync::Mutex::new(logger) )
     }
 }
 
@@ -49,6 +48,7 @@ fn log_to_slog_level(level: log::LogLevel) -> Level {
         log::LogLevel::Error => Level::Error,
     }
 }
+
 
 impl log::Log for Logger {
     fn enabled(&self, _: &LogMetadata) -> bool {
@@ -64,12 +64,13 @@ impl log::Log for Logger {
         let file = r.location().file();
         let line = r.location().line();
         {
-            self.logger.log(level,
-                            msg,
-                            &[("target", &target),
-                              ("module", &module),
-                              ("file", &file),
-                              ("line", &line)]);
+            let _ = self.0.lock()
+                .map(|l| (*l).log(level,
+                               msg,
+                               &[("target", &target),
+                                 ("module", &module),
+                                 ("file", &file),
+                                 ("line", &line)]));
         }
     }
 }

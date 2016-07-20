@@ -6,6 +6,7 @@ use std::io;
 use std::sync::Mutex;
 use std::sync::mpsc;
 use std::thread;
+use std::mem;
 
 use super::Level;
 use super::format;
@@ -52,14 +53,20 @@ pub use self::error::{Error, Result, ErrorKind};
 /// Implementing this trait allows writing own Drains
 pub trait Drain: Send + Sync {
     /// Write one logging record
-    fn log(&self, info: &RecordInfo, &[OwnedKeyValue], &[BorrowedKeyValue]) -> Result<()>;
+    /// As an optimization (avoiding allocations), loggers are responsible for
+    /// providing a byte buffer, that `Drain` can use for their own needs.
+    fn log(&self,
+           buf : &mut Vec<u8>,
+           info: &RecordInfo, &[OwnedKeyValue], &[BorrowedKeyValue]) -> Result<()>;
 }
 
 /// Drain discarding everything
 pub struct Discard;
 
 impl Drain for Discard {
-    fn log(&self, _: &RecordInfo, _: &[OwnedKeyValue], _: &[BorrowedKeyValue]) -> Result<()> {
+    fn log(&self,
+           _: &mut Vec<u8>,
+           _: &RecordInfo, _: &[OwnedKeyValue], _: &[BorrowedKeyValue]) -> Result<()> {
         Ok(())
     }
 }
@@ -85,11 +92,11 @@ impl<W: io::Write, F: format::Format> Streamer<W, F> {
 
 impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer<W, F> {
     fn log(&self,
+           mut buf : &mut Vec<u8>,
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
            values: &[BorrowedKeyValue])
            -> Result<()> {
-        let mut buf = Vec::with_capacity(128);
         try!(self.format.format(&mut buf, info, logger_values, values));
         {
             let mut io = try!(self.io.lock().map_err(|_| -> Error { ErrorKind::LockError.into() }));
@@ -121,15 +128,17 @@ impl<F: format::Format> AsyncStreamer<F> {
 
 impl<F: format::Format + Send> Drain for AsyncStreamer<F> {
     fn log(&self,
+           mut buf : &mut Vec<u8>,
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
            values: &[BorrowedKeyValue])
            -> Result<()> {
-        let mut buf = Vec::with_capacity(128);
         try!(self.format.format(&mut buf, info, logger_values, values));
         {
             let mut io = try!(self.io.lock().map_err(|_| -> Error { ErrorKind::LockError.into() }));
-            try!(io.write_nocopy(buf));
+            let mut new_buf = Vec::with_capacity(128);
+            mem::swap(buf, &mut new_buf);
+            try!(io.write_nocopy(new_buf));
         }
         Ok(())
     }
@@ -158,12 +167,13 @@ impl<D: Drain> Filter<D> {
 
 impl<D: Drain> Drain for Filter<D> {
     fn log(&self,
+           buf : &mut Vec<u8>,
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
            values: &[BorrowedKeyValue])
            -> Result<()> {
         if (self.cond)(&info) {
-            self.drain.log(info, logger_values, values)
+            self.drain.log(buf, info, logger_values, values)
         } else {
             Ok(())
         }
@@ -195,12 +205,13 @@ impl<D: Drain> FilterLevel<D> {
 
 impl<D: Drain> Drain for FilterLevel<D> {
     fn log(&self,
+           buf : &mut Vec<u8>,
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
            values: &[BorrowedKeyValue])
            -> Result<()> {
         if info.level.is_at_least(self.level) {
-            self.drain.log(info, logger_values, values)
+            self.drain.log(buf, info, logger_values, values)
         } else {
             Ok(())
         }
@@ -226,12 +237,13 @@ impl<D1: Drain, D2: Drain> Duplicate<D1, D2> {
 
 impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
     fn log(&self,
+           buf : &mut Vec<u8>,
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
            values: &[BorrowedKeyValue])
            -> Result<()> {
-        let res1 = self.drain1.log(info, logger_values, values);
-        let res2 = self.drain2.log(info, logger_values, values);
+        let res1 = self.drain1.log(buf, info, logger_values, values);
+        let res2 = self.drain2.log(buf, info, logger_values, values);
 
         // TODO: Don't discard e2 in case of two errors at once?
         match (res1, res2) {
@@ -264,13 +276,14 @@ impl<D1: Drain, D2: Drain> Failover<D1, D2> {
 
 impl<D1: Drain, D2: Drain> Drain for Failover<D1, D2> {
     fn log(&self,
+           buf : &mut Vec<u8>,
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
            values: &[BorrowedKeyValue])
            -> Result<()> {
-        match self.drain1.log(info, logger_values, values) {
+        match self.drain1.log(buf, info, logger_values, values) {
             Ok(_) => Ok(()),
-            Err(_) => self.drain2.log(info, logger_values, values),
+            Err(_) => self.drain2.log(buf, info, logger_values, values),
         }
     }
 }

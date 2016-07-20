@@ -12,22 +12,20 @@
 //! any logger will change it on all loggers in given hierarchy.
 use super::{OwnedKeyValue, Level, BorrowedKeyValue};
 use std::sync::Arc;
+use std::cell::RefCell;
 use crossbeam::sync::ArcCell;
 
 use drain;
 
 use chrono;
 
-struct LoggerInner {
-    drain: Arc<ArcCell<Box<drain::Drain>>>,
-    values: Vec<OwnedKeyValue>,
-}
-
-
+// TODO: Implement custom clone, that starts with a new buffer
 #[derive(Clone)]
 /// Logger
 pub struct Logger {
-    inner: Arc<LoggerInner>,
+    drain: Arc<ArcCell<Box<drain::Drain>>>,
+    values: Vec<OwnedKeyValue>,
+    buf : RefCell<Vec<u8>>,
 }
 
 impl Logger {
@@ -49,10 +47,9 @@ impl Logger {
         let drain =
             Arc::new(ArcCell::new(Arc::new(Box::new(drain::discard()) as Box<drain::Drain>)));
         Logger {
-            inner: Arc::new(LoggerInner {
-                drain: drain,
-                values: values.to_vec(),
-            }),
+            drain: drain,
+            values: values.to_vec(),
+            buf : RefCell::new(Vec::with_capacity(128)),
         }
     }
 
@@ -75,19 +72,18 @@ impl Logger {
     /// }
 
     pub fn new(&self, values: &[OwnedKeyValue]) -> Logger {
-        let mut new_values = self.inner.values.clone();
+        let mut new_values = self.values.clone();
         new_values.extend_from_slice(values);
         Logger {
-            inner: Arc::new(LoggerInner {
-                drain: self.inner.drain.clone(),
-                values: new_values,
-            }),
+            drain: self.drain.clone(),
+            values: new_values,
+            buf : RefCell::new(Vec::with_capacity(128)),
         }
     }
 
     /// Set the drain for logger and it's hierarchy
     pub fn set_drain<D: drain::Drain>(&self, drain: D) {
-        let _ = self.inner.drain.set(Arc::new(Box::new(drain)));
+        let _ = self.drain.set(Arc::new(Box::new(drain)));
     }
 
     /// Swap the existing drain with a new one
@@ -95,7 +91,7 @@ impl Logger {
     /// As the drains are shared between threads, and might still be
     /// referenced `Arc`s are being used to reference-count them.
     pub fn swap_drain(&self, drain: Arc<Box<drain::Drain>>) -> Arc<Box<drain::Drain>> {
-        self.inner.drain.set(drain)
+        self.drain.set(drain)
     }
 
     /// Log one logging record
@@ -110,7 +106,10 @@ impl Logger {
         };
 
         // By default errors in loggers are ignored
-        let _ = self.inner.drain.get().log(&info, self.inner.values.as_slice(), values);
+        let mut buf = self.buf.borrow_mut();
+        let _ = self.drain.get().log(&mut *buf, &info, self.values.as_slice(), values);
+        // TODO: Double check if this will not zero the old bytes
+        buf.clear();
     }
 
     /// Log critical level record

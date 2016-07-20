@@ -74,11 +74,11 @@ impl Streamer3164 {
 
 impl drain::Drain for Streamer3164 {
     fn log(&self,
+           mut buf : &mut Vec<u8>,
            info: &RecordInfo,
            logger_values: &[OwnedKeyValue],
            values: &[BorrowedKeyValue])
            -> slog::drain::Result<()> {
-        let mut buf = Vec::with_capacity(128);
         try!(self.format.format(&mut buf, info, logger_values, values));
         let sever = level_to_severity(info.level);
         {
