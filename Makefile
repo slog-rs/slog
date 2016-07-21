@@ -32,6 +32,8 @@ test-all:
 	cd "crates/serde"; cargo test $(CARGO_FLAGS)
 	cd "crates/json"; cargo test $(CARGO_FLAGS)
 	cd "crates/bunyan"; cargo test $(CARGO_FLAGS)
+	cd "crates/syslog"; cargo test $(CARGO_FLAGS)
+	cd "crates/stdlog"; cargo test $(CARGO_FLAGS)
 
 check:
 	$(info Running check; use `make build` to actually build)
