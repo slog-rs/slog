@@ -87,10 +87,15 @@
 //! }
 
 #![warn(missing_docs)]
+#![cfg_attr(feature="bench", feature(test))]
 
 extern crate crossbeam;
 extern crate chrono;
 extern crate rustc_serialize as serialize;
+
+
+#[cfg(feature="bench")]
+extern crate test;
 
 #[macro_use]
 extern crate error_chain;
@@ -160,3 +165,9 @@ include!("_level.rs");
 pub type OwnedKeyValue = (&'static str, Arc<ser::SyncSerialize>);
 /// Key value pair that can be part of each logging record
 pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
+
+#[cfg(test)]
+mod tests;
+
+#[cfg(all(feature="bench", test))]
+mod bench;

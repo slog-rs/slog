@@ -13,6 +13,9 @@ readme = "README.md"
 
 [workspace]
 
+[features]
+bench = []
+
 [dependencies]
 crossbeam = "0.2.9"
 chrono = "0.2.22"
