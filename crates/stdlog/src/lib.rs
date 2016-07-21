@@ -58,15 +58,15 @@ impl log::Log for Logger {
     fn log(&self, r: &log::LogRecord) {
         let level = log_to_slog_level(r.metadata().level());
 
-        let msg = &format!("{}", r.args());
         let target = r.target();
         let module = r.location().module_path();
         let file = r.location().file();
         let line = r.location().line();
+        let msg = format!("{}", r.args());
         {
             let _ = self.0.lock()
                 .map(|l| (*l).log(level,
-                               msg,
+                               &msg,
                                &[("target", &target),
                                  ("module", &module),
                                  ("file", &file),

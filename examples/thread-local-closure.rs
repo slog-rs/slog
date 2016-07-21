@@ -6,6 +6,7 @@ use std::cell::RefCell;
 use std::thread;
 
 use slog::Logger;
+use slog::RecordInfo;
 
 thread_local!(static TL_THREAD_ID: RefCell<String> = RefCell::new("main".into()));
 
@@ -15,7 +16,7 @@ fn foo(log : Logger) {
 
 fn main() {
     let root = Logger::new_root(
-        o!("thread-id" => |_:&_| {
+        o!("thread-id" => |_:&RecordInfo| {
             TL_THREAD_ID.with(|id| { id.borrow().clone() })
         }
         ));

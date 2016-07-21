@@ -192,21 +192,21 @@ impl SlogFormat for Format {
               logger_values: &[OwnedKeyValue],
               values: &[BorrowedKeyValue])
               -> slog::format::Result<()> {
-        let level_color = Colour::Fixed(severity_to_color(info.level));
+        let level_color = Colour::Fixed(severity_to_color(info.level()));
         let bold = ansi_term::Style::new().bold();
 
         if self.color {
             let _ = try!(write!(io,
                                 "{} {} {}",
                                 info.ts().format("%b %d %H:%M:%S%.3f"),
-                                level_color.paint(info.level.as_short_str()),
-                                bold.paint(info.msg.clone()).to_string()));
+                                level_color.paint(info.level().as_short_str()),
+                                bold.paint(info.msg()).to_string()));
         } else {
             let _ = try!(write!(io,
                                 "{} {} {}",
                                 info.ts().format("%b %d %H:%M:%S%.3f"),
-                                info.level.as_short_str(),
-                                info.msg));
+                                info.level().as_short_str(),
+                                info.msg()));
         }
 
         let mut serializer = Serializer::new(io, self.color);

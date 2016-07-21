@@ -43,10 +43,10 @@
 //!     let log = log.new(o!("counter" => {
 //!         let counter = counter.clone();
 //!         // Note the `move` to capture `counter`,
-//!         // and unfortunate `|_ : &_|` that helps
+//!         // and necessity to use `|_ : &RecordInfo|` that helps
 //!         // current `rustc` limitations. In the future,
 //!         // a `|_|` could work.
-//!         move |_ : &_| { counter.load(SeqCst)}
+//!         move |_ : &RecordInfo| { counter.load(SeqCst)}
 //!     }));
 //!
 //!     // Note `b!` macro for more natural `BorrowedKeyValue` sequence building.
@@ -70,7 +70,7 @@
 //!     // Closures can be used for lazy evaluation:
 //!     // This `slow_fib` won't be evaluated, as the current drain discards
 //!     // "trace" level logging records.
-//!     log.debug("debug", b!("lazy-closure" => |_ : &_| slow_fib(40)));
+//!     log.debug("debug", b!("lazy-closure" => |_ : &RecordInfo| slow_fib(40)));
 //!
 //!     // Loggers are internally atomically reference counted so can be cloned,
 //!     // passed between threads and stored without hassle.
@@ -158,6 +158,7 @@ pub mod ser;
 pub mod format;
 
 pub use logger::Logger;
+pub use logger::RecordInfo;
 
 include!("_level.rs");
 

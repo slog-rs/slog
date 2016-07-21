@@ -80,7 +80,7 @@ impl drain::Drain for Streamer3164 {
            values: &[BorrowedKeyValue])
            -> slog::drain::Result<()> {
         try!(self.format.format(&mut buf, info, logger_values, values));
-        let sever = level_to_severity(info.level);
+        let sever = level_to_severity(info.level());
         {
             let io = try!(self.io
                 .lock()

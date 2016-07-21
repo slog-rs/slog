@@ -98,13 +98,13 @@ impl Logger {
     /// Log one logging record
     ///
     /// Use specific logging functions instead.
-    pub fn log<'a>(&'a self, lvl: Level, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn log(&self, lvl: Level, msg: &str, values: &[BorrowedKeyValue]) {
 
         let mut info = RecordInfo::new(lvl, msg);
 
         // By default errors in loggers are ignored
         TL_BUF.with(|buf| {
-            let mut buf =buf.borrow_mut();
+            let mut buf = buf.borrow_mut();
             let _ = self.drain.get().log(&mut *buf, &mut info, self.values.as_slice(), values);
             // TODO: Double check if this will not zero the old bytes as it costs time
             buf.clear();
@@ -114,62 +114,62 @@ impl Logger {
     /// Log critical level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn critical<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn critical(&self, msg: &str, values: &[BorrowedKeyValue]) {
         self.log(Level::Critical, msg, values);
     }
 
     /// Log error level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn error<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn error(&self, msg: &str, values: &[BorrowedKeyValue]) {
         self.log(Level::Error, msg, values);
     }
 
     /// Log warning level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn warn<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn warn(&self, msg: &str, values: &[BorrowedKeyValue]) {
         self.log(Level::Warning, msg, values);
     }
 
     /// Log info level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn info<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn info(&self, msg: &str, values: &[BorrowedKeyValue]) {
         self.log(Level::Info, msg, values);
     }
 
     /// Log debug level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn debug<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn debug(&self, msg: &str, values: &[BorrowedKeyValue]) {
         self.log(Level::Debug, msg, values);
     }
 
     /// Log trace level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn trace<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn trace(&self, msg: &str, values: &[BorrowedKeyValue]) {
         self.log(Level::Trace, msg, values);
     }
 }
 
 /// Common information about a logging record
-pub struct RecordInfo {
+pub struct RecordInfo<'a> {
     ts: RefCell<Option<chrono::DateTime<chrono::UTC>>>,
     /// Logging level
-    pub level: Level,
+    level: Level,
     /// Message
-    pub msg: String,
+    msg: &'a str,
 }
 
-impl RecordInfo {
+impl<'a> RecordInfo<'a> {
     /// Create a new `RecordInfo` with a current timestamp
-    pub fn new<'a>(level: Level, msg: &'a str) -> Self {
+    pub fn new(level: Level, msg: &'a str) -> Self {
         RecordInfo {
             ts: RefCell::new(None),
             level: level,
-            msg: String::from(msg),
+            msg: msg,
         }
     }
 
@@ -192,5 +192,16 @@ impl RecordInfo {
     /// Set timestamp
     pub fn set_ts(&self, ts : chrono::DateTime<chrono::UTC>) {
         *self.ts.borrow_mut() = Some(ts);
+    }
+
+    /// Get a log record message
+    pub fn msg(&self) -> &str {
+        self.msg
+    }
+
+
+    /// Get record logging level
+    pub fn level(&self) -> Level {
+        self.level
     }
 }

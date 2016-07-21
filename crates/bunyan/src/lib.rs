@@ -64,13 +64,13 @@ pub fn new() -> Json {
                     rinfo.ts().to_rfc3339()
                 },
                 "level" => |rinfo : &RecordInfo| {
-                    level_to_string(rinfo.level)
+                    level_to_string(rinfo.level())
                 },
                 // TODO: slog loggers don't have names...
                 "name" => "slog-rs",
                 "v" => 0usize,
                 "msg" => |rinfo : &RecordInfo| {
-                    rinfo.msg.clone()
+                    rinfo.msg().to_string()
                 }
             ));
     b.build()
