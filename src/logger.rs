@@ -19,13 +19,16 @@ use drain;
 
 use chrono;
 
+thread_local! {
+    static TL_BUF: RefCell<Vec<u8>> = RefCell::new(Vec::with_capacity(128));
+}
+
 // TODO: Implement custom clone, that starts with a new buffer
 #[derive(Clone)]
 /// Logger
 pub struct Logger {
     drain: Arc<ArcCell<Box<drain::Drain>>>,
     values: Vec<OwnedKeyValue>,
-    buf : RefCell<Vec<u8>>,
 }
 
 impl Logger {
@@ -49,7 +52,6 @@ impl Logger {
         Logger {
             drain: drain,
             values: values.to_vec(),
-            buf : RefCell::new(Vec::with_capacity(128)),
         }
     }
 
@@ -77,7 +79,6 @@ impl Logger {
         Logger {
             drain: self.drain.clone(),
             values: new_values,
-            buf : RefCell::new(Vec::with_capacity(128)),
         }
     }
 
@@ -106,10 +107,12 @@ impl Logger {
         };
 
         // By default errors in loggers are ignored
-        let mut buf = self.buf.borrow_mut();
-        let _ = self.drain.get().log(&mut *buf, &info, self.values.as_slice(), values);
-        // TODO: Double check if this will not zero the old bytes
-        buf.clear();
+        TL_BUF.with(|buf| {
+            let mut buf =buf.borrow_mut();
+            let _ = self.drain.get().log(&mut *buf, &info, self.values.as_slice(), values);
+            // TODO: Double check if this will not zero the old bytes as it costs time
+            buf.clear();
+        });
     }
 
     /// Log critical level record
