@@ -65,7 +65,7 @@ impl Json {
             newlines: true,
             values: o!(
                 "ts" => |rinfo : &RecordInfo| {
-                    rinfo.ts.to_rfc3339()
+                    rinfo.ts().to_rfc3339()
                 },
                 "level" => |rinfo : &RecordInfo| {
                     level_to_string(rinfo.level)

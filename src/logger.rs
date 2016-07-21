@@ -100,16 +100,12 @@ impl Logger {
     /// Use specific logging functions instead.
     pub fn log<'a>(&'a self, lvl: Level, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
 
-        let info = RecordInfo {
-            ts: chrono::UTC::now(),
-            msg: msg.to_string(),
-            level: lvl,
-        };
+        let mut info = RecordInfo::new(lvl, msg);
 
         // By default errors in loggers are ignored
         TL_BUF.with(|buf| {
             let mut buf =buf.borrow_mut();
-            let _ = self.drain.get().log(&mut *buf, &info, self.values.as_slice(), values);
+            let _ = self.drain.get().log(&mut *buf, &mut info, self.values.as_slice(), values);
             // TODO: Double check if this will not zero the old bytes as it costs time
             buf.clear();
         });
@@ -160,8 +156,7 @@ impl Logger {
 
 /// Common information about a logging record
 pub struct RecordInfo {
-    /// Timestamp
-    pub ts: chrono::DateTime<chrono::UTC>,
+    ts: RefCell<Option<chrono::DateTime<chrono::UTC>>>,
     /// Logging level
     pub level: Level,
     /// Message
@@ -170,11 +165,32 @@ pub struct RecordInfo {
 
 impl RecordInfo {
     /// Create a new `RecordInfo` with a current timestamp
-    pub fn new(level: Level, msg: String) -> Self {
+    pub fn new<'a>(level: Level, msg: &'a str) -> Self {
         RecordInfo {
-            ts: chrono::UTC::now(),
+            ts: RefCell::new(None),
             level: level,
-            msg: msg,
+            msg: String::from(msg),
         }
+    }
+
+    /// Timestamp
+    ///
+    /// Lazily evaluated timestamp
+    pub fn ts(&self) -> chrono::DateTime<chrono::UTC> {
+        let mut ts = self.ts.borrow_mut();
+        match *ts {
+            None => {
+                let now = chrono::UTC::now();
+                *ts = Some(now);
+                now
+            },
+            Some(ts) => ts
+        }
+    }
+
+
+    /// Set timestamp
+    pub fn set_ts(&self, ts : chrono::DateTime<chrono::UTC>) {
+        *self.ts.borrow_mut() = Some(ts);
     }
 }

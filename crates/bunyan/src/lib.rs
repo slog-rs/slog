@@ -61,7 +61,7 @@ pub fn new() -> Json {
                 "pid" => nix::unistd::getpid() as usize,
                 "host" => get_hostname(),
                 "time" => |rinfo : &RecordInfo| {
-                    rinfo.ts.to_rfc3339()
+                    rinfo.ts().to_rfc3339()
                 },
                 "level" => |rinfo : &RecordInfo| {
                     level_to_string(rinfo.level)
@@ -90,13 +90,13 @@ mod test {
     fn trivial() {
         let formatter = new();
 
-        let dt = UTC.ymd(2014, 7, 8).and_hms(9, 10, 11);
 
-        let info = RecordInfo {
-            ts: dt,
-            level: Level::Info,
-            msg: "message".to_string(),
-        };
+        let info = RecordInfo::new(
+            Level::Info,
+            "message",
+        );
+
+        info.set_ts(UTC.ymd(2014, 7, 8).and_hms(9, 10, 11));
 
         let mut v = vec![];
         formatter.format(&mut v, &info, &[], &[]).unwrap();

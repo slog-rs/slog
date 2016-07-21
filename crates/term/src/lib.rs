@@ -198,13 +198,13 @@ impl SlogFormat for Format {
         if self.color {
             let _ = try!(write!(io,
                                 "{} {} {}",
-                                info.ts.format("%b %d %H:%M:%S%.3f"),
+                                info.ts().format("%b %d %H:%M:%S%.3f"),
                                 level_color.paint(info.level.as_short_str()),
                                 bold.paint(info.msg.clone()).to_string()));
         } else {
             let _ = try!(write!(io,
                                 "{} {} {}",
-                                info.ts.format("%b %d %H:%M:%S%.3f"),
+                                info.ts().format("%b %d %H:%M:%S%.3f"),
                                 info.level.as_short_str(),
                                 info.msg));
         }
