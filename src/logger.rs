@@ -20,7 +20,7 @@ use drain;
 use chrono;
 
 thread_local! {
-    static TL_BUF: RefCell<Vec<u8>> = RefCell::new(Vec::with_capacity(128));
+    static TL_BUF: RefCell<Vec<u8>> = RefCell::new(Vec::with_capacity(128))
 }
 
 // TODO: Implement custom clone, that starts with a new buffer
