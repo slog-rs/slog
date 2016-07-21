@@ -15,6 +15,8 @@ use std::sync::Arc;
 use std::cell::RefCell;
 use crossbeam::sync::ArcCell;
 
+use std::fmt;
+
 use drain;
 
 use chrono;
@@ -98,7 +100,7 @@ impl Logger {
     /// Log one logging record
     ///
     /// Use specific logging functions instead.
-    pub fn log<'a>(&'a self, lvl: Level, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn log<'a>(&'a self, lvl: Level, msg: &'a fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
 
         let mut info = RecordInfo::new(lvl, msg);
 
@@ -114,62 +116,62 @@ impl Logger {
     /// Log critical level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn critical<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn critical<'a>(&'a self, msg: &'a fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Critical, msg, values);
     }
 
     /// Log error level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn error<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn error<'a>(&'a self, msg: &'a  fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Error, msg, values);
     }
 
     /// Log warning level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn warn<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn warn<'a>(&'a self, msg: &'a fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Warning, msg, values);
     }
 
     /// Log info level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn info<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn info<'a>(&'a self, msg: &'a fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Info, msg, values);
     }
 
     /// Log debug level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn debug<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn debug<'a>(&'a self, msg: &'a  fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Debug, msg, values);
     }
 
     /// Log trace level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn trace<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn trace<'a>(&'a self, msg: &'a fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Trace, msg, values);
     }
 }
 
 /// Common information about a logging record
-pub struct RecordInfo {
+pub struct RecordInfo<'a> {
     ts: RefCell<Option<chrono::DateTime<chrono::UTC>>>,
     /// Logging level
     pub level: Level,
     /// Message
-    pub msg: String,
+    pub msg: &'a fmt::Arguments<'a>,
 }
 
-impl RecordInfo {
+impl<'a> RecordInfo<'a> {
     /// Create a new `RecordInfo` with a current timestamp
-    pub fn new<'a>(level: Level, msg: &'a str) -> Self {
+    pub fn new(level: Level, msg: &'a fmt::Arguments<'a>) -> Self {
         RecordInfo {
             ts: RefCell::new(None),
             level: level,
-            msg: String::from(msg),
+            msg: msg,
         }
     }
 

@@ -20,7 +20,7 @@ extern crate isatty;
 extern crate ansi_term;
 extern crate rustc_serialize;
 
-use std::io;
+use std::{io, fmt};
 use rustc_serialize::hex::ToHex;
 
 use ansi_term::Colour;
@@ -200,7 +200,7 @@ impl SlogFormat for Format {
                                 "{} {} {}",
                                 info.ts().format("%b %d %H:%M:%S%.3f"),
                                 level_color.paint(info.level.as_short_str()),
-                                bold.paint(info.msg.clone()).to_string()));
+                                bold.paint(fmt::format(info.msg)).to_string()));
         } else {
             let _ = try!(write!(io,
                                 "{} {} {}",
