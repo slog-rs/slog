@@ -1,7 +1,8 @@
 use std::io;
 use serialize::hex::ToHex;
 
-use super::logger::RecordInfo;
+use super::logger::{RecordInfo, Record};
+
 #[allow(missing_docs)]
 mod error {
     use std::io;
@@ -168,13 +169,13 @@ impl_serialize_for!(u64, emit_u64);
 impl_serialize_for!(i64, emit_i64);
 impl_serialize_for!(f64, emit_f64);
 
-impl<S: Serialize, F: Sync + Send + Fn(&RecordInfo) -> S> Serialize for F {
+impl<S: Serialize, F: Sync + Send + Fn(Record) -> S> Serialize for F {
     fn serialize(&self, rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
-        (*self)(rinfo).serialize(rinfo, key, serializer)
+        (*self)(rinfo.for_closures()).serialize(rinfo, key, serializer)
     }
 }
 
-impl<S: Serialize, F: 'static + Sync + Send + Fn(&RecordInfo) -> S> SyncSerialize for F {}
+impl<S: Serialize, F: 'static + Sync + Send + for<'a> Fn(Record) -> S> SyncSerialize for F {}
 
 
 impl<W: io::Write + ?Sized> Serializer for W {

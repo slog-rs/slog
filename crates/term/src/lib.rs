@@ -200,13 +200,13 @@ impl SlogFormat for Format {
                                 "{} {} {}",
                                 info.ts().format("%b %d %H:%M:%S%.3f"),
                                 level_color.paint(info.level.as_short_str()),
-                                bold.paint(fmt::format(info.msg)).to_string()));
+                                bold.paint(info.msg().as_str()).to_string()));
         } else {
             let _ = try!(write!(io,
                                 "{} {} {}",
                                 info.ts().format("%b %d %H:%M:%S%.3f"),
                                 info.level.as_short_str(),
-                                info.msg));
+                                info.msg()));
         }
 
         let mut serializer = Serializer::new(io, self.color);

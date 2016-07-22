@@ -6,7 +6,7 @@ fn empty_log_discard(b: &mut Bencher) {
     let log = Logger::new_root(o!());
 
     b.iter(|| {
-        log.info("", b!());
+        log.info(&format_args!(""), b!());
     });
 }
 
@@ -15,7 +15,7 @@ fn nonempty_log_discard(b: &mut Bencher) {
     let log = Logger::new_root(o!("build" => "123456", "id" => 123456));
 
     b.iter(|| {
-        log.info("operation failed", b!("what" => "write"));
+        log.info(&format_args!(""), b!("what" => "write"));
     });
 }
 

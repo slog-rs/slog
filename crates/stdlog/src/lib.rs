@@ -58,7 +58,7 @@ impl log::Log for Logger {
     fn log(&self, r: &log::LogRecord) {
         let level = log_to_slog_level(r.metadata().level());
 
-        let msg = &format!("{}", r.args());
+        let msg = r.args();
         let target = r.target();
         let module = r.location().module_path();
         let file = r.location().file();

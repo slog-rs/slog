@@ -162,7 +162,8 @@ pub struct RecordInfo<'a> {
     /// Logging level
     pub level: Level,
     /// Message
-    pub msg: &'a fmt::Arguments<'a>,
+    msg: &'a fmt::Arguments<'a>,
+    msg_str : RefCell<Option<Arc<String>>>,
 }
 
 impl<'a> RecordInfo<'a> {
@@ -172,6 +173,7 @@ impl<'a> RecordInfo<'a> {
             ts: RefCell::new(None),
             level: level,
             msg: msg,
+            msg_str: RefCell::new(None),
         }
     }
 
@@ -194,5 +196,54 @@ impl<'a> RecordInfo<'a> {
     /// Set timestamp
     pub fn set_ts(&self, ts : chrono::DateTime<chrono::UTC>) {
         *self.ts.borrow_mut() = Some(ts);
+    }
+
+    /// Get a log record message
+    pub fn msg(&self) -> Arc<String> {
+        let mut msg = self.msg_str.borrow_mut();
+        let new_msg = match *msg {
+            None => {
+                Arc::new(format!("{}", *self.msg))
+            },
+            Some(ref msg) => return msg.clone()
+        };
+        *msg = Some(new_msg.clone());
+        new_msg
+    }
+
+    /// TODO: Make private
+    pub fn for_closures(&self) -> Record {
+        Record {
+            ts: self.ts(),
+            level: self.level,
+            msg: self.msg()
+        }
+    }
+}
+
+/// Common information about a logging record
+pub struct Record {
+    ts: chrono::DateTime<chrono::UTC>,
+    /// Logging level
+    pub level: Level,
+    /// Message
+    pub msg : Arc<String>,
+}
+
+impl Record {
+
+    /// Get timestamp
+    pub fn ts(&self) -> chrono::DateTime<chrono::UTC> {
+        self.ts
+    }
+
+    /// Get record message
+    pub fn msg(&self) -> &str{
+        &self.msg
+    }
+
+    /// Get record logging level
+    pub fn level(&self) -> Level{
+        self.level
     }
 }

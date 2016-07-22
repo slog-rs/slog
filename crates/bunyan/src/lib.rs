@@ -27,7 +27,7 @@ extern crate chrono;
 extern crate slog_json;
 
 use slog_json::Json;
-use slog::logger::RecordInfo;
+use slog::logger::Record;
 use slog::Level;
 
 fn get_hostname() -> String {
@@ -60,17 +60,17 @@ pub fn new() -> Json {
         .add_key_values(o!(
                 "pid" => nix::unistd::getpid() as usize,
                 "host" => get_hostname(),
-                "time" => |rinfo : &RecordInfo| {
+                "time" => |rinfo : Record| {
                     rinfo.ts().to_rfc3339()
                 },
-                "level" => |rinfo : &RecordInfo| {
+                "level" => |rinfo : Record| {
                     level_to_string(rinfo.level)
                 },
                 // TODO: slog loggers don't have names...
                 "name" => "slog-rs",
                 "v" => 0usize,
-                "msg" => |rinfo : &RecordInfo| {
-                    rinfo.msg.clone()
+                "msg" => |rinfo : Record| {
+                    rinfo.msg().to_string()
                 }
             ));
     b.build()
