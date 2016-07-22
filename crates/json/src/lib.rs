@@ -27,7 +27,7 @@ extern crate serde_json;
 use std::io;
 
 use slog_serde::SerdeSerializer;
-use slog::logger::{RecordInfo, Record};
+use slog::logger::{RecordInfo};
 use slog::{Level, OwnedKeyValue, BorrowedKeyValue};
 use slog::format::Format;
 use slog::Level::*;
@@ -64,13 +64,13 @@ impl Json {
         Json {
             newlines: true,
             values: o!(
-                "ts" => move |rinfo : Record| {
+                "ts" => move |rinfo : &RecordInfo| {
                     rinfo.ts().to_rfc3339()
                 },
-                "level" => move |rinfo : Record| {
+                "level" => move |rinfo : &RecordInfo| {
                     level_to_string(rinfo.level())
                 },
-                "msg" => move |rinfo : Record| {
+                "msg" => move |rinfo : &RecordInfo| {
                     rinfo.msg().to_string()
                 }
                 )

@@ -100,13 +100,13 @@ impl Logger {
     /// Log one logging record
     ///
     /// Use specific logging functions instead.
-    pub fn log<'a>(&'a self, lvl: Level, msg: &'a fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn log<'a>(&'a self, lvl: Level, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
 
         let mut info = RecordInfo::new(lvl, msg);
 
         // By default errors in loggers are ignored
         TL_BUF.with(|buf| {
-            let mut buf =buf.borrow_mut();
+            let mut buf = buf.borrow_mut();
             let _ = self.drain.get().log(&mut *buf, &mut info, self.values.as_slice(), values);
             // TODO: Double check if this will not zero the old bytes as it costs time
             buf.clear();
@@ -116,42 +116,42 @@ impl Logger {
     /// Log critical level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn critical<'a>(&'a self, msg: &'a fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn critical<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Critical, msg, values);
     }
 
     /// Log error level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn error<'a>(&'a self, msg: &'a  fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn error<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Error, msg, values);
     }
 
     /// Log warning level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn warn<'a>(&'a self, msg: &'a fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn warn<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Warning, msg, values);
     }
 
     /// Log info level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn info<'a>(&'a self, msg: &'a fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn info<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Info, msg, values);
     }
 
     /// Log debug level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn debug<'a>(&'a self, msg: &'a  fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn debug<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Debug, msg, values);
     }
 
     /// Log trace level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn trace<'a>(&'a self, msg: &'a fmt::Arguments<'a>, values: &'a [BorrowedKeyValue<'a>]) {
+    pub fn trace<'a>(&'a self, msg: &'a str, values: &'a [BorrowedKeyValue<'a>]) {
         self.log(Level::Trace, msg, values);
     }
 }
@@ -160,20 +160,18 @@ impl Logger {
 pub struct RecordInfo<'a> {
     ts: RefCell<Option<chrono::DateTime<chrono::UTC>>>,
     /// Logging level
-    pub level: Level,
+    level: Level,
     /// Message
-    msg: &'a fmt::Arguments<'a>,
-    msg_str : RefCell<Option<Arc<String>>>,
+    msg: &'a str,
 }
 
 impl<'a> RecordInfo<'a> {
     /// Create a new `RecordInfo` with a current timestamp
-    pub fn new(level: Level, msg: &'a fmt::Arguments<'a>) -> Self {
+    pub fn new(level: Level, msg: &'a str) -> Self {
         RecordInfo {
             ts: RefCell::new(None),
             level: level,
             msg: msg,
-            msg_str: RefCell::new(None),
         }
     }
 
@@ -199,51 +197,13 @@ impl<'a> RecordInfo<'a> {
     }
 
     /// Get a log record message
-    pub fn msg(&self) -> Arc<String> {
-        let mut msg = self.msg_str.borrow_mut();
-        let new_msg = match *msg {
-            None => {
-                Arc::new(format!("{}", *self.msg))
-            },
-            Some(ref msg) => return msg.clone()
-        };
-        *msg = Some(new_msg.clone());
-        new_msg
+    pub fn msg(&self) -> &str {
+        self.msg
     }
 
-    /// TODO: Make private
-    pub fn for_closures(&self) -> Record {
-        Record {
-            ts: self.ts(),
-            level: self.level,
-            msg: self.msg()
-        }
-    }
-}
-
-/// Common information about a logging record
-pub struct Record {
-    ts: chrono::DateTime<chrono::UTC>,
-    /// Logging level
-    pub level: Level,
-    /// Message
-    pub msg : Arc<String>,
-}
-
-impl Record {
-
-    /// Get timestamp
-    pub fn ts(&self) -> chrono::DateTime<chrono::UTC> {
-        self.ts
-    }
-
-    /// Get record message
-    pub fn msg(&self) -> &str{
-        &self.msg
-    }
 
     /// Get record logging level
-    pub fn level(&self) -> Level{
+    pub fn level(&self) -> Level {
         self.level
     }
 }

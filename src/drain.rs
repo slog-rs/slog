@@ -210,7 +210,7 @@ impl<D: Drain> Drain for FilterLevel<D> {
            logger_values: &[OwnedKeyValue],
            values: &[BorrowedKeyValue])
            -> Result<()> {
-        if info.level.is_at_least(self.level) {
+        if info.level().is_at_least(self.level) {
             self.drain.log(buf, info, logger_values, values)
         } else {
             Ok(())
