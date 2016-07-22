@@ -12,7 +12,6 @@ ALL_TARGETS += build $(EXAMPLES) test doc crates
 ifneq ($(RELEASE),)
 $(info RELEASE BUILD: $(PKG_NAME))
 CARGO_FLAGS += --release
-ALL_TARGETS += bench
 else
 $(info DEBUG BUILD: $(PKG_NAME); use `RELEASE=true make [args]` for release build)
 endif

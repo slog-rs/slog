@@ -6,6 +6,7 @@ rust:
 script:
   - make all
   - make travistest
+  - if [ "$TRAVIS_RUST_VERSION" == "nightly" ]; then make bench ; fi
 
 env:
   global:
