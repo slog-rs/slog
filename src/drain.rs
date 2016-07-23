@@ -4,14 +4,16 @@
 //! into given destination.
 use std::io;
 use std::sync::Mutex;
-use std::sync::mpsc;
+use std::sync::{mpsc, Arc};
 use std::thread;
 use std::mem;
 
-use super::Level;
+use super::{Level, Logger};
 use super::format;
 use super::logger::RecordInfo;
 use super::{OwnedKeyValue, BorrowedKeyValue};
+
+use crossbeam::sync::ArcCell;
 
 #[allow(missing_docs)]
 mod error {
@@ -58,6 +60,35 @@ pub trait Drain: Send + Sync {
     fn log(&self,
            buf : &mut Vec<u8>,
            info: &RecordInfo, &[OwnedKeyValue], &[BorrowedKeyValue]) -> Result<()>;
+
+}
+
+/// Convenience trait allowing turning drain into root `Logger`
+///
+/// `Logger::new_root` shortcut
+pub trait IntoLogger : Drain+Sized+'static {
+    /// Turn drain into root `Logger`
+    fn into_logger(self, values: &[OwnedKeyValue]) -> Logger {
+        Logger::new_root(values, self)
+    }
+}
+
+impl<D : Drain+Sized+'static> IntoLogger for D {}
+
+impl<D:Drain> Drain for Box<D> {
+    fn log(&self,
+           buf : &mut Vec<u8>,
+           info: &RecordInfo, o : &[OwnedKeyValue], b : &[BorrowedKeyValue]) -> Result<()> {
+        (**self).log(buf, info, o, b)
+    }
+}
+
+impl<D:Drain> Drain for Arc<D> {
+    fn log(&self,
+           buf : &mut Vec<u8>,
+           info: &RecordInfo, o : &[OwnedKeyValue], b : &[BorrowedKeyValue]) -> Result<()> {
+        (**self).log(buf, info, o, b)
+    }
 }
 
 /// Drain discarding everything
@@ -70,6 +101,51 @@ impl Drain for Discard {
         Ok(())
     }
 }
+
+/// A handle to `AtomicSwitch` allowing to switch it's sub-drain
+pub struct AtomicSwitchCtrl(Arc<ArcCell<Box<Drain>>>);
+
+/// A drain allowing to atomically switch a sub-drain at runtime
+pub struct AtomicSwitch(Arc<ArcCell<Box<Drain>>>);
+
+impl AtomicSwitchCtrl {
+    /// Create new `AtomicSwitchCtrl`
+    pub fn new<D: Drain+'static>(d : D) -> Self{
+        let a = Arc::new(ArcCell::new(Arc::new(Box::new(d) as Box<Drain>)));
+        AtomicSwitchCtrl(a)
+    }
+
+    /// Create new `AtomicSwitchCtrl` from an existing `Arc<...>`
+    pub fn new_from_arc(d : Arc<ArcCell<Box<Drain>>>) -> Self{
+        AtomicSwitchCtrl(d)
+    }
+
+    /// Get a `AtomicSwitch` drain controlled by this `AtomicSwitchCtrl`
+    pub fn drain(&self) -> AtomicSwitch {
+        AtomicSwitch(self.0.clone())
+    }
+
+    /// Set the drain
+    pub fn set<D: Drain>(&self, drain: D) {
+        let _ = self.0.set(Arc::new(Box::new(drain)));
+    }
+
+    /// Swap the existing drain with a new one
+    pub fn swap(&self, drain: Arc<Box<Drain>>) -> Arc<Box<Drain>> {
+        self.0.set(drain)
+    }
+}
+impl Drain for AtomicSwitch {
+    fn log(&self,
+           mut buf : &mut Vec<u8>,
+           info: &RecordInfo,
+           logger_values: &[OwnedKeyValue],
+           values: &[BorrowedKeyValue])
+           -> Result<()> {
+            self.0.get().log(buf, info, logger_values, values)
+    }
+}
+
 
 /// Drain formating records and writing them to a byte-stream (io::Write)
 ///

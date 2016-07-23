@@ -2,11 +2,10 @@
 extern crate slog;
 extern crate slog_term;
 
-use slog::*;
+use slog::drain::IntoLogger;
 
 fn main() {
-    let log = Logger::new_root(o!("version" => "0.5"));
-    log.set_drain(slog_term::stderr());
+    let log = slog_term::stderr().into_logger(o!("version" => "0.5"));
 
     log.trace("logging a trace message", b!());
     log.debug("debug values", b!("x" => 1, "y" => -1));

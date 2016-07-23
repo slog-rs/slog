@@ -4,6 +4,7 @@ extern crate slog_json;
 extern crate slog_term;
 
 use slog::*;
+use slog::drain::{IntoLogger, AtomicSwitchCtrl};
 use std::thread;
 
 use std::sync::atomic::Ordering::SeqCst;
@@ -21,13 +22,20 @@ fn slow_fib(n : u64) -> u64 {
 }
 
 fn main() {
-    // Create a new group of loggers, sharing one drain.
+    // Create a new drain hierarchy, for the need of your program.
+    // Choose from collection of existing drains, or write your own `struct`
+    // implementing `Drain` trait.
+    let drain = slog_term::async_stderr();
+
+    // `AtomicSwitch` is a drain that wraps other drains and allows to change
+    // it atomically in runtime
+    let ctrl = AtomicSwitchCtrl::new(drain);
+    let drain = ctrl.drain();
+
+    // Turn a drain into new group of loggers, sharing that drain.
     //
     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
-    let root = Logger::new_root(o!("version" => VERSION, "build-id" => "8dfljdf"));
-
-    // Set drains to specify the output format and destination.
-    root.set_drain(slog_term::async_stderr());
+    let root = drain.into_logger(o!("version" => VERSION, "build-id" => "8dfljdf"));
 
     // Build logging context as data becomes available.
     //
@@ -53,7 +61,7 @@ fn main() {
     log.info("after-fetch-add", b!()); // counter == 1
 
     // Drains can be swapped atomically (race-free).
-    log.set_drain(
+    ctrl.set(
         // drains are composable
         drain::filter_level(
             Level::Info,

@@ -14,7 +14,10 @@
 //! use slog::*;
 //!
 //! fn main() {
-//!     let root = Logger::new_root(o!("build-id" => "8dfljdf"));
+//!     let root = Logger::new_root(
+//!         o!("build-id" => "8dfljdf"),
+//!         slog::drain::discard(),
+//!     );
 //!     slog_stdlog::set_logger(root).unwrap();
 //!     info!("standard logging redirected to slog");
 //! }

@@ -1,9 +1,11 @@
 use test::Bencher;
 use super::*;
+use super::drain::IntoLogger;
 
 #[bench]
 fn empty_log_discard(b: &mut Bencher) {
-    let log = Logger::new_root(o!());
+    let d = drain::discard();
+    let log = d.into_logger(o!());
 
     b.iter(|| {
         log.info("", b!());
@@ -12,7 +14,8 @@ fn empty_log_discard(b: &mut Bencher) {
 
 #[bench]
 fn nonempty_log_discard(b: &mut Bencher) {
-    let log = Logger::new_root(o!("build" => "123456", "id" => 123456));
+    let d = drain::discard();
+    let log = d.into_logger(o!("build" => "123456", "id" => 123456));
 
     b.iter(|| {
         log.info("", b!("what" => "write"));
@@ -21,7 +24,8 @@ fn nonempty_log_discard(b: &mut Bencher) {
 
 #[bench]
 fn empty_logger_clone(b: &mut Bencher) {
-    let log = Logger::new_root(o!());
+    let d = drain::discard();
+    let log = d.into_logger(o!());
 
     b.iter(|| {
         log.clone()
@@ -30,7 +34,8 @@ fn empty_logger_clone(b: &mut Bencher) {
 
 #[bench]
 fn nonempty_logger_clone(b: &mut Bencher) {
-    let log = Logger::new_root(o!("build" => "123456", "id" => 123456));
+    let d = drain::discard();
+    let log = d.into_logger(o!("build" => "123456", "id" => 123456));
 
     b.iter(|| {
         log.clone()
@@ -39,7 +44,8 @@ fn nonempty_logger_clone(b: &mut Bencher) {
 
 #[bench]
 fn empty_logger_new(b: &mut Bencher) {
-    let log = Logger::new_root(o!());
+    let d = drain::discard();
+    let log = d.into_logger(o!());
 
     b.iter(|| {
         log.new(o!())
@@ -49,7 +55,8 @@ fn empty_logger_new(b: &mut Bencher) {
 
 #[bench]
 fn nonempty_logger_new(b: &mut Bencher) {
-    let log = Logger::new_root(o!("build" => "123456", "id" => 123456));
+    let d = drain::discard();
+    let log = d.into_logger(o!("build" => "123456", "id" => 123456));
 
     b.iter(|| {
         log.new(o!("what" => "write"));

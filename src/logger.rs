@@ -13,7 +13,6 @@
 use super::{OwnedKeyValue, Level, BorrowedKeyValue};
 use std::sync::Arc;
 use std::cell::RefCell;
-use crossbeam::sync::ArcCell;
 
 use drain;
 
@@ -27,7 +26,7 @@ thread_local! {
 #[derive(Clone)]
 /// Logger
 pub struct Logger {
-    drain: Arc<ArcCell<Box<drain::Drain>>>,
+    drain: Arc<drain::Drain>,
     values: Vec<OwnedKeyValue>,
 }
 
@@ -44,13 +43,11 @@ impl Logger {
     /// extern crate slog;
     ///
     /// fn main() {
-    ///     let root = slog::Logger::new_root(o!("key1" => "value1", "key2" => "value2"));
+    ///     let root = slog::Logger::new_root(o!("key1" => "value1", "key2" => "value2"), slog::drain::discard());
     /// }
-    pub fn new_root(values: &[OwnedKeyValue]) -> Logger {
-        let drain =
-            Arc::new(ArcCell::new(Arc::new(Box::new(drain::discard()) as Box<drain::Drain>)));
+    pub fn new_root<D : 'static+drain::Drain+Sized>(values: &[OwnedKeyValue], d : D) -> Logger {
         Logger {
-            drain: drain,
+            drain: Arc::new(d),
             values: values.to_vec(),
         }
     }
@@ -67,12 +64,12 @@ impl Logger {
     /// ```
     /// #[macro_use]
     /// extern crate slog;
+    /// use slog::drain::IntoLogger;
     ///
     /// fn main() {
-    ///     let root = slog::Logger::new_root(o!("key1" => "value1", "key2" => "value2"));
+    ///     let root = slog::drain::discard().into_logger(o!("key1" => "value1", "key2" => "value2"));
     ///     let log = root.new(o!("key" => "value"));
     /// }
-
     pub fn new(&self, values: &[OwnedKeyValue]) -> Logger {
         let mut new_values = self.values.clone();
         new_values.extend_from_slice(values);
@@ -80,19 +77,6 @@ impl Logger {
             drain: self.drain.clone(),
             values: new_values,
         }
-    }
-
-    /// Set the drain for logger and it's hierarchy
-    pub fn set_drain<D: drain::Drain>(&self, drain: D) {
-        let _ = self.drain.set(Arc::new(Box::new(drain)));
-    }
-
-    /// Swap the existing drain with a new one
-    ///
-    /// As the drains are shared between threads, and might still be
-    /// referenced `Arc`s are being used to reference-count them.
-    pub fn swap_drain(&self, drain: Arc<Box<drain::Drain>>) -> Arc<Box<drain::Drain>> {
-        self.drain.set(drain)
     }
 
     /// Log one logging record
@@ -105,7 +89,7 @@ impl Logger {
         // By default errors in loggers are ignored
         TL_BUF.with(|buf| {
             let mut buf = buf.borrow_mut();
-            let _ = self.drain.get().log(&mut *buf, &mut info, self.values.as_slice(), values);
+            let _ = self.drain.log(&mut *buf, &mut info, self.values.as_slice(), values);
             // TODO: Double check if this will not zero the old bytes as it costs time
             buf.clear();
         });

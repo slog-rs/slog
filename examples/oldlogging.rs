@@ -5,11 +5,10 @@ extern crate slog_stdlog;
 #[macro_use]
 extern crate log;
 
-use slog::*;
+use slog::drain::IntoLogger;
 
 fn main() {
-    let log = Logger::new_root(o!("version" => "0.5"));
-    log.set_drain(slog_term::stderr());
+    let log = slog_term::stderr().into_logger(o!("version" => "0.5"));
     slog_stdlog::set_logger(log.clone()).unwrap();
 
     info!("standard logging redirected to slog");

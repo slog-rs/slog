@@ -7,6 +7,7 @@
 //! extern crate slog_term;
 //!
 //! use slog::*;
+//! use slog::drain::{IntoLogger, AtomicSwitchCtrl};
 //! use std::thread;
 //!
 //! use std::sync::atomic::Ordering::SeqCst;
@@ -23,14 +24,23 @@
 //!     }
 //! }
 //!
+//!
 //! fn main() {
-//!     // Create a new group of loggers, sharing one drain.
+//!     // Create a new drain hierarchy, for the need of your program.
+//!     // Choose from collection of existing drains, or write your own `struct`
+//!     // implementing `Drain` trait.
+//!     let drain = slog_term::async_stderr();
+//!
+//!     // `AtomicSwitch` is a drain that wraps other drains and allows to change
+//!     // it atomically in runtime
+//!     let ctrl = AtomicSwitchCtrl::new(drain);
+//!     let drain = ctrl.drain();
+//!
+//!     // Turn a drain into new group of loggers, sharing that drain.
 //!     //
 //!     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
-//!     let root = Logger::new_root(o!("version" => VERSION, "build-id" => "8dfljdf"));
+//!     let root = drain.into_logger(o!("version" => VERSION, "build-id" => "8dfljdf"));
 //!
-//!    // Set drains to specify the output format and destination.
-//!    root.set_drain(slog_term::async_stderr());
 //!     // Build logging context as data becomes available.
 //!     //
 //!     // Create child loggers from existing ones. Children clone `key: value`
@@ -43,7 +53,7 @@
 //!     let log = log.new(o!("counter" => {
 //!         let counter = counter.clone();
 //!         // Note the `move` to capture `counter`,
-//!         // and necessity to use `|_ : &RecordInfo|` that helps
+//!         // and unfortunate `|_ : &_|` that helps
 //!         // current `rustc` limitations. In the future,
 //!         // a `|_|` could work.
 //!         move |_ : &RecordInfo| { counter.load(SeqCst)}
@@ -55,11 +65,11 @@
 //!     log.info("after-fetch-add", b!()); // counter == 1
 //!
 //!     // Drains can be swapped atomically (race-free).
-//!     log.set_drain(
+//!     ctrl.set(
 //!         // drains are composable
 //!         drain::filter_level(
 //!             Level::Info,
-//!             drain::stream(
+//!             drain::async_stream(
 //!                 std::io::stderr(),
 //!                 // multiple outputs formats are supported
 //!                 slog_json::new(),
@@ -108,9 +118,11 @@ use std::fmt;
 /// ```
 /// #[macro_use]
 /// extern crate slog;
+/// use slog::drain::IntoLogger;
 ///
 /// fn main() {
-///     let root = slog::Logger::new_root(o!("key1" => "value1", "key2" => "value2"));
+///     let drain = slog::drain::discard();
+///     let root = drain.into_logger(o!("key1" => "value1", "key2" => "value2"));
 /// }
 #[macro_export]
 macro_rules! o(
@@ -130,9 +142,11 @@ macro_rules! o(
 /// ```
 /// #[macro_use]
 /// extern crate slog;
+/// use slog::drain::IntoLogger;
 ///
 /// fn main() {
-///     let root = slog::Logger::new_root(o!());
+///     let drain = slog::drain::discard();
+///     let root = drain.into_logger(o!("key1" => "value1", "key2" => "value2"));
 ///     root.info("test info log", b!("log-key" => true));
 /// }
 #[macro_export]
