@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog_stdlog/src/lib.rs.html#1-97' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog_stdlog/src/lib.rs.html#1-101' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Standard Rust log crate adapter to slog-rs</p>
 
 <p>This crate allows setting one of <code>slog</code> <code>Logger</code>s
@@ -64,7 +64,10 @@ as a global handler of Rust de facto standard logging statements
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='op'>*</span>;
 
 <span class='kw'>fn</span> <span class='ident'>main</span>() {
-    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>Logger</span>::<span class='ident'>new_root</span>(<span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;build-id&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;8dfljdf&quot;</span>));
+    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>Logger</span>::<span class='ident'>new_root</span>(
+        <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;build-id&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;8dfljdf&quot;</span>),
+        <span class='ident'>slog</span>::<span class='ident'>drain</span>::<span class='ident'>discard</span>(),
+    );
     <span class='ident'>slog_stdlog</span>::<span class='ident'>set_logger</span>(<span class='ident'>root</span>).<span class='ident'>unwrap</span>();
     <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;standard logging redirected to slog&quot;</span>);
 }</pre>

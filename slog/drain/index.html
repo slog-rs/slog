@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-10' class='srclink' href='../../src/slog/src/drain.rs.html#1-384' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-10' class='srclink' href='../../src/slog/src/drain.rs.html#1-477' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Drains - logging outputs</p>
 
 <h1 id='drains' class='section-header'><a href='#drains'>Drains</a></h1>
@@ -61,6 +61,20 @@ into given destination.</p>
                            <td class='docblock short'>
                                 <p>Drain formating records and writing them to a byte-stream (io::Write)
 asynchronously.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.AtomicSwitch.html'
+                                  title='slog::drain::AtomicSwitch'>AtomicSwitch</a></td>
+                           <td class='docblock short'>
+                                <p>A drain allowing to atomically switch a sub-drain at runtime</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.AtomicSwitchCtrl.html'
+                                  title='slog::drain::AtomicSwitchCtrl'>AtomicSwitchCtrl</a></td>
+                           <td class='docblock short'>
+                                <p>A handle to <code>AtomicSwitch</code> allowing to switch it&#39;s sub-drain</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -126,6 +140,13 @@ asynchronously.</p>
                                   title='slog::drain::Drain'>Drain</a></td>
                            <td class='docblock short'>
                                 <p>Drain for Loggers</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.IntoLogger.html'
+                                  title='slog::drain::IntoLogger'>IntoLogger</a></td>
+                           <td class='docblock short'>
+                                <p>Convenience trait allowing turning drain into root <code>Logger</code></p>
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
