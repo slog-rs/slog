@@ -13,7 +13,6 @@
 use super::{OwnedKeyValue, Level, BorrowedKeyValue};
 use std::sync::Arc;
 use std::cell::RefCell;
-use std::io;
 
 use drain;
 
@@ -31,7 +30,9 @@ pub struct Logger {
     values: Vec<OwnedKeyValue>,
 }
 
+/// A type that can be translated into `Msg`
 pub trait IntoMsg {
+    /// Convert to the `&str`
     fn as_str(&self) -> &str;
 }
 

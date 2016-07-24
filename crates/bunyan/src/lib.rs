@@ -88,9 +88,10 @@ mod test {
         let formatter = new();
 
 
+        let msg = "message";
         let info = RecordInfo::new(
             Level::Info,
-            "message",
+            &msg,
         );
 
         info.set_ts(UTC.ymd(2014, 7, 8).and_hms(9, 10, 11));
