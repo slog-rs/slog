@@ -169,7 +169,7 @@ impl_serialize_for!(u64, emit_u64);
 impl_serialize_for!(i64, emit_i64);
 impl_serialize_for!(f64, emit_f64);
 
-impl<S: 'static + Serialize, F: 'static + Sync + Send + for<'c> Fn(&'c RecordInfo<'c>) -> S> Serialize for F {
+impl<S: 'static + Serialize, F: Sync + Send + for<'c> Fn(&'c RecordInfo<'c>) -> S> Serialize for F {
     fn serialize(&self, rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
         (*self)(&rinfo).serialize(rinfo, key, serializer)
     }
