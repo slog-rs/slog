@@ -10,11 +10,13 @@ homepage = "https://github.com/dpc/slog-rs"
 repository = "https://github.com/dpc/slog-rs"
 readme = "README.md"
 
+[profile.release]
+opt-level = 3
+debug = false
+lto = true
+debug-assertions = false
 
 [workspace]
-
-[features]
-bench = []
 
 [dependencies]
 crossbeam = "0.2.9"
@@ -23,9 +25,9 @@ rustc-serialize = "0.3.19"
 error-chain = "0.2.1"
 
 [dev-dependencies]
-slog-json = { version = "0.6.0", path = "crates/json" }
-slog-term = { version = "0.6.0", path = "crates/term" }
-slog-stdlog = { version = "0.6.0", path = "crates/stdlog" }
-slog-syslog = { version = "0.6.0", path = "crates/syslog" }
-slog-bunyan = { version = "0.6.0", path = "crates/bunyan" }
+slog-json = { path = "crates/json" }
+slog-term = { path = "crates/term" }
+slog-stdlog = { path = "crates/stdlog" }
+slog-syslog = { path = "crates/syslog" }
+slog-bunyan = { path = "crates/bunyan" }
 log = "0.3.6"

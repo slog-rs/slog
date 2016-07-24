@@ -27,7 +27,6 @@ use std::io;
 use slog_serde::SerdeSerializer;
 use slog::logger::{RecordInfo};
 use slog::{Level, OwnedKeyValue, BorrowedKeyValue};
-use slog::format::Format;
 use slog::Level::*;
 use slog::format;
 
@@ -172,7 +171,7 @@ impl<W: io::Write> io::Write for SkipFirstByte<W> {
     }
 }
 
-impl Format for Json {
+impl format::Format for Json {
     fn format(&self,
               io: &mut io::Write,
               rinfo: &RecordInfo,

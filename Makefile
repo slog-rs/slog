@@ -43,7 +43,7 @@ clippy:
 
 .PHONY: bench
 bench:
-	cargo $@ $(filter-out --release,$(CARGO_FLAGS)) --features bench
+	cargo $@ $(filter-out --release,$(CARGO_FLAGS))
 
 .PHONY: travistest
 travistest: test-all
