@@ -34,23 +34,10 @@ pub struct Logger {
 pub trait IntoMsg {
     fn as_str(&self) -> &str;
 }
-/*
-impl IntoMsg for str {
-    fn as_str(&self) -> &str {
-       self.as_str()
-    }
-}*/
 
-
-impl<'a> IntoMsg for &'a str {
+impl<T : AsRef<str>> IntoMsg for T {
     fn as_str(&self) -> &str {
-        self
-    }
-}
-
-impl IntoMsg for String {
-    fn as_str(&self) -> &str {
-        (self as &String).as_str()
+        self.as_ref()
     }
 }
 
