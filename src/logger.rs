@@ -13,6 +13,7 @@
 use super::{OwnedKeyValue, Level, BorrowedKeyValue};
 use std::sync::Arc;
 use std::cell::RefCell;
+use std::io;
 
 use drain;
 
@@ -28,6 +29,29 @@ thread_local! {
 pub struct Logger {
     drain: Arc<drain::Drain>,
     values: Vec<OwnedKeyValue>,
+}
+
+pub trait IntoMsg {
+    fn as_str(&self) -> &str;
+}
+/*
+impl IntoMsg for str {
+    fn as_str(&self) -> &str {
+       self.as_str()
+    }
+}*/
+
+
+impl<'a> IntoMsg for &'a str {
+    fn as_str(&self) -> &str {
+        self
+    }
+}
+
+impl IntoMsg for String {
+    fn as_str(&self) -> &str {
+        (self as &String).as_str()
+    }
 }
 
 impl Logger {
@@ -82,7 +106,7 @@ impl Logger {
     /// Log one logging record
     ///
     /// Use specific logging functions instead.
-    pub fn log(&self, lvl: Level, msg: &str, values: &[BorrowedKeyValue]) {
+    pub fn log(&self, lvl: Level, msg: &IntoMsg, values: &[BorrowedKeyValue]) {
 
         let mut info = RecordInfo::new(lvl, msg);
 
@@ -98,43 +122,43 @@ impl Logger {
     /// Log critical level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn critical(&self, msg: &str, values: &[BorrowedKeyValue]) {
-        self.log(Level::Critical, msg, values);
+    pub fn critical<M : IntoMsg>(&self, msg: M, values: &[BorrowedKeyValue]) {
+        self.log(Level::Critical, &msg, values);
     }
 
     /// Log error level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn error(&self, msg: &str, values: &[BorrowedKeyValue]) {
-        self.log(Level::Error, msg, values);
+    pub fn error<M : IntoMsg>(&self, msg: M, values: &[BorrowedKeyValue]) {
+        self.log(Level::Error, &msg, values);
     }
 
     /// Log warning level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn warn(&self, msg: &str, values: &[BorrowedKeyValue]) {
-        self.log(Level::Warning, msg, values);
+    pub fn warn<M : IntoMsg>(&self, msg: M, values: &[BorrowedKeyValue]) {
+        self.log(Level::Warning, &msg, values);
     }
 
     /// Log info level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn info(&self, msg: &str, values: &[BorrowedKeyValue]) {
-        self.log(Level::Info, msg, values);
+    pub fn info<M : IntoMsg>(&self, msg: M, values: &[BorrowedKeyValue]) {
+        self.log(Level::Info, &msg, values);
     }
 
     /// Log debug level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn debug(&self, msg: &str, values: &[BorrowedKeyValue]) {
-        self.log(Level::Debug, msg, values);
+    pub fn debug<M : IntoMsg>(&self, msg: M, values: &[BorrowedKeyValue]) {
+        self.log(Level::Debug, &msg, values);
     }
 
     /// Log trace level record
     ///
     /// Use `b!` macro to help build `values`
-    pub fn trace(&self, msg: &str, values: &[BorrowedKeyValue]) {
-        self.log(Level::Trace, msg, values);
+    pub fn trace<M : IntoMsg>(&self, msg: M, values: &[BorrowedKeyValue]) {
+        self.log(Level::Trace, &msg, values);
     }
 }
 
@@ -144,12 +168,12 @@ pub struct RecordInfo<'a> {
     /// Logging level
     level: Level,
     /// Message
-    msg: &'a str,
+    msg: &'a IntoMsg,
 }
 
 impl<'a> RecordInfo<'a> {
     /// Create a new `RecordInfo` with a current timestamp
-    pub fn new(level: Level, msg: &'a str) -> Self {
+    pub fn new(level: Level, msg: &'a IntoMsg) -> Self {
         RecordInfo {
             ts: RefCell::new(None),
             level: level,
@@ -180,7 +204,7 @@ impl<'a> RecordInfo<'a> {
 
     /// Get a log record message
     pub fn msg(&self) -> &str {
-        self.msg
+        self.msg.as_str()
     }
 
 
