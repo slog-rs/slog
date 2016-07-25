@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/backtrace-0.2.2/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/backtrace-0.2.3/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -201,15 +201,6 @@
 <span id="157">157</span>
 <span id="158">158</span>
 <span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
-<span id="165">165</span>
-<span id="166">166</span>
-<span id="167">167</span>
-<span id="168">168</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! A library for acquiring a backtrace at runtime</span>
 <span class='doccomment'>//!</span>
@@ -358,25 +349,16 @@
     }
 }
 
+<span class='comment'>// requires external synchronization</span>
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>windows</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;dbghelp&quot;</span>))]</span>
-<span class='kw'>fn</span> <span class='ident'>dbghelp_init</span>() <span class='op'>-&gt;</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>std</span>::<span class='ident'>any</span>::<span class='ident'>Any</span><span class='op'>&gt;</span> {
-    <span class='kw'>use</span> <span class='ident'>winapi</span>::<span class='op'>*</span>;
-    <span class='kw'>struct</span> <span class='ident'>Cleanup</span> { <span class='ident'>handle</span>: <span class='ident'>HANDLE</span> }
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>dbghelp_init</span>() {
+    <span class='kw'>static</span> <span class='kw-2'>mut</span> <span class='ident'>INITIALIZED</span>: <span class='ident'>bool</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
 
-    <span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>Cleanup</span> {
-        <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-            <span class='kw'>unsafe</span> { ::<span class='ident'>dbghelp</span>::<span class='ident'>SymCleanup</span>(<span class='self'>self</span>.<span class='ident'>handle</span>); }
-        }
-    }
-
-    <span class='kw'>unsafe</span> {
-        <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> ::<span class='ident'>dbghelp</span>::<span class='ident'>SymInitializeW</span>(<span class='ident'>kernel32</span>::<span class='ident'>GetCurrentProcess</span>(),
-                                            <span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='ident'>TRUE</span>);
-        <span class='kw'>if</span> <span class='ident'>ret</span> <span class='op'>!=</span> <span class='ident'>TRUE</span> {
-            <span class='ident'>Box</span>::<span class='ident'>new</span>(())
-        } <span class='kw'>else</span> {
-            <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>Cleanup</span> { <span class='ident'>handle</span>: <span class='ident'>kernel32</span>::<span class='ident'>GetCurrentProcess</span>() })
-        }
+    <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>INITIALIZED</span> {
+        <span class='ident'>dbghelp</span>::<span class='ident'>SymInitializeW</span>(<span class='ident'>kernel32</span>::<span class='ident'>GetCurrentProcess</span>(),
+                                <span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _,
+                                <span class='ident'>winapi</span>::<span class='ident'>TRUE</span>);
+        <span class='ident'>INITIALIZED</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
     }
 }
 </pre>

@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/error_chain/lib.rs.html#1-503' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/error_chain/lib.rs.html#1-575' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>A library for consistent and reliable error handling</p>
 
 <p>This crate defines an opinionated strategy for error handling in Rust,
@@ -122,6 +122,8 @@ define an <code>errors</code> module and inside it call <code>error_chain!</code
 <span class='macro'>error_chain</span><span class='macro'>!</span> {
     <span class='comment'>// The type defined for this error. These are the conventional</span>
     <span class='comment'>// and recommended names, but they can be arbitrarily chosen.</span>
+    <span class='comment'>// It is also possible to leave this block out entirely, or</span>
+    <span class='comment'>// leave it empty, and these names will be used automatically.</span>
     <span class='ident'>types</span> {
         <span class='ident'>Error</span>, <span class='ident'>ErrorKind</span>, <span class='ident'>ChainErr</span>, <span class='prelude-ty'>Result</span>;
     }

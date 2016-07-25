@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/unix_socket-0.4.6/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/unix_socket-0.5.0/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -1259,45 +1259,54 @@
 <span id="1215">1215</span>
 <span id="1216">1216</span>
 <span id="1217">1217</span>
+<span id="1218">1218</span>
+<span id="1219">1219</span>
+<span id="1220">1220</span>
+<span id="1221">1221</span>
+<span id="1222">1222</span>
+<span id="1223">1223</span>
+<span id="1224">1224</span>
+<span id="1225">1225</span>
+<span id="1226">1226</span>
+<span id="1227">1227</span>
+<span id="1228">1228</span>
+<span id="1229">1229</span>
+<span id="1230">1230</span>
+<span id="1231">1231</span>
+<span id="1232">1232</span>
+<span id="1233">1233</span>
+<span id="1234">1234</span>
+<span id="1235">1235</span>
+<span id="1236">1236</span>
+<span id="1237">1237</span>
+<span id="1238">1238</span>
+<span id="1239">1239</span>
+<span id="1240">1240</span>
+<span id="1241">1241</span>
+<span id="1242">1242</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Support for Unix domain socket clients and servers.</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>missing_docs</span>)]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>doc</span>(<span class='ident'>html_root_url</span><span class='op'>=</span><span class='string'>&quot;https://doc.rust-lang.org/unix-socket/doc/v0.4.6&quot;</span>)]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>all</span>(<span class='ident'>test</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>), <span class='ident'>feature</span>(<span class='ident'>duration_span</span>))]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>doc</span>(<span class='ident'>html_root_url</span><span class='op'>=</span><span class='string'>&quot;https://doc.rust-lang.org/unix-socket/doc/v0.5.0&quot;</span>)]</span>
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>debug_builders</span>;
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>cfg_if</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>libc</span>;
 
-<span class='kw'>use</span> <span class='ident'>debug_builders</span>::<span class='ident'>DebugStruct</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ascii</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>convert</span>::<span class='ident'>AsRef</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::{<span class='self'>self</span>, <span class='ident'>Ordering</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ffi</span>::<span class='ident'>OsStr</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>Shutdown</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>IntoIterator</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>unix</span>::<span class='ident'>io</span>::{<span class='ident'>RawFd</span>, <span class='ident'>AsRawFd</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>unix</span>::<span class='ident'>ffi</span>::<span class='ident'>OsStrExt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>size_of</span>;
-
-<span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
-    <span class='kw'>fn</span> <span class='ident'>socketpair</span>(<span class='ident'>domain</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>,
-                  <span class='ident'>ty</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>,
-                  <span class='ident'>proto</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>,
-                  <span class='ident'>sv</span>: <span class='op'>*</span><span class='kw-2'>mut</span> [<span class='ident'>libc</span>::<span class='ident'>c_int</span>; <span class='number'>2</span>])
-                  <span class='op'>-&gt;</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
-
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>getsockopt</span>(<span class='ident'>socket</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>,
-                  <span class='ident'>level</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>,
-                  <span class='ident'>option_name</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>,
-                  <span class='ident'>option_value</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>libc</span>::<span class='ident'>c_void</span>,
-                  <span class='ident'>option_len</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>libc</span>::<span class='ident'>c_void</span>)
-                  <span class='op'>-&gt;</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
-}
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>Shutdown</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>unix</span>::<span class='ident'>ffi</span>::<span class='ident'>OsStrExt</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>unix</span>::<span class='ident'>io</span>::{<span class='ident'>RawFd</span>, <span class='ident'>AsRawFd</span>, <span class='ident'>FromRawFd</span>, <span class='ident'>IntoRawFd</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>;
 
 <span class='kw'>fn</span> <span class='ident'>sun_path_offset</span>() <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
     <span class='kw'>unsafe</span> {
@@ -1337,23 +1346,19 @@
 
 <span class='kw'>impl</span> <span class='ident'>Inner</span> {
     <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>kind</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Inner</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>socket</span>(<span class='ident'>libc</span>::<span class='ident'>AF_UNIX</span>, <span class='ident'>kind</span>, <span class='number'>0</span>)).<span class='ident'>map</span>(<span class='ident'>Inner</span>)
-        }
+        <span class='kw'>unsafe</span> { <span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>socket</span>(<span class='ident'>libc</span>::<span class='ident'>AF_UNIX</span>, <span class='ident'>kind</span>, <span class='number'>0</span>)).<span class='ident'>map</span>(<span class='ident'>Inner</span>) }
     }
 
     <span class='kw'>fn</span> <span class='ident'>new_pair</span>(<span class='ident'>kind</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>Inner</span>, <span class='ident'>Inner</span>)<span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>fds</span> <span class='op'>=</span> [<span class='number'>0</span>, <span class='number'>0</span>];
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>socketpair</span>(<span class='ident'>libc</span>::<span class='ident'>AF_UNIX</span>, <span class='ident'>kind</span>, <span class='number'>0</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fds</span>)));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>socketpair</span>(<span class='ident'>libc</span>::<span class='ident'>AF_UNIX</span>, <span class='ident'>kind</span>, <span class='number'>0</span>, <span class='ident'>fds</span>.<span class='ident'>as_mut_ptr</span>())));
             <span class='prelude-val'>Ok</span>((<span class='ident'>Inner</span>(<span class='ident'>fds</span>[<span class='number'>0</span>]), <span class='ident'>Inner</span>(<span class='ident'>fds</span>[<span class='number'>1</span>])))
         }
     }
 
     <span class='kw'>fn</span> <span class='ident'>try_clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Inner</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>dup</span>(<span class='self'>self</span>.<span class='number'>0</span>)).<span class='ident'>map</span>(<span class='ident'>Inner</span>)
-        }
+        <span class='kw'>unsafe</span> { <span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>dup</span>(<span class='self'>self</span>.<span class='number'>0</span>)).<span class='ident'>map</span>(<span class='ident'>Inner</span>) }
     }
 
     <span class='kw'>fn</span> <span class='ident'>shutdown</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>how</span>: <span class='ident'>Shutdown</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
@@ -1363,34 +1368,29 @@
             <span class='ident'>Shutdown</span>::<span class='ident'>Both</span> <span class='op'>=&gt;</span> <span class='ident'>libc</span>::<span class='ident'>SHUT_RDWR</span>,
         };
 
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>shutdown</span>(<span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>how</span>)).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
-        }
+        <span class='kw'>unsafe</span> { <span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>shutdown</span>(<span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>how</span>)).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ()) }
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>kind</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>kind</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Duration</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>timeout</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>timeout</span>: <span class='ident'>libc</span>::<span class='ident'>timeval</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>zeroed</span>();
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>size</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>libc</span>::<span class='ident'>timeval</span><span class='op'>&gt;</span>() <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>socklen_t</span>;
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>getsockopt</span>(<span class='self'>self</span>.<span class='number'>0</span>,
-                                <span class='ident'>libc</span>::<span class='ident'>SOL_SOCKET</span>,
-                                <span class='ident'>kind</span>,
-                                <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>timeout</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _,
-                                <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>size</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _)));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>getsockopt</span>(<span class='self'>self</span>.<span class='number'>0</span>,
+                                      <span class='ident'>libc</span>::<span class='ident'>SOL_SOCKET</span>,
+                                      <span class='ident'>kind</span>,
+                                      <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>timeout</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _,
+                                      <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>size</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _)));
             <span class='ident'>timeout</span>
         };
 
         <span class='kw'>if</span> <span class='ident'>timeout</span>.<span class='ident'>tv_sec</span> <span class='op'>==</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span> <span class='ident'>timeout</span>.<span class='ident'>tv_usec</span> <span class='op'>==</span> <span class='number'>0</span> {
             <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
         } <span class='kw'>else</span> {
-            <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>::<span class='ident'>new</span>(<span class='ident'>timeout</span>.<span class='ident'>tv_sec</span> <span class='kw'>as</span> <span class='ident'>u64</span>,
-                                             (<span class='ident'>timeout</span>.<span class='ident'>tv_usec</span> <span class='kw'>as</span> <span class='ident'>u32</span>) <span class='op'>*</span> <span class='number'>1000</span>)))
+            <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Duration</span>::<span class='ident'>new</span>(<span class='ident'>timeout</span>.<span class='ident'>tv_sec</span> <span class='kw'>as</span> <span class='ident'>u64</span>, (<span class='ident'>timeout</span>.<span class='ident'>tv_usec</span> <span class='kw'>as</span> <span class='ident'>u32</span>) <span class='op'>*</span> <span class='number'>1000</span>)))
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>set_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dur</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span><span class='op'>&gt;</span>, <span class='ident'>kind</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>set_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dur</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Duration</span><span class='op'>&gt;</span>, <span class='ident'>kind</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>timeout</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>dur</span> {
             <span class='prelude-val'>Some</span>(<span class='ident'>dur</span>) <span class='op'>=&gt;</span> {
                 <span class='kw'>if</span> <span class='ident'>dur</span>.<span class='ident'>as_secs</span>() <span class='op'>==</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span> <span class='ident'>dur</span>.<span class='ident'>subsec_nanos</span>() <span class='op'>==</span> <span class='number'>0</span> {
@@ -1398,14 +1398,15 @@
                                               <span class='string'>&quot;cannot set a 0 duration timeout&quot;</span>));
                 }
 
-                <span class='kw'>let</span> <span class='ident'>secs</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>dur</span>.<span class='ident'>as_secs</span>() <span class='op'>&gt;</span> <span class='ident'>libc</span>::<span class='ident'>time_t</span>::<span class='ident'>max_value</span>() <span class='kw'>as</span> <span class='ident'>u64</span> {
-                    <span class='ident'>libc</span>::<span class='ident'>time_t</span>::<span class='ident'>max_value</span>()
+                <span class='kw'>let</span> (<span class='ident'>secs</span>, <span class='ident'>usecs</span>) <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>dur</span>.<span class='ident'>as_secs</span>() <span class='op'>&gt;</span> <span class='ident'>libc</span>::<span class='ident'>time_t</span>::<span class='ident'>max_value</span>() <span class='kw'>as</span> <span class='ident'>u64</span> {
+                    (<span class='ident'>libc</span>::<span class='ident'>time_t</span>::<span class='ident'>max_value</span>(), <span class='number'>999_999</span>)
                 } <span class='kw'>else</span> {
-                    <span class='ident'>dur</span>.<span class='ident'>as_secs</span>() <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>time_t</span>
+                    (<span class='ident'>dur</span>.<span class='ident'>as_secs</span>() <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>time_t</span>,
+                     (<span class='ident'>dur</span>.<span class='ident'>subsec_nanos</span>() <span class='op'>/</span> <span class='number'>1000</span>) <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>suseconds_t</span>)
                 };
                 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>timeout</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>timeval</span> {
                     <span class='ident'>tv_sec</span>: <span class='ident'>secs</span>,
-                    <span class='ident'>tv_usec</span>: (<span class='ident'>dur</span>.<span class='ident'>subsec_nanos</span>() <span class='op'>/</span> <span class='number'>1000</span>) <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>suseconds_t</span>,
+                    <span class='ident'>tv_usec</span>: <span class='ident'>usecs</span>,
                 };
                 <span class='kw'>if</span> <span class='ident'>timeout</span>.<span class='ident'>tv_sec</span> <span class='op'>==</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span> <span class='ident'>timeout</span>.<span class='ident'>tv_usec</span> <span class='op'>==</span> <span class='number'>0</span> {
                     <span class='ident'>timeout</span>.<span class='ident'>tv_usec</span> <span class='op'>=</span> <span class='number'>1</span>;
@@ -1429,10 +1430,32 @@
                 .<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
         }
     }
+
+    <span class='kw'>fn</span> <span class='ident'>set_nonblocking</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>nonblocking</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>nonblocking</span> <span class='op'>=</span> <span class='ident'>nonblocking</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>c_ulong</span>;
+        <span class='kw'>unsafe</span> { <span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>ioctl</span>(<span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>libc</span>::<span class='ident'>FIONBIO</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>nonblocking</span>)).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ()) }
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>take_error</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;&gt;</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>errno</span>: <span class='ident'>libc</span>::<span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>0</span>;
+
+        <span class='kw'>unsafe</span> {
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>getsockopt</span>(<span class='self'>self</span>.<span class='number'>0</span>,
+                                      <span class='ident'>libc</span>::<span class='ident'>SOL_SOCKET</span>,
+                                      <span class='ident'>libc</span>::<span class='ident'>SO_ERROR</span>,
+                                      <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>errno</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _,
+                                      <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>mem</span>::<span class='ident'>size_of_val</span>(<span class='kw-2'>&amp;</span><span class='ident'>errno</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _)));
+        }
+
+        <span class='kw'>if</span> <span class='ident'>errno</span> <span class='op'>==</span> <span class='number'>0</span> {
+            <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+        } <span class='kw'>else</span> {
+            <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>from_raw_os_error</span>(<span class='ident'>errno</span>)))
+        }
+    }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>sockaddr_un</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='ident'>path</span>: <span class='ident'>P</span>)
-        <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>libc</span>::<span class='ident'>sockaddr_un</span>, <span class='ident'>libc</span>::<span class='ident'>socklen_t</span>)<span class='op'>&gt;</span> {
+<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>sockaddr_un</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='ident'>path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>libc</span>::<span class='ident'>sockaddr_un</span>, <span class='ident'>libc</span>::<span class='ident'>socklen_t</span>)<span class='op'>&gt;</span> {
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>addr</span>: <span class='ident'>libc</span>::<span class='ident'>sockaddr_un</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>zeroed</span>();
     <span class='ident'>addr</span>.<span class='ident'>sun_family</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>AF_UNIX</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>sa_family_t</span>;
 
@@ -1442,7 +1465,7 @@
         <span class='comment'>// Abstract paths don&#39;t need a null terminator</span>
         (<span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>0</span>), <span class='ident'>Ordering</span>::<span class='ident'>Greater</span>) <span class='op'>=&gt;</span> {
             <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>InvalidInput</span>,
-                                      <span class='string'>&quot;path must be no longer than SUN_LEN&quot;</span>))
+                                      <span class='string'>&quot;path must be no longer than SUN_LEN&quot;</span>));
         }
         (_, <span class='ident'>Ordering</span>::<span class='ident'>Greater</span>) <span class='op'>|</span> (_, <span class='ident'>Ordering</span>::<span class='ident'>Equal</span>) <span class='op'>=&gt;</span> {
             <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>InvalidInput</span>,
@@ -1453,47 +1476,34 @@
     <span class='kw'>for</span> (<span class='ident'>dst</span>, <span class='ident'>src</span>) <span class='kw'>in</span> <span class='ident'>addr</span>.<span class='ident'>sun_path</span>.<span class='ident'>iter_mut</span>().<span class='ident'>zip</span>(<span class='ident'>bytes</span>.<span class='ident'>iter</span>()) {
         <span class='op'>*</span><span class='ident'>dst</span> <span class='op'>=</span> <span class='op'>*</span><span class='ident'>src</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>c_char</span>;
     }
-    <span class='comment'>// null byte for pathname addresses is already there because we zeroed the struct</span>
+    <span class='comment'>// null byte for pathname addresses is already there because we zeroed the</span>
+    <span class='comment'>// struct</span>
 
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>sun_path_offset</span>() <span class='op'>+</span> <span class='ident'>bytes</span>.<span class='ident'>len</span>();
     <span class='kw'>match</span> <span class='ident'>bytes</span>.<span class='ident'>get</span>(<span class='number'>0</span>) {
         <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>0</span>) <span class='op'>|</span> <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {}
-        <span class='prelude-val'>Some</span>(_) <span class='op'>=&gt;</span> <span class='ident'>len</span> <span class='op'>+=</span> <span class='number'>1</span>
+        <span class='prelude-val'>Some</span>(_) <span class='op'>=&gt;</span> <span class='ident'>len</span> <span class='op'>+=</span> <span class='number'>1</span>,
     }
     <span class='prelude-val'>Ok</span>((<span class='ident'>addr</span>, <span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>socklen_t</span>))
 }
 
-<span class='doccomment'>/// The kind of an address associated with a Unix socket.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>AddressKind</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// An unnamed address.</span>
+<span class='kw'>enum</span> <span class='ident'>AddressKind</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>Unnamed</span>,
-    <span class='doccomment'>/// An address corresponding to a path on the filesystem.</span>
     <span class='ident'>Pathname</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Path</span>),
-    <span class='doccomment'>/// An address in an abstract namespace unrelated to the filesystem.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Abstract addresses are a nonportable Linux extension.</span>
     <span class='ident'>Abstract</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]),
 }
 
 <span class='doccomment'>/// An address associated with a Unix socket.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SocketAddr</span> {
     <span class='ident'>addr</span>: <span class='ident'>libc</span>::<span class='ident'>sockaddr_un</span>,
     <span class='ident'>len</span>: <span class='ident'>libc</span>::<span class='ident'>socklen_t</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>SocketAddr</span> {
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>SocketAddr</span> {
-        <span class='ident'>SocketAddr</span> {
-            <span class='ident'>addr</span>: <span class='self'>self</span>.<span class='ident'>addr</span>,
-            <span class='ident'>len</span>: <span class='self'>self</span>.<span class='ident'>len</span>,
-        }
-    }
-}
-
 <span class='kw'>impl</span> <span class='ident'>SocketAddr</span> {
     <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SocketAddr</span><span class='op'>&gt;</span>
-            <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>libc</span>::<span class='ident'>sockaddr</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>libc</span>::<span class='ident'>socklen_t</span>) <span class='op'>-&gt;</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span> {
+        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>libc</span>::<span class='ident'>sockaddr</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>libc</span>::<span class='ident'>socklen_t</span>) <span class='op'>-&gt;</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>
+    {
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>addr</span>: <span class='ident'>libc</span>::<span class='ident'>sockaddr_un</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>zeroed</span>();
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>libc</span>::<span class='ident'>sockaddr_un</span><span class='op'>&gt;</span>() <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>socklen_t</span>;
@@ -1515,8 +1525,25 @@
         }
     }
 
-    <span class='doccomment'>/// Returns the value of the address.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>address</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>AddressKind</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='doccomment'>/// Returns true iff the address is unnamed.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_unnamed</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>AddressKind</span>::<span class='ident'>Unnamed</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>address</span>() {
+            <span class='bool-val'>true</span>
+        } <span class='kw'>else</span> {
+            <span class='bool-val'>false</span>
+        }
+    }
+
+    <span class='doccomment'>/// Returns the contents of this address if it is a `pathname` address.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_pathname</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Path</span><span class='op'>&gt;</span> {
+        <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>AddressKind</span>::<span class='ident'>Pathname</span>(<span class='ident'>path</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>address</span>() {
+            <span class='prelude-val'>Some</span>(<span class='ident'>path</span>)
+        } <span class='kw'>else</span> {
+            <span class='prelude-val'>None</span>
+        }
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>address</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>AddressKind</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>usize</span> <span class='op'>-</span> <span class='ident'>sun_path_offset</span>();
         <span class='kw'>let</span> <span class='ident'>path</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>::<span class='op'>&lt;</span><span class='kw-2'>&amp;</span>[<span class='ident'>libc</span>::<span class='ident'>c_char</span>], <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]<span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>addr</span>.<span class='ident'>sun_path</span>) };
 
@@ -1536,7 +1563,7 @@
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>address</span>() {
             <span class='ident'>AddressKind</span>::<span class='ident'>Unnamed</span> <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;(unnamed)&quot;</span>),
             <span class='ident'>AddressKind</span>::<span class='ident'>Abstract</span>(<span class='ident'>name</span>) <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;{} (abstract)&quot;</span>, <span class='ident'>AsciiEscaped</span>(<span class='ident'>name</span>)),
-            <span class='ident'>AddressKind</span>::<span class='ident'>Pathname</span>(<span class='ident'>path</span>) <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;{:?} (pathname)&quot;</span>, <span class='ident'>path</span>)
+            <span class='ident'>AddressKind</span>::<span class='ident'>Pathname</span>(<span class='ident'>path</span>) <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;{:?} (pathname)&quot;</span>, <span class='ident'>path</span>),
         }
     }
 }
@@ -1550,6 +1577,32 @@
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>byte</span> <span class='kw'>as</span> <span class='ident'>char</span>));
         }
         <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;\&quot;&quot;</span>)
+    }
+}
+
+<span class='doccomment'>/// OS specific extension traits.</span>
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>os</span> {
+    <span class='doccomment'>/// Linux specific extension traits.</span>
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>)]</span>
+    <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>linux</span> {
+        <span class='kw'>use</span> {<span class='ident'>AddressKind</span>, <span class='ident'>SocketAddr</span>};
+
+        <span class='doccomment'>/// Linux specific extensions for the `SocketAddr` type.</span>
+        <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>SocketAddrExt</span> {
+            <span class='doccomment'>/// Returns the contents of this address (without the leading</span>
+            <span class='doccomment'>/// null byte) if it is an `abstract` address.</span>
+            <span class='kw'>fn</span> <span class='ident'>as_abstract</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]<span class='op'>&gt;</span>;
+        }
+
+        <span class='kw'>impl</span> <span class='ident'>SocketAddrExt</span> <span class='kw'>for</span> <span class='ident'>SocketAddr</span> {
+            <span class='kw'>fn</span> <span class='ident'>as_abstract</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]<span class='op'>&gt;</span> {
+                <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>AddressKind</span>::<span class='ident'>Abstract</span>(<span class='ident'>path</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>address</span>() {
+                    <span class='prelude-val'>Some</span>(<span class='ident'>path</span>)
+                } <span class='kw'>else</span> {
+                    <span class='prelude-val'>None</span>
+                }
+            }
+        }
     }
 }
 
@@ -1573,20 +1626,20 @@
 
 <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>UnixStream</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>fmt</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>DebugStruct</span>::<span class='ident'>new</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;UnixStream&quot;</span>)
-            .<span class='ident'>field</span>(<span class='string'>&quot;fd&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>fmt</span>.<span class='ident'>debug_struct</span>(<span class='string'>&quot;UnixStream&quot;</span>);
+        <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;fd&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>);
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>addr</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>local_addr</span>() {
-            <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;local&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>addr</span>);
+            <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;local&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>addr</span>);
         }
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>addr</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>peer_addr</span>() {
-            <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;peer&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>addr</span>);
+            <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;peer&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>addr</span>);
         }
         <span class='ident'>builder</span>.<span class='ident'>finish</span>()
     }
 }
 
 <span class='kw'>impl</span> <span class='ident'>UnixStream</span> {
-    <span class='doccomment'>/// Connect to the socket named by `path`.</span>
+    <span class='doccomment'>/// Connects to the socket named by `path`.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Linux provides, as a nonportable extension, a separate &quot;abstract&quot;</span>
     <span class='doccomment'>/// address namespace as opposed to filesystem-based addressing. If `path`</span>
@@ -1602,14 +1655,12 @@
             <span class='kw'>if</span> <span class='ident'>ret</span> <span class='op'>&lt;</span> <span class='number'>0</span> {
                 <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>last_os_error</span>())
             } <span class='kw'>else</span> {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>UnixStream</span> {
-                    <span class='ident'>inner</span>: <span class='ident'>inner</span>,
-                })
+                <span class='prelude-val'>Ok</span>(<span class='ident'>UnixStream</span> { <span class='ident'>inner</span>: <span class='ident'>inner</span> })
             }
         }
     }
 
-    <span class='doccomment'>/// Create an unnamed pair of connected sockets.</span>
+    <span class='doccomment'>/// Creates an unnamed pair of connected sockets.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns two `UnixStream`s which are connected to each other.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>pair</span>() <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>UnixStream</span>, <span class='ident'>UnixStream</span>)<span class='op'>&gt;</span> {
@@ -1617,23 +1668,14 @@
         <span class='prelude-val'>Ok</span>((<span class='ident'>UnixStream</span> { <span class='ident'>inner</span>: <span class='ident'>i1</span> }, <span class='ident'>UnixStream</span> { <span class='ident'>inner</span>: <span class='ident'>i2</span> }))
     }
 
-    <span class='doccomment'>/// # Deprecated</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use `UnixStream::pair` instead.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>unnamed</span>() <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>UnixStream</span>, <span class='ident'>UnixStream</span>)<span class='op'>&gt;</span> {
-        <span class='ident'>UnixStream</span>::<span class='ident'>pair</span>()
-    }
-
-    <span class='doccomment'>/// Create a new independently owned handle to the underlying socket.</span>
+    <span class='doccomment'>/// Creates a new independently owned handle to the underlying socket.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// The returned `UnixStream` is a reference to the same stream that this</span>
     <span class='doccomment'>/// object references. Both handles will read and write the same stream of</span>
     <span class='doccomment'>/// data, and options set on one stream will be propogated to the other</span>
     <span class='doccomment'>/// stream.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>try_clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>UnixStream</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Ok</span>(<span class='ident'>UnixStream</span> {
-            <span class='ident'>inner</span>: <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>try_clone</span>())
-        })
+        <span class='prelude-val'>Ok</span>(<span class='ident'>UnixStream</span> { <span class='ident'>inner</span>: <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>try_clone</span>()) })
     }
 
     <span class='doccomment'>/// Returns the socket address of the local half of this connection.</span>
@@ -1651,10 +1693,7 @@
     <span class='doccomment'>/// If the provided value is `None`, then `read` calls will block</span>
     <span class='doccomment'>/// indefinitely. It is an error to pass the zero `Duration` to this</span>
     <span class='doccomment'>/// method.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Requires the `socket_timeout` feature.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_read_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_read_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Duration</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>set_timeout</span>(<span class='ident'>timeout</span>, <span class='ident'>libc</span>::<span class='ident'>SO_RCVTIMEO</span>)
     }
 
@@ -1663,30 +1702,31 @@
     <span class='doccomment'>/// If the provided value is `None`, then `write` calls will block</span>
     <span class='doccomment'>/// indefinitely. It is an error to pass the zero `Duration` to this</span>
     <span class='doccomment'>/// method.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Requires the `socket_timeout` feature.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_write_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_write_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Duration</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>set_timeout</span>(<span class='ident'>timeout</span>, <span class='ident'>libc</span>::<span class='ident'>SO_SNDTIMEO</span>)
     }
 
     <span class='doccomment'>/// Returns the read timeout of this socket.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Requires the `socket_timeout` feature.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>read_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>read_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Duration</span><span class='op'>&gt;&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>timeout</span>(<span class='ident'>libc</span>::<span class='ident'>SO_RCVTIMEO</span>)
     }
 
     <span class='doccomment'>/// Returns the write timeout of this socket.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Requires the `socket_timeout` feature.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>write_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>write_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Duration</span><span class='op'>&gt;&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>timeout</span>(<span class='ident'>libc</span>::<span class='ident'>SO_SNDTIMEO</span>)
     }
 
-    <span class='doccomment'>/// Shut down the read, write, or both halves of this connection.</span>
+    <span class='doccomment'>/// Moves the socket into or out of nonblocking mode.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_nonblocking</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>nonblocking</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>set_nonblocking</span>(<span class='ident'>nonblocking</span>)
+    }
+
+    <span class='doccomment'>/// Returns the value of the `SO_ERROR` option.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>take_error</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;&gt;</span> {
+        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>take_error</span>()
+    }
+
+    <span class='doccomment'>/// Shuts down the read, write, or both halves of this connection.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// This function will cause all pending and future I/O calls on the</span>
     <span class='doccomment'>/// specified portions to immediately return with an appropriate value</span>
@@ -1694,10 +1734,6 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>shutdown</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>how</span>: <span class='ident'>Shutdown</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>shutdown</span>(<span class='ident'>how</span>)
     }
-}
-
-<span class='kw'>fn</span> <span class='ident'>calc_len</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>libc</span>::<span class='ident'>size_t</span> {
-    <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>libc</span>::<span class='ident'>size_t</span>::<span class='ident'>max_value</span>() <span class='kw'>as</span> <span class='ident'>usize</span>, <span class='ident'>buf</span>.<span class='ident'>len</span>()) <span class='kw'>as</span> <span class='ident'>libc</span>::<span class='ident'>size_t</span>
 }
 
 <span class='kw'>impl</span> <span class='ident'>io</span>::<span class='ident'>Read</span> <span class='kw'>for</span> <span class='ident'>UnixStream</span> {
@@ -1709,7 +1745,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>io</span>::<span class='ident'>Read</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>UnixStream</span> {
     <span class='kw'>fn</span> <span class='ident'>read</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt_s</span>(<span class='ident'>libc</span>::<span class='ident'>recv</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>, <span class='ident'>buf</span>.<span class='ident'>as_mut_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='ident'>calc_len</span>(<span class='ident'>buf</span>), <span class='number'>0</span>))
+            <span class='ident'>cvt_s</span>(<span class='ident'>libc</span>::<span class='ident'>recv</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>, <span class='ident'>buf</span>.<span class='ident'>as_mut_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='ident'>buf</span>.<span class='ident'>len</span>(), <span class='number'>0</span>))
                 .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>r</span><span class='op'>|</span> <span class='ident'>r</span> <span class='kw'>as</span> <span class='ident'>usize</span>)
         }
     }
@@ -1728,7 +1764,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>UnixStream</span> {
     <span class='kw'>fn</span> <span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt_s</span>(<span class='ident'>libc</span>::<span class='ident'>send</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>, <span class='ident'>buf</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _, <span class='ident'>calc_len</span>(<span class='ident'>buf</span>), <span class='number'>0</span>))
+            <span class='ident'>cvt_s</span>(<span class='ident'>libc</span>::<span class='ident'>send</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>, <span class='ident'>buf</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _, <span class='ident'>buf</span>.<span class='ident'>len</span>(), <span class='number'>0</span>))
                 .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>r</span><span class='op'>|</span> <span class='ident'>r</span> <span class='kw'>as</span> <span class='ident'>usize</span>)
         }
     }
@@ -1744,13 +1780,17 @@
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;from_raw_fd&quot;</span>)]</span>
-<span class='doccomment'>/// Requires the `from_raw_fd` feature (enabled by default).</span>
-<span class='kw'>impl</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>unix</span>::<span class='ident'>io</span>::<span class='ident'>FromRawFd</span> <span class='kw'>for</span> <span class='ident'>UnixStream</span> {
+<span class='kw'>impl</span> <span class='ident'>FromRawFd</span> <span class='kw'>for</span> <span class='ident'>UnixStream</span> {
     <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_raw_fd</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>) <span class='op'>-&gt;</span> <span class='ident'>UnixStream</span> {
-        <span class='ident'>UnixStream</span> {
-            <span class='ident'>inner</span>: <span class='ident'>Inner</span>(<span class='ident'>fd</span>)
-        }
+        <span class='ident'>UnixStream</span> { <span class='ident'>inner</span>: <span class='ident'>Inner</span>(<span class='ident'>fd</span>) }
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>IntoRawFd</span> <span class='kw'>for</span> <span class='ident'>UnixStream</span> {
+    <span class='kw'>fn</span> <span class='ident'>into_raw_fd</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>RawFd</span> {
+        <span class='kw'>let</span> <span class='ident'>fd</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>;
+        <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='self'>self</span>);
+        <span class='ident'>fd</span>
     }
 }
 
@@ -1791,18 +1831,17 @@
 
 <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>UnixListener</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>fmt</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>DebugStruct</span>::<span class='ident'>new</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;UnixListener&quot;</span>)
-            .<span class='ident'>field</span>(<span class='string'>&quot;fd&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>fmt</span>.<span class='ident'>debug_struct</span>(<span class='string'>&quot;UnixListener&quot;</span>);
+        <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;fd&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>);
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>addr</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>local_addr</span>() {
-            <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;local&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>addr</span>);
+            <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;local&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>addr</span>);
         }
         <span class='ident'>builder</span>.<span class='ident'>finish</span>()
     }
 }
 
 <span class='kw'>impl</span> <span class='ident'>UnixListener</span> {
-    <span class='doccomment'>/// Creates a new `UnixListener` which will be bound to the specified</span>
-    <span class='doccomment'>/// socket.</span>
+    <span class='doccomment'>/// Creates a new `UnixListener` bound to the specified socket.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Linux provides, as a nonportable extension, a separate &quot;abstract&quot;</span>
     <span class='doccomment'>/// address namespace as opposed to filesystem-based addressing. If `path`</span>
@@ -1817,43 +1856,57 @@
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>bind</span>(<span class='ident'>inner</span>.<span class='number'>0</span>, <span class='kw-2'>&amp;</span><span class='ident'>addr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _, <span class='ident'>len</span>)));
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>listen</span>(<span class='ident'>inner</span>.<span class='number'>0</span>, <span class='number'>128</span>)));
 
-            <span class='prelude-val'>Ok</span>(<span class='ident'>UnixListener</span> {
-                <span class='ident'>inner</span>: <span class='ident'>inner</span>,
-            })
+            <span class='prelude-val'>Ok</span>(<span class='ident'>UnixListener</span> { <span class='ident'>inner</span>: <span class='ident'>inner</span> })
         }
     }
 
     <span class='doccomment'>/// Accepts a new incoming connection to this listener.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>accept</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>UnixStream</span><span class='op'>&gt;</span> {
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// This function will block the calling thread until a new Unix connection</span>
+    <span class='doccomment'>/// is established. When established, the corersponding `UnixStream` and</span>
+    <span class='doccomment'>/// the remote peer&#39;s address will be returned.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>accept</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>UnixStream</span>, <span class='ident'>SocketAddr</span>)<span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>accept</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>, <span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _))
-                .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>fd</span><span class='op'>|</span> <span class='ident'>UnixStream</span> { <span class='ident'>inner</span>: <span class='ident'>Inner</span>(<span class='ident'>fd</span>) })
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>fd</span> <span class='op'>=</span> <span class='number'>0</span>;
+            <span class='kw'>let</span> <span class='ident'>addr</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>SocketAddr</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='ident'>addr</span>, <span class='ident'>len</span><span class='op'>|</span> {
+                <span class='ident'>fd</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>accept</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>, <span class='ident'>addr</span>, <span class='ident'>len</span>);
+                <span class='ident'>fd</span>
+            }));
+
+            <span class='prelude-val'>Ok</span>((<span class='ident'>UnixStream</span> { <span class='ident'>inner</span>: <span class='ident'>Inner</span>(<span class='ident'>fd</span>) }, <span class='ident'>addr</span>))
         }
     }
 
-    <span class='doccomment'>/// Create a new independently owned handle to the underlying socket.</span>
+    <span class='doccomment'>/// Creates a new independently owned handle to the underlying socket.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// The returned `UnixListener` is a reference to the same socket that this</span>
     <span class='doccomment'>/// object references. Both handles can be used to accept incoming</span>
     <span class='doccomment'>/// connections and options set on one listener will affect the other.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>try_clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>UnixListener</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Ok</span>(<span class='ident'>UnixListener</span> {
-            <span class='ident'>inner</span>: <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>try_clone</span>())
-        })
+        <span class='prelude-val'>Ok</span>(<span class='ident'>UnixListener</span> { <span class='ident'>inner</span>: <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>try_clone</span>()) })
     }
 
-    <span class='doccomment'>/// Returns the socket address of the local half of this connection.</span>
+    <span class='doccomment'>/// Returns the local socket address of this listener.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>local_addr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SocketAddr</span><span class='op'>&gt;</span> {
         <span class='ident'>SocketAddr</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='ident'>addr</span>, <span class='ident'>len</span><span class='op'>|</span> <span class='kw'>unsafe</span> { <span class='ident'>libc</span>::<span class='ident'>getsockname</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>, <span class='ident'>addr</span>, <span class='ident'>len</span>) })
     }
 
+    <span class='doccomment'>/// Moves the socket into or out of nonblocking mode.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_nonblocking</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>nonblocking</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>set_nonblocking</span>(<span class='ident'>nonblocking</span>)
+    }
+
+    <span class='doccomment'>/// Returns the value of the `SO_ERROR` option.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>take_error</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;&gt;</span> {
+        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>take_error</span>()
+    }
+
     <span class='doccomment'>/// Returns an iterator over incoming connections.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The iterator will never return `None`.</span>
+    <span class='doccomment'>/// The iterator will never return `None` and will also not yield the</span>
+    <span class='doccomment'>/// peer&#39;s `SocketAddr` structure.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>incoming</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Incoming</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>Incoming</span> {
-            <span class='ident'>listener</span>: <span class='self'>self</span>
-        }
+        <span class='ident'>Incoming</span> { <span class='ident'>listener</span>: <span class='self'>self</span> }
     }
 }
 
@@ -1863,13 +1916,17 @@
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;from_raw_fd&quot;</span>)]</span>
-<span class='doccomment'>/// Requires the `from_raw_fd` feature (enabled by default).</span>
-<span class='kw'>impl</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>unix</span>::<span class='ident'>io</span>::<span class='ident'>FromRawFd</span> <span class='kw'>for</span> <span class='ident'>UnixListener</span> {
+<span class='kw'>impl</span> <span class='ident'>FromRawFd</span> <span class='kw'>for</span> <span class='ident'>UnixListener</span> {
     <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_raw_fd</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>) <span class='op'>-&gt;</span> <span class='ident'>UnixListener</span> {
-        <span class='ident'>UnixListener</span> {
-            <span class='ident'>inner</span>: <span class='ident'>Inner</span>(<span class='ident'>fd</span>)
-        }
+        <span class='ident'>UnixListener</span> { <span class='ident'>inner</span>: <span class='ident'>Inner</span>(<span class='ident'>fd</span>) }
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>IntoRawFd</span> <span class='kw'>for</span> <span class='ident'>UnixListener</span> {
+    <span class='kw'>fn</span> <span class='ident'>into_raw_fd</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>RawFd</span> {
+        <span class='kw'>let</span> <span class='ident'>fd</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>;
+        <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='self'>self</span>);
+        <span class='ident'>fd</span>
     }
 }
 
@@ -1894,7 +1951,7 @@
     <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>UnixStream</span><span class='op'>&gt;</span>;
 
     <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>UnixStream</span><span class='op'>&gt;&gt;</span> {
-        <span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='ident'>listener</span>.<span class='ident'>accept</span>())
+        <span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='ident'>listener</span>.<span class='ident'>accept</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>s</span>.<span class='number'>0</span>))
     }
 
     <span class='kw'>fn</span> <span class='ident'>size_hint</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>usize</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>) {
@@ -1921,13 +1978,13 @@
 
 <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>UnixDatagram</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>fmt</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>DebugStruct</span>::<span class='ident'>new</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;UnixDatagram&quot;</span>)
-            .<span class='ident'>field</span>(<span class='string'>&quot;fd&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>fmt</span>.<span class='ident'>debug_struct</span>(<span class='string'>&quot;UnixDatagram&quot;</span>);
+        <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;fd&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>);
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>addr</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>local_addr</span>() {
-            <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;local&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>addr</span>);
+            <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;local&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>addr</span>);
         }
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>addr</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>peer_addr</span>() {
-            <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;peer&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>addr</span>);
+            <span class='ident'>builder</span>.<span class='ident'>field</span>(<span class='string'>&quot;peer&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>addr</span>);
         }
         <span class='ident'>builder</span>.<span class='ident'>finish</span>()
     }
@@ -1948,18 +2005,14 @@
 
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>libc</span>::<span class='ident'>bind</span>(<span class='ident'>inner</span>.<span class='number'>0</span>, <span class='kw-2'>&amp;</span><span class='ident'>addr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _, <span class='ident'>len</span>)));
 
-            <span class='prelude-val'>Ok</span>(<span class='ident'>UnixDatagram</span> {
-                <span class='ident'>inner</span>: <span class='ident'>inner</span>,
-            })
+            <span class='prelude-val'>Ok</span>(<span class='ident'>UnixDatagram</span> { <span class='ident'>inner</span>: <span class='ident'>inner</span> })
         }
     }
 
     <span class='doccomment'>/// Creates a Unix Datagram socket which is not bound to any address.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>unbound</span>() <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>UnixDatagram</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>inner</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Inner</span>::<span class='ident'>new</span>(<span class='ident'>libc</span>::<span class='ident'>SOCK_DGRAM</span>));
-        <span class='prelude-val'>Ok</span>(<span class='ident'>UnixDatagram</span> {
-            <span class='ident'>inner</span>: <span class='ident'>inner</span>,
-        })
+        <span class='prelude-val'>Ok</span>(<span class='ident'>UnixDatagram</span> { <span class='ident'>inner</span>: <span class='ident'>inner</span> })
     }
 
     <span class='doccomment'>/// Create an unnamed pair of connected sockets.</span>
@@ -1970,13 +2023,11 @@
         <span class='prelude-val'>Ok</span>((<span class='ident'>UnixDatagram</span> { <span class='ident'>inner</span>: <span class='ident'>i1</span> }, <span class='ident'>UnixDatagram</span> { <span class='ident'>inner</span>: <span class='ident'>i2</span> }))
     }
 
-    <span class='doccomment'>/// Connect the socket to the specified address.</span>
+    <span class='doccomment'>/// Connects the socket to the specified address.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// The `send` method may be used to send data to the specified address.</span>
     <span class='doccomment'>/// `recv` and `recv_from` will only receive data from that address.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>connect</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>path</span>: <span class='ident'>P</span>)
-        <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
-    {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>connect</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> (<span class='ident'>addr</span>, <span class='ident'>len</span>) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sockaddr_un</span>(<span class='ident'>path</span>));
 
@@ -2008,11 +2059,17 @@
             <span class='kw'>unsafe</span> {
                 <span class='ident'>count</span> <span class='op'>=</span> <span class='ident'>libc</span>::<span class='ident'>recvfrom</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>,
                                        <span class='ident'>buf</span>.<span class='ident'>as_mut_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _,
-                                       <span class='ident'>calc_len</span>(<span class='ident'>buf</span>),
+                                       <span class='ident'>buf</span>.<span class='ident'>len</span>(),
                                        <span class='number'>0</span>,
                                        <span class='ident'>addr</span>,
                                        <span class='ident'>len</span>);
-                <span class='kw'>if</span> <span class='ident'>count</span> <span class='op'>&gt;</span> <span class='number'>0</span> { <span class='number'>1</span> } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>count</span> <span class='op'>==</span> <span class='number'>0</span> { <span class='number'>0</span> } <span class='kw'>else</span> { <span class='op'>-</span><span class='number'>1</span> }
+                <span class='kw'>if</span> <span class='ident'>count</span> <span class='op'>&gt;</span> <span class='number'>0</span> {
+                    <span class='number'>1</span>
+                } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>count</span> <span class='op'>==</span> <span class='number'>0</span> {
+                    <span class='number'>0</span>
+                } <span class='kw'>else</span> {
+                    <span class='op'>-</span><span class='number'>1</span>
+                }
             }
         }));
 
@@ -2026,7 +2083,7 @@
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='ident'>count</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt_s</span>(<span class='ident'>libc</span>::<span class='ident'>recv</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>,
                                               <span class='ident'>buf</span>.<span class='ident'>as_mut_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _,
-                                              <span class='ident'>calc_len</span>(<span class='ident'>buf</span>),
+                                              <span class='ident'>buf</span>.<span class='ident'>len</span>(),
                                               <span class='number'>0</span>)));
             <span class='prelude-val'>Ok</span>(<span class='ident'>count</span> <span class='kw'>as</span> <span class='ident'>usize</span>)
         }
@@ -2041,7 +2098,7 @@
 
             <span class='kw'>let</span> <span class='ident'>count</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt_s</span>(<span class='ident'>libc</span>::<span class='ident'>sendto</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>,
                                                 <span class='ident'>buf</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _,
-                                                <span class='ident'>calc_len</span>(<span class='ident'>buf</span>),
+                                                <span class='ident'>buf</span>.<span class='ident'>len</span>(),
                                                 <span class='number'>0</span>,
                                                 <span class='kw-2'>&amp;</span><span class='ident'>addr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _,
                                                 <span class='ident'>len</span>)));
@@ -2058,9 +2115,9 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>send</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
             <span class='kw'>let</span> <span class='ident'>count</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt_s</span>(<span class='ident'>libc</span>::<span class='ident'>send</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>,
-                                                <span class='ident'>buf</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _,
-                                                <span class='ident'>calc_len</span>(<span class='ident'>buf</span>),
-                                                <span class='number'>0</span>)));
+                                              <span class='ident'>buf</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _,
+                                              <span class='ident'>buf</span>.<span class='ident'>len</span>(),
+                                              <span class='number'>0</span>)));
             <span class='prelude-val'>Ok</span>(<span class='ident'>count</span> <span class='kw'>as</span> <span class='ident'>usize</span>)
         }
     }
@@ -2070,10 +2127,7 @@
     <span class='doccomment'>/// If the provided value is `None`, then `recv` and `recv_from` calls will</span>
     <span class='doccomment'>/// block indefinitely. It is an error to pass the zero `Duration` to this</span>
     <span class='doccomment'>/// method.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Requires the `socket_timeout` feature.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_read_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_read_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Duration</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>set_timeout</span>(<span class='ident'>timeout</span>, <span class='ident'>libc</span>::<span class='ident'>SO_RCVTIMEO</span>)
     }
 
@@ -2082,27 +2136,28 @@
     <span class='doccomment'>/// If the provided value is `None`, then `send` and `send_to` calls will</span>
     <span class='doccomment'>/// block indefinitely. It is an error to pass the zero `Duration` to this</span>
     <span class='doccomment'>/// method.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Requires the `socket_timeout` feature.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_write_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_write_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>timeout</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Duration</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>set_timeout</span>(<span class='ident'>timeout</span>, <span class='ident'>libc</span>::<span class='ident'>SO_SNDTIMEO</span>)
     }
 
     <span class='doccomment'>/// Returns the read timeout of this socket.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Requires the `socket_timeout` feature.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>read_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>read_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Duration</span><span class='op'>&gt;&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>timeout</span>(<span class='ident'>libc</span>::<span class='ident'>SO_RCVTIMEO</span>)
     }
 
     <span class='doccomment'>/// Returns the write timeout of this socket.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Requires the `socket_timeout` feature.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>write_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>write_timeout</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Duration</span><span class='op'>&gt;&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>timeout</span>(<span class='ident'>libc</span>::<span class='ident'>SO_SNDTIMEO</span>)
+    }
+
+    <span class='doccomment'>/// Moves the socket into or out of nonblocking mode.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_nonblocking</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>nonblocking</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>set_nonblocking</span>(<span class='ident'>nonblocking</span>)
+    }
+
+    <span class='doccomment'>/// Returns the value of the `SO_ERROR` option.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>take_error</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;&gt;</span> {
+        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>take_error</span>()
     }
 
     <span class='doccomment'>/// Shut down the read, write, or both halves of this connection.</span>
@@ -2121,13 +2176,17 @@
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;from_raw_fd&quot;</span>)]</span>
-<span class='doccomment'>/// Requires the `from_raw_fd` feature (enabled by default).</span>
-<span class='kw'>impl</span> <span class='ident'>std</span>::<span class='ident'>os</span>::<span class='ident'>unix</span>::<span class='ident'>io</span>::<span class='ident'>FromRawFd</span> <span class='kw'>for</span> <span class='ident'>UnixDatagram</span> {
+<span class='kw'>impl</span> <span class='ident'>FromRawFd</span> <span class='kw'>for</span> <span class='ident'>UnixDatagram</span> {
     <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_raw_fd</span>(<span class='ident'>fd</span>: <span class='ident'>RawFd</span>) <span class='op'>-&gt;</span> <span class='ident'>UnixDatagram</span> {
-        <span class='ident'>UnixDatagram</span> {
-            <span class='ident'>inner</span>: <span class='ident'>Inner</span>(<span class='ident'>fd</span>)
-        }
+        <span class='ident'>UnixDatagram</span> { <span class='ident'>inner</span>: <span class='ident'>Inner</span>(<span class='ident'>fd</span>) }
+    }
+}
+
+<span class='kw'>impl</span> <span class='ident'>IntoRawFd</span> <span class='kw'>for</span> <span class='ident'>UnixDatagram</span> {
+    <span class='kw'>fn</span> <span class='ident'>into_raw_fd</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>RawFd</span> {
+        <span class='kw'>let</span> <span class='ident'>fd</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='number'>0</span>;
+        <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='self'>self</span>);
+        <span class='ident'>fd</span>
     }
 }
 
@@ -2138,9 +2197,10 @@
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>thread</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>prelude</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>;
     <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>tempdir</span>::<span class='ident'>TempDir</span>;
 
-    <span class='kw'>use</span> {<span class='ident'>UnixListener</span>, <span class='ident'>UnixStream</span>, <span class='ident'>UnixDatagram</span>, <span class='ident'>AddressKind</span>};
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
 
     <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>or_panic</span> {
         (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>e</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> {
@@ -2160,7 +2220,7 @@
 
         <span class='kw'>let</span> <span class='ident'>listener</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>UnixListener</span>::<span class='ident'>bind</span>(<span class='kw-2'>&amp;</span><span class='ident'>socket_path</span>));
         <span class='kw'>let</span> <span class='ident'>thread</span> <span class='op'>=</span> <span class='ident'>thread</span>::<span class='ident'>spawn</span>(<span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>listener</span>.<span class='ident'>accept</span>());
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>listener</span>.<span class='ident'>accept</span>()).<span class='number'>0</span>;
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> [<span class='number'>0</span>; <span class='number'>5</span>];
             <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>read</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>));
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='ident'>msg1</span>[..], <span class='kw-2'>&amp;</span><span class='ident'>buf</span>[..]);
@@ -2168,6 +2228,8 @@
         });
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>UnixStream</span>::<span class='ident'>connect</span>(<span class='kw-2'>&amp;</span><span class='ident'>socket_path</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>socket_path</span>),
+                   <span class='ident'>stream</span>.<span class='ident'>peer_addr</span>().<span class='ident'>unwrap</span>().<span class='ident'>as_pathname</span>());
         <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>write_all</span>(<span class='ident'>msg1</span>));
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
         <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>read_to_end</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>));
@@ -2201,15 +2263,17 @@
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>not</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>), <span class='ident'>ignore</span>)]</span>
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>target_os</span> <span class='op'>=</span> <span class='string'>&quot;linux&quot;</span>)]</span>
     <span class='kw'>fn</span> <span class='ident'>abstract_address</span>() {
+        <span class='kw'>use</span> <span class='ident'>os</span>::<span class='ident'>linux</span>::<span class='ident'>SocketAddrExt</span>;
+
         <span class='kw'>let</span> <span class='ident'>socket_path</span> <span class='op'>=</span> <span class='string'>&quot;\0the path&quot;</span>;
         <span class='kw'>let</span> <span class='ident'>msg1</span> <span class='op'>=</span> <span class='string'>b&quot;hello&quot;</span>;
         <span class='kw'>let</span> <span class='ident'>msg2</span> <span class='op'>=</span> <span class='string'>b&quot;world!&quot;</span>;
 
         <span class='kw'>let</span> <span class='ident'>listener</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>UnixListener</span>::<span class='ident'>bind</span>(<span class='kw-2'>&amp;</span><span class='ident'>socket_path</span>));
         <span class='kw'>let</span> <span class='ident'>thread</span> <span class='op'>=</span> <span class='ident'>thread</span>::<span class='ident'>spawn</span>(<span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>listener</span>.<span class='ident'>accept</span>());
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>listener</span>.<span class='ident'>accept</span>()).<span class='number'>0</span>;
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> [<span class='number'>0</span>; <span class='number'>5</span>];
             <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>read</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>));
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='ident'>msg1</span>[..], <span class='kw-2'>&amp;</span><span class='ident'>buf</span>[..]);
@@ -2217,6 +2281,8 @@
         });
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>UnixStream</span>::<span class='ident'>connect</span>(<span class='kw-2'>&amp;</span><span class='ident'>socket_path</span>));
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='string'>b&quot;the path&quot;</span>[..]),
+                   <span class='ident'>stream</span>.<span class='ident'>peer_addr</span>().<span class='ident'>unwrap</span>().<span class='ident'>as_abstract</span>());
         <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>write_all</span>(<span class='ident'>msg1</span>));
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
         <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>read_to_end</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>));
@@ -2235,7 +2301,7 @@
 
         <span class='kw'>let</span> <span class='ident'>listener</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>UnixListener</span>::<span class='ident'>bind</span>(<span class='kw-2'>&amp;</span><span class='ident'>socket_path</span>));
         <span class='kw'>let</span> <span class='ident'>thread</span> <span class='op'>=</span> <span class='ident'>thread</span>::<span class='ident'>spawn</span>(<span class='kw'>move</span> <span class='op'>||</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>listener</span>.<span class='ident'>accept</span>());
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>listener</span>.<span class='ident'>accept</span>()).<span class='number'>0</span>;
             <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>write_all</span>(<span class='ident'>msg1</span>));
             <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>write_all</span>(<span class='ident'>msg2</span>));
         });
@@ -2277,8 +2343,9 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>long_path</span>() {
         <span class='kw'>let</span> <span class='ident'>dir</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>TempDir</span>::<span class='ident'>new</span>(<span class='string'>&quot;unix_socket&quot;</span>));
-        <span class='kw'>let</span> <span class='ident'>socket_path</span> <span class='op'>=</span> <span class='ident'>dir</span>.<span class='ident'>path</span>().<span class='ident'>join</span>(<span class='string'>&quot;asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasd\
-                                           fasdfasasdfasdfasdasdfasdfasdfadfasdfasdfasdfasdfasdf&quot;</span>);
+        <span class='kw'>let</span> <span class='ident'>socket_path</span> <span class='op'>=</span> <span class='ident'>dir</span>.<span class='ident'>path</span>()
+                             .<span class='ident'>join</span>(<span class='string'>&quot;asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfa\
+                                    sasdfasdfasdasdfasdfasdfadfasdfasdfasdfasdfasdf&quot;</span>);
         <span class='kw'>match</span> <span class='ident'>UnixStream</span>::<span class='ident'>connect</span>(<span class='kw-2'>&amp;</span><span class='ident'>socket_path</span>) {
             <span class='prelude-val'>Err</span>(<span class='kw-2'>ref</span> <span class='ident'>e</span>) <span class='kw'>if</span> <span class='ident'>e</span>.<span class='ident'>kind</span>() <span class='op'>==</span> <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>InvalidInput</span> <span class='op'>=&gt;</span> {}
             <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;unexpected error {}&quot;</span>, <span class='ident'>e</span>),
@@ -2299,10 +2366,7 @@
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
     <span class='kw'>fn</span> <span class='ident'>timeouts</span>() {
-        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>;
-
         <span class='kw'>let</span> <span class='ident'>dir</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>TempDir</span>::<span class='ident'>new</span>(<span class='string'>&quot;unix_socket&quot;</span>));
         <span class='kw'>let</span> <span class='ident'>socket_path</span> <span class='op'>=</span> <span class='ident'>dir</span>.<span class='ident'>path</span>().<span class='ident'>join</span>(<span class='string'>&quot;sock&quot;</span>);
 
@@ -2329,10 +2393,7 @@
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
     <span class='kw'>fn</span> <span class='ident'>test_read_timeout</span>() {
-        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>;
-
         <span class='kw'>let</span> <span class='ident'>dir</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>TempDir</span>::<span class='ident'>new</span>(<span class='string'>&quot;unix_socket&quot;</span>));
         <span class='kw'>let</span> <span class='ident'>socket_path</span> <span class='op'>=</span> <span class='ident'>dir</span>.<span class='ident'>path</span>().<span class='ident'>join</span>(<span class='string'>&quot;sock&quot;</span>);
 
@@ -2342,19 +2403,12 @@
         <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>set_read_timeout</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='number'>1000</span>))));
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> [<span class='number'>0</span>; <span class='number'>10</span>];
-        <span class='kw'>let</span> <span class='ident'>wait</span> <span class='op'>=</span> <span class='ident'>Duration</span>::<span class='ident'>span</span>(<span class='op'>||</span> {
-            <span class='kw'>let</span> <span class='ident'>kind</span> <span class='op'>=</span> <span class='ident'>stream</span>.<span class='ident'>read</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>).<span class='ident'>err</span>().<span class='ident'>expect</span>(<span class='string'>&quot;expected error&quot;</span>).<span class='ident'>kind</span>();
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>kind</span> <span class='op'>==</span> <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>WouldBlock</span> <span class='op'>||</span> <span class='ident'>kind</span> <span class='op'>==</span> <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>TimedOut</span>);
-        });
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>wait</span> <span class='op'>&gt;</span> <span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='number'>400</span>));
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>wait</span> <span class='op'>&lt;</span> <span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='number'>1600</span>));
+        <span class='kw'>let</span> <span class='ident'>kind</span> <span class='op'>=</span> <span class='ident'>stream</span>.<span class='ident'>read</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>).<span class='ident'>err</span>().<span class='ident'>expect</span>(<span class='string'>&quot;expected error&quot;</span>).<span class='ident'>kind</span>();
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>kind</span> <span class='op'>==</span> <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>WouldBlock</span> <span class='op'>||</span> <span class='ident'>kind</span> <span class='op'>==</span> <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>TimedOut</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;socket_timeout&quot;</span>)]</span>
     <span class='kw'>fn</span> <span class='ident'>test_read_with_timeout</span>() {
-        <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>;
-
         <span class='kw'>let</span> <span class='ident'>dir</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>TempDir</span>::<span class='ident'>new</span>(<span class='string'>&quot;unix_socket&quot;</span>));
         <span class='kw'>let</span> <span class='ident'>socket_path</span> <span class='op'>=</span> <span class='ident'>dir</span>.<span class='ident'>path</span>().<span class='ident'>join</span>(<span class='string'>&quot;sock&quot;</span>);
 
@@ -2363,19 +2417,15 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>UnixStream</span>::<span class='ident'>connect</span>(<span class='kw-2'>&amp;</span><span class='ident'>socket_path</span>));
         <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>set_read_timeout</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='number'>1000</span>))));
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>other_end</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>listener</span>.<span class='ident'>accept</span>());
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>other_end</span> <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>listener</span>.<span class='ident'>accept</span>()).<span class='number'>0</span>;
         <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>other_end</span>.<span class='ident'>write_all</span>(<span class='string'>b&quot;hello world&quot;</span>));
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> [<span class='number'>0</span>; <span class='number'>11</span>];
         <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>read</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>b&quot;hello world&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>buf</span>[..]);
 
-        <span class='kw'>let</span> <span class='ident'>wait</span> <span class='op'>=</span> <span class='ident'>Duration</span>::<span class='ident'>span</span>(<span class='op'>||</span> {
-            <span class='kw'>let</span> <span class='ident'>kind</span> <span class='op'>=</span> <span class='ident'>stream</span>.<span class='ident'>read</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>).<span class='ident'>err</span>().<span class='ident'>expect</span>(<span class='string'>&quot;expected error&quot;</span>).<span class='ident'>kind</span>();
-            <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>kind</span> <span class='op'>==</span> <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>WouldBlock</span> <span class='op'>||</span> <span class='ident'>kind</span> <span class='op'>==</span> <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>TimedOut</span>);
-        });
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>wait</span> <span class='op'>&gt;</span> <span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='number'>400</span>));
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>wait</span> <span class='op'>&lt;</span> <span class='ident'>Duration</span>::<span class='ident'>from_millis</span>(<span class='number'>1600</span>));
+        <span class='kw'>let</span> <span class='ident'>kind</span> <span class='op'>=</span> <span class='ident'>stream</span>.<span class='ident'>read</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>).<span class='ident'>err</span>().<span class='ident'>expect</span>(<span class='string'>&quot;expected error&quot;</span>).<span class='ident'>kind</span>();
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>kind</span> <span class='op'>==</span> <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>WouldBlock</span> <span class='op'>||</span> <span class='ident'>kind</span> <span class='op'>==</span> <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>TimedOut</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -2407,7 +2457,7 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> [<span class='number'>0</span>; <span class='number'>11</span>];
         <span class='kw'>let</span> (<span class='ident'>usize</span>, <span class='ident'>addr</span>) <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>sock1</span>.<span class='ident'>recv_from</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>usize</span>, <span class='number'>11</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>addr</span>.<span class='ident'>address</span>(), <span class='ident'>AddressKind</span>::<span class='ident'>Unnamed</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>addr</span>.<span class='ident'>is_unnamed</span>());
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>msg</span>, <span class='kw-2'>&amp;</span><span class='ident'>buf</span>[..]);
     }
 
@@ -2428,7 +2478,7 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> [<span class='number'>0</span>; <span class='number'>11</span>];
         <span class='kw'>let</span> (<span class='ident'>usize</span>, <span class='ident'>addr</span>) <span class='op'>=</span> <span class='macro'>or_panic</span><span class='macro'>!</span>(<span class='ident'>bsock1</span>.<span class='ident'>recv_from</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>usize</span>, <span class='number'>11</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>addr</span>.<span class='ident'>address</span>(), <span class='ident'>AddressKind</span>::<span class='ident'>Unnamed</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>addr</span>.<span class='ident'>is_unnamed</span>());
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>msg</span>, <span class='kw-2'>&amp;</span><span class='ident'>buf</span>[..]);
 
         <span class='comment'>// Changing default socket works too</span>

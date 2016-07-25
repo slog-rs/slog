@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/lab/rust/slog-rs/target/debug/build/backtrace-84fe7449c57aed39/out/capture.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/lab/rust/slog-rs/target/debug/build/backtrace-3bc1ff360ebb00cb/out/capture.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>capture.rs.html -- source</title>
@@ -231,10 +231,6 @@
 <span id="187">187</span>
 <span id="188">188</span>
 <span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
@@ -386,37 +382,33 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>Backtrace</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
+    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>fmt</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
         <span class='kw'>let</span> <span class='ident'>hex_width</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>() <span class='op'>*</span> <span class='number'>2</span> <span class='op'>+</span> <span class='number'>2</span>;
 
-        <span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>frame</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>frames</span>().<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
-            <span class='kw'>let</span> <span class='ident'>ip</span> <span class='op'>=</span> <span class='ident'>frame</span>.<span class='ident'>ip</span>();
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;frame #{:&lt;2} - {:#02$x}&quot;</span>, <span class='ident'>i</span>, <span class='ident'>ip</span> <span class='kw'>as</span> <span class='ident'>usize</span>, <span class='ident'>hex_width</span>));
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;stack backtrace:&quot;</span>));
 
-            <span class='kw'>if</span> <span class='ident'>frame</span>.<span class='ident'>symbols</span>().<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot; - &lt;no info&gt;&quot;</span>));
-                <span class='kw'>continue</span>
+        <span class='kw'>for</span> (<span class='ident'>idx</span>, <span class='ident'>frame</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>frames</span>().<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
+            <span class='kw'>let</span> <span class='ident'>ip</span> <span class='op'>=</span> <span class='ident'>frame</span>.<span class='ident'>ip</span>();
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;\n{:4}: {:2$?}&quot;</span>, <span class='ident'>idx</span>, <span class='ident'>ip</span>, <span class='ident'>hex_width</span>));
+
+            <span class='kw'>if</span> <span class='ident'>frame</span>.<span class='ident'>symbols</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> {
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot; - &lt;no info&gt;&quot;</span>));
             }
 
-            <span class='kw'>for</span> (<span class='ident'>j</span>, <span class='ident'>symbol</span>) <span class='kw'>in</span> <span class='ident'>frame</span>.<span class='ident'>symbols</span>().<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
-                <span class='kw'>if</span> <span class='ident'>j</span> <span class='op'>!=</span> <span class='number'>0</span> {
-                    <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='number'>0</span>..<span class='number'>7</span> <span class='op'>+</span> <span class='number'>2</span> <span class='op'>+</span> <span class='number'>3</span> <span class='op'>+</span> <span class='ident'>hex_width</span> {
-                        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot; &quot;</span>));
-                    }
+            <span class='kw'>for</span> (<span class='ident'>idx</span>, <span class='ident'>symbol</span>) <span class='kw'>in</span> <span class='ident'>frame</span>.<span class='ident'>symbols</span>().<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
+                <span class='kw'>if</span> <span class='ident'>idx</span> <span class='op'>!=</span> <span class='number'>0</span> {
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;\n      {:1$}&quot;</span>, <span class='string'>&quot;&quot;</span>, <span class='ident'>hex_width</span>));
                 }
 
                 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>name</span>) <span class='op'>=</span> <span class='ident'>symbol</span>.<span class='ident'>name</span>() {
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot; - {}&quot;</span>, <span class='ident'>name</span>));
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot; - {}&quot;</span>, <span class='ident'>name</span>));
                 } <span class='kw'>else</span> {
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot; - &lt;unknown&gt;&quot;</span>));
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot; - &lt;unknown&gt;&quot;</span>));
                 }
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>file</span>) <span class='op'>=</span> <span class='ident'>symbol</span>.<span class='ident'>filename</span>() {
-                    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>l</span>) <span class='op'>=</span> <span class='ident'>symbol</span>.<span class='ident'>lineno</span>() {
-                        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;\n{:13}{:4$}@ {}:{}&quot;</span>, <span class='string'>&quot;&quot;</span>, <span class='string'>&quot;&quot;</span>,
-                                    <span class='ident'>file</span>.<span class='ident'>display</span>(), <span class='ident'>l</span>, <span class='ident'>hex_width</span>));
-                    }
+
+                <span class='kw'>if</span> <span class='kw'>let</span> (<span class='prelude-val'>Some</span>(<span class='ident'>file</span>), <span class='prelude-val'>Some</span>(<span class='ident'>line</span>)) <span class='op'>=</span> (<span class='ident'>symbol</span>.<span class='ident'>filename</span>(), <span class='ident'>symbol</span>.<span class='ident'>lineno</span>()) {
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;\n      {:3$}at {}:{}&quot;</span>, <span class='string'>&quot;&quot;</span>, <span class='ident'>file</span>.<span class='ident'>display</span>(), <span class='ident'>line</span>, <span class='ident'>hex_width</span>));
                 }
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;&quot;</span>));
             }
         }
 

@@ -47,9 +47,42 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-22' class='srclink' href='../src/error_chain/lib.rs.html#258-482' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-22' class='srclink' href='../src/error_chain/lib.rs.html#260-555' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>error_chain</span> {
+    (
+        <span class='ident'>links</span> {
+            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_error_path</span>:<span class='ident'>path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_kind_path</span>:<span class='ident'>path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_variant</span>:<span class='ident'>ident</span>;  ) <span class='op'>*</span>
+        }
+
+        <span class='ident'>foreign_links</span> {
+            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_error_path</span>:<span class='ident'>path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_variant</span>:<span class='ident'>ident</span>,
+               <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_desc</span>:<span class='ident'>expr</span>;  ) <span class='op'>*</span>
+        }
+
+        <span class='ident'>errors</span> {
+            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>error_chunks</span>:<span class='ident'>tt</span> ) <span class='op'>*</span>
+        }
+
+    ) <span class='op'>=&gt;</span> { ... };
+    (
+        <span class='ident'>types</span> {
+        }
+
+        <span class='ident'>links</span> {
+            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_error_path</span>:<span class='ident'>path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_kind_path</span>:<span class='ident'>path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_variant</span>:<span class='ident'>ident</span>;  ) <span class='op'>*</span>
+        }
+
+        <span class='ident'>foreign_links</span> {
+            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_error_path</span>:<span class='ident'>path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_variant</span>:<span class='ident'>ident</span>,
+               <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_desc</span>:<span class='ident'>expr</span>;  ) <span class='op'>*</span>
+        }
+
+        <span class='ident'>errors</span> {
+            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>error_chunks</span>:<span class='ident'>tt</span> ) <span class='op'>*</span>
+        }
+
+    ) <span class='op'>=&gt;</span> { ... };
     (
         <span class='ident'>types</span> {
             <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>error_name</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>error_kind_name</span>:<span class='ident'>ident</span>,

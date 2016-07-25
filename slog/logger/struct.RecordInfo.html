@@ -47,12 +47,12 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-493' class='srclink' href='../../src/slog/src/logger.rs.html#142-148' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-506' class='srclink' href='../../src/slog/src/logger.rs.html#154-160' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct RecordInfo&lt;'a&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>Common information about a logging record</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-498' class='srclink' href='../../src/slog/src/logger.rs.html#150-191' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(level: <a class='enum' href='../../slog/enum.Level.html' title='slog::Level'>Level</a>, msg: &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; Self</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-511' class='srclink' href='../../src/slog/src/logger.rs.html#162-203' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(level: <a class='enum' href='../../slog/enum.Level.html' title='slog::Level'>Level</a>, msg: &amp;'a <a class='trait' href='../../slog/logger/trait.IntoMsg.html' title='slog::logger::IntoMsg'>IntoMsg</a>) -&gt; Self</code></h4>
 <div class='docblock'><p>Create a new <code>RecordInfo</code> with a current timestamp</p>
 </div><h4 id='method.ts' class='method'><code>fn <a href='#method.ts' class='fnname'>ts</a>(&amp;self) -&gt; <a class='struct' href='../../chrono/datetime/struct.DateTime.html' title='chrono::datetime::DateTime'>DateTime</a>&lt;<a class='struct' href='../../chrono/offset/utc/struct.UTC.html' title='chrono::offset::utc::UTC'>UTC</a>&gt;</code></h4>
 <div class='docblock'><p>Timestamp</p>

@@ -519,6 +519,7 @@
 <span id="475">475</span>
 <span id="476">476</span>
 <span id="477">477</span>
+<span id="478">478</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Drains</span>
 <span class='doccomment'>//!</span>
@@ -841,6 +842,7 @@
            <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>])
            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>res1</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>drain1</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>);
+        <span class='ident'>buf</span>.<span class='ident'>clear</span>();
         <span class='kw'>let</span> <span class='ident'>res2</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>drain2</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>);
 
         <span class='comment'>// TODO: Don&#39;t discard e2 in case of two errors at once?</span>
