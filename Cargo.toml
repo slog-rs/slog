@@ -31,3 +31,5 @@ slog-stdlog = { path = "crates/stdlog" }
 slog-syslog = { path = "crates/syslog" }
 slog-bunyan = { path = "crates/bunyan" }
 log = "0.3.6"
+nix = "*"
+lazy_static = "0.1.*"
