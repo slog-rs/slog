@@ -319,6 +319,7 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
            values: &[BorrowedKeyValue])
            -> Result<()> {
         let res1 = self.drain1.log(buf, info, logger_values, values);
+        buf.clear();
         let res2 = self.drain2.log(buf, info, logger_values, values);
 
         // TODO: Don't discard e2 in case of two errors at once?
