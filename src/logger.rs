@@ -13,6 +13,7 @@
 use super::{OwnedKeyValue, Level, BorrowedKeyValue, OwnedKeyValueNode};
 use std::sync::Arc;
 use std::cell::RefCell;
+use std::borrow::Cow;
 
 use drain;
 
@@ -33,12 +34,12 @@ pub struct Logger {
 /// A type that can be translated into `Msg`
 pub trait IntoMsg {
     /// Convert to the `&str`
-    fn as_str(&self) -> &str;
+    fn as_str(&self) -> Cow<str>;
 }
 
 impl<T : AsRef<str>> IntoMsg for T {
-    fn as_str(&self) -> &str {
-        self.as_ref()
+    fn as_str(&self) -> Cow<str> {
+        Cow::Borrowed(self.as_ref())
     }
 }
 
@@ -189,7 +190,7 @@ impl<'a> RecordInfo<'a> {
     }
 
     /// Get a log record message
-    pub fn msg(&self) -> &str {
+    pub fn msg(&self) -> Cow<str> {
         self.msg.as_str()
     }
 
