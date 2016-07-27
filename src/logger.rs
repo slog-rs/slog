@@ -14,6 +14,7 @@ use super::{OwnedKeyValue, Level, BorrowedKeyValue, OwnedKeyValueNode};
 use std::sync::Arc;
 use std::cell::RefCell;
 use std::borrow::Cow;
+use std::fmt;
 
 use drain;
 
@@ -37,9 +38,31 @@ pub trait IntoMsg {
     fn as_str(&self) -> Cow<str>;
 }
 
+/* TODO: why does this conflict with &'a str?
 impl<T : AsRef<str>> IntoMsg for T {
     fn as_str(&self) -> Cow<str> {
         Cow::Borrowed(self.as_ref())
+    }
+}
+ */
+
+impl<'a> IntoMsg for &'a str {
+    fn as_str(&self) -> Cow<str> {
+        Cow::Borrowed(self)
+    }
+}
+
+impl<'a> IntoMsg for String {
+    fn as_str(&self) -> Cow<str> {
+        Cow::Borrowed(self.as_str())
+    }
+}
+
+impl<'a> IntoMsg for fmt::Arguments<'a> {
+    fn as_str(&self) -> Cow<str> {
+        let mut s = String::new();
+        fmt::write(&mut s, *self).unwrap();
+        Cow::Owned(s)
     }
 }
 

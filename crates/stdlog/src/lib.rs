@@ -32,7 +32,6 @@ use log::LogMetadata;
 use std::sync;
 
 use slog::Level;
-use slog::logger::RecordInfo;
 
 // TODO: Change this to use thread local copies
 struct Logger(sync::Mutex<slog::Logger>);
@@ -62,6 +61,7 @@ impl log::Log for Logger {
     fn log(&self, r: &log::LogRecord) {
         let level = log_to_slog_level(r.metadata().level());
 
+        let args = r.args();
         let target = r.target();
         let module = r.location().module_path();
         let file = r.location().file();
@@ -69,13 +69,12 @@ impl log::Log for Logger {
         {
             let _ = self.0.lock()
                 .map(|l| (*l).log(level,
-                                  &"stdlog",
+                                  args,
                                   b!(
                                       "target" => target,
                                       "module" => module,
                                       "file" => file,
-                                      "line" => line,
-                                      "stdmsg" => |_:&RecordInfo|{format!("{}", r.args())}
+                                      "line" => line
                                   )));
         }
     }
