@@ -11,7 +11,7 @@ use std::mem;
 use super::{Level, Logger};
 use super::format;
 use super::logger::RecordInfo;
-use super::{OwnedKeyValue, BorrowedKeyValue};
+use super::{OwnedKeyValue, BorrowedKeyValue, OwnedKeyValueNode};
 
 use crossbeam::sync::ArcCell;
 
@@ -59,7 +59,7 @@ pub trait Drain: Send + Sync {
     /// providing a byte buffer, that `Drain` can use for their own needs.
     fn log(&self,
            buf : &mut Vec<u8>,
-           info: &RecordInfo, &[OwnedKeyValue], &[BorrowedKeyValue]) -> Result<()>;
+           info: &RecordInfo, &OwnedKeyValueNode, &[BorrowedKeyValue]) -> Result<()>;
 
 }
 
@@ -68,7 +68,7 @@ pub trait Drain: Send + Sync {
 /// `Logger::new_root` shortcut
 pub trait IntoLogger : Drain+Sized+'static {
     /// Turn drain into root `Logger`
-    fn into_logger(self, values: &[OwnedKeyValue]) -> Logger {
+    fn into_logger(self, values: Vec<OwnedKeyValue>) -> Logger {
         Logger::new_root(values, self)
     }
 }
@@ -78,7 +78,7 @@ impl<D : Drain+Sized+'static> IntoLogger for D {}
 impl<D:Drain> Drain for Box<D> {
     fn log(&self,
            buf : &mut Vec<u8>,
-           info: &RecordInfo, o : &[OwnedKeyValue], b : &[BorrowedKeyValue]) -> Result<()> {
+           info: &RecordInfo, o : &OwnedKeyValueNode, b : &[BorrowedKeyValue]) -> Result<()> {
         (**self).log(buf, info, o, b)
     }
 }
@@ -86,7 +86,7 @@ impl<D:Drain> Drain for Box<D> {
 impl<D:Drain> Drain for Arc<D> {
     fn log(&self,
            buf : &mut Vec<u8>,
-           info: &RecordInfo, o : &[OwnedKeyValue], b : &[BorrowedKeyValue]) -> Result<()> {
+           info: &RecordInfo, o : &OwnedKeyValueNode, b : &[BorrowedKeyValue]) -> Result<()> {
         (**self).log(buf, info, o, b)
     }
 }
@@ -97,7 +97,7 @@ pub struct Discard;
 impl Drain for Discard {
     fn log(&self,
            _: &mut Vec<u8>,
-           _: &RecordInfo, _: &[OwnedKeyValue], _: &[BorrowedKeyValue]) -> Result<()> {
+           _: &RecordInfo, _: &OwnedKeyValueNode, _: &[BorrowedKeyValue]) -> Result<()> {
         Ok(())
     }
 }
@@ -139,7 +139,7 @@ impl Drain for AtomicSwitch {
     fn log(&self,
            mut buf : &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &[OwnedKeyValue],
+           logger_values: &OwnedKeyValueNode,
            values: &[BorrowedKeyValue])
            -> Result<()> {
             self.0.get().log(buf, info, logger_values, values)
@@ -170,7 +170,7 @@ impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer
     fn log(&self,
            mut buf : &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &[OwnedKeyValue],
+           logger_values: &OwnedKeyValueNode,
            values: &[BorrowedKeyValue])
            -> Result<()> {
         try!(self.format.format(&mut buf, info, logger_values, values));
@@ -206,7 +206,7 @@ impl<F: format::Format + Send> Drain for AsyncStreamer<F> {
     fn log(&self,
            mut buf : &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &[OwnedKeyValue],
+           logger_values: &OwnedKeyValueNode,
            values: &[BorrowedKeyValue])
            -> Result<()> {
         try!(self.format.format(&mut buf, info, logger_values, values));
@@ -245,7 +245,7 @@ impl<D: Drain> Drain for Filter<D> {
     fn log(&self,
            buf : &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &[OwnedKeyValue],
+           logger_values: &OwnedKeyValueNode,
            values: &[BorrowedKeyValue])
            -> Result<()> {
         if (self.cond)(&info) {
@@ -283,7 +283,7 @@ impl<D: Drain> Drain for FilterLevel<D> {
     fn log(&self,
            buf : &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &[OwnedKeyValue],
+           logger_values: &OwnedKeyValueNode,
            values: &[BorrowedKeyValue])
            -> Result<()> {
         if info.level().is_at_least(self.level) {
@@ -315,7 +315,7 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
     fn log(&self,
            buf : &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &[OwnedKeyValue],
+           logger_values: &OwnedKeyValueNode,
            values: &[BorrowedKeyValue])
            -> Result<()> {
         let res1 = self.drain1.log(buf, info, logger_values, values);
@@ -355,7 +355,7 @@ impl<D1: Drain, D2: Drain> Drain for Failover<D1, D2> {
     fn log(&self,
            buf : &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &[OwnedKeyValue],
+           logger_values: &OwnedKeyValueNode,
            values: &[BorrowedKeyValue])
            -> Result<()> {
         match self.drain1.log(buf, info, logger_values, values) {

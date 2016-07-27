@@ -16,7 +16,7 @@ struct BlackBoxDrain;
 impl drain::Drain for BlackBoxDrain {
     fn log(&self,
            buf: &mut Vec<u8>,
-           ri: &RecordInfo, o : &[OwnedKeyValue], b: &[BorrowedKeyValue]) -> drain::Result<()> {
+           ri: &RecordInfo, o : &OwnedKeyValueNode, b: &[BorrowedKeyValue]) -> drain::Result<()> {
 
         test::black_box((buf, ri, o, b));
         Ok(())

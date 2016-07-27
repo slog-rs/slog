@@ -10,7 +10,7 @@
 //!
 //! Loggers form hierarchies sharing a drain. Setting a drain on
 //! any logger will change it on all loggers in given hierarchy.
-use super::{OwnedKeyValue, Level, BorrowedKeyValue};
+use super::{OwnedKeyValue, Level, BorrowedKeyValue, OwnedKeyValueNode};
 use std::sync::Arc;
 use std::cell::RefCell;
 
@@ -27,7 +27,7 @@ thread_local! {
 /// Logger
 pub struct Logger {
     drain: Arc<drain::Drain>,
-    values: Vec<OwnedKeyValue>,
+    values: Arc<OwnedKeyValueNode>,
 }
 
 /// A type that can be translated into `Msg`
@@ -57,10 +57,10 @@ impl Logger {
     /// fn main() {
     ///     let root = slog::Logger::new_root(o!("key1" => "value1", "key2" => "value2"), slog::drain::discard());
     /// }
-    pub fn new_root<D : 'static+drain::Drain+Sized>(values: &[OwnedKeyValue], d : D) -> Logger {
+    pub fn new_root<D : 'static+drain::Drain+Sized>(values: Vec<OwnedKeyValue>, d : D) -> Logger {
         Logger {
             drain: Arc::new(d),
-            values: values.to_vec(),
+            values: Arc::new(OwnedKeyValueNode::new_root(values)),
         }
     }
 
@@ -82,12 +82,10 @@ impl Logger {
     ///     let root = slog::drain::discard().into_logger(o!("key1" => "value1", "key2" => "value2"));
     ///     let log = root.new(o!("key" => "value"));
     /// }
-    pub fn new(&self, values: &[OwnedKeyValue]) -> Logger {
-        let mut new_values = self.values.clone();
-        new_values.extend_from_slice(values);
+    pub fn new(&self, values: Vec<OwnedKeyValue>) -> Logger {
         Logger {
             drain: self.drain.clone(),
-            values: new_values,
+            values: Arc::new(OwnedKeyValueNode::new(values, self.values.clone())),
         }
     }
 
@@ -101,7 +99,7 @@ impl Logger {
         // By default errors in loggers are ignored
         TL_BUF.with(|buf| {
             let mut buf = buf.borrow_mut();
-            let _ = self.drain.log(&mut *buf, &mut info, self.values.as_slice(), values);
+            let _ = self.drain.log(&mut *buf, &mut info, &self.values, values);
             // TODO: Double check if this will not zero the old bytes as it costs time
             buf.clear();
         });

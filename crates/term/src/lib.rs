@@ -28,7 +28,7 @@ use isatty::{stderr_isatty, stdout_isatty};
 
 use slog::logger::RecordInfo;
 use slog::drain::{Streamer, AsyncStreamer};
-use slog::{Level, OwnedKeyValue, BorrowedKeyValue};
+use slog::{Level, BorrowedKeyValue, OwnedKeyValueNode};
 use slog::format::Format as SlogFormat;
 
 /// Format formatting with optional color support
@@ -189,7 +189,7 @@ impl SlogFormat for Format {
     fn format(&self,
               io: &mut io::Write,
               info: &RecordInfo,
-              logger_values: &[OwnedKeyValue],
+              logger_values: &OwnedKeyValueNode,
               values: &[BorrowedKeyValue])
               -> slog::format::Result<()> {
         let level_color = Colour::Fixed(severity_to_color(info.level()));
@@ -211,7 +211,7 @@ impl SlogFormat for Format {
 
         let mut serializer = Serializer::new(io, self.color);
 
-        for &(ref k, ref v) in logger_values {
+        for &(ref k, ref v) in logger_values.iter() {
             try!(v.serialize(info, k, &mut serializer));
         }
 

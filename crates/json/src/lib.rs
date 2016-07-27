@@ -26,7 +26,7 @@ use std::io;
 
 use slog_serde::SerdeSerializer;
 use slog::logger::{RecordInfo};
-use slog::{Level, OwnedKeyValue, BorrowedKeyValue};
+use slog::{Level, OwnedKeyValue, OwnedKeyValueNode, BorrowedKeyValue};
 use slog::Level::*;
 use slog::format;
 
@@ -122,8 +122,8 @@ impl JsonBuilder {
     }
 
     /// Add custom values to be printed with this formatter
-    pub fn add_key_values(&mut self, values: &[OwnedKeyValue]) -> &mut Self {
-        self.values.extend_from_slice(values);
+    pub fn add_key_values(&mut self, values: Vec<OwnedKeyValue>) -> &mut Self {
+        self.values.extend(values.iter().cloned());
         self
     }
 
@@ -175,7 +175,7 @@ impl format::Format for Json {
     fn format(&self,
               io: &mut io::Write,
               rinfo: &RecordInfo,
-              logger_values: &[OwnedKeyValue],
+              logger_values: &OwnedKeyValueNode,
               record_values: &[BorrowedKeyValue])
               -> format::Result<()> {
         let _ = try!(write!(io, "{{"));

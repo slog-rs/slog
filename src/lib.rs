@@ -122,12 +122,12 @@ use std::fmt;
 #[macro_export]
 macro_rules! o(
     () => {
-        &[]
+        vec![]
     };
     ($($k:expr => $v:expr),*) => {
         {
         use std;
-        &[$(($k, std::sync::Arc::new($v) as std::sync::Arc<$crate::ser::SyncSerialize>)),*]
+        vec![$(($k, std::sync::Arc::new($v) as std::sync::Arc<$crate::ser::SyncSerialize>)),*]
         }
     };
 );
@@ -175,6 +175,69 @@ include!("_level.rs");
 pub type OwnedKeyValue = (&'static str, Arc<ser::SyncSerialize>);
 /// Key value pair that can be part of each logging record
 pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
+
+/// Values specific for this Logger and reference to it's parent values
+#[derive(Clone)]
+pub struct OwnedKeyValueNode {
+    parent : Option<Arc<OwnedKeyValueNode>>,
+    values : Vec<OwnedKeyValue>,
+}
+
+impl OwnedKeyValueNode {
+    // New `OwnedKeyValue` with a parent
+    pub fn new(values : Vec<OwnedKeyValue>, parent : Arc<OwnedKeyValueNode>) -> Self {
+        OwnedKeyValueNode {
+            parent : Some(parent),
+            values : values,
+        }
+    }
+
+    // New `OwnedKeyValue` without a parent (root)
+    pub fn new_root(values : Vec<OwnedKeyValue>) -> Self {
+        OwnedKeyValueNode {
+            parent : None,
+            values : values,
+        }
+    }
+
+    /// Iterator over `OwnedKeyValue`-s
+    pub fn iter(&self) -> OwnedKeyValueNodeIterator {
+        OwnedKeyValueNodeIterator::new(self)
+    }
+}
+
+/// Iterator over `OwnedKeyValue`-s
+pub struct OwnedKeyValueNodeIterator<'a> {
+    next_node : &'a Option<Arc<OwnedKeyValueNode>>,
+    iter : std::slice::Iter<'a, OwnedKeyValue>,
+}
+
+impl<'a> OwnedKeyValueNodeIterator<'a> {
+    fn new(node : &'a OwnedKeyValueNode) -> Self {
+        OwnedKeyValueNodeIterator {
+            next_node: &node.parent,
+            iter: node.values.iter()
+        }
+    }
+}
+
+impl<'a> Iterator for OwnedKeyValueNodeIterator<'a> {
+    type Item = &'a OwnedKeyValue;
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            match self.iter.next() {
+                Some(x) => return Some(&*x),
+                None => match self.next_node {
+                    &Some(ref node) => {
+                        self.iter = node.values.iter();
+                        self.next_node = &node.parent;
+                    }
+                    &None => return None
+                }
+            }
+        }
+    }
+}
 
 #[cfg(test)]
 mod tests;

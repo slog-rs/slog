@@ -82,6 +82,7 @@ mod test {
     use slog::logger::RecordInfo;
     use slog::Level;
     use slog::format::Format;
+    use slog::OwnedKeyValueNode;
 
     #[test]
     fn trivial() {
@@ -97,7 +98,7 @@ mod test {
         info.set_ts(UTC.ymd(2014, 7, 8).and_hms(9, 10, 11));
 
         let mut v = vec![];
-        formatter.format(&mut v, &info, &[], &[]).unwrap();
+        formatter.format(&mut v, &info, &OwnedKeyValueNode::new_root(vec![]), &[]).unwrap();
 
         assert_eq!(String::from_utf8_lossy(&v),
                    "{\"pid\":".to_string() + &nix::unistd::getpid().to_string() + ",\"host\":\"" +
