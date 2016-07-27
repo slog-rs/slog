@@ -51,7 +51,7 @@ fn main() {
         let sig_action = signal::SigAction::new(signal::SigHandler::Handler(handle_sigusr1),
                                                 signal::SaFlags::empty(),
                                                 signal::SigSet::empty());
-        signal::sigaction(signal::SIGUSR1, &sig_action);
+        signal::sigaction(signal::SIGUSR1, &sig_action).unwrap();
     }
 
     let drain = slog::drain::duplicate(
@@ -65,7 +65,7 @@ fn main() {
 
     log.info("logging a message every 3s", b!());
     log.info("send SIGUSR1 signal to switch output with", b!());
-    log.info(format!("kill -SIGUSR1 {}", nix::unistd::getpid()), b!());
+    log.info(format_args!("kill -SIGUSR1 {}", nix::unistd::getpid()), b!());
     loop {
         log.info("tick", b!());
         thread::sleep_ms(3000);
