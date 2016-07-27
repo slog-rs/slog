@@ -49,14 +49,14 @@
                    </a>
                </span><a id='src-180' class='srclink' href='../../src/slog/src/drain.rs.html#69-74' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait IntoLogger: <a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + 'static {
-    fn <a href='#method.into_logger' class='fnname'>into_logger</a>(self, values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a> { ... }
+    fn <a href='#method.into_logger' class='fnname'>into_logger</a>(self, values: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>&gt;) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a> { ... }
 }</pre><div class='docblock'><p>Convenience trait allowing turning drain into root <code>Logger</code></p>
 
 <p><code>Logger::new_root</code> shortcut</p>
 </div>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
-        <h3 id='method.into_logger' class='method stab '><code>fn <a href='#method.into_logger' class='fnname'>into_logger</a>(self, values: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h3><div class='docblock'><p>Turn drain into root <code>Logger</code></p>
+        <h3 id='method.into_logger' class='method stab '><code>fn <a href='#method.into_logger' class='fnname'>into_logger</a>(self, values: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>&gt;) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h3><div class='docblock'><p>Turn drain into root <code>Logger</code></p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
