@@ -184,7 +184,7 @@ pub struct OwnedKeyValueNode {
 }
 
 impl OwnedKeyValueNode {
-    // New `OwnedKeyValue` with a parent
+    /// New `OwnedKeyValue` with a parent
     pub fn new(values : Vec<OwnedKeyValue>, parent : Arc<OwnedKeyValueNode>) -> Self {
         OwnedKeyValueNode {
             parent : Some(parent),
@@ -192,7 +192,7 @@ impl OwnedKeyValueNode {
         }
     }
 
-    // New `OwnedKeyValue` without a parent (root)
+    /// New `OwnedKeyValue` without a parent (root)
     pub fn new_root(values : Vec<OwnedKeyValue>) -> Self {
         OwnedKeyValueNode {
             parent : None,
