@@ -10,5 +10,5 @@ fn main() {
         Facility::LOG_USER,
     ).into_logger(o!("build-id" => "8dfljdf"));
 
-    root.error("Test slog unix syslog message", b!("x" => -1));
+    error!(root, "Test slog unix syslog message", "x" => -1);
 }

@@ -62,20 +62,23 @@ impl log::Log for Logger {
         let level = log_to_slog_level(r.metadata().level());
 
         let args = r.args();
-        let target = r.target();
+        // TODO: What to do with it?
+        let _target = r.target();
         let module = r.location().module_path();
         let file = r.location().file();
         let line = r.location().line();
         {
             let _ = self.0.lock()
-                .map(|l| (*l).log(level,
-                                  args,
-                                  b!(
-                                      "target" => target,
-                                      "module" => module,
-                                      "file" => file,
-                                      "line" => line
-                                  )));
+                .map(|l| (*l).log(&slog::RecordInfo::new(
+                    level,
+                    args,
+                    file,
+                    line,
+                    module,
+                    &[]
+                )
+
+                ));
         }
     }
 }

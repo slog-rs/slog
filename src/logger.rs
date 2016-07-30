@@ -116,78 +116,58 @@ impl Logger {
     /// Log one logging record
     ///
     /// Use specific logging functions instead.
-    pub fn log(&self, lvl: Level, msg: &IntoMsg, values: &[BorrowedKeyValue]) {
-
-        let mut info = RecordInfo::new(lvl, msg);
+    pub fn log(&self, record : &RecordInfo) {
 
         // By default errors in loggers are ignored
         TL_BUF.with(|buf| {
             let mut buf = buf.borrow_mut();
-            let _ = self.drain.log(&mut *buf, &mut info, &self.values, values);
+            let _ = self.drain.log(&mut *buf, &record, &*self.values);
             // TODO: Double check if this will not zero the old bytes as it costs time
             buf.clear();
         });
-    }
-
-    /// Log critical level record
-    ///
-    /// Use `b!` macro to help build `values`
-    pub fn critical<M : IntoMsg>(&self, msg: M, values: &[BorrowedKeyValue]) {
-        self.log(Level::Critical, &msg, values);
-    }
-
-    /// Log error level record
-    ///
-    /// Use `b!` macro to help build `values`
-    pub fn error<M : IntoMsg>(&self, msg: M, values: &[BorrowedKeyValue]) {
-        self.log(Level::Error, &msg, values);
-    }
-
-    /// Log warning level record
-    ///
-    /// Use `b!` macro to help build `values`
-    pub fn warn<M : IntoMsg>(&self, msg: M, values: &[BorrowedKeyValue]) {
-        self.log(Level::Warning, &msg, values);
-    }
-
-    /// Log info level record
-    ///
-    /// Use `b!` macro to help build `values`
-    pub fn info<M : IntoMsg>(&self, msg: M, values: &[BorrowedKeyValue]) {
-        self.log(Level::Info, &msg, values);
-    }
-
-    /// Log debug level record
-    ///
-    /// Use `b!` macro to help build `values`
-    pub fn debug<M : IntoMsg>(&self, msg: M, values: &[BorrowedKeyValue]) {
-        self.log(Level::Debug, &msg, values);
-    }
-
-    /// Log trace level record
-    ///
-    /// Use `b!` macro to help build `values`
-    pub fn trace<M : IntoMsg>(&self, msg: M, values: &[BorrowedKeyValue]) {
-        self.log(Level::Trace, &msg, values);
     }
 }
 
 /// Common information about a logging record
 pub struct RecordInfo<'a> {
+    /// Lazily initialized timestamp
+    ///
+    /// Since getting current time requires a
+    /// syscall and most log records won't make it to the final drain it will be
+    /// delayed until ts is actually needed.
     ts: RefCell<Option<chrono::DateTime<chrono::UTC>>>,
     /// Logging level
     level: Level,
     /// Message
     msg: &'a IntoMsg,
+    /// File
+    file : &'a str,
+    /// Line
+    line : u32,
+    /// Module
+    module : &'a str,
+    /// Values
+    values: &'a [BorrowedKeyValue<'a>]
 }
 
 impl<'a> RecordInfo<'a> {
-    /// Create a new `RecordInfo` with a current timestamp
-    pub fn new(level: Level, msg: &'a IntoMsg) -> Self {
+    /// Create a new `RecordInfo`
+    #[inline]
+    pub fn new(
+        level: Level,
+        msg: &'a IntoMsg,
+        file : &'a str,
+        line : u32,
+        module : &'a str,
+        values: &'a [BorrowedKeyValue<'a>]) -> Self {
         RecordInfo {
             ts: RefCell::new(None),
             level: level,
             msg: msg,
+            file : file,
+            line : line,
+            module : module,
+            values: values,
         }
     }
 
@@ -217,9 +197,30 @@ impl<'a> RecordInfo<'a> {
         self.msg.as_str()
     }
 
-
     /// Get record logging level
     pub fn level(&self) -> Level {
         self.level
     }
+
+    /// Get line number
+    pub fn line(&self) -> u32 {
+        self.line
+    }
+
+    /// Get file path
+    pub fn file(&self) -> &str {
+        self.file
+
+    }
+
+    /// Get module
+    pub fn module(&self) -> &str {
+        self.module
+    }
+
+    /// Record value-key pairs
+    pub fn values(&self) ->  &'a [BorrowedKeyValue<'a>] {
+        self.values
+    }
+
 }

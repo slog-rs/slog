@@ -89,16 +89,20 @@ mod test {
         let formatter = new();
 
 
-        let msg = "message";
+        let msg = &"message";
         let info = RecordInfo::new(
             Level::Info,
-            &msg,
+            msg,
+            "filepath",
+            11192,
+            "modulepath",
+            &[]
         );
 
         info.set_ts(UTC.ymd(2014, 7, 8).and_hms(9, 10, 11));
 
         let mut v = vec![];
-        formatter.format(&mut v, &info, &OwnedKeyValueNode::new_root(vec![]), &[]).unwrap();
+        formatter.format(&mut v, &info, &OwnedKeyValueNode::new_root(vec![])).unwrap();
 
         assert_eq!(String::from_utf8_lossy(&v),
                    "{\"pid\":".to_string() + &nix::unistd::getpid().to_string() + ",\"host\":\"" +

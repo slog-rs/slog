@@ -23,7 +23,7 @@ thread_local!(static TL_LOG: RefCell<Logger> = RefCell::new(Logger::new_root(o!(
 
 fn foo() {
     TL_LOG.with(|log| {
-        log.borrow().info("foo called", b!());
+        info!(log.borrow(), "foo called");
     });
 }
 

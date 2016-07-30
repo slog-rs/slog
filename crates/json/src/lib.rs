@@ -26,7 +26,7 @@ use std::io;
 
 use slog_serde::SerdeSerializer;
 use slog::logger::{RecordInfo};
-use slog::{Level, OwnedKeyValue, OwnedKeyValueNode, BorrowedKeyValue};
+use slog::{Level, OwnedKeyValue, OwnedKeyValueNode};
 use slog::Level::*;
 use slog::format;
 
@@ -176,7 +176,7 @@ impl format::Format for Json {
               io: &mut io::Write,
               rinfo: &RecordInfo,
               logger_values: &OwnedKeyValueNode,
-              record_values: &[BorrowedKeyValue])
+              )
               -> format::Result<()> {
         let _ = try!(write!(io, "{{"));
         let mut serializer = serde_json::Serializer::new(SkipFirstByte::new(io));
@@ -190,7 +190,7 @@ impl format::Format for Json {
                 try!(v.serialize(rinfo, k, serializer));
             }
 
-            for &(ref k, ref v) in record_values.iter() {
+            for &(ref k, ref v) in rinfo.values().iter() {
                 try!(v.serialize(rinfo, k, serializer));
             }
         }

@@ -56,9 +56,9 @@ fn main() {
     }));
 
     // Note `b!` macro for more natural `BorrowedKeyValue` sequence building.
-    log.info("before-fetch-add", b!()); // counter == 0
+    info!(log, "before-fetch-add"); // counter == 0
     counter.fetch_add(1, SeqCst);
-    log.info("after-fetch-add", b!()); // counter == 1
+    info!(log, "after-fetch-add"); // counter == 1
 
     // Drains can be swapped atomically (race-free).
     ctrl.set(
@@ -76,16 +76,16 @@ fn main() {
     // Closures can be used for lazy evaluation:
     // This `slow_fib` won't be evaluated, as the current drain discards
     // "trace" level logging records.
-    log.debug("debug", b!("lazy-closure" => |_ : &RecordInfo| slow_fib(40)));
+    debug!(log, "debug", "lazy-closure" => |_ : &RecordInfo| slow_fib(40));
 
     // Loggers are internally atomically reference counted so can be cloned,
     // passed between threads and stored without hassle.
     let join = thread::spawn({
         let log = log.clone();
         move || {
-            log.info("subthread", b!("stage" => "start"));
+            info!(log, "subthread", "stage" => "start");
             thread::sleep(Duration::new(1, 0));
-            log.info("subthread", b!("stage" => "end"));
+            info!(log, "subthread", "stage" => "end");
         }
     });
 

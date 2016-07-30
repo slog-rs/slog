@@ -16,9 +16,9 @@ struct BlackBoxDrain;
 impl drain::Drain for BlackBoxDrain {
     fn log(&self,
            buf: &mut Vec<u8>,
-           ri: &RecordInfo, o : &OwnedKeyValueNode, b: &[BorrowedKeyValue]) -> drain::Result<()> {
+           ri: &RecordInfo, o : &OwnedKeyValueNode) -> drain::Result<()> {
 
-        test::black_box((buf, ri, o, b));
+        test::black_box((buf, ri, o));
         Ok(())
     }
 }
@@ -41,7 +41,7 @@ fn log_discard_empty(b: &mut Bencher) {
     let log = BlackBoxDrain.into_logger(o!());
 
     b.iter(|| {
-        log.info("", b!());
+        info!(log, "");
     });
 }
 
@@ -50,7 +50,7 @@ fn log_discard_nonempty(b: &mut Bencher) {
     let log = BlackBoxDrain.into_logger(o!("build" => "123456", "id" => 123456));
 
     b.iter(|| {
-        log.info("", b!("what" => "write"));
+        info!(log, "", "what" => "write");
     });
 }
 
@@ -95,7 +95,7 @@ fn log_discard_i32val(b: &mut Bencher) {
     let log = BlackBoxDrain.into_logger(o!());
 
     b.iter(|| {
-        log.info("", b!("i32" => 5));
+        info!(log, "", "i32" => 5);
     });
 }
 
@@ -105,7 +105,7 @@ fn log_discard_i32closure(b: &mut Bencher) {
     let log = BlackBoxDrain.into_logger(o!());
 
     b.iter(|| {
-        log.info("", b!("i32" => |_:&RecordInfo|{5}));
+        info!(log, "", "i32" => |_:&RecordInfo|{5});
     });
 }
 
@@ -116,7 +116,7 @@ fn log_stream_json_blackbox_i32val(b: &mut Bencher) {
     let log = drain.into_logger(o!());
 
     b.iter(|| {
-        log.info("", b!("i32" => 5));
+        info!(log, "",  "i32" => 5);
     });
 }
 
@@ -127,6 +127,6 @@ fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
     let log = drain.into_logger(o!());
 
     b.iter(|| {
-        log.info("", b!("i32" => |_:&RecordInfo|{5}));
+        info!(log, "", "i32" => |_:&RecordInfo|{5});
     });
 }

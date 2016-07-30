@@ -63,11 +63,11 @@ fn main() {
 
     let log = drain.into_logger(o!());
 
-    log.info("logging a message every 3s", b!());
-    log.info("send SIGUSR1 signal to switch output with", b!());
-    log.info(format_args!("kill -SIGUSR1 {}", nix::unistd::getpid()), b!());
+    info!(log, "logging a message every 3s");
+    info!(log, "send SIGUSR1 signal to switch output with");
+    info!(log, format_args!("kill -SIGUSR1 {}", nix::unistd::getpid()));
     loop {
-        log.info("tick", b!());
+        info!(log, "tick");
         thread::sleep_ms(3000);
     }
 }

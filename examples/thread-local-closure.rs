@@ -11,7 +11,7 @@ use slog::RecordInfo;
 thread_local!(static TL_THREAD_ID: RefCell<String> = RefCell::new("main".into()));
 
 fn foo(log : Logger) {
-    log.info("foo called", b!());
+    info!(log, "foo called");
 }
 
 fn main() {
