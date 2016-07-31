@@ -123,7 +123,7 @@ impl Logger {
             let mut buf = buf.borrow_mut();
             let _ = self.drain.log(&mut *buf, &record, &*self.values);
             // TODO: Double check if this will not zero the old bytes as it costs time
-            buf.clear();
+            debug_assert!(buf.is_empty());
         });
     }
 }
