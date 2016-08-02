@@ -173,3 +173,9 @@ In your `main.rs`:
 #[macro_use]
 extern crate slog;
 ```
+
+### Alternatives
+
+Please fill an issue if slog does not fill your needs. I will appreciate any
+feedback. You might look into issue discussing [slog-rs
+alternatives](https://github.com/dpc/slog-rs/issues/17) too.
