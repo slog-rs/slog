@@ -25,7 +25,7 @@ extern crate serde_json;
 use std::io;
 
 use slog_serde::SerdeSerializer;
-use slog::logger::{RecordInfo};
+use slog::logger::RecordInfo;
 use slog::{Level, OwnedKeyValue, OwnedKeyValueNode};
 use slog::Level::*;
 use slog::format;
@@ -175,8 +175,7 @@ impl format::Format for Json {
     fn format(&self,
               io: &mut io::Write,
               rinfo: &RecordInfo,
-              logger_values: &OwnedKeyValueNode,
-              )
+              logger_values: &OwnedKeyValueNode)
               -> format::Result<()> {
         let _ = try!(write!(io, "{{"));
         let mut serializer = serde_json::Serializer::new(SkipFirstByte::new(io));

@@ -38,13 +38,13 @@ pub trait IntoMsg {
     fn as_str(&self) -> Cow<str>;
 }
 
-/* TODO: why does this conflict with &'a str?
-impl<T : AsRef<str>> IntoMsg for T {
-    fn as_str(&self) -> Cow<str> {
-        Cow::Borrowed(self.as_ref())
-    }
-}
- */
+// TODO: why does this conflict with &'a str?
+// impl<T : AsRef<str>> IntoMsg for T {
+// fn as_str(&self) -> Cow<str> {
+// Cow::Borrowed(self.as_ref())
+// }
+// }
+//
 
 impl<'a> IntoMsg for &'a str {
     fn as_str(&self) -> Cow<str> {
@@ -81,7 +81,7 @@ impl Logger {
     /// fn main() {
     ///     let root = slog::Logger::new_root(o!("key1" => "value1", "key2" => "value2"), slog::drain::discard());
     /// }
-    pub fn new_root<D : 'static+drain::Drain+Sized>(values: Vec<OwnedKeyValue>, d : D) -> Logger {
+    pub fn new_root<D: 'static + drain::Drain + Sized>(values: Vec<OwnedKeyValue>, d: D) -> Logger {
         Logger {
             drain: Arc::new(d),
             values: Arc::new(OwnedKeyValueNode::new_root(values)),
@@ -116,7 +116,7 @@ impl Logger {
     /// Log one logging record
     ///
     /// Use specific logging functions instead.
-    pub fn log(&self, record : &RecordInfo) {
+    pub fn log(&self, record: &RecordInfo) {
 
         // By default errors in loggers are ignored
         TL_BUF.with(|buf| {
@@ -141,32 +141,32 @@ pub struct RecordInfo<'a> {
     /// Message
     msg: &'a IntoMsg,
     /// File
-    file : &'a str,
+    file: &'a str,
     /// Line
-    line : u32,
+    line: u32,
     /// Module
-    module : &'a str,
+    module: &'a str,
     /// Values
-    values: &'a [BorrowedKeyValue<'a>]
+    values: &'a [BorrowedKeyValue<'a>],
 }
 
 impl<'a> RecordInfo<'a> {
     /// Create a new `RecordInfo`
     #[inline]
-    pub fn new(
-        level: Level,
-        msg: &'a IntoMsg,
-        file : &'a str,
-        line : u32,
-        module : &'a str,
-        values: &'a [BorrowedKeyValue<'a>]) -> Self {
+    pub fn new(level: Level,
+               msg: &'a IntoMsg,
+               file: &'a str,
+               line: u32,
+               module: &'a str,
+               values: &'a [BorrowedKeyValue<'a>])
+               -> Self {
         RecordInfo {
             ts: RefCell::new(None),
             level: level,
             msg: msg,
-            file : file,
-            line : line,
-            module : module,
+            file: file,
+            line: line,
+            module: module,
             values: values,
         }
     }
@@ -181,14 +181,14 @@ impl<'a> RecordInfo<'a> {
                 let now = chrono::UTC::now();
                 *ts = Some(now);
                 now
-            },
-            Some(ts) => ts
+            }
+            Some(ts) => ts,
         }
     }
 
 
     /// Set timestamp
-    pub fn set_ts(&self, ts : chrono::DateTime<chrono::UTC>) {
+    pub fn set_ts(&self, ts: chrono::DateTime<chrono::UTC>) {
         *self.ts.borrow_mut() = Some(ts);
     }
 
@@ -219,8 +219,7 @@ impl<'a> RecordInfo<'a> {
     }
 
     /// Record value-key pairs
-    pub fn values(&self) ->  &'a [BorrowedKeyValue<'a>] {
+    pub fn values(&self) -> &'a [BorrowedKeyValue<'a>] {
         self.values
     }
-
 }

@@ -1,6 +1,6 @@
 use super::logger::RecordInfo;
 
-use super::{OwnedKeyValueNode};
+use super::OwnedKeyValueNode;
 
 use std::io;
 
@@ -31,7 +31,6 @@ pub trait Format: Send + Sync + Sized {
     fn format(&self,
               io: &mut io::Write,
               info: &RecordInfo,
-              logger_values: &OwnedKeyValueNode
-              )
+              logger_values: &OwnedKeyValueNode)
               -> Result<()>;
 }

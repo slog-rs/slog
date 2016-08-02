@@ -57,37 +57,29 @@ pub trait Drain: Send + Sync {
     /// Write one logging record
     /// As an optimization (avoiding allocations), loggers are responsible for
     /// providing a byte buffer, that `Drain` can use for their own needs.
-    fn log(&self,
-           buf : &mut Vec<u8>,
-           info: &RecordInfo, &OwnedKeyValueNode) -> Result<()>;
-
+    fn log(&self, buf: &mut Vec<u8>, info: &RecordInfo, &OwnedKeyValueNode) -> Result<()>;
 }
 
 /// Convenience trait allowing turning drain into root `Logger`
 ///
 /// `Logger::new_root` shortcut
-pub trait IntoLogger : Drain+Sized+'static {
+pub trait IntoLogger: Drain + Sized + 'static {
     /// Turn drain into root `Logger`
     fn into_logger(self, values: Vec<OwnedKeyValue>) -> Logger {
         Logger::new_root(values, self)
     }
 }
 
-impl<D : Drain+Sized+'static> IntoLogger for D {}
+impl<D: Drain + Sized + 'static> IntoLogger for D {}
 
-impl<D:Drain> Drain for Box<D> {
-    fn log(&self,
-           buf : &mut Vec<u8>,
-           info: &RecordInfo,
-           o : &OwnedKeyValueNode) -> Result<()> {
+impl<D: Drain> Drain for Box<D> {
+    fn log(&self, buf: &mut Vec<u8>, info: &RecordInfo, o: &OwnedKeyValueNode) -> Result<()> {
         (**self).log(buf, info, o)
     }
 }
 
-impl<D:Drain> Drain for Arc<D> {
-    fn log(&self,
-           buf : &mut Vec<u8>,
-           info: &RecordInfo, o : &OwnedKeyValueNode) -> Result<()> {
+impl<D: Drain> Drain for Arc<D> {
+    fn log(&self, buf: &mut Vec<u8>, info: &RecordInfo, o: &OwnedKeyValueNode) -> Result<()> {
         (**self).log(buf, info, o)
     }
 }
@@ -96,9 +88,7 @@ impl<D:Drain> Drain for Arc<D> {
 pub struct Discard;
 
 impl Drain for Discard {
-    fn log(&self,
-           _: &mut Vec<u8>,
-           _: &RecordInfo, _: &OwnedKeyValueNode) -> Result<()> {
+    fn log(&self, _: &mut Vec<u8>, _: &RecordInfo, _: &OwnedKeyValueNode) -> Result<()> {
         Ok(())
     }
 }
@@ -111,13 +101,13 @@ pub struct AtomicSwitch(Arc<ArcCell<Box<Drain>>>);
 
 impl AtomicSwitchCtrl {
     /// Create new `AtomicSwitchCtrl`
-    pub fn new<D: Drain+'static>(d : D) -> Self{
+    pub fn new<D: Drain + 'static>(d: D) -> Self {
         let a = Arc::new(ArcCell::new(Arc::new(Box::new(d) as Box<Drain>)));
         AtomicSwitchCtrl(a)
     }
 
     /// Create new `AtomicSwitchCtrl` from an existing `Arc<...>`
-    pub fn new_from_arc(d : Arc<ArcCell<Box<Drain>>>) -> Self{
+    pub fn new_from_arc(d: Arc<ArcCell<Box<Drain>>>) -> Self {
         AtomicSwitchCtrl(d)
     }
 
@@ -138,12 +128,11 @@ impl AtomicSwitchCtrl {
 }
 impl Drain for AtomicSwitch {
     fn log(&self,
-           mut buf : &mut Vec<u8>,
+           mut buf: &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &OwnedKeyValueNode,
-           )
+           logger_values: &OwnedKeyValueNode)
            -> Result<()> {
-            self.0.get().log(buf, info, logger_values)
+        self.0.get().log(buf, info, logger_values)
     }
 }
 
@@ -169,20 +158,22 @@ impl<W: io::Write, F: format::Format> Streamer<W, F> {
 
 impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer<W, F> {
     fn log(&self,
-           mut buf : &mut Vec<u8>,
+           mut buf: &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &OwnedKeyValueNode,
-           )
+           logger_values: &OwnedKeyValueNode)
            -> Result<()> {
 
-        let res = {|| {
-            try!(self.format.format(&mut buf, info, logger_values));
+        let res =
             {
-                let mut io = try!(self.io.lock().map_err(|_| -> Error { ErrorKind::LockError.into() }));
-                try!(io.write_all(&buf));
-            }
-            Ok(())
-        }}();
+                || {
+                    try!(self.format.format(&mut buf, info, logger_values));
+                    {
+                        let mut io = try!(self.io.lock().map_err(|_| -> Error { ErrorKind::LockError.into() }));
+                        try!(io.write_all(&buf));
+                    }
+                    Ok(())
+                }
+            }();
         buf.clear();
         res
     }
@@ -210,10 +201,9 @@ impl<F: format::Format> AsyncStreamer<F> {
 
 impl<F: format::Format + Send> Drain for AsyncStreamer<F> {
     fn log(&self,
-           mut buf : &mut Vec<u8>,
+           mut buf: &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &OwnedKeyValueNode,
-           )
+           logger_values: &OwnedKeyValueNode)
            -> Result<()> {
         try!(self.format.format(&mut buf, info, logger_values));
         {
@@ -249,10 +239,9 @@ impl<D: Drain> Filter<D> {
 
 impl<D: Drain> Drain for Filter<D> {
     fn log(&self,
-           buf : &mut Vec<u8>,
+           buf: &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &OwnedKeyValueNode,
-           )
+           logger_values: &OwnedKeyValueNode)
            -> Result<()> {
         if (self.cond)(&info) {
             self.drain.log(buf, info, logger_values)
@@ -287,10 +276,9 @@ impl<D: Drain> FilterLevel<D> {
 
 impl<D: Drain> Drain for FilterLevel<D> {
     fn log(&self,
-           buf : &mut Vec<u8>,
+           buf: &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &OwnedKeyValueNode,
-           )
+           logger_values: &OwnedKeyValueNode)
            -> Result<()> {
         if info.level().is_at_least(self.level) {
             self.drain.log(buf, info, logger_values)
@@ -319,10 +307,9 @@ impl<D1: Drain, D2: Drain> Duplicate<D1, D2> {
 
 impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
     fn log(&self,
-           buf : &mut Vec<u8>,
+           buf: &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &OwnedKeyValueNode,
-           )
+           logger_values: &OwnedKeyValueNode)
            -> Result<()> {
         let res1 = self.drain1.log(buf, info, logger_values);
         buf.clear();
@@ -359,10 +346,9 @@ impl<D1: Drain, D2: Drain> Failover<D1, D2> {
 
 impl<D1: Drain, D2: Drain> Drain for Failover<D1, D2> {
     fn log(&self,
-           buf : &mut Vec<u8>,
+           buf: &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &OwnedKeyValueNode,
-           )
+           logger_values: &OwnedKeyValueNode)
            -> Result<()> {
         match self.drain1.log(buf, info, logger_values) {
             Ok(_) => Ok(()),

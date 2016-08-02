@@ -178,24 +178,24 @@ pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
 /// Values specific for this Logger and reference to it's parent values
 #[derive(Clone)]
 pub struct OwnedKeyValueNode {
-    parent : Option<Arc<OwnedKeyValueNode>>,
-    values : Vec<OwnedKeyValue>,
+    parent: Option<Arc<OwnedKeyValueNode>>,
+    values: Vec<OwnedKeyValue>,
 }
 
 impl OwnedKeyValueNode {
     /// New `OwnedKeyValue` with a parent
-    pub fn new(values : Vec<OwnedKeyValue>, parent : Arc<OwnedKeyValueNode>) -> Self {
+    pub fn new(values: Vec<OwnedKeyValue>, parent: Arc<OwnedKeyValueNode>) -> Self {
         OwnedKeyValueNode {
-            parent : Some(parent),
-            values : values,
+            parent: Some(parent),
+            values: values,
         }
     }
 
     /// New `OwnedKeyValue` without a parent (root)
-    pub fn new_root(values : Vec<OwnedKeyValue>) -> Self {
+    pub fn new_root(values: Vec<OwnedKeyValue>) -> Self {
         OwnedKeyValueNode {
-            parent : None,
-            values : values,
+            parent: None,
+            values: values,
         }
     }
 
@@ -207,15 +207,15 @@ impl OwnedKeyValueNode {
 
 /// Iterator over `OwnedKeyValue`-s
 pub struct OwnedKeyValueNodeIterator<'a> {
-    next_node : &'a Option<Arc<OwnedKeyValueNode>>,
-    iter : std::slice::Iter<'a, OwnedKeyValue>,
+    next_node: &'a Option<Arc<OwnedKeyValueNode>>,
+    iter: std::slice::Iter<'a, OwnedKeyValue>,
 }
 
 impl<'a> OwnedKeyValueNodeIterator<'a> {
-    fn new(node : &'a OwnedKeyValueNode) -> Self {
+    fn new(node: &'a OwnedKeyValueNode) -> Self {
         OwnedKeyValueNodeIterator {
             next_node: &node.parent,
-            iter: node.values.iter()
+            iter: node.values.iter(),
         }
     }
 }
@@ -226,12 +226,14 @@ impl<'a> Iterator for OwnedKeyValueNodeIterator<'a> {
         loop {
             match self.iter.next() {
                 Some(x) => return Some(&*x),
-                None => match self.next_node {
-                    &Some(ref node) => {
-                        self.iter = node.values.iter();
-                        self.next_node = &node.parent;
+                None => {
+                    match self.next_node {
+                        &Some(ref node) => {
+                            self.iter = node.values.iter();
+                            self.next_node = &node.parent;
+                        }
+                        &None => return None,
                     }
-                    &None => return None
                 }
             }
         }

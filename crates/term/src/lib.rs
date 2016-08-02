@@ -189,8 +189,7 @@ impl SlogFormat for Format {
     fn format(&self,
               io: &mut io::Write,
               info: &RecordInfo,
-              logger_values: &OwnedKeyValueNode,
-              )
+              logger_values: &OwnedKeyValueNode)
               -> slog::format::Result<()> {
         let level_color = Colour::Fixed(severity_to_color(info.level()));
         let bold = ansi_term::Style::new().bold();

@@ -34,7 +34,7 @@ use slog::ser;
 use slog::Level;
 use slog::ser::Serializer;
 use slog::logger::RecordInfo;
-use slog::{OwnedKeyValueNode};
+use slog::OwnedKeyValueNode;
 use std::io;
 use std::sync::Mutex;
 use serialize::hex::ToHex;
@@ -74,10 +74,9 @@ impl Streamer3164 {
 
 impl drain::Drain for Streamer3164 {
     fn log(&self,
-           mut buf : &mut Vec<u8>,
+           mut buf: &mut Vec<u8>,
            info: &RecordInfo,
-           logger_values: &OwnedKeyValueNode,
-           )
+           logger_values: &OwnedKeyValueNode)
            -> slog::drain::Result<()> {
         try!(self.format.format(&mut buf, info, logger_values));
         let sever = level_to_severity(info.level());
@@ -105,8 +104,7 @@ impl format::Format for Format3164 {
     fn format(&self,
               io: &mut io::Write,
               rinfo: &RecordInfo,
-              logger_values: &OwnedKeyValueNode,
-              )
+              logger_values: &OwnedKeyValueNode)
               -> slog::format::Result<()> {
         let mut ser = KSV::new(io, "=".into());
         {

@@ -38,7 +38,7 @@ struct Logger(sync::Mutex<slog::Logger>);
 
 impl Logger {
     fn new(logger: slog::Logger) -> Self {
-        Logger ( sync::Mutex::new(logger) )
+        Logger(sync::Mutex::new(logger))
     }
 }
 
@@ -68,17 +68,9 @@ impl log::Log for Logger {
         let file = r.location().file();
         let line = r.location().line();
         {
-            let _ = self.0.lock()
-                .map(|l| (*l).log(&slog::RecordInfo::new(
-                    level,
-                    args,
-                    file,
-                    line,
-                    module,
-                    &[]
-                )
-
-                ));
+            let _ = self.0
+                .lock()
+                .map(|l| (*l).log(&slog::RecordInfo::new(level, args, file, line, module, &[])));
         }
     }
 }

@@ -1,7 +1,7 @@
 use std::io;
 use serialize::hex::ToHex;
 
-use super::logger::{RecordInfo};
+use super::logger::RecordInfo;
 
 #[allow(missing_docs)]
 mod error {
@@ -36,7 +36,7 @@ pub trait Serialize: Send + Sync {
     ///
     /// Structs implementing this trait should generally
     /// only call respective methods of `serializer`.
-    fn serialize(&self, rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> ;
+    fn serialize(&self, rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()>;
 }
 
 /// Value that can be serialized and stored
