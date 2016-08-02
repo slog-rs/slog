@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `b!` macro in crate `slog`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, b!">
+    <meta name="description" content="API documentation for the Rust `log!` macro in crate `slog`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, log!">
 
-    <title>slog::b! - Rust</title>
+    <title>slog::log! - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>slog</a></p><script>window.sidebarCurrent = {name: 'b!', ty: 'macro', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>slog</a></p><script>window.sidebarCurrent = {name: 'log!', ty: 'macro', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,17 +43,19 @@
     </nav>
 
     <section id='main' class="content macro">
-<h1 class='fqn'><span class='in-band'><a href='index.html'>slog</a>::<wbr><a class='macro' href=''>b!</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'><a href='index.html'>slog</a>::<wbr><a class='macro' href=''>log!</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1269' class='srclink' href='../src/slog/src/lib.rs.html#148-155' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-1256' class='srclink' href='../src/slog/src/lib.rs.html#62-87' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>b</span> {
-    () <span class='op'>=&gt;</span> { ... };
-    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>log</span> {
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> { ... };
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
 }</pre>
-<div class='docblock'><p>Convenience function for building <code>&amp;[BorrowedKeyValue]</code></p>
+<div class='docblock'><p>Log message of a given level</p>
+
+<p>Use wrappers <code>error!</code>, <code>warn!</code> etc. instead</p>
 
 <pre class='rust rust-example-rendered'>
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
@@ -63,7 +65,7 @@
 <span class='kw'>fn</span> <span class='ident'>main</span>() {
     <span class='kw'>let</span> <span class='ident'>drain</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>drain</span>::<span class='ident'>discard</span>();
     <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>drain</span>.<span class='ident'>into_logger</span>(<span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>));
-    <span class='ident'>root</span>.<span class='ident'>info</span>(<span class='string'>&quot;test info log&quot;</span>, <span class='macro'>b</span><span class='macro'>!</span>(<span class='string'>&quot;log-key&quot;</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>));
+    <span class='macro'>info</span><span class='macro'>!</span>(<span class='ident'>root</span>, <span class='string'>&quot;test info log&quot;</span>, <span class='string'>&quot;log-key&quot;</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>);
 }</pre>
 </div></section>
     <section id='search' class="content hidden"></section>

@@ -514,12 +514,6 @@
 <span id="470">470</span>
 <span id="471">471</span>
 <span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Drains</span>
 <span class='doccomment'>//!</span>
@@ -534,7 +528,7 @@
 <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Level</span>, <span class='ident'>Logger</span>};
 <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>format</span>;
 <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>logger</span>::<span class='ident'>RecordInfo</span>;
-<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>OwnedKeyValue</span>, <span class='ident'>BorrowedKeyValue</span>, <span class='ident'>OwnedKeyValueNode</span>};
+<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>OwnedKeyValue</span>, <span class='ident'>OwnedKeyValueNode</span>};
 
 <span class='kw'>use</span> <span class='ident'>crossbeam</span>::<span class='ident'>sync</span>::<span class='ident'>ArcCell</span>;
 
@@ -580,37 +574,30 @@
     <span class='doccomment'>/// Write one logging record</span>
     <span class='doccomment'>/// As an optimization (avoiding allocations), loggers are responsible for</span>
     <span class='doccomment'>/// providing a byte buffer, that `Drain` can use for their own needs.</span>
-    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='ident'>buf</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
-           <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>, <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>;
-
+    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>, <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>;
 }
 
 <span class='doccomment'>/// Convenience trait allowing turning drain into root `Logger`</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// `Logger::new_root` shortcut</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>IntoLogger</span> : <span class='ident'>Drain</span><span class='op'>+</span><span class='ident'>Sized</span><span class='op'>+</span><span class='lifetime'>&#39;static</span> {
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>IntoLogger</span>: <span class='ident'>Drain</span> <span class='op'>+</span> <span class='ident'>Sized</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span> {
     <span class='doccomment'>/// Turn drain into root `Logger`</span>
     <span class='kw'>fn</span> <span class='ident'>into_logger</span>(<span class='self'>self</span>, <span class='ident'>values</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>OwnedKeyValue</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Logger</span> {
         <span class='ident'>Logger</span>::<span class='ident'>new_root</span>(<span class='ident'>values</span>, <span class='self'>self</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span> : <span class='ident'>Drain</span><span class='op'>+</span><span class='ident'>Sized</span><span class='op'>+</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> <span class='ident'>IntoLogger</span> <span class='kw'>for</span> <span class='ident'>D</span> {}
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span> <span class='op'>+</span> <span class='ident'>Sized</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> <span class='ident'>IntoLogger</span> <span class='kw'>for</span> <span class='ident'>D</span> {}
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>:<span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='ident'>buf</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
-           <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='ident'>o</span> : <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>, <span class='ident'>b</span> : <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>o</span>, <span class='ident'>b</span>)
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>, <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='ident'>o</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>o</span>)
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>:<span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='ident'>buf</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
-           <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='ident'>o</span> : <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>, <span class='ident'>b</span> : <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>o</span>, <span class='ident'>b</span>)
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>, <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, <span class='ident'>o</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>o</span>)
     }
 }
 
@@ -618,9 +605,7 @@
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Discard</span>;
 
 <span class='kw'>impl</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Discard</span> {
-    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
-           _: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, _: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>, _: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>, _: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>, _: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='prelude-val'>Ok</span>(())
     }
 }
@@ -633,13 +618,13 @@
 
 <span class='kw'>impl</span> <span class='ident'>AtomicSwitchCtrl</span> {
     <span class='doccomment'>/// Create new `AtomicSwitchCtrl`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>+</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span>(<span class='ident'>d</span> : <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>{
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span><span class='op'>&gt;</span>(<span class='ident'>d</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>ArcCell</span>::<span class='ident'>new</span>(<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>d</span>) <span class='kw'>as</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&gt;</span>)));
         <span class='ident'>AtomicSwitchCtrl</span>(<span class='ident'>a</span>)
     }
 
     <span class='doccomment'>/// Create new `AtomicSwitchCtrl` from an existing `Arc&lt;...&gt;`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_from_arc</span>(<span class='ident'>d</span> : <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>ArcCell</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>{
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_from_arc</span>(<span class='ident'>d</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>ArcCell</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>AtomicSwitchCtrl</span>(<span class='ident'>d</span>)
     }
 
@@ -660,12 +645,11 @@
 }
 <span class='kw'>impl</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>AtomicSwitch</span> {
     <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='kw-2'>mut</span> <span class='ident'>buf</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
+           <span class='kw-2'>mut</span> <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
            <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
-           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>,
-           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>])
+           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>)
            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-            <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>get</span>().<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>)
+        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>get</span>().<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>)
     }
 }
 
@@ -691,17 +675,26 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='op'>+</span> <span class='ident'>Send</span>, <span class='ident'>F</span>: <span class='ident'>format</span>::<span class='ident'>Format</span> <span class='op'>+</span> <span class='ident'>Send</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>W</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='kw-2'>mut</span> <span class='ident'>buf</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
+           <span class='kw-2'>mut</span> <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
            <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
-           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>,
-           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>])
+           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>)
            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>format</span>.<span class='ident'>format</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>));
-        {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>io</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>.<span class='ident'>lock</span>().<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='op'>-&gt;</span> <span class='ident'>Error</span> { <span class='ident'>ErrorKind</span>::<span class='ident'>LockError</span>.<span class='ident'>into</span>() }));
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>io</span>.<span class='ident'>write_all</span>(<span class='kw-2'>&amp;</span><span class='ident'>buf</span>));
-        }
-        <span class='prelude-val'>Ok</span>(())
+
+        <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span>
+            {
+                <span class='op'>||</span> {
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>format</span>.<span class='ident'>format</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>));
+                    {
+                        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>io</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>
+                            .<span class='ident'>lock</span>()
+                            .<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='op'>-&gt;</span> <span class='ident'>Error</span> { <span class='ident'>ErrorKind</span>::<span class='ident'>LockError</span>.<span class='ident'>into</span>() }));
+                        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>io</span>.<span class='ident'>write_all</span>(<span class='kw-2'>&amp;</span><span class='ident'>buf</span>));
+                    }
+                    <span class='prelude-val'>Ok</span>(())
+                }
+            }();
+        <span class='ident'>buf</span>.<span class='ident'>clear</span>();
+        <span class='ident'>res</span>
     }
 }
 
@@ -727,12 +720,11 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>F</span>: <span class='ident'>format</span>::<span class='ident'>Format</span> <span class='op'>+</span> <span class='ident'>Send</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>AsyncStreamer</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='kw-2'>mut</span> <span class='ident'>buf</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
+           <span class='kw-2'>mut</span> <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
            <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
-           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>,
-           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>])
+           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>)
            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>format</span>.<span class='ident'>format</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>));
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>format</span>.<span class='ident'>format</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>));
         {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>io</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>.<span class='ident'>lock</span>().<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='op'>-&gt;</span> <span class='ident'>Error</span> { <span class='ident'>ErrorKind</span>::<span class='ident'>LockError</span>.<span class='ident'>into</span>() }));
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>new_buf</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>128</span>);
@@ -766,13 +758,12 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='ident'>buf</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
+           <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
            <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
-           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>,
-           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>])
+           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>)
            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='kw'>if</span> (<span class='self'>self</span>.<span class='ident'>cond</span>)(<span class='kw-2'>&amp;</span><span class='ident'>info</span>) {
-            <span class='self'>self</span>.<span class='ident'>drain</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>)
+            <span class='self'>self</span>.<span class='ident'>drain</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>)
         } <span class='kw'>else</span> {
             <span class='prelude-val'>Ok</span>(())
         }
@@ -804,13 +795,12 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>FilterLevel</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='ident'>buf</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
+           <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
            <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
-           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>,
-           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>])
+           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>)
            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='ident'>info</span>.<span class='ident'>level</span>().<span class='ident'>is_at_least</span>(<span class='self'>self</span>.<span class='ident'>level</span>) {
-            <span class='self'>self</span>.<span class='ident'>drain</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>)
+            <span class='self'>self</span>.<span class='ident'>drain</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>)
         } <span class='kw'>else</span> {
             <span class='prelude-val'>Ok</span>(())
         }
@@ -836,14 +826,13 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D1</span>: <span class='ident'>Drain</span>, <span class='ident'>D2</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Duplicate</span><span class='op'>&lt;</span><span class='ident'>D1</span>, <span class='ident'>D2</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='ident'>buf</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
+           <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
            <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
-           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>,
-           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>])
+           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>)
            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>res1</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>drain1</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>);
+        <span class='kw'>let</span> <span class='ident'>res1</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>drain1</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>);
         <span class='ident'>buf</span>.<span class='ident'>clear</span>();
-        <span class='kw'>let</span> <span class='ident'>res2</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>drain2</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>);
+        <span class='kw'>let</span> <span class='ident'>res2</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>drain2</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>);
 
         <span class='comment'>// TODO: Don&#39;t discard e2 in case of two errors at once?</span>
         <span class='kw'>match</span> (<span class='ident'>res1</span>, <span class='ident'>res2</span>) {
@@ -876,14 +865,13 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D1</span>: <span class='ident'>Drain</span>, <span class='ident'>D2</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>Failover</span><span class='op'>&lt;</span><span class='ident'>D1</span>, <span class='ident'>D2</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='ident'>buf</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
+           <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
            <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
-           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>,
-           <span class='ident'>values</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>BorrowedKeyValue</span>])
+           <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>)
            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>drain1</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>) {
+        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>drain1</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>) {
             <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(()),
-            <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>drain2</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>, <span class='ident'>values</span>),
+            <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>drain2</span>.<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>),
         }
     }
 }

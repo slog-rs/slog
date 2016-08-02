@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `filter_level` fn in crate `slog`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, filter_level">
+    <meta name="description" content="API documentation for the Rust `error!` macro in crate `slog`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, error!">
 
-    <title>slog::drain::filter_level - Rust</title>
+    <title>slog::error! - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
     
 
     
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>slog</a>::<wbr><a href='index.html'>drain</a></p><script>window.sidebarCurrent = {name: 'filter_level', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>slog</a></p><script>window.sidebarCurrent = {name: 'error!', ty: 'macro', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,13 +42,18 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>slog</a>::<wbr><a href='index.html'>drain</a>::<wbr><a class='fn' href=''>filter_level</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content macro">
+<h1 class='fqn'><span class='in-band'><a href='index.html'>slog</a>::<wbr><a class='macro' href=''>error!</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-411' class='srclink' href='../../src/slog/src/drain.rs.html#460-462' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn filter_level&lt;D:&nbsp;<a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a>&gt;(level: <a class='enum' href='../../slog/enum.Level.html' title='slog::Level'>Level</a>, d: D) -&gt; <a class='struct' href='../../slog/drain/struct.FilterLevel.html' title='slog::drain::FilterLevel'>FilterLevel</a>&lt;D&gt;</pre><div class='docblock'><p>Filter by log level</p>
+               </span><a id='src-1258' class='srclink' href='../src/slog/src/lib.rs.html#102-109' title='goto source code'>[src]</a></span></h1>
+<pre class='rust macro'>
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>error</span> {
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> { ... };
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
+}</pre>
+<div class='docblock'><p>Log error level record</p>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -103,13 +108,13 @@
     
 
     <script>
-        window.rootPath = "../../";
+        window.rootPath = "../";
         window.currentCrate = "slog";
         window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
     
-    <script defer src="../../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

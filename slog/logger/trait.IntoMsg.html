@@ -47,18 +47,20 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-451' class='srclink' href='../../src/slog/src/logger.rs.html#34-37' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-445' class='srclink' href='../../src/slog/src/logger.rs.html#36-39' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait IntoMsg {
-    fn <a href='#tymethod.as_str' class='fnname'>as_str</a>(&amp;self) -&gt; &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>;
+    fn <a href='#tymethod.as_str' class='fnname'>as_str</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;;
 }</pre><div class='docblock'><p>A type that can be translated into <code>Msg</code></p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.as_str' class='method stab '><code>fn <a href='#tymethod.as_str' class='fnname'>as_str</a>(&amp;self) -&gt; &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></h3><div class='docblock'><p>Convert to the <code>&amp;str</code></p>
+        <h3 id='tymethod.as_str' class='method stab '><code>fn <a href='#tymethod.as_str' class='fnname'>as_str</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;</code></h3><div class='docblock'><p>Convert to the <code>&amp;str</code></p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;T:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;&gt; IntoMsg for T</code></li>
+    <li><code>impl&lt;'a&gt; IntoMsg for &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></li>
+<li><code>impl&lt;'a&gt; IntoMsg for <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></li>
+<li><code>impl&lt;'a&gt; IntoMsg for <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Arguments.html' title='core::fmt::Arguments'>Arguments</a>&lt;'a&gt;</code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/slog/logger/trait.IntoMsg.js">
                  </script></section>
