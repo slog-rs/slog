@@ -67,13 +67,20 @@ Inspired by [log15] for Go.
 
 ``` rust
 fn main() {
-    // Create a new group of loggers, sharing one drain.
+    // Create a new drain hierarchy, for the need of your program.
+    // Choose from collection of existing drains, or write your own
+    // `struct`-s implementing `Drain` trait.
+    let drain = slog_term::async_stderr();
+
+    // `AtomicSwitch` is a drain that wraps other drain and allows to change
+    // it atomically in runtime.
+    let ctrl = AtomicSwitchCtrl::new(drain);
+    let drain = ctrl.drain();
+
+    // Turn a drain into new group of loggers, sharing that drain.
     //
     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
-    let root = Logger::new_root(o!("version" => VERSION, "build-id" => "8dfljdf"));
-
-    // Set drains to specify the output format and destination.
-    root.set_drain(slog_term::async_stderr());
+    let root = drain.into_logger(o!("version" => VERSION, "build-id" => "8dfljdf"));
 
     // Build logging context as data becomes available.
     //
@@ -90,40 +97,39 @@ fn main() {
         // and unfortunate `|_ : &_|` that helps
         // current `rustc` limitations. In the future,
         // a `|_|` could work.
-        move |_ : &_| { counter.load(SeqCst)}
+        move |_ : &RecordInfo| { counter.load(SeqCst)}
     }));
 
-    // Note `b!` macro for more natural `BorrowedKeyValue` sequence building.
-    log.info("before-fetch-add", b!()); // counter == 0
-    counter.fetch_add(1, SeqCst);
-    log.info("after-fetch-add", b!()); // counter == 1
-
-    // Drains can be swapped atomically (race-free).
-    log.set_drain(
-        // drains are composable
-        drain::filter_level(
-            Level::Info,
-            drain::stream(
-                drain::async(std::io::stderr()),
-                // multiple outputs formats are supported
-                slog_json::new(),
-                ),
-            ),
-        );
-
-    // Closures can be used for lazy evaluation:
-    // This `slow_fib` won't be evaluated, as the current drain discards
-    // "trace" level logging records.
-    log.debug("debug", b!("lazy-closure" => |_ : &_| slow_fib(40)));
-
-    // Loggers are internally atomically reference counted so can be cloned,
-    // passed between threads and stored without hassle.
+    // Loggers  can be cloned, passed between threads and stored without hassle.
     let join = thread::spawn({
         let log = log.clone();
         move || {
-            log.info("subthread", b!("stage" => "start"));
+
+            info!(log, "before-fetch-add"); // counter == 0
+            counter.fetch_add(1, SeqCst);
+            info!(log, "after-fetch-add"); // counter == 1
+
+            // `AtomicSwitch` drain can swap it's interior atomically (race-free).
+            ctrl.set(
+                // drains are composable and reusable
+                drain::filter_level(
+                    Level::Info,
+                    drain::async_stream(
+                        std::io::stderr(),
+                        // multiple outputs formats are supported
+                        slog_json::new(),
+                    ),
+                ),
+            );
+
+            // Closures can be used for lazy evaluation:
+            // This `slow_fib` won't be evaluated, as the current drain discards
+            // "trace" level logging records.
+            debug!(log, "debug", "lazy-closure" => |_ : &RecordInfo| slow_fib(40));
+
+            info!(log, "subthread", "stage" => "start");
             thread::sleep(Duration::new(1, 0));
-            log.info("subthread", b!("stage" => "end"));
+            info!(log, "subthread", "stage" => "end");
         }
     });
 

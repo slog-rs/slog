@@ -79,7 +79,10 @@ impl Logger {
     /// extern crate slog;
     ///
     /// fn main() {
-    ///     let root = slog::Logger::new_root(o!("key1" => "value1", "key2" => "value2"), slog::drain::discard());
+    ///     let root = slog::Logger::new_root(
+    ///         o!("key1" => "value1", "key2" => "value2"),
+    ///         slog::drain::discard()
+    ///     );
     /// }
     pub fn new_root<D: 'static + drain::Drain + Sized>(values: Vec<OwnedKeyValue>, d: D) -> Logger {
         Logger {
@@ -103,7 +106,8 @@ impl Logger {
     /// use slog::drain::IntoLogger;
     ///
     /// fn main() {
-    ///     let root = slog::drain::discard().into_logger(o!("key1" => "value1", "key2" => "value2"));
+    ///     let root = slog::drain::discard()
+    ///         .into_logger(o!("key1" => "value1", "key2" => "value2"));
     ///     let log = root.new(o!("key" => "value"));
     /// }
     pub fn new(&self, values: Vec<OwnedKeyValue>) -> Logger {

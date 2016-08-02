@@ -10,18 +10,18 @@ use slog::RecordInfo;
 
 thread_local!(static TL_THREAD_ID: RefCell<String> = RefCell::new("main".into()));
 
-fn foo(log : Logger) {
+fn foo(log: Logger) {
     info!(log, "foo called");
 }
 
 fn main() {
-    let root = Logger::new_root(
-        o!("thread-id" => |_:&RecordInfo| {
+    let root = Logger::new_root(o!("thread-id" => |_:&RecordInfo| {
             TL_THREAD_ID.with(|id| { id.borrow().clone() })
         }
-        ), slog::drain::discard());
+        ),
+                                slog::drain::discard());
 
-    let mut join = vec!();
+    let mut join = vec![];
 
     for i in 0..4 {
         join.push(thread::spawn({

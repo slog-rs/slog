@@ -32,17 +32,13 @@ fn atomic_drain_switch() {
     ATOMIC_DRAIN_SWITCH_STATE.store(new, SeqCst);
 
     if new {
-        ATOMIC_DRAIN_SWITCH.set(
-            drain::stream(io::stdout(), slog_json::new())
-        )
+        ATOMIC_DRAIN_SWITCH.set(drain::stream(io::stdout(), slog_json::new()))
     } else {
-        ATOMIC_DRAIN_SWITCH.set(
-            slog_term::stdout()
-        )
+        ATOMIC_DRAIN_SWITCH.set(slog_term::stdout())
     }
 }
 
-extern fn handle_sigusr1(_:i32) {
+extern "C" fn handle_sigusr1(_: i32) {
     atomic_drain_switch();
 }
 
@@ -54,10 +50,7 @@ fn main() {
         signal::sigaction(signal::SIGUSR1, &sig_action).unwrap();
     }
 
-    let drain = slog::drain::duplicate(
-        slog_term::stderr(),
-        ATOMIC_DRAIN_SWITCH.drain(),
-    );
+    let drain = slog::drain::duplicate(slog_term::stderr(), ATOMIC_DRAIN_SWITCH.drain());
 
     atomic_drain_switch();
 

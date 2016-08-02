@@ -19,7 +19,9 @@ use std::thread;
 
 use slog::Logger;
 
-thread_local!(static TL_LOG: RefCell<Logger> = RefCell::new(Logger::new_root(o!("logger" => "unititalized"), slog::drain::discard() )));
+thread_local!(static TL_LOG: RefCell<Logger> = RefCell::new(
+    Logger::new_root(o!("logger" => "unititalized"), slog::drain::discard() )
+));
 
 fn foo() {
     TL_LOG.with(|log| {
@@ -28,16 +30,14 @@ fn foo() {
 }
 
 fn main() {
-    let root = Logger::new_root(
-        o!("version" => "0.0.1", "build-id" => "8dfljdf"),
-        slog::drain::discard()
-    );
+    let root = Logger::new_root(o!("version" => "0.0.1", "build-id" => "8dfljdf"),
+                                slog::drain::discard());
 
     TL_LOG.with(|log| {
         *log.borrow_mut() = root.new(o!("thread-id" => "main"));
     });
 
-    let mut join = vec!();
+    let mut join = vec![];
 
     for i in 0..4 {
         join.push(thread::spawn({

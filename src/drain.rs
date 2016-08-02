@@ -168,7 +168,9 @@ impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer
                 || {
                     try!(self.format.format(&mut buf, info, logger_values));
                     {
-                        let mut io = try!(self.io.lock().map_err(|_| -> Error { ErrorKind::LockError.into() }));
+                        let mut io = try!(self.io
+                            .lock()
+                            .map_err(|_| -> Error { ErrorKind::LockError.into() }));
                         try!(io.write_all(&buf));
                     }
                     Ok(())

@@ -175,7 +175,10 @@ impl<S: 'static + Serialize, F: Sync + Send + for<'c> Fn(&'c RecordInfo<'c>) -> 
     }
 }
 
-impl<S: 'static + Serialize, F: 'static + Sync + Send + for<'c, 'd> Fn(&'c RecordInfo<'d>) -> S> SyncSerialize for F {}
+impl<S: 'static + Serialize, F> SyncSerialize for F
+    where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c RecordInfo<'d>) -> S
+{
+}
 
 
 impl<W: io::Write + ?Sized> Serializer for W {
