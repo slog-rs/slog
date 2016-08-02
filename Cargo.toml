@@ -1,6 +1,6 @@
 [package]
 name = "slog"
-version = "0.6.0"
+version = "0.7.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Structured, composable logging for Rust"
 keywords = ["log", "logging", "structured", "hierarchical"]
@@ -25,11 +25,11 @@ rustc-serialize = "0.3.19"
 error-chain = "0.2.1"
 
 [dev-dependencies]
-slog-json = { path = "crates/json" }
-slog-term = { path = "crates/term" }
-slog-stdlog = { path = "crates/stdlog" }
-slog-syslog = { path = "crates/syslog" }
-slog-bunyan = { path = "crates/bunyan" }
+slog-json = { path = "crates/json", version = "0.7.0" }
+slog-term = { path = "crates/term", version = "0.7.0" }
+slog-stdlog = { path = "crates/stdlog", version = "0.7.0" }
+slog-syslog = { path = "crates/syslog", version = "0.7.0" }
+slog-bunyan = { path = "crates/bunyan", version = "0.7.0" }
 log = "0.3.6"
-nix = "*"
-lazy_static = "0.1.*"
+nix = "0.6.0"
+lazy_static = "0.1.16"
