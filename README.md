@@ -21,6 +21,7 @@ Inspired by [log15] for Go.
 ### Features
 
 * easy to use
+* good performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
 * hierarchical loggers
 * lazily evaluated values
 * modular and extensible
