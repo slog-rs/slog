@@ -1,5 +1,6 @@
 /// Logging level
-#[derive(Copy, Clone, Debug)]
+#[repr(usize)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Level {
     /// Critical
     Critical,
@@ -13,6 +14,20 @@ pub enum Level {
     Debug,
     /// Trace
     Trace
+}
+
+#[repr(usize)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[doc(hidden)]
+/// Not part of the API
+pub enum LevelFilter {
+    Off,
+    Critical,
+    Error,
+    Warning,
+    Info,
+    Debug,
+    Trace,
 }
 
 impl Level {
@@ -30,16 +45,32 @@ impl Level {
         }
     }
 
-    /// Cast `Level` to ordering integer, where
-    /// `Critical` is 0, and `Trace` is 5
-    pub fn as_int(&self) -> i32 {
+    /// Cast `Level` to ordering integer where `Critical` is the smallest and
+    /// `Trace` the biggest value
+    pub fn as_usize(&self) -> usize {
         match *self {
-            Level::Critical => 0,
-            Level::Error => 1,
-            Level::Warning => 2,
-            Level::Info => 3,
-            Level::Debug => 4,
-            Level::Trace => 5,
+            Level::Critical => 1,
+            Level::Error => 2,
+            Level::Warning => 3,
+            Level::Info => 4,
+            Level::Debug => 5,
+            Level::Trace => 6,
+        }
+    }
+}
+
+impl LevelFilter {
+    #[doc(hidden)]
+    /// Not part of the API
+    pub fn as_usize(&self) -> usize {
+        match *self {
+            LevelFilter::Off => 0,
+            LevelFilter::Critical => 1,
+            LevelFilter::Error => 2,
+            LevelFilter::Warning => 3,
+            LevelFilter::Info => 4,
+            LevelFilter::Debug => 5,
+            LevelFilter::Trace => 6,
         }
     }
 }
@@ -53,7 +84,7 @@ impl fmt::Display for Level {
 impl Level {
     /// Returns true if `self` is at least `level` logging level
     pub fn is_at_least(&self, level : Self) -> bool {
-        self.as_int() <= level.as_int()
+        self.as_usize() <= level.as_usize()
     }
 }
 
@@ -64,3 +95,9 @@ fn level_at_least() {
     assert!(!Level::Debug.is_at_least(Level::Info));
 }
 
+#[test]
+fn levelfilter_sanity() {
+    assert!(Level::Critical.as_usize() > LevelFilter::Off.as_usize());
+    assert!(Level::Critical.as_usize() <= LevelFilter::Critical.as_usize());
+    assert!(Level::Trace.as_usize() <= LevelFilter::Trace.as_usize());
+}

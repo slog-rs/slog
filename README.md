@@ -37,6 +37,7 @@ Inspired by [log15] for Go.
 		* Bunyan (`slog-bunyan` crate)
 	* syslog (`slog-syslog` crate)
 	* support for first class custom ones
+* compile time log level using cargo features (same as in `log` crate)
 
 ### Advantages over `log` crate
 

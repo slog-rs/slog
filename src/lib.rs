@@ -41,6 +41,9 @@ macro_rules! o(
 ///
 /// Use wrappers `error!`, `warn!` etc. instead
 ///
+/// The `max_level_*` features can be used to statically disable logging at
+/// various levels.
+///
 /// ```
 /// #[macro_use]
 /// extern crate slog;
@@ -55,28 +58,34 @@ macro_rules! o(
 #[macro_export]
 macro_rules! log(
     ($l:expr, $lvl:expr, $msg:expr) => {
-        $l.log(
-            &$crate::RecordInfo::new(
-                $lvl,
-                &$msg,
-                file!(),
-                line!(),
-                module_path!(),
-                &[]
+        let lvl = $lvl;
+        if lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
+            $l.log(
+                &$crate::RecordInfo::new(
+                    lvl,
+                    &$msg,
+                    file!(),
+                    line!(),
+                    module_path!(),
+                    &[]
+                )
             )
-        )
+        }
     };
     ($l:expr, $lvl:expr, $msg:expr, $($k:expr => $v:expr),*) => {
-        $l.log(
-            &$crate::RecordInfo::new(
-                $lvl,
-                &$msg,
-                file!(),
-                line!(),
-                module_path!(),
-                &[$(($k, &$v)),*]
+        let lvl = $lvl;
+        if lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
+            $l.log(
+                &$crate::RecordInfo::new(
+                    $lvl,
+                    &$msg,
+                    file!(),
+                    line!(),
+                    module_path!(),
+                    &[$(($k, &$v)),*]
+                )
             )
-    )
+        }
     };
 );
 
@@ -348,6 +357,40 @@ impl<'a> Iterator for OwnedKeyValueNodeIterator<'a> {
                 }
             }
         }
+    }
+}
+
+#[inline(always)]
+#[doc(hidden)]
+/// Not an API
+pub fn __slog_static_max_level() -> LevelFilter {
+    if !cfg!(debug_assertions) {
+        if cfg!(feature = "release_max_level_off") {
+            return LevelFilter::Off
+        } else if cfg!(feature = "release_max_level_error") {
+            return LevelFilter::Error
+        } else if cfg!(feature = "release_max_level_warn") {
+            return LevelFilter::Warning
+        } else if cfg!(feature = "release_max_level_info") {
+            return LevelFilter::Info
+        } else if cfg!(feature = "release_max_level_debug") {
+            return LevelFilter::Debug
+        } else if cfg!(feature = "release_max_level_trace") {
+            return LevelFilter::Trace
+        }
+    }
+    if cfg!(feature = "max_level_off") {
+        LevelFilter::Off
+    } else if cfg!(feature = "max_level_error") {
+        LevelFilter::Error
+    } else if cfg!(feature = "max_level_warn") {
+        LevelFilter::Warning
+    } else if cfg!(feature = "max_level_info") {
+        LevelFilter::Info
+    } else if cfg!(feature = "max_level_debug") {
+        LevelFilter::Debug
+    } else {
+        LevelFilter::Trace
     }
 }
 
