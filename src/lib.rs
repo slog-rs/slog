@@ -12,14 +12,6 @@ extern crate error_chain;
 use std::sync::Arc;
 use std::fmt;
 
-/// Get current location in the file
-#[macro_export]
-macro_rules! loc(
-    () => {
-        &$crate::Location{ line: line!(), file: file!(), module : module_path!()}
-    };
-);
-
 /// Convenience function for building `&[OwnedKeyValue]`
 ///
 /// ```
