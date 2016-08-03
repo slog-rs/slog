@@ -32,7 +32,7 @@ macro_rules! o(
     ($($k:expr => $v:expr),*) => {
         {
         use std;
-        vec![$(($k, std::sync::Arc::new($v) as std::sync::Arc<$crate::ser::SyncSerialize>)),*]
+        vec![$(($k, std::boxed::Box::new($v) as std::boxed::Box<$crate::ser::SyncSerialize>)),*]
         }
     };
 );
@@ -283,12 +283,11 @@ pub use logger::RecordInfo;
 include!("_level.rs");
 
 /// Key value pair that can be owned by `Logger`
-pub type OwnedKeyValue = (&'static str, Arc<ser::SyncSerialize>);
+pub type OwnedKeyValue = (&'static str, Box<ser::SyncSerialize>);
 /// Key value pair that can be part of each logging record
 pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
 
 /// Values specific for this Logger and reference to it's parent values
-#[derive(Clone)]
 pub struct OwnedKeyValueNode {
     parent: Option<Arc<OwnedKeyValueNode>>,
     values: Vec<OwnedKeyValue>,

@@ -66,7 +66,7 @@ Inspired by [log15] for Go.
 
 ### Code snippet
 
-``` rust
+```rust
 fn main() {
     // Create a new drain hierarchy, for the need of your program.
     // Choose from collection of existing drains, or write your own

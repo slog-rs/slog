@@ -70,8 +70,7 @@ impl Json {
                 "msg" => move |rinfo : &RecordInfo| {
                     rinfo.msg().to_string()
                 }
-                )
-                .to_vec(),
+                ),
         }
     }
 
@@ -122,8 +121,8 @@ impl JsonBuilder {
     }
 
     /// Add custom values to be printed with this formatter
-    pub fn add_key_values(&mut self, values: Vec<OwnedKeyValue>) -> &mut Self {
-        self.values.extend(values.iter().cloned());
+    pub fn add_key_values(&mut self, mut values: Vec<OwnedKeyValue>) -> &mut Self {
+        self.values.extend(values.drain(..));
         self
     }
 
