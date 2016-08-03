@@ -47,10 +47,30 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-31' class='srclink' href='../src/slog_stdlog/src/lib.rs.html#81-86' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-32' class='srclink' href='../src/slog_stdlog/src/lib.rs.html#94-99' title='goto source code'>[src]</a></span></h1>
 <pre class='rust fn'>pub fn set_logger(logger: <a class='struct' href='../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>,&nbsp;<a class='struct' href='../log/struct.SetLoggerError.html' title='log::SetLoggerError'>SetLoggerError</a>&gt;</pre><div class='docblock'><p>Set a <code>slog::Logger</code> as a global <code>log</code> create handler</p>
 
 <p>This will forward all <code>log</code> records to <code>slog</code> logger.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='comment'>// only use `o` macro from `slog` crate</span>
+<span class='attribute'>#[<span class='ident'>macro_use</span>(<span class='ident'>o</span>)]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog_stdlog</span>;
+
+<span class='kw'>use</span> <span class='ident'>slog</span>::<span class='op'>*</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>Logger</span>::<span class='ident'>new_root</span>(
+        <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;build-id&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;8dfljdf&quot;</span>),
+        <span class='ident'>slog</span>::<span class='ident'>drain</span>::<span class='ident'>discard</span>(),
+    );
+    <span class='ident'>slog_stdlog</span>::<span class='ident'>set_logger</span>(<span class='ident'>root</span>).<span class='ident'>unwrap</span>();
+    <span class='comment'>// Note: this `info!(...)` macro comes from `log` crate</span>
+    <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;standard logging redirected to slog&quot;</span>);
+}</pre>
 </div></section>
     <section id='search' class="content hidden"></section>
 

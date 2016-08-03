@@ -47,32 +47,31 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog_stdlog/src/lib.rs.html#1-98' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog_stdlog/src/lib.rs.html#1-134' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Standard Rust log crate adapter to slog-rs</p>
 
-<p>This crate allows setting one of <code>slog</code> <code>Logger</code>s
-as a global handler of Rust de facto standard logging statements
-(eg <code>info!(...)</code>) provided by <code>log</code> create.</p>
+<p>This crate allows using <code>slog</code> features with code
+using legacy <code>log</code> statements.</p>
 
-<pre class='rust rust-example-rendered'>
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog_stdlog</span>;
+<p><code>log</code> crate expects a global logger to be registered
+(popular one is <code>env_logger</code>) as a handler for all
+<code>info!(...)</code> and similar.</p>
 
-<span class='kw'>use</span> <span class='ident'>slog</span>::<span class='op'>*</span>;
+<p><code>slog-stdlog</code> will register itself as <code>log</code> global handler and forward all
+legacy logging statements to <code>slog</code>&#39;s <code>Logger</code>. That means existing logging
+<code>debug!</code> (even in dependencies crates) work and utilize <code>slog</code> composable
+drains.</p>
 
-<span class='kw'>fn</span> <span class='ident'>main</span>() {
-    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>Logger</span>::<span class='ident'>new_root</span>(
-        <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;build-id&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;8dfljdf&quot;</span>),
-        <span class='ident'>slog</span>::<span class='ident'>drain</span>::<span class='ident'>discard</span>(),
-    );
-    <span class='ident'>slog_stdlog</span>::<span class='ident'>set_logger</span>(<span class='ident'>root</span>).<span class='ident'>unwrap</span>();
-    <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;standard logging redirected to slog&quot;</span>);
-}</pre>
+<p>See <code>init()</code> documentation for minimal working example.</p>
 </div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.init.html'
+                                  title='slog_stdlog::init'>init</a></td>
+                           <td class='docblock short'>
+                                <p>Minimal initialization with default drain</p>
+                           </td>
+                       </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.set_logger.html'
                                   title='slog_stdlog::set_logger'>set_logger</a></td>

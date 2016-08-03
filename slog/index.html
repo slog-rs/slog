@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog/src/lib.rs.html#1-244' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog/src/lib.rs.html#1-356' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='slog----structured-composable-logging-for-rust' class='section-header'><a href='#slog----structured-composable-logging-for-rust'>Slog -  Structured, composable logging for Rust</a></h1></div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
 <table><tr><td><code>pub use logger::<a class='struct' href='../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a>;</code></td></tr><tr><td><code>pub use logger::<a class='struct' href='../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
@@ -110,13 +110,6 @@
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='macro' href='macro.loc!.html'
-                                  title='slog::loc!'>loc!</a></td>
-                           <td class='docblock short'>
-                                <p>Get current location in the file</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
                            <td><a class='macro' href='macro.log!.html'
                                   title='slog::log!'>log!</a></td>
                            <td class='docblock short'>
@@ -128,6 +121,55 @@
                                   title='slog::o!'>o!</a></td>
                            <td class='docblock short'>
                                 <p>Convenience function for building <code>&amp;[OwnedKeyValue]</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.slog_crit!.html'
+                                  title='slog::slog_crit!'>slog_crit!</a></td>
+                           <td class='docblock short'>
+                                <p>Log critical level record</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.slog_debug!.html'
+                                  title='slog::slog_debug!'>slog_debug!</a></td>
+                           <td class='docblock short'>
+                                <p>Log debug level record</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.slog_error!.html'
+                                  title='slog::slog_error!'>slog_error!</a></td>
+                           <td class='docblock short'>
+                                <p>Log error level record</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.slog_info!.html'
+                                  title='slog::slog_info!'>slog_info!</a></td>
+                           <td class='docblock short'>
+                                <p>Log info level record</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.slog_log!.html'
+                                  title='slog::slog_log!'>slog_log!</a></td>
+                           <td class='docblock short'>
+                                <p>Alias for <code>log</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.slog_trace!.html'
+                                  title='slog::slog_trace!'>slog_trace!</a></td>
+                           <td class='docblock short'>
+                                <p>Log trace level record</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.slog_warn!.html'
+                                  title='slog::slog_warn!'>slog_warn!</a></td>
+                           <td class='docblock short'>
+                                <p>Log warning level record</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `stdout` fn in crate `slog_term`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, stdout">
+    <meta name="description" content="API documentation for the Rust `init` fn in crate `slog_stdlog`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, init">
 
-    <title>slog_term::stdout - Rust</title>
+    <title>slog_stdlog::init - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>slog_term</a></p><script>window.sidebarCurrent = {name: 'stdout', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>slog_stdlog</a></p><script>window.sidebarCurrent = {name: 'init', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,14 +43,27 @@
     </nav>
 
     <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>slog_term</a>::<wbr><a class='fn' href=''>stdout</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>slog_stdlog</a>::<wbr><a class='fn' href=''>init</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-271' class='srclink' href='../src/slog_term/lib.rs.html#243-250' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn stdout() -&gt; <a class='struct' href='../slog/drain/struct.Streamer.html' title='slog::drain::Streamer'>Streamer</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/io/stdio/struct.Stdout.html' title='std::io::stdio::Stdout'>Stdout</a>,&nbsp;<a class='struct' href='../slog_term/struct.Format.html' title='slog_term::Format'>Format</a>&gt;</pre><div class='docblock'><p>Drain to <code>stdout</code></p>
+               </span><a id='src-41' class='srclink' href='../src/slog_stdlog/src/lib.rs.html#130-134' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn init() -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>,&nbsp;<a class='struct' href='../log/struct.SetLoggerError.html' title='log::SetLoggerError'>SetLoggerError</a>&gt;</pre><div class='docblock'><p>Minimal initialization with default drain</p>
 
-<p>Automatically using color if printing to tty</p>
+<p>The exact default drain is unspecified and will
+change in future versions! Use <code>set_logger</code> instead
+to build customized drain.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog_stdlog</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='ident'>slog_stdlog</span>::<span class='ident'>init</span>().<span class='ident'>unwrap</span>();
+    <span class='comment'>// Note: this `info!(...)` macro comes from `log` crate</span>
+    <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;standard logging redirected to slog&quot;</span>);
+}</pre>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -106,7 +119,7 @@
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "slog_term";
+        window.currentCrate = "slog_stdlog";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
