@@ -23,6 +23,7 @@ use std::fmt;
 ///     let drain = slog::drain::discard();
 ///     let root = drain.into_logger(o!("key1" => "value1", "key2" => "value2"));
 /// }
+/// ```
 #[macro_export]
 macro_rules! o(
     () => {
@@ -50,6 +51,7 @@ macro_rules! o(
 ///     let root = drain.into_logger(o!("key1" => "value1", "key2" => "value2"));
 ///     info!(root, "test info log", "log-key" => true);
 /// }
+/// ```
 #[macro_export]
 macro_rules! log(
     ($l:expr, $lvl:expr, $msg:expr) => {
