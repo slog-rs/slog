@@ -27,7 +27,7 @@ Inspired by [log15] for Go.
 * modular and extensible
 	* small core create with multiple addon crates (`./crates/`) - compile only
 	what you're actually using
-* standard `log` crate logging support (`slog-stdlog` crate)
+* backward compatibility with standard `log` crate (`slog-stdlog` crate)
 * drains & output formatting
 	* filtering
 	* multiple outputs
@@ -36,28 +36,46 @@ Inspired by [log15] for Go.
 	* Json (`slog-json` crate)
 		* Bunyan (`slog-bunyan` crate)
 	* syslog (`slog-syslog` crate)
-	* support for first class custom ones
-* compile time log level using cargo features (same as in `log` crate)
+	* first class custom drains
+* compile time log level filter using cargo features (same as in `log` crate)
 
 ### Advantages over `log` crate
 
-* **composable** and **extensible** logging drains - You can easily log messages
-  to different destinations, in different formats, using different filtering
-  rules. Building new drains and new output formats is very easy.
-* drains are **run-time swappable** - Send a signal to your program and start
-  logging everything to a file for run-time production debugging. Send another
-  one when you're done to return to normal operation. Build your own flexible
-  scenarios easily.
-* **non-global** - Hierarchical loggers carry information about context of
-  logging. When logging an error condition, you want to know which resource was
-  being handled, on which instance of your service, using which source code
-  build, talking with what peer, etc. In standard `log` you would have to repeat
-  this information in every log statement. In `slog` it will happen
-  automatically.
+* **extensible** - `slog` privides core functionality, and some standard
+  feature-set. But using Rust trait system, anyone can easily implement as
+  powerful fully-custom features, publish separately and grow `slog` feature-set
+  for everyone.
+* **composable** - Wouldn't it be nice if you could use
+  [`env_logger`][env_logger], but output authentication messages to syslog,
+  while reporting errors over network in json format? With `slog` drains can
+  reuse other drains! You can combine them together, chain, wrap - you name it.
+* **context aware** - It's not just one global logger. Hierarchical
+  loggers carry information about context of logging. When logging an error
+  condition, you want to know which resource was being handled, on which
+  instance of your service, using which source code build, talking with what
+  peer, etc. In standard `log` you would have to repeat this information in
+  every log statement. In `slog` it will happen automatically. See
+  [slog-rs functional overview page][functional-overview] to understand better
+  logger and drain hierarchies and log record flow through them.
 * both **human and machine readable** - By keeping the key-value data format,
   meaning of logging data is preserved. Dump your logging to a JSON file, and
-  send it to your data-mining system for further analysis.
-* **lazy evaluation** and **asynchronous IO** included
+  send it to your data-mining system for further analysis. Don't parse it from
+  lines of text anymore!
+* **lazy evaluation** and **asynchronous IO** included. Program waiting to
+  finish writing logging information to disk, or spending time calculating
+  data that will be thrown away at the current logging level, are sources of big
+  performance waste. Use [`AsyncStreamer`][async-streamer] drain, and closures
+  to make your logging fast.
+* **run-time configuration** - [`AtomicSwitch`][atomic-switch] drain allows
+  changing log levels, logging destination or anything in the running program.
+  You could use eg. signal handlers to change logging behavior. See
+  [`signal` example][signal].
+
+[signal]: https://github.com/dpc/slog-rs/blob/master/examples/signal.rs
+[env_logger]: https://crates.io/crates/env_logger
+[functional-overview]: https://github.com/dpc/slog-rs/wiki/Functional-overview
+[async-streamer]: http://dpc.pw/slog-rs/slog/drain/struct.AsyncStreamer.html
+[atomic-switch]: http://dpc.pw/slog-rs/slog/drain/struct.AtomicSwitch.html
 
 ### Terminal output example
 
@@ -144,12 +162,14 @@ See `examples/features.rs` for full code.
 
 Read [Documentation](//dpc.github.io/slog-rs/) for details and features.
 
-If you want to say hi, or need help use [#slog-rs gitter.im][slog-rs gitter].
+See [faq] for answers to common questions. If you want to say hi, or need help
+use [#slog-rs gitter.im][slog-rs gitter].
 
 To report a bug or ask for features use [github issues][issues].
 
+[faq]: https://github.com/dpc/slog-rs/wiki/FAQ
 [rust]: http://rust-lang.org
-[dpc gitter]: https://gitter.im/dpc/slog-rs
+[slog-rs gitter]: https://gitter.im/dpc/slog-rs
 [issues]: //github.com/dpc/slog-rs/issues
 [log15]: //github.com/inconshreveable/log15
 
