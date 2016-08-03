@@ -80,6 +80,38 @@ macro_rules! log(
     };
 );
 
+/// Alias for `log`
+///
+/// Prefer shorter version, unless it clashes with
+/// existing `log` crate macro.
+#[macro_export]
+macro_rules! slog_log(
+    ($l:expr, $lvl:expr, $msg:expr) => {
+        $l.log(
+            &$crate::RecordInfo::new(
+                $lvl,
+                &$msg,
+                file!(),
+                line!(),
+                module_path!(),
+                &[]
+            )
+        )
+    };
+    ($l:expr, $lvl:expr, $msg:expr, $($k:expr => $v:expr),*) => {
+        $l.log(
+            &$crate::RecordInfo::new(
+                $lvl,
+                &$msg,
+                file!(),
+                line!(),
+                module_path!(),
+                &[$(($k, &$v)),*]
+            )
+        )
+    };
+);
+
 /// Log critical level record
 #[macro_export]
 macro_rules! crit(
@@ -88,6 +120,20 @@ macro_rules! crit(
     };
     ($l:expr, $msg:expr, $($k:expr => $v:expr),*) => {
         log!($l, $crate::Level::Critical, $msg, $($k => $v),*)
+    };
+);
+
+/// Log critical level record
+///
+/// Prefer shorter version, unless it clashes with
+/// existing `log` crate macro.
+#[macro_export]
+macro_rules! slog_crit(
+    ($l:expr, $msg:expr) => {
+        slog_log!($l, $crate::Level::Critical, $msg)
+    };
+    ($l:expr, $msg:expr, $($k:expr => $v:expr),*) => {
+        slog_log!($l, $crate::Level::Critical, $msg, $($k => $v),*)
     };
 );
 
@@ -102,6 +148,21 @@ macro_rules! error(
     };
 );
 
+/// Log error level record
+///
+/// Prefer shorter version, unless it clashes with
+/// existing `log` crate macro.
+#[macro_export]
+macro_rules! slog_error(
+    ($l:expr, $msg:expr) => {
+        slog_log!($l, $crate::Level::Error, $msg)
+    };
+    ($l:expr, $msg:expr, $($k:expr => $v:expr),*) => {
+        slog_log!($l, $crate::Level::Error, $msg, $($k => $v),*)
+    };
+);
+
+
 /// Log warning level record
 #[macro_export]
 macro_rules! warn(
@@ -110,6 +171,20 @@ macro_rules! warn(
     };
     ($l:expr, $msg:expr, $($k:expr => $v:expr),*) => {
         log!($l, $crate::Level::Warning, $msg, $($k => $v),*)
+    };
+);
+
+/// Log warning level record
+///
+/// Prefer shorter version, unless it clashes with
+/// existing `log` crate macro.
+#[macro_export]
+macro_rules! slog_warn(
+    ($l:expr, $msg:expr) => {
+    slog_log!($l, $crate::Level::Warning, $msg)
+};
+($l:expr, $msg:expr, $($k:expr => $v:expr),*) => {
+        slog_log!($l, $crate::Level::Warning, $msg, $($k => $v),*)
     };
 );
 
@@ -124,6 +199,20 @@ macro_rules! info(
     };
 );
 
+/// Log info level record
+///
+/// Prefer shorter version, unless it clashes with
+/// existing `log` crate macro.
+#[macro_export]
+macro_rules! slog_info(
+    ($l:expr, $msg:expr) => {
+        slog_log!($l, $crate::Level::Info, $msg)
+    };
+    ($l:expr, $msg:expr, $($k:expr => $v:expr),*) => {
+        slog_log!($l, $crate::Level::Info, $msg, $($k => $v),*)
+    };
+);
+
 /// Log debug level record
 #[macro_export]
 macro_rules! debug(
@@ -135,6 +224,21 @@ macro_rules! debug(
     };
 );
 
+/// Log debug level record
+///
+/// Prefer shorter version, unless it clashes with
+/// existing `log` crate macro.
+#[macro_export]
+macro_rules! slog_debug(
+    ($l:expr, $msg:expr) => {
+        slog_log!($l, $crate::Level::Debug, $msg)
+    };
+    ($l:expr, $msg:expr, $($k:expr => $v:expr),*) => {
+        slog_log!($l, $crate::Level::Debug, $msg, $($k => $v),*)
+    };
+);
+
+
 /// Log trace level record
 #[macro_export]
 macro_rules! trace(
@@ -143,6 +247,20 @@ macro_rules! trace(
     };
     ($l:expr, $msg:expr, $($k:expr => $v:expr),*) => {
         log!($l, $crate::Level::Trace, $msg, $($k => $v),*)
+    };
+);
+
+/// Log trace level record
+///
+/// Prefer shorter version, unless it clashes with
+/// existing `log` crate macro.
+#[macro_export]
+macro_rules! slog_trace(
+    ($l:expr, $msg:expr) => {
+        slog_log!($l, $crate::Level::Trace, $msg)
+    };
+    ($l:expr, $msg:expr, $($k:expr => $v:expr),*) => {
+        slog_log!($l, $crate::Level::Trace, $msg, $($k => $v),*)
     };
 );
 
