@@ -72,14 +72,14 @@ Long term goal is to make it a go-to logging crate for Rust.
   meaning of logging data is preserved. Dump your logging to a JSON file, and
   send it to your data-mining system for further analysis. Don't parse it from
   lines of text anymore!
-* **lazy evaluation** and **asynchronous IO** included. Program waiting to
+* **lazy evaluation** and **asynchronous IO** included. Waiting to
   finish writing logging information to disk, or spending time calculating
   data that will be thrown away at the current logging level, are sources of big
   performance waste. Use [`AsyncStreamer`][async-streamer] drain, and closures
   to make your logging fast.
 * **run-time configuration** - [`AtomicSwitch`][atomic-switch] drain allows
-  changing log levels, logging destination or anything in the running program.
-  You could use eg. signal handlers to change logging behavior. See
+  changing logging behavior in the running program. You could use eg. signal
+  handlers to change logging level or logging destinations. See
   [`signal` example][signal].
 
 [signal]: https://github.com/dpc/slog-rs/blob/master/examples/signal.rs
