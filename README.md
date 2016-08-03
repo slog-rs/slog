@@ -14,9 +14,20 @@
   <strong><a href="//dpc.github.io/slog-rs/">Documentation</a></strong>
 </p>
 
-## Introduction
+### Status & news
 
-Inspired by [log15] for Go.
+`slog-rs` is reaching a core-feature completion - works on "stable Rust" and has
+no major problems. There can be still some API changes if there's a good reason
+for it, but I'll try to avoid it.
+
+The near-term goal is to stabilize the API and release 1.0
+(see [milestone 1.0](https://github.com/dpc/slog-rs/milestone/1)).
+
+Testing, feedback, PRs, etc. are very welcome. I'd be also very happy to share
+the ownership of the project with a team of people that share the big-picture
+design of it to make it more community-driven.
+
+Long term goal is to make it a go-to logging crate for Rust.
 
 ### Features
 
