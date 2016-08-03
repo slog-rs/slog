@@ -13,4 +13,5 @@ readme = "../../README.md"
 
 [dependencies]
 slog = { version = "0.7.0", path = "../.." }
+slog-term = { version = "0.7.0", path = "../term" }
 log = "0.3.6"

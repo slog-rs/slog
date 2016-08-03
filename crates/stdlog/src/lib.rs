@@ -1,31 +1,23 @@
 //! Standard Rust log crate adapter to slog-rs
 //!
-//! This crate allows setting one of `slog` `Logger`s
-//! as a global handler of Rust de facto standard logging statements
-//! (eg ``info!(...)``) provided by `log` create.
+//! This crate allows using `slog` features with code
+//! using legacy `log` statements.
 //!
-//! ```
-//! #[macro_use]
-//! extern crate slog;
-//! #[macro_use]
-//! extern crate log;
-//! extern crate slog_stdlog;
+//! `log` crate expects a global logger to be registered
+//! (popular one is `env_logger`) as a handler for all
+//! `info!(...)` and similar.
 //!
-//! use slog::*;
+//! `slog-stdlog` will register itself as `log` global handler and forward all
+//! legacy logging statements to `slog`'s `Logger`. That means existing logging
+//! `debug!` (even in dependencies crates) work and utilize `slog` composable
+//! drains.
 //!
-//! fn main() {
-//!     let root = Logger::new_root(
-//!         o!("build-id" => "8dfljdf"),
-//!         slog::drain::discard(),
-//!     );
-//!     slog_stdlog::set_logger(root).unwrap();
-//!     info!("standard logging redirected to slog");
-//! }
-//! ```
+//! See `init()` documentation for minimal working example.
 #![warn(missing_docs)]
 
 #[macro_use]
 extern crate slog;
+extern crate slog_term;
 extern crate log;
 
 use log::LogMetadata;
@@ -78,6 +70,27 @@ impl log::Log for Logger {
 /// Set a `slog::Logger` as a global `log` create handler
 ///
 /// This will forward all `log` records to `slog` logger.
+///
+/// ```
+/// // only use `o` macro from `slog` crate
+/// #[macro_use(o)]
+/// extern crate slog;
+/// #[macro_use]
+/// extern crate log;
+/// extern crate slog_stdlog;
+///
+/// use slog::*;
+///
+/// fn main() {
+///     let root = Logger::new_root(
+///         o!("build-id" => "8dfljdf"),
+///         slog::drain::discard(),
+///     );
+///     slog_stdlog::set_logger(root).unwrap();
+///     // Note: this `info!(...)` macro comes from `log` crate
+///     info!("standard logging redirected to slog");
+/// }
+/// ```
 pub fn set_logger(logger: slog::Logger) -> Result<(), log::SetLoggerError> {
     log::set_logger(|max_log_level| {
         max_log_level.set(log::LogLevelFilter::max());
@@ -95,4 +108,27 @@ pub fn set_logger_level(logger: slog::Logger,
         max_log_level.set(log_level_filter);
         Box::new(Logger::new(logger))
     })
+}
+
+/// Minimal initialization with default drain
+///
+/// The exact default drain is unspecified and will
+/// change in future versions! Use `set_logger` instead
+/// to build customized drain.
+///
+/// ```
+/// #[macro_use]
+/// extern crate log;
+/// extern crate slog_stdlog;
+///
+/// fn main() {
+///     slog_stdlog::init().unwrap();
+///     // Note: this `info!(...)` macro comes from `log` crate
+///     info!("standard logging redirected to slog");
+/// }
+/// ```
+pub fn init() -> Result<(), log::SetLoggerError> {
+    use slog::drain::IntoLogger;
+    let drain = slog::drain::filter_level(Level::Info, slog_term::stderr());
+    set_logger(drain.into_logger(o!()))
 }
