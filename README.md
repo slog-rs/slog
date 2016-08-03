@@ -7,7 +7,7 @@
   <a href="https://crates.io/crates/slog">
       <img src="http://meritbadge.herokuapp.com/slog?style=flat-square" alt="crates.io">
   </a>
-  <a href="https://gitter.im/dpc/dpc">
+  <a href="https://gitter.im/dpc/slog-rs">
       <img src="https://img.shields.io/badge/GITTER-join%20chat-green.svg?style=flat-square" alt="Gitter Chat">
   </a>
   <br>
@@ -144,12 +144,12 @@ See `examples/features.rs` for full code.
 
 Read [Documentation](//dpc.github.io/slog-rs/) for details and features.
 
-If you want to say hi, or need help use [#dpc gitter.im][dpc gitter].
+If you want to say hi, or need help use [#slog-rs gitter.im][slog-rs gitter].
 
 To report a bug or ask for features use [github issues][issues].
 
 [rust]: http://rust-lang.org
-[dpc gitter]: https://gitter.im/dpc/dpc
+[dpc gitter]: https://gitter.im/dpc/slog-rs
 [issues]: //github.com/dpc/slog-rs/issues
 [log15]: //github.com/inconshreveable/log15
 
