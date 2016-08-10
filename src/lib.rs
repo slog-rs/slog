@@ -32,7 +32,7 @@ macro_rules! o(
     ($($k:expr => $v:expr),*) => {
         {
         use std;
-        vec![$(($k, std::boxed::Box::new($v) as std::boxed::Box<$crate::ser::SyncSerialize>)),*]
+        vec![$(($k, std::boxed::Box::new($v))),*]
         }
     };
 );
