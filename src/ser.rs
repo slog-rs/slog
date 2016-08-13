@@ -181,18 +181,24 @@ impl<S: 'static + Serialize, F> SyncSerialize for F
 {
 }
 
-/// A newtype for fast lazy values
+/// A newtype for non-return based lazy values
 ///
 /// It's more natural for closures used as lazy values to return `Serialize`
 /// implementing type, but sometimes that forces an allocation (eg. Strings)
-/// Instead another closure form can be used. Unfortunately, as one `struct`
-/// can implement many different closure traits, a newtype has to be used to
-/// prevent ambiguity
 ///
-/// TODO: Can `FastLazy` be avoided?
-pub struct FastLazy<F>(pub F);
+/// In some cases it might make sense for another closure form to be used - one
+/// taking a serializer as an argument, which avoids lifetimes / allocation issues.
+///
+/// Unfortunately, as one `struct` can implement many different closure traits,
+/// a newtype has to be used to prevent ambiguity.
+///
+/// Generally this method should be used only if it avoids a big allocation of
+/// `Serialize`-implementing type in performance-critical logging statement.
+///
+/// TODO: Can `PushLazy` be avoided?
+pub struct PushLazy<F>(pub F);
 
-/// A handle to `Serializer` for `FastLazy` closure
+/// A handle to `Serializer` for `PushLazy` closure
 pub struct ValueSerializer<'a> {
     rinfo : &'a RecordInfo<'a>,
     key : &'a str,
@@ -219,7 +225,7 @@ impl<'a> Drop for ValueSerializer<'a> {
     }
 }
 
-impl<F> Serialize for FastLazy<F>
+impl<F> Serialize for PushLazy<F>
      where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c RecordInfo<'d>, ValueSerializer<'c>) -> Result<()> {
     fn serialize(&self, rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
         let ser = ValueSerializer {
@@ -232,7 +238,7 @@ impl<F> Serialize for FastLazy<F>
     }
 }
 
-impl<F> SyncSerialize for FastLazy<F>
+impl<F> SyncSerialize for PushLazy<F>
      where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c RecordInfo<'d>, ValueSerializer<'c>) -> Result<()> {
 }
 

@@ -288,6 +288,7 @@ pub mod format;
 
 pub use logger::Logger;
 pub use logger::RecordInfo;
+pub use ser::{PushLazy, ValueSerializer, Serializer, Serialize};
 
 include!("_level.rs");
 

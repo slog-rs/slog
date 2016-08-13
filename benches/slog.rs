@@ -130,3 +130,45 @@ fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
         info!(log, "", "i32" => |_:&RecordInfo|{5});
     });
 }
+
+#[bench]
+fn log_stream_json_blackbox_i32pushclosure(b: &mut Bencher) {
+    let drain = drain::stream(BlackBoxWriter, slog_json::new());
+
+    let log = drain.into_logger(o!());
+
+    b.iter(|| {
+        info!(log, "", "i32" => PushLazy(|_:&RecordInfo, ser : ValueSerializer|{
+            ser.serialize(5)
+        }));
+    });
+}
+
+
+const LONG_STRING : &'static str = "A long string that would take some time to allocate";
+
+#[bench]
+fn log_stream_json_blackbox_strclosure(b: &mut Bencher) {
+    let drain = drain::stream(BlackBoxWriter, slog_json::new());
+
+    let log = drain.into_logger(o!());
+
+    b.iter(|| {
+        info!(log, "", "str" => |_:&RecordInfo| {
+            String::from(LONG_STRING)
+        });
+    });
+}
+
+#[bench]
+fn log_stream_json_blackbox_strpushclosure(b: &mut Bencher) {
+    let drain = drain::stream(BlackBoxWriter, slog_json::new());
+
+    let log = drain.into_logger(o!());
+
+    b.iter(|| {
+        info!(log, "", "str" => PushLazy(|_:&RecordInfo, ser : ValueSerializer|{
+            ser.serialize(LONG_STRING)
+        }));
+    });
+}
