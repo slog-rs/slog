@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `format` mod in crate `slog`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, format">
+    <meta name="description" content="API documentation for the Rust `ValueSerializer` struct in crate `slog`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, ValueSerializer">
 
-    <title>slog::format - Rust</title>
+    <title>slog::ser::ValueSerializer - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>slog</a></p><script>window.sidebarCurrent = {name: 'format', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'><a href='../index.html'>slog</a>::<wbr><a href='index.html'>ser</a></p><script>window.sidebarCurrent = {name: 'ValueSerializer', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,46 +42,24 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>slog</a>::<wbr><a class='mod' href=''>format</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>slog</a>::<wbr><a href='index.html'>ser</a>::<wbr><a class='struct' href=''>ValueSerializer</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1072' class='srclink' href='../../src/slog/src/format/mod.rs.html#1-36' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>Output formating</p>
-</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Error.html'
-                                  title='slog::format::Error'>Error</a></td>
-                           <td class='docblock short'>
-                                
-                           </td>
-                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class='enum' href='enum.ErrorKind.html'
-                                  title='slog::format::ErrorKind'>ErrorKind</a></td>
-                           <td class='docblock short'>
-                                
-                           </td>
-                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Format.html'
-                                  title='slog::format::Format'>Format</a></td>
-                           <td class='docblock short'>
-                                <p>Format record information</p>
-                           </td>
-                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class='type' href='type.Result.html'
-                                  title='slog::format::Result'>Result</a></td>
-                           <td class='docblock short'>
-                                
-                           </td>
-                       </tr></table></section>
+               </span><a id='src-880' class='srclink' href='../../src/slog/src/ser.rs.html#202-207' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct ValueSerializer&lt;'a&gt; {
+    // some fields omitted
+}</pre><div class='docblock'><p>A handle to <code>Serializer</code> for <code>PushLazy</code> closure</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../../slog/ser/struct.ValueSerializer.html' title='slog::ser::ValueSerializer'>ValueSerializer</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-886' class='srclink' href='../../src/slog/src/ser.rs.html#209-217' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.serialize' class='method'><code>fn <a href='#method.serialize' class='fnname'>serialize</a>&lt;'b,&nbsp;S:&nbsp;'b + <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a>&gt;(self, s: S) -&gt; <a class='type' href='../../slog/ser/type.Result.html' title='slog::ser::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Serialize a value</p>
+
+<p>This consumes <code>self</code> to prevent serializing one value multiple times</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../../slog/ser/struct.ValueSerializer.html' title='slog::ser::ValueSerializer'>ValueSerializer</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-893' class='srclink' href='../../src/slog/src/ser.rs.html#219-226' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.drop' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>A method called when the value goes out of scope. <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

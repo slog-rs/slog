@@ -440,6 +440,7 @@
 <span id="396">396</span>
 <span id="397">397</span>
 <span id="398">398</span>
+<span id="399">399</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 
@@ -475,7 +476,7 @@
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> {
         {
         <span class='kw'>use</span> <span class='ident'>std</span>;
-        <span class='macro'>vec</span><span class='macro'>!</span>[$((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>, <span class='ident'>std</span>::<span class='ident'>boxed</span>::<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>) <span class='kw'>as</span> <span class='ident'>std</span>::<span class='ident'>boxed</span>::<span class='ident'>Box</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>ser</span>::<span class='ident'>SyncSerialize</span><span class='op'>&gt;</span>)),<span class='op'>*</span>]
+        <span class='macro'>vec</span><span class='macro'>!</span>[$((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>, <span class='ident'>std</span>::<span class='ident'>boxed</span>::<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>))),<span class='op'>*</span>]
         }
     };
 );
@@ -731,6 +732,7 @@
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>logger</span>::<span class='ident'>Logger</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>logger</span>::<span class='ident'>RecordInfo</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>ser</span>::{<span class='ident'>PushLazy</span>, <span class='ident'>ValueSerializer</span>, <span class='ident'>Serializer</span>, <span class='ident'>Serialize</span>};
 
 <span class='macro'>include</span><span class='macro'>!</span>(<span class='string'>&quot;_level.rs&quot;</span>);
 
