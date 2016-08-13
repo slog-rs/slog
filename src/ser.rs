@@ -169,7 +169,8 @@ impl_serialize_for!(u64, emit_u64);
 impl_serialize_for!(i64, emit_i64);
 impl_serialize_for!(f64, emit_f64);
 
-impl<S: 'static + Serialize, F: Sync + Send + for<'c> Fn(&'c RecordInfo<'c>) -> S> Serialize for F {
+impl<S: 'static + Serialize, F> Serialize for F
+    where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c RecordInfo<'d>) -> S {
     fn serialize(&self, rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
         (*self)(&rinfo).serialize(rinfo, key, serializer)
     }
@@ -178,6 +179,61 @@ impl<S: 'static + Serialize, F: Sync + Send + for<'c> Fn(&'c RecordInfo<'c>) -> 
 impl<S: 'static + Serialize, F> SyncSerialize for F
     where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c RecordInfo<'d>) -> S
 {
+}
+
+/// A newtype for fast lazy values
+///
+/// It's more natural for closures used as lazy values to return `Serialize`
+/// implementing type, but sometimes that forces an allocation (eg. Strings)
+/// Instead another closure form can be used. Unfortunately, as one `struct`
+/// can implement many different closure traits, a newtype has to be used to
+/// prevent ambiguity
+///
+/// TODO: Can `FastLazy` be avoided?
+pub struct FastLazy<F>(pub F);
+
+/// A handle to `Serializer` for `FastLazy` closure
+pub struct ValueSerializer<'a> {
+    rinfo : &'a RecordInfo<'a>,
+    key : &'a str,
+    serializer : &'a mut Serializer,
+    done : bool,
+}
+
+impl<'a> ValueSerializer<'a> {
+    /// Serialize a value
+    ///
+    /// This consumes `self` to prevent serializing one value multiple times
+    pub fn serialize<'b, S: 'b + Serialize>(mut self, s : S) -> Result<()> {
+        self.done = true;
+        s.serialize(self.rinfo, self.key, self.serializer)
+    }
+}
+
+impl<'a> Drop for ValueSerializer<'a> {
+    fn drop(&mut self) {
+        if !self.done {
+            // unfortunately this gives no change to return serialization errors
+            let _ = self.serializer.emit_unit(self.key);
+        }
+    }
+}
+
+impl<F> Serialize for FastLazy<F>
+     where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c RecordInfo<'d>, ValueSerializer<'c>) -> Result<()> {
+    fn serialize(&self, rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
+        let ser = ValueSerializer {
+            rinfo: rinfo,
+            key: key,
+            serializer: serializer,
+            done: false,
+        };
+        (self.0)(&rinfo, ser)
+    }
+}
+
+impl<F> SyncSerialize for FastLazy<F>
+     where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c RecordInfo<'d>, ValueSerializer<'c>) -> Result<()> {
 }
 
 
