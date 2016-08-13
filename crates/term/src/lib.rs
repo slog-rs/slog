@@ -54,8 +54,8 @@ fn severity_to_color(lvl: Level) -> u8 {
         Level::Error => 9,
         Level::Warning => 3,
         Level::Info => 2,
-        Level::Debug => 10,
-        Level::Trace => 11,
+        Level::Debug => 6,
+        Level::Trace => 4,
     }
 }
 
