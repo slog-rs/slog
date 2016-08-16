@@ -11,6 +11,8 @@ extern crate error_chain;
 
 use std::sync::Arc;
 use std::fmt;
+use std::str::FromStr;
+use std::ascii::AsciiExt;
 
 /// Convenience function for building `&[OwnedKeyValue]`
 ///
@@ -289,6 +291,7 @@ pub mod format;
 pub use logger::Logger;
 pub use logger::RecordInfo;
 pub use ser::{PushLazy, ValueSerializer, Serializer, Serialize};
+pub use self::drain::{Error, Result, ErrorKind};
 
 include!("_level.rs");
 
@@ -364,34 +367,34 @@ impl<'a> Iterator for OwnedKeyValueNodeIterator<'a> {
 #[inline(always)]
 #[doc(hidden)]
 /// Not an API
-pub fn __slog_static_max_level() -> LevelFilter {
+pub fn __slog_static_max_level() -> FilterLevel {
     if !cfg!(debug_assertions) {
         if cfg!(feature = "release_max_level_off") {
-            return LevelFilter::Off
+            return FilterLevel::Off
         } else if cfg!(feature = "release_max_level_error") {
-            return LevelFilter::Error
+            return FilterLevel::Error
         } else if cfg!(feature = "release_max_level_warn") {
-            return LevelFilter::Warning
+            return FilterLevel::Warning
         } else if cfg!(feature = "release_max_level_info") {
-            return LevelFilter::Info
+            return FilterLevel::Info
         } else if cfg!(feature = "release_max_level_debug") {
-            return LevelFilter::Debug
+            return FilterLevel::Debug
         } else if cfg!(feature = "release_max_level_trace") {
-            return LevelFilter::Trace
+            return FilterLevel::Trace
         }
     }
     if cfg!(feature = "max_level_off") {
-        LevelFilter::Off
+        FilterLevel::Off
     } else if cfg!(feature = "max_level_error") {
-        LevelFilter::Error
+        FilterLevel::Error
     } else if cfg!(feature = "max_level_warn") {
-        LevelFilter::Warning
+        FilterLevel::Warning
     } else if cfg!(feature = "max_level_info") {
-        LevelFilter::Info
+        FilterLevel::Info
     } else if cfg!(feature = "max_level_debug") {
-        LevelFilter::Debug
+        FilterLevel::Debug
     } else {
-        LevelFilter::Trace
+        FilterLevel::Trace
     }
 }
 

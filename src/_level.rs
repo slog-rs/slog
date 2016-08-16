@@ -1,6 +1,6 @@
 /// Logging level
 #[repr(usize)]
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Level {
     /// Critical
     Critical,
@@ -16,11 +16,14 @@ pub enum Level {
     Trace
 }
 
+
+static LOG_LEVEL_NAMES: [&'static str; 7] = ["OFF", "CRITICAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE"];
+
 #[repr(usize)]
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 #[doc(hidden)]
 /// Not part of the API
-pub enum LevelFilter {
+pub enum FilterLevel {
     Off,
     Critical,
     Error,
@@ -57,21 +60,66 @@ impl Level {
             Level::Trace => 6,
         }
     }
+
+    /// Get a `Level` from a usize
+    ///
+    /// This complements `as_usize`
+    pub fn from_usize(u: usize) -> Option<Level> {
+        match u {
+            1 => Some(Level::Critical),
+            2 => Some(Level::Error),
+            3 => Some(Level::Warning),
+            4 => Some(Level::Info),
+            5 => Some(Level::Debug),
+            6 => Some(Level::Trace),
+            _ => None
+        }
+    }
 }
 
-impl LevelFilter {
+impl FilterLevel {
     #[doc(hidden)]
     /// Not part of the API
     pub fn as_usize(&self) -> usize {
         match *self {
-            LevelFilter::Off => 0,
-            LevelFilter::Critical => 1,
-            LevelFilter::Error => 2,
-            LevelFilter::Warning => 3,
-            LevelFilter::Info => 4,
-            LevelFilter::Debug => 5,
-            LevelFilter::Trace => 6,
+            FilterLevel::Off => 0,
+            FilterLevel::Critical => 1,
+            FilterLevel::Error => 2,
+            FilterLevel::Warning => 3,
+            FilterLevel::Info => 4,
+            FilterLevel::Debug => 5,
+            FilterLevel::Trace => 6,
         }
+    }
+
+    /// Get a `FilterLevel` from a usize
+    ///
+    /// This complements `as_usize`
+    pub fn from_usize(u: usize) -> Option<FilterLevel> {
+        match u {
+            0 => Some(FilterLevel::Off),
+            1 => Some(FilterLevel::Critical),
+            2 => Some(FilterLevel::Error),
+            3 => Some(FilterLevel::Warning),
+            4 => Some(FilterLevel::Info),
+            5 => Some(FilterLevel::Debug),
+            6 => Some(FilterLevel::Trace),
+            _ => None
+        }
+    }
+
+    /// Maximum logging level (log everything)
+    pub fn max() -> Self {
+        FilterLevel::Trace
+    }
+}
+
+impl FromStr for FilterLevel {
+    type Err = ();
+    fn from_str(level: &str) -> std::result::Result<FilterLevel, ()> {
+        LOG_LEVEL_NAMES.iter()
+            .position(|&name| name.eq_ignore_ascii_case(level))
+            .map(|p| FilterLevel::from_usize(p).unwrap()).ok_or(())
     }
 }
 
@@ -96,8 +144,8 @@ fn level_at_least() {
 }
 
 #[test]
-fn levelfilter_sanity() {
-    assert!(Level::Critical.as_usize() > LevelFilter::Off.as_usize());
-    assert!(Level::Critical.as_usize() <= LevelFilter::Critical.as_usize());
-    assert!(Level::Trace.as_usize() <= LevelFilter::Trace.as_usize());
+fn filterlevel_sanity() {
+    assert!(Level::Critical.as_usize() > FilterLevel::Off.as_usize());
+    assert!(Level::Critical.as_usize() <= FilterLevel::Critical.as_usize());
+    assert!(Level::Trace.as_usize() <= FilterLevel::Trace.as_usize());
 }
