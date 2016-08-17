@@ -1,5 +1,8 @@
 use std::io;
 use serialize::hex::ToHex;
+use std;
+use std::sync::Arc;
+use std::rc::Rc;
 
 use super::logger::RecordInfo;
 
@@ -31,7 +34,7 @@ pub use self::error::{Error, Result, ErrorKind};
 /// Loggers require values in key-value pairs to
 /// implement this trait.
 ///
-pub trait Serialize: Send + Sync {
+pub trait Serialize {
     /// Serialize self into `Serializer`
     ///
     /// Structs implementing this trait should generally
@@ -90,57 +93,6 @@ pub trait Serializer {
     fn emit_str(&mut self, key: &str, val: &str) -> Result<()>;
 }
 
-impl Serialize for str {
-    fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
-        serializer.emit_str(key, self)
-    }
-}
-
-impl<'a> Serialize for &'a str {
-    fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
-        serializer.emit_str(key, self)
-    }
-}
-
-impl SyncSerialize for &'static str {}
-
-impl Serialize for [u8] {
-    fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
-        serializer.emit_bytes(key, self)
-    }
-}
-
-impl SyncSerialize for [u8] {}
-
-impl Serialize for Vec<u8> {
-    fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
-        serializer.emit_bytes(key, self.as_slice())
-    }
-}
-
-impl SyncSerialize for Vec<u8> {}
-
-
-impl<T: Serialize> Serialize for Option<T> {
-    fn serialize(&self, rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
-        match *self {
-            Some(ref s) => s.serialize(rinfo, key, serializer),
-            None => serializer.emit_none(key),
-        }
-    }
-}
-
-impl<T: Serialize + 'static> SyncSerialize for Option<T> {}
-
-impl Serialize for String {
-    fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
-        serializer.emit_str(key, self.as_str())
-    }
-}
-
-impl SyncSerialize for String {}
-
-
 macro_rules! impl_serialize_for{
     ($t:ty, $f:ident) => {
         impl Serialize for $t {
@@ -169,8 +121,82 @@ impl_serialize_for!(u64, emit_u64);
 impl_serialize_for!(i64, emit_i64);
 impl_serialize_for!(f64, emit_f64);
 
+impl Serialize for str {
+    fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
+        serializer.emit_str(key, self)
+    }
+}
+
+impl<'a> Serialize for &'a str {
+    fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
+        serializer.emit_str(key, self)
+    }
+}
+
+impl SyncSerialize for &'static str {}
+
+impl Serialize for String {
+    fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
+        serializer.emit_str(key, self.as_str())
+    }
+}
+
+impl SyncSerialize for String {}
+
+impl<T: Serialize> Serialize for Option<T> {
+    fn serialize(&self, rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
+        match *self {
+            Some(ref s) => s.serialize(rinfo, key, serializer),
+            None => serializer.emit_none(key),
+        }
+    }
+}
+
+impl<T: Serialize + Send +Sync + 'static> SyncSerialize for Option<T> {}
+
+impl Serialize for [u8] {
+    fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
+        serializer.emit_bytes(key, self)
+    }
+}
+
+impl SyncSerialize for [u8] {}
+
+impl Serialize for Vec<u8> {
+    fn serialize(&self, _rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
+        serializer.emit_bytes(key, self.as_slice())
+    }
+}
+
+impl SyncSerialize for Vec<u8> {}
+
+impl<T> Serialize for Arc<T> where T: Serialize {
+    fn serialize(&self, rinfo : &RecordInfo, key : &str, serializer : &mut Serializer)
+                 -> Result<()> {
+        (**self).serialize(rinfo, key, serializer)
+    }
+}
+
+impl<T> SyncSerialize for Arc<T> where T : SyncSerialize { }
+
+impl<T> Serialize for Rc<T> where T: Serialize {
+    fn serialize(&self, rinfo : &RecordInfo, key : &str, serializer : &mut Serializer)
+                 -> Result<()> {
+        (**self).serialize(rinfo, key, serializer)
+    }
+}
+
+impl<T> Serialize for std::num::Wrapping<T> where T: Serialize {
+    fn serialize(&self, rinfo : &RecordInfo, key : &str, serializer : &mut Serializer)
+                 -> Result<()> {
+        self.0.serialize(rinfo, key, serializer)
+    }
+}
+
+impl<T> SyncSerialize for std::num::Wrapping<T> where T : SyncSerialize { }
+
 impl<S: 'static + Serialize, F> Serialize for F
-    where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c RecordInfo<'d>) -> S {
+    where F: 'static + for<'c, 'd> Fn(&'c RecordInfo<'d>) -> S {
     fn serialize(&self, rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
         (*self)(&rinfo).serialize(rinfo, key, serializer)
     }
@@ -226,7 +252,7 @@ impl<'a> Drop for ValueSerializer<'a> {
 }
 
 impl<F> Serialize for PushLazy<F>
-     where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c RecordInfo<'d>, ValueSerializer<'c>) -> Result<()> {
+     where F: 'static + for<'c, 'd> Fn(&'c RecordInfo<'d>, ValueSerializer<'c>) -> Result<()> {
     fn serialize(&self, rinfo: &RecordInfo, key: &str, serializer: &mut Serializer) -> Result<()> {
         let ser = ValueSerializer {
             rinfo: rinfo,
