@@ -1,6 +1,6 @@
 [package]
 name = "slog-stdlog"
-version = "0.7.0"
+version = "1.0.0-alpha"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Standard Rust log crate adapter to slog-rs"
 keywords = ["slog", "logging", "json", "log"]
@@ -12,6 +12,6 @@ readme = "../../README.md"
 
 
 [dependencies]
-slog = { version = "0.7.0", path = "../.." }
-slog-term = { version = "0.7.0", path = "../term" }
+slog = { version = "1.0.0-alpha", path = "../.." }
+slog-term = { version = "1.0.0-alpha", path = "../term" }
 log = "0.3.6"

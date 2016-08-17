@@ -1,6 +1,6 @@
 [package]
 name = "slog-bunyan"
-version = "0.7.0"
+version = "1.0.0-alpha"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Bunyan formatter for slog-rs"
 keywords = ["log", "logging", "structured", "hierarchical"]
@@ -12,7 +12,7 @@ readme = "../../README.md"
 
 
 [dependencies]
-slog = { version = "0.7.0", path = "../.." }
-slog-json = { version = "0.7.0", path = "../json" }
+slog = { version = "1.0.0-alpha", path = "../.." }
+slog-json = { version = "1.0.0-alpha", path = "../json" }
 nix = "0.6.0"
 chrono = "0.2.22"

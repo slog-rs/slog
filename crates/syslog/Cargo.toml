@@ -1,6 +1,6 @@
 [package]
 name = "slog-syslog"
-version = "0.7.0"
+version = "1.0.0-alpha"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Syslog drain for slog-rs"
 keywords = ["slog", "logging", "json", "log", "syslog"]
@@ -12,7 +12,7 @@ readme = "../../README.md"
 
 
 [dependencies]
-slog = { version = "0.7.0", path = "../.." }
+slog = { version = "1.0.0-alpha", path = "../.." }
 syslog = "3.1.0"
 nix = "0.6.0"
 rustc-serialize = "0.3.19"
