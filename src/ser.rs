@@ -170,6 +170,15 @@ impl Serialize for Vec<u8> {
 
 impl SyncSerialize for Vec<u8> {}
 
+impl<T> Serialize for Box<T> where T: Serialize {
+    fn serialize(&self, rinfo : &RecordInfo, key : &str, serializer : &mut Serializer)
+                 -> Result<()> {
+        (**self).serialize(rinfo, key, serializer)
+    }
+}
+
+impl<T> SyncSerialize for Box<T> where T : SyncSerialize { }
+
 impl<T> Serialize for Arc<T> where T: Serialize {
     fn serialize(&self, rinfo : &RecordInfo, key : &str, serializer : &mut Serializer)
                  -> Result<()> {
