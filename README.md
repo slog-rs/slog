@@ -41,6 +41,9 @@ Long term goal is to make it a go-to logging crate for Rust.
 * backward compatibility with standard `log` crate (`slog-stdlog` crate)
 * drains & output formatting
 	* filtering
+		* compile time log level filter using cargo features (same as in `log` crate)
+		* by level, msg, and other meta-data
+		* [`slog-envlogger`](https://github.com/dpc/slog-envlogger) - port of `env_logger`
 	* multiple outputs
 	* asynchronous IO writing
 	* terminal output, with color support (`slog-term` crate)
@@ -48,7 +51,6 @@ Long term goal is to make it a go-to logging crate for Rust.
 		* Bunyan (`slog-bunyan` crate)
 	* syslog (`slog-syslog` crate)
 	* first class custom drains
-* compile time log level filter using cargo features (same as in `log` crate)
 
 ### Advantages over `log` crate
 
