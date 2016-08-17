@@ -1,4 +1,15 @@
-/// Logging level
+/// Official capitalized logging (and logging filtering) level names
+///
+/// In order of `as_usize()`.
+pub static LOG_LEVEL_NAMES: [&'static str; 7] = ["OFF", "CRITICAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE"];
+
+/// Official capitalized logging (and logging filtering) short level names
+///
+/// In order of `as_usize()`.
+pub static LOG_LEVEL_SHORT_NAMES: [&'static str; 7] = ["OFF", "CRIT", "ERRO", "WARN", "INFO", "DEBG", "TRCE"];
+
+
+/// Log record level
 #[repr(usize)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Level {
@@ -16,40 +27,40 @@ pub enum Level {
     Trace
 }
 
-
-static LOG_LEVEL_NAMES: [&'static str; 7] = ["OFF", "CRITICAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE"];
-
+/// Logging filtering level
 #[repr(usize)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-#[doc(hidden)]
-/// Not part of the API
 pub enum FilterLevel {
+    /// Log nothing
     Off,
+    /// Log critical level only
     Critical,
+    /// Log only error level and above
     Error,
+    /// Log only warning level and above
     Warning,
+    /// Log only info level and above
     Info,
+    /// Log only debug level and above
     Debug,
+    /// Log everything
     Trace,
 }
 
 impl Level {
-    /// Convert to short string
-    ///
-    /// Currently a 4 char string.
+    /// Convert to `str` from `LOG_LEVEL_SHORT_NAMES`
     pub fn as_short_str(&self) -> &'static str {
-        match *self {
-            Level::Critical => "CRIT",
-            Level::Error => "ERRO",
-            Level::Warning => "WARN",
-            Level::Info => "INFO",
-            Level::Debug => "DEBG",
-            Level::Trace => "TRCE",
-        }
+        LOG_LEVEL_SHORT_NAMES[self.as_usize()]
     }
 
-    /// Cast `Level` to ordering integer where `Critical` is the smallest and
-    /// `Trace` the biggest value
+    /// Convert to `str` from `LOG_LEVEL_NAMES`
+    pub fn as_str(&self) -> &'static str {
+        LOG_LEVEL_NAMES[self.as_usize()]
+    }
+
+    /// Cast `Level` to ordering integer 
+    ///
+    /// `Critical` is the smallest and `Trace` the biggest value
     pub fn as_usize(&self) -> usize {
         match *self {
             Level::Critical => 1,
@@ -61,7 +72,7 @@ impl Level {
         }
     }
 
-    /// Get a `Level` from a usize
+    /// Get a `Level` from an `usize`
     ///
     /// This complements `as_usize`
     pub fn from_usize(u: usize) -> Option<Level> {
@@ -78,8 +89,9 @@ impl Level {
 }
 
 impl FilterLevel {
-    #[doc(hidden)]
-    /// Not part of the API
+    /// Convert to `usize` value
+    ///
+    /// `Off` is 0, and `Trace` 6
     pub fn as_usize(&self) -> usize {
         match *self {
             FilterLevel::Off => 0,
@@ -92,7 +104,7 @@ impl FilterLevel {
         }
     }
 
-    /// Get a `FilterLevel` from a usize
+    /// Get a `FilterLevel` from an `usize`
     ///
     /// This complements `as_usize`
     pub fn from_usize(u: usize) -> Option<FilterLevel> {
@@ -111,6 +123,12 @@ impl FilterLevel {
     /// Maximum logging level (log everything)
     pub fn max() -> Self {
         FilterLevel::Trace
+    }
+
+
+    /// Minimum logging level (log nothing)
+    pub fn min() -> Self {
+        FilterLevel::Off
     }
 }
 
