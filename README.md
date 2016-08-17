@@ -12,6 +12,7 @@
   </a>
   <br>
   <strong><a href="//dpc.github.io/slog-rs/">Documentation</a></strong>
+  <strong><a href="//github.com/dpc/slog-rs/wiki/FAQ">FAQ</a></strong>
 </p>
 
 ### Status & news
