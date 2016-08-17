@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-3750' class='srclink' href='../src/chrono/lib.rs.html#327-342' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-3766' class='srclink' href='../src/chrono/lib.rs.html#382-397' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum Weekday {
     Mon,
     Tue,
@@ -56,9 +56,10 @@
     Fri,
     Sat,
     Sun,
-}</pre><div class='docblock'><p>The day of week (DOW).</p>
+}</pre><div class='docblock'><p>The day of week.</p>
 
 <p>The order of the days of week depends on the context.
+(This is why this type does <em>not</em> implement <code>PartialOrd</code> or <code>Ord</code> traits.)
 One should prefer <code>*_from_monday</code> or <code>*_from_sunday</code> methods to get the correct result.</p>
 </div><h2 class='variants'>Variants</h2>
 <span id='variant.Mon' class='variant'><code>Mon</code></span><div class='docblock'><p>Monday.</p>
@@ -68,37 +69,205 @@ One should prefer <code>*_from_monday</code> or <code>*_from_sunday</code> metho
 </div><span id='variant.Fri' class='variant'><code>Fri</code></span><div class='docblock'><p>Friday.</p>
 </div><span id='variant.Sat' class='variant'><code>Sat</code></span><div class='docblock'><p>Saturday.</p>
 </div><span id='variant.Sun' class='variant'><code>Sun</code></span><div class='docblock'><p>Sunday.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3765' class='srclink' href='../src/chrono/lib.rs.html#344-428' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3781' class='srclink' href='../src/chrono/lib.rs.html#399-507' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.succ' class='method'><code>fn <a href='#method.succ' class='fnname'>succ</a>(&amp;self) -&gt; <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></h4>
 <div class='docblock'><p>The next day in the week.</p>
+
+<table>
+<thead>
+<tr>
+<th><code>w</code>:</th>
+<th><code>Mon</code></th>
+<th><code>Tue</code></th>
+<th><code>Wed</code></th>
+<th><code>Thu</code></th>
+<th><code>Fri</code></th>
+<th><code>Sat</code></th>
+<th><code>Sun</code></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>w.succ()</code>:</td>
+<td><code>Tue</code></td>
+<td><code>Wed</code></td>
+<td><code>Thu</code></td>
+<td><code>Fri</code></td>
+<td><code>Sat</code></td>
+<td><code>Sun</code></td>
+<td><code>Mon</code></td>
+</tr>
+</tbody>
+</table>
 </div><h4 id='method.pred' class='method'><code>fn <a href='#method.pred' class='fnname'>pred</a>(&amp;self) -&gt; <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></h4>
 <div class='docblock'><p>The previous day in the week.</p>
+
+<table>
+<thead>
+<tr>
+<th><code>w</code>:</th>
+<th><code>Mon</code></th>
+<th><code>Tue</code></th>
+<th><code>Wed</code></th>
+<th><code>Thu</code></th>
+<th><code>Fri</code></th>
+<th><code>Sat</code></th>
+<th><code>Sun</code></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>w.pred()</code>:</td>
+<td><code>Sun</code></td>
+<td><code>Mon</code></td>
+<td><code>Tue</code></td>
+<td><code>Wed</code></td>
+<td><code>Thu</code></td>
+<td><code>Fri</code></td>
+<td><code>Sat</code></td>
+</tr>
+</tbody>
+</table>
 </div><h4 id='method.number_from_monday' class='method'><code>fn <a href='#method.number_from_monday' class='fnname'>number_from_monday</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
-<div class='docblock'><p>Returns a DOW number starting from Monday = 1. (ISO 8601 weekday number)</p>
+<div class='docblock'><p>Returns a day-of-week number starting from Monday = 1. (ISO 8601 weekday number)</p>
+
+<table>
+<thead>
+<tr>
+<th><code>w</code>:</th>
+<th><code>Mon</code></th>
+<th><code>Tue</code></th>
+<th><code>Wed</code></th>
+<th><code>Thu</code></th>
+<th><code>Fri</code></th>
+<th><code>Sat</code></th>
+<th><code>Sun</code></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>w.number_from_monday()</code>:</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
 </div><h4 id='method.number_from_sunday' class='method'><code>fn <a href='#method.number_from_sunday' class='fnname'>number_from_sunday</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
-<div class='docblock'><p>Returns a DOW number starting from Sunday = 1.</p>
+<div class='docblock'><p>Returns a day-of-week number starting from Sunday = 1.</p>
+
+<table>
+<thead>
+<tr>
+<th><code>w</code>:</th>
+<th><code>Mon</code></th>
+<th><code>Tue</code></th>
+<th><code>Wed</code></th>
+<th><code>Thu</code></th>
+<th><code>Fri</code></th>
+<th><code>Sat</code></th>
+<th><code>Sun</code></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>w.number_from_sunday()</code>:</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
 </div><h4 id='method.num_days_from_monday' class='method'><code>fn <a href='#method.num_days_from_monday' class='fnname'>num_days_from_monday</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
-<div class='docblock'><p>Returns a DOW number starting from Monday = 0.</p>
+<div class='docblock'><p>Returns a day-of-week number starting from Monday = 0.</p>
+
+<table>
+<thead>
+<tr>
+<th><code>w</code>:</th>
+<th><code>Mon</code></th>
+<th><code>Tue</code></th>
+<th><code>Wed</code></th>
+<th><code>Thu</code></th>
+<th><code>Fri</code></th>
+<th><code>Sat</code></th>
+<th><code>Sun</code></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>w.num_days_from_monday()</code>:</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
 </div><h4 id='method.num_days_from_sunday' class='method'><code>fn <a href='#method.num_days_from_sunday' class='fnname'>num_days_from_sunday</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
-<div class='docblock'><p>Returns a DOW number starting from Sunday = 0.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3726' class='srclink' href='../src/chrono/lib.rs.html#325' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>Returns a day-of-week number starting from Sunday = 0.</p>
+
+<table>
+<thead>
+<tr>
+<th><code>w</code>:</th>
+<th><code>Mon</code></th>
+<th><code>Tue</code></th>
+<th><code>Wed</code></th>
+<th><code>Thu</code></th>
+<th><code>Fri</code></th>
+<th><code>Sat</code></th>
+<th><code>Sun</code></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>w.num_days_from_sunday()</code>:</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3742' class='srclink' href='../src/chrono/lib.rs.html#380' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3737' class='srclink' href='../src/chrono/lib.rs.html#325' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3753' class='srclink' href='../src/chrono/lib.rs.html#380' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3740' class='srclink' href='../src/chrono/lib.rs.html#325' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3741' class='srclink' href='../src/chrono/lib.rs.html#325' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3744' class='srclink' href='../src/chrono/lib.rs.html#325' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3756' class='srclink' href='../src/chrono/lib.rs.html#380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3757' class='srclink' href='../src/chrono/lib.rs.html#380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3760' class='srclink' href='../src/chrono/lib.rs.html#380' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
 </div><h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../num_traits/cast/trait.FromPrimitive.html' title='num_traits::cast::FromPrimitive'>FromPrimitive</a> for <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3778' class='srclink' href='../src/chrono/lib.rs.html#433-461' title='goto source code'>[src]</a></span></h3>
-<div class='docblock'><p>Any weekday can be represented as an integer from 0 to 6,
-which equals to <code>Weekday::num_days_from_monday</code> in this implementation.
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../num_traits/cast/trait.FromPrimitive.html' title='num_traits::cast::FromPrimitive'>FromPrimitive</a> for <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3794' class='srclink' href='../src/chrono/lib.rs.html#512-540' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>Any weekday can be represented as an integer from 0 to 6, which equals to
+<a href="#method.num_days_from_monday"><code>Weekday::num_days_from_monday</code></a> in this implementation.
 Do not heavily depend on this though; use explicit methods whenever possible.</p>
 </div><div class='impl-items'><h4 id='method.from_i64' class='method'><code>fn <a href='../num_traits/cast/trait.FromPrimitive.html#tymethod.from_i64' class='fnname'>from_i64</a>(n: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a>&gt;</code></h4>
 <div class='docblock'><p>Convert an <code>i64</code> to return an optional value of this type. If the type cannot be represented by this value, the <code>None</code> is returned. <a href="../num_traits/cast/trait.FromPrimitive.html#tymethod.from_i64">Read more</a></p>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-0.2.9/src/mem/epoch/participants.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-0.2.10/src/mem/epoch/participants.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>participants.rs.html -- source</title>
@@ -159,6 +159,9 @@
 <span id="115">115</span>
 <span id="116">116</span>
 <span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
 </pre><pre class='rust '>
 <span class='comment'>// Manages the global participant list, which is an intrustive list in</span>
 <span class='comment'>// which items are lazily removed on traversal (after being</span>
@@ -173,10 +176,12 @@
 <span class='kw'>use</span> <span class='ident'>mem</span>::<span class='ident'>CachePadded</span>;
 
 <span class='doccomment'>/// Global, threadsafe list of threads participating in epoch management.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Participants</span> {
     <span class='ident'>head</span>: <span class='ident'>Atomic</span><span class='op'>&lt;</span><span class='ident'>ParticipantNode</span><span class='op'>&gt;</span>
 }
 
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ParticipantNode</span>(<span class='ident'>CachePadded</span><span class='op'>&lt;</span><span class='ident'>Participant</span><span class='op'>&gt;</span>);
 
 <span class='kw'>impl</span> <span class='ident'>ParticipantNode</span> {
@@ -243,6 +248,7 @@
     }
 }
 
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='comment'>// pin to an epoch so that we can free inactive nodes</span>
     <span class='ident'>guard</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Guard</span>,

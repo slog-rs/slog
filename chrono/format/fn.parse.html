@@ -47,20 +47,22 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-3487' class='srclink' href='../../src/chrono/format/parse.rs.html#206-341' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-3503' class='srclink' href='../../src/chrono/format/parse.rs.html#208-343' title='goto source code'>[src]</a></span></h1>
 <pre class='rust fn'>pub fn parse&lt;'a,&nbsp;I&gt;(parsed: &amp;mut <a class='struct' href='../../chrono/format/parsed/struct.Parsed.html' title='chrono::format::parsed::Parsed'>Parsed</a>, s: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, items: I) -&gt; <a class='type' href='../../chrono/format/type.ParseResult.html' title='chrono::format::ParseResult'>ParseResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; <span class='where'>where I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a>&lt;Item=<a class='enum' href='../../chrono/format/enum.Item.html' title='chrono::format::Item'>Item</a>&lt;'a&gt;&gt;</span></pre><div class='docblock'><p>Tries to parse given string into <code>parsed</code> with given formatting items.
 Returns <code>Ok</code> when the entire string has been parsed (otherwise <code>parsed</code> should not be used).
-There should be no trailing string after parsing; use a stray <code>Item::Space</code> to trim whitespaces.</p>
+There should be no trailing string after parsing;
+use a stray <a href="./enum.Item.html#variant.Space"><code>Item::Space</code></a> to trim whitespaces.</p>
 
 <p>This particular date and time parser is:</p>
 
 <ul>
-<li>Greedy. It will consume the longest possible prefix.
+<li><p>Greedy. It will consume the longest possible prefix.
 For example, <code>April</code> is always consumed entirely when the long month name is requested;
-it equally accepts <code>Apr</code>, but prefers the longer prefix in this case.</li>
-<li>Padding-agnostic (for numeric items). The <code>Pad</code> field is completely ignored,
-so one can prepend any number of whitespace then any number of zeroes before numbers.</li>
-<li>(Still) obeying the intrinsic parsing width. This allows, for example, parsing <code>HHMMSS</code>.</li>
+it equally accepts <code>Apr</code>, but prefers the longer prefix in this case.</p></li>
+<li><p>Padding-agnostic (for numeric items).
+The <a href="./enum.Pad.html"><code>Pad</code></a> field is completely ignored,
+so one can prepend any number of whitespace then any number of zeroes before numbers.</p></li>
+<li><p>(Still) obeying the intrinsic parsing width. This allows, for example, parsing <code>HHMMSS</code>.</p></li>
 </ul>
 </div></section>
     <section id='search' class="content hidden"></section>

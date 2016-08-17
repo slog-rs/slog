@@ -47,10 +47,10 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-880' class='srclink' href='../src/crossbeam/scoped.rs.html#11-13' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-1112' class='srclink' href='../src/crossbeam/scoped.rs.html#12-14' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Scope&lt;'a&gt; {
     // some fields omitted
-}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../crossbeam/struct.Scope.html' title='crossbeam::Scope'>Scope</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-909' class='srclink' href='../src/crossbeam/scoped.rs.html#66-243' title='goto source code'>[src]</a></span></h3>
+}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../crossbeam/struct.Scope.html' title='crossbeam::Scope'>Scope</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1153' class='srclink' href='../src/crossbeam/scoped.rs.html#79-256' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.defer' class='method'><code>fn <a href='#method.defer' class='fnname'>defer</a>&lt;F&gt;(&amp;self, f: F) <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>() + 'a</span></code></h4>
 <div class='docblock'><p>Schedule code to be executed when exiting the scope.</p>
 
@@ -164,7 +164,10 @@ than from <code>std::thread</code>:</p>
 });</pre>
 
 <p>Much more straightforward.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../crossbeam/struct.Scope.html' title='crossbeam::Scope'>Scope</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-943' class='srclink' href='../src/crossbeam/scoped.rs.html#258-262' title='goto source code'>[src]</a></span></h3>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../crossbeam/struct.Scope.html' title='crossbeam::Scope'>Scope</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1141' class='srclink' href='../src/crossbeam/scoped.rs.html#67-71' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../crossbeam/struct.Scope.html' title='crossbeam::Scope'>Scope</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1187' class='srclink' href='../src/crossbeam/scoped.rs.html#271-275' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.drop' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
 <div class='docblock'><p>A method called when the value goes out of scope. <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop">Read more</a></p>
 </div></div></section>

@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-3832' class='srclink' href='../src/chrono/lib.rs.html#558-609' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-3848' class='srclink' href='../src/chrono/lib.rs.html#649-705' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Timelike: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> {
     fn <a href='#tymethod.hour' class='fnname'>hour</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>;
     fn <a href='#tymethod.minute' class='fnname'>minute</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>;
@@ -68,7 +68,8 @@
 </div><h3 id='tymethod.minute' class='method stab '><code>fn <a href='#tymethod.minute' class='fnname'>minute</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h3><div class='docblock'><p>Returns the minute number from 0 to 59.</p>
 </div><h3 id='tymethod.second' class='method stab '><code>fn <a href='#tymethod.second' class='fnname'>second</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h3><div class='docblock'><p>Returns the second number from 0 to 59.</p>
 </div><h3 id='tymethod.nanosecond' class='method stab '><code>fn <a href='#tymethod.nanosecond' class='fnname'>nanosecond</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h3><div class='docblock'><p>Returns the number of nanoseconds since the whole non-leap second.
-The range from 1,000,000,000 to 1,999,999,999 represents the leap second.</p>
+The range from 1,000,000,000 to 1,999,999,999 represents
+the <a href="./naive/time/index.html#leap-second-handling">leap second</a>.</p>
 </div><h3 id='tymethod.with_hour' class='method stab '><code>fn <a href='#tymethod.with_hour' class='fnname'>with_hour</a>(&amp;self, hour: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></h3><div class='docblock'><p>Makes a new value with the hour number changed.</p>
 
 <p>Returns <code>None</code> when the resulting value would be invalid.</p>
@@ -77,10 +78,14 @@ The range from 1,000,000,000 to 1,999,999,999 represents the leap second.</p>
 <p>Returns <code>None</code> when the resulting value would be invalid.</p>
 </div><h3 id='tymethod.with_second' class='method stab '><code>fn <a href='#tymethod.with_second' class='fnname'>with_second</a>(&amp;self, sec: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></h3><div class='docblock'><p>Makes a new value with the second number changed.</p>
 
-<p>Returns <code>None</code> when the resulting value would be invalid.</p>
+<p>Returns <code>None</code> when the resulting value would be invalid.
+As with the <a href="#tymethod.second"><code>second</code></a> method,
+the input range is restricted to 0 through 59.</p>
 </div><h3 id='tymethod.with_nanosecond' class='method stab '><code>fn <a href='#tymethod.with_nanosecond' class='fnname'>with_nanosecond</a>(&amp;self, nano: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></h3><div class='docblock'><p>Makes a new value with nanoseconds since the whole non-leap second changed.</p>
 
-<p>Returns <code>None</code> when the resulting value would be invalid.</p>
+<p>Returns <code>None</code> when the resulting value would be invalid.
+As with the <a href="#tymethod.nanosecond"><code>nanosecond</code></a> method,
+the input range can exceed 1,000,000,000 for leap seconds.</p>
 </div></div>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-0.2.9/src/mem/epoch/local.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-0.2.10/src/mem/epoch/local.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>local.rs.html -- source</title>
@@ -79,6 +79,7 @@
 <span id="35">35</span>
 <span id="36">36</span>
 <span id="37">37</span>
+<span id="38">38</span>
 </pre><pre class='rust '>
 <span class='comment'>// Manage the thread-local state, providing access to a `Participant` record.</span>
 
@@ -87,6 +88,7 @@
 <span class='kw'>use</span> <span class='ident'>mem</span>::<span class='ident'>epoch</span>::<span class='ident'>participant</span>::<span class='ident'>Participant</span>;
 <span class='kw'>use</span> <span class='ident'>mem</span>::<span class='ident'>epoch</span>::<span class='ident'>global</span>;
 
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>struct</span> <span class='ident'>LocalEpoch</span> {
     <span class='ident'>participant</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Participant</span>,
 }

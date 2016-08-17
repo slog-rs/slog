@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-0.2.9/src/mem/epoch/global.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-0.2.10/src/mem/epoch/global.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>global.rs.html -- source</title>
@@ -136,6 +136,7 @@
 <span id="92">92</span>
 <span id="93">93</span>
 <span id="94">94</span>
+<span id="95">95</span>
 </pre><pre class='rust '>
 <span class='comment'>// Definition of global epoch state. The `get` function is the way to</span>
 <span class='comment'>// access this data externally (until const fn is stabilized...).</span>
@@ -147,6 +148,7 @@
 <span class='kw'>use</span> <span class='ident'>mem</span>::<span class='ident'>epoch</span>::<span class='ident'>participants</span>::<span class='ident'>Participants</span>;
 
 <span class='doccomment'>/// Global epoch state</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EpochState</span> {
     <span class='doccomment'>/// Current global epoch</span>
     <span class='kw'>pub</span> <span class='ident'>epoch</span>: <span class='ident'>CachePadded</span><span class='op'>&lt;</span><span class='ident'>AtomicUsize</span><span class='op'>&gt;</span>,

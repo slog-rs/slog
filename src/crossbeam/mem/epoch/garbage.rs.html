@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-0.2.9/src/mem/epoch/garbage.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-0.2.10/src/mem/epoch/garbage.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>garbage.rs.html -- source</title>
@@ -181,6 +181,11 @@
 <span id="137">137</span>
 <span id="138">138</span>
 <span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
 </pre><pre class='rust '>
 <span class='comment'>// Data structures for storing garbage to be freed later (once the</span>
 <span class='comment'>// epochs have sufficiently advanced).</span>
@@ -200,12 +205,14 @@
 <span class='doccomment'>/// One item of garbage.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Stores enough information to do a deallocation.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>struct</span> <span class='ident'>Item</span> {
     <span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
     <span class='ident'>free</span>: <span class='kw'>unsafe</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>),
 }
 
 <span class='doccomment'>/// A single, thread-local bag of garbage.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Bag</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>&gt;</span>);
 
 <span class='kw'>impl</span> <span class='ident'>Bag</span> {
@@ -246,6 +253,7 @@
 <span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Sync</span> <span class='kw'>for</span> <span class='ident'>Bag</span> {}
 
 <span class='doccomment'>/// A thread-local set of garbage bags.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Local</span> {
     <span class='doccomment'>/// Garbage added at least one epoch behind the current local epoch</span>
     <span class='kw'>pub</span> <span class='ident'>old</span>: <span class='ident'>Bag</span>,
@@ -284,12 +292,14 @@
 <span class='doccomment'>/// A concurrent garbage bag, currently based on Treiber&#39;s stack.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// The elements are themselves owned `Bag`s.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ConcBag</span> {
     <span class='ident'>head</span>: <span class='ident'>AtomicPtr</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&gt;</span>,
 }
 
 <span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>ZerosValid</span> <span class='kw'>for</span> <span class='ident'>ConcBag</span> {}
 
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>struct</span> <span class='ident'>Node</span> {
     <span class='ident'>data</span>: <span class='ident'>Bag</span>,
     <span class='ident'>next</span>: <span class='ident'>AtomicPtr</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&gt;</span>,

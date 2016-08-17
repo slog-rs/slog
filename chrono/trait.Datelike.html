@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-3783' class='srclink' href='../src/chrono/lib.rs.html#465-555' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-3799' class='srclink' href='../src/chrono/lib.rs.html#544-646' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Datelike: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> {
     fn <a href='#tymethod.year' class='fnname'>year</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>;
     fn <a href='#tymethod.month' class='fnname'>month</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>;
@@ -72,13 +72,25 @@
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.year' class='method stab '><code>fn <a href='#tymethod.year' class='fnname'>year</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h3><div class='docblock'><p>Returns the year number.</p>
+        <h3 id='tymethod.year' class='method stab '><code>fn <a href='#tymethod.year' class='fnname'>year</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code></h3><div class='docblock'><p>Returns the year number in the <a href="./naive/date/index.html#calendar-date">calendar date</a>.</p>
 </div><h3 id='tymethod.month' class='method stab '><code>fn <a href='#tymethod.month' class='fnname'>month</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h3><div class='docblock'><p>Returns the month number starting from 1.</p>
+
+<p>The return value ranges from 1 to 12.</p>
 </div><h3 id='tymethod.month0' class='method stab '><code>fn <a href='#tymethod.month0' class='fnname'>month0</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h3><div class='docblock'><p>Returns the month number starting from 0.</p>
+
+<p>The return value ranges from 0 to 11.</p>
 </div><h3 id='tymethod.day' class='method stab '><code>fn <a href='#tymethod.day' class='fnname'>day</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h3><div class='docblock'><p>Returns the day of month starting from 1.</p>
+
+<p>The return value ranges from 1 to 31. (The last day of month differs by months.)</p>
 </div><h3 id='tymethod.day0' class='method stab '><code>fn <a href='#tymethod.day0' class='fnname'>day0</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h3><div class='docblock'><p>Returns the day of month starting from 0.</p>
+
+<p>The return value ranges from 0 to 30. (The last day of month differs by months.)</p>
 </div><h3 id='tymethod.ordinal' class='method stab '><code>fn <a href='#tymethod.ordinal' class='fnname'>ordinal</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h3><div class='docblock'><p>Returns the day of year starting from 1.</p>
+
+<p>The return value ranges from 1 to 366. (The last day of year differs by years.)</p>
 </div><h3 id='tymethod.ordinal0' class='method stab '><code>fn <a href='#tymethod.ordinal0' class='fnname'>ordinal0</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h3><div class='docblock'><p>Returns the day of year starting from 0.</p>
+
+<p>The return value ranges from 0 to 365. (The last day of year differs by years.)</p>
 </div><h3 id='tymethod.weekday' class='method stab '><code>fn <a href='#tymethod.weekday' class='fnname'>weekday</a>(&amp;self) -&gt; <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a></code></h3><div class='docblock'><p>Returns the day of week.</p>
 </div><h3 id='tymethod.isoweekdate' class='method stab '><code>fn <a href='#tymethod.isoweekdate' class='fnname'>isoweekdate</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, <a class='enum' href='../chrono/enum.Weekday.html' title='chrono::Weekday'>Weekday</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></h3><div class='docblock'><p>Returns the ISO week date: an adjusted year, week number and day of week.
 The adjusted year may differ from that of the calendar date.</p>

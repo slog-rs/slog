@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.2.22/src/format/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.2.25/src/format/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -519,14 +519,16 @@
 <span id="475">475</span>
 <span id="476">476</span>
 <span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
 </pre><pre class='rust '>
 <span class='comment'>// This is a part of rust-chrono.</span>
 <span class='comment'>// Copyright (c) 2014-2015, Kang Seonghoon.</span>
 <span class='comment'>// See README.md and LICENSE.txt for details.</span>
 
-<span class='doccomment'>/*!
- * Formatting utilities for date and time.
- */</span>
+<span class='doccomment'>//! Formatting utilities for date and time.</span>
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span>;
@@ -557,7 +559,8 @@
 <span class='doccomment'>/// They have associated formatting width (FW) and parsing width (PW).</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// The **formatting width** is the minimal width to be formatted.</span>
-<span class='doccomment'>/// If the number is too short, and the padding is not `Pad::None`, then it is left-padded.</span>
+<span class='doccomment'>/// If the number is too short, and the padding is not [`Pad::None`](./enum.Pad.html#variant.None),</span>
+<span class='doccomment'>/// then it is left-padded.</span>
 <span class='doccomment'>/// If the number is too long or (in some cases) negative, it is printed as is.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// The **parsing width** is the maximal width to be scanned.</span>
@@ -567,14 +570,14 @@
 <span class='doccomment'>/// parsed with the same formatting items.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Numeric</span> {
-    <span class='doccomment'>/// Full Gregorian year (FW=4, PW=infinity).</span>
+    <span class='doccomment'>/// Full Gregorian year (FW=4, PW=∞).</span>
     <span class='doccomment'>/// May accept years before 1 BCE or after 9999 CE, given an initial sign.</span>
     <span class='ident'>Year</span>,
     <span class='doccomment'>/// Gregorian year divided by 100 (century number; FW=PW=2). Implies the non-negative year.</span>
     <span class='ident'>YearDiv100</span>,
     <span class='doccomment'>/// Gregorian year modulo 100 (FW=PW=2). Cannot be negative.</span>
     <span class='ident'>YearMod100</span>,
-    <span class='doccomment'>/// Year in the ISO week date (FW=4, PW=infinity).</span>
+    <span class='doccomment'>/// Year in the ISO week date (FW=4, PW=∞).</span>
     <span class='doccomment'>/// May accept years before 1 BCE or after 9999 CE, given an initial sign.</span>
     <span class='ident'>IsoYear</span>,
     <span class='doccomment'>/// Year in the ISO week date, divided by 100 (FW=PW=2). Implies the non-negative year.</span>
@@ -606,9 +609,10 @@
     <span class='doccomment'>/// The number of seconds since the last whole minute (FW=PW=2).</span>
     <span class='ident'>Second</span>,
     <span class='doccomment'>/// The number of nanoseconds since the last whole second (FW=PW=9).</span>
-    <span class='doccomment'>/// Note that this is *not* left-aligned; see also `Fixed::Nanosecond`.</span>
+    <span class='doccomment'>/// Note that this is *not* left-aligned;</span>
+    <span class='doccomment'>/// see also [`Fixed::Nanosecond`](./enum.Fixed.html#variant.Nanosecond).</span>
     <span class='ident'>Nanosecond</span>,
-    <span class='doccomment'>/// The number of non-leap seconds since January 1, 1970 0:00:00 UTC (FW=1, PW=infinity).</span>
+    <span class='doccomment'>/// The number of non-leap seconds since the midnight UTC on January 1, 1970 (FW=1, PW=∞).</span>
     <span class='doccomment'>/// For formatting, it assumes UTC upon the absence of time zone offset.</span>
     <span class='ident'>Timestamp</span>,
 }
@@ -645,13 +649,13 @@
     <span class='ident'>UpperAmPm</span>,
     <span class='doccomment'>/// An optional dot plus one or more digits for left-aligned nanoseconds.</span>
     <span class='doccomment'>/// May print nothing, 3, 6 or 9 digits according to the available accuracy.</span>
-    <span class='doccomment'>/// See also `Numeric::Nanosecond`.</span>
+    <span class='doccomment'>/// See also [`Numeric::Nanosecond`](./enum.Numeric.html#variant.Nanosecond).</span>
     <span class='ident'>Nanosecond</span>,
-    <span class='doccomment'>/// Fixed prescision at Nanosecond3 where 3 is the left aligned accuracy.</span>
+    <span class='doccomment'>/// Same to [`Nanosecond`](#variant.Nanosecond) but the accuracy is fixed to 3.</span>
     <span class='ident'>Nanosecond3</span>,
-    <span class='doccomment'>/// Fixed prescision at Nanosecond6 where 6 is the left aligned accuracy.</span>
+    <span class='doccomment'>/// Same to [`Nanosecond`](#variant.Nanosecond) but the accuracy is fixed to 6.</span>
     <span class='ident'>Nanosecond6</span>,
-    <span class='doccomment'>/// Fixed prescision at Nanosecond9 where 9 is the left aligned accuracy.</span>
+    <span class='doccomment'>/// Same to [`Nanosecond`](#variant.Nanosecond) but the accuracy is fixed to 9.</span>
     <span class='ident'>Nanosecond9</span>,
     <span class='doccomment'>/// Timezone name.</span>
     <span class='doccomment'>///</span>
@@ -660,17 +664,21 @@
     <span class='doccomment'>/// Offset from the local time to UTC (`+09:00` or `-04:00` or `+00:00`).</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// In the parser, the colon can be omitted and/or surrounded with any amount of whitespaces.</span>
-    <span class='doccomment'>/// The offset is limited from `-24:00` to `+24:00`, which is same to `FixedOffset`&#39;s range.</span>
+    <span class='doccomment'>/// The offset is limited from `-24:00` to `+24:00`,</span>
+    <span class='doccomment'>/// which is same to [`FixedOffset`](../offset/fixed/struct.FixedOffset.html)&#39;s range.</span>
     <span class='ident'>TimezoneOffsetColon</span>,
     <span class='doccomment'>/// Offset from the local time to UTC (`+09:00` or `-04:00` or `Z`).</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// In the parser, the colon can be omitted and/or surrounded with any amount of whitespaces,</span>
     <span class='doccomment'>/// and `Z` can be either in upper case or in lower case.</span>
-    <span class='doccomment'>/// The offset is limited from `-24:00` to `+24:00`, which is same to `FixedOffset`&#39;s range.</span>
+    <span class='doccomment'>/// The offset is limited from `-24:00` to `+24:00`,</span>
+    <span class='doccomment'>/// which is same to [`FixedOffset`](../offset/fixed/struct.FixedOffset.html)&#39;s range.</span>
     <span class='ident'>TimezoneOffsetColonZ</span>,
-    <span class='doccomment'>/// Same to `TimezoneOffsetColon` but prints no colon. Parsing allows an optional colon.</span>
+    <span class='doccomment'>/// Same to [`TimezoneOffsetColon`](#variant.TimezoneOffsetColon) but prints no colon.</span>
+    <span class='doccomment'>/// Parsing allows an optional colon.</span>
     <span class='ident'>TimezoneOffset</span>,
-    <span class='doccomment'>/// Same to `TimezoneOffsetColonZ` but prints no colon. Parsing allows an optional colon.</span>
+    <span class='doccomment'>/// Same to [`TimezoneOffsetColonZ`](#variant.TimezoneOffsetColonZ) but prints no colon.</span>
+    <span class='doccomment'>/// Parsing allows an optional colon.</span>
     <span class='ident'>TimezoneOffsetZ</span>,
     <span class='doccomment'>/// RFC 2822 date and time syntax. Commonly used for email and MIME date and time.</span>
     <span class='ident'>RFC2822</span>,

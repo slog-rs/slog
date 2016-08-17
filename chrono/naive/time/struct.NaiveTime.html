@@ -47,53 +47,20 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1172' class='srclink' href='../../../src/chrono/naive/time.rs.html#60-63' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-1174' class='srclink' href='../../../src/chrono/naive/time.rs.html#61-64' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct NaiveTime {
     // some fields omitted
 }</pre><div class='docblock'><p>ISO 8601 time without timezone.
 Allows for the nanosecond precision and optional leap second representation.</p>
 
-<h1 id='leap-second-what' class='section-header'><a href='#leap-second-what'>Leap second WHAT?</a></h1>
-<p>Since 1960s, the manmade atomic clock has been so accurate that
-it is much more accurate than Earth&#39;s own motion.
-It became desirable to define the civil time in terms of the atomic clock,
-but that risks the desynchronization of the civil time from Earth.
-To account for this, the designers of the Coordinated Universal Time (UTC)
-made that the UTC should be kept within 0.9 seconds of the observed Earth-bound time.
-When the mean solar day is longer than the ideal (86,400 seconds),
-the error slowly accumulates and it is necessary to add a <strong>leap second</strong>
-to slow the UTC down a bit.
-(We may also remove a second to speed the UTC up a bit, but it never happened.)
-The leap second, if any, follows 23:59:59 of June 30 or December 31 in the UTC.</p>
-
-<p>Fast forward to the 21st century,
-we have seen 26 leap seconds from January 1972 to December 2015.
-Yes, 26 seconds. Probably you can read this paragraph within 26 seconds.
-But those 26 seconds, and possibly more in the future, are never predictable,
-and whether to add a leap second or not is known only before 6 months.
-Internet-based clocks (via NTP) do account for known leap seconds,
-but the system API normally doesn&#39;t (and often can&#39;t, with no network connection)
-and there is no reliable way to retrieve leap second information.</p>
-
-<p>Chrono does not try to accurately implement leap seconds; it is impossible.
-Rather, <strong>it allows for leap seconds but behaves as if there are <em>no other</em> leap seconds.</strong>
-Various time arithmetics will ignore any possible leap second(s)
-except when the operand were actually a leap second.
-The leap second is indicated via fractional seconds more than 1 second,
-so values like <code>NaiveTime::from_hms_milli(23, 56, 4, 1_005)</code> are allowed;
-that value would mean 5ms after the beginning of a leap second following 23:56:04.
-Parsing and formatting will correctly handle times that look like leap seconds,
-and you can then conveniently ignore leap seconds if you are not prepared for them.</p>
-
-<p>If you cannot tolerate this behavior,
-you must use a separate <code>TimeZone</code> for the International Atomic Time (TAI).
-TAI is like UTC but has no leap seconds, and thus slightly differs from UTC.
-Chrono 0.2 does not provide such implementation, but it is planned for 0.3.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1175' class='srclink' href='../../../src/chrono/naive/time.rs.html#65-431' title='goto source code'>[src]</a></span></h3>
+<p><a name="leap-second-what?"></a>
+Chrono has a notable policy on the <a href="./index.html#leap-second-handling">leap second handling</a>,
+designed to be maximally useful for typical users.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1177' class='srclink' href='../../../src/chrono/naive/time.rs.html#66-450' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.from_hms' class='method'><code>fn <a href='#method.from_hms' class='fnname'>from_hms</a>(hour: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, min: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, sec: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></h4>
 <div class='docblock'><p>Makes a new <code>NaiveTime</code> from hour, minute and second.</p>
 
-<p>No <a href="#leap-second-what?">leap second</a> is allowed here;
+<p>No <a href="./index.html#leap-second-handling">leap second</a> is allowed here;
 use <code>NaiveTime::from_hms_*</code> methods with a subsecond parameter instead.</p>
 
 <p>Panics on invalid hour, minute and/or second.</p>
@@ -110,7 +77,7 @@ use <code>NaiveTime::from_hms_*</code> methods with a subsecond parameter instea
 </div><h4 id='method.from_hms_opt' class='method'><code>fn <a href='#method.from_hms_opt' class='fnname'>from_hms_opt</a>(hour: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, min: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, sec: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>&gt;</code></h4>
 <div class='docblock'><p>Makes a new <code>NaiveTime</code> from hour, minute and second.</p>
 
-<p>No <a href="#leap-second-what?">leap second</a> is allowed here;
+<p>No <a href="./index.html#leap-second-handling">leap second</a> is allowed here;
 use <code>NaiveTime::from_hms_*_opt</code> methods with a subsecond parameter instead.</p>
 
 <p>Returns <code>None</code> on invalid hour, minute and/or second.</p>
@@ -129,7 +96,7 @@ use <code>NaiveTime::from_hms_*_opt</code> methods with a subsecond parameter in
 <div class='docblock'><p>Makes a new <code>NaiveTime</code> from hour, minute, second and millisecond.</p>
 
 <p>The millisecond part can exceed 1,000
-in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
+in order to represent the <a href="./index.html#leap-second-handling">leap second</a>.</p>
 
 <p>Panics on invalid hour, minute, second and/or millisecond.</p>
 
@@ -146,7 +113,7 @@ in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
 <div class='docblock'><p>Makes a new <code>NaiveTime</code> from hour, minute, second and millisecond.</p>
 
 <p>The millisecond part can exceed 1,000
-in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
+in order to represent the <a href="./index.html#leap-second-handling">leap second</a>.</p>
 
 <p>Returns <code>None</code> on invalid hour, minute, second and/or millisecond.</p>
 
@@ -166,7 +133,7 @@ in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
 <div class='docblock'><p>Makes a new <code>NaiveTime</code> from hour, minute, second and microsecond.</p>
 
 <p>The microsecond part can exceed 1,000,000
-in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
+in order to represent the <a href="./index.html#leap-second-handling">leap second</a>.</p>
 
 <p>Panics on invalid hour, minute, second and/or microsecond.</p>
 
@@ -183,7 +150,7 @@ in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
 <div class='docblock'><p>Makes a new <code>NaiveTime</code> from hour, minute, second and microsecond.</p>
 
 <p>The microsecond part can exceed 1,000,000
-in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
+in order to represent the <a href="./index.html#leap-second-handling">leap second</a>.</p>
 
 <p>Returns <code>None</code> on invalid hour, minute, second and/or microsecond.</p>
 
@@ -203,7 +170,7 @@ in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
 <div class='docblock'><p>Makes a new <code>NaiveTime</code> from hour, minute, second and nanosecond.</p>
 
 <p>The nanosecond part can exceed 1,000,000,000
-in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
+in order to represent the <a href="./index.html#leap-second-handling">leap second</a>.</p>
 
 <p>Panics on invalid hour, minute, second and/or nanosecond.</p>
 
@@ -220,7 +187,7 @@ in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
 <div class='docblock'><p>Makes a new <code>NaiveTime</code> from hour, minute, second and nanosecond.</p>
 
 <p>The nanosecond part can exceed 1,000,000,000
-in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
+in order to represent the <a href="./index.html#leap-second-handling">leap second</a>.</p>
 
 <p>Returns <code>None</code> on invalid hour, minute, second and/or nanosecond.</p>
 
@@ -240,7 +207,7 @@ in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
 <div class='docblock'><p>Makes a new <code>NaiveTime</code> from the number of seconds since midnight and nanosecond.</p>
 
 <p>The nanosecond part can exceed 1,000,000,000
-in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
+in order to represent the <a href="./index.html#leap-second-handling">leap second</a>.</p>
 
 <p>Panics on invalid number of seconds and/or nanosecond.</p>
 
@@ -257,7 +224,7 @@ in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
 <div class='docblock'><p>Makes a new <code>NaiveTime</code> from the number of seconds since midnight and nanosecond.</p>
 
 <p>The nanosecond part can exceed 1,000,000,000
-in order to represent the <a href="#leap-second-what?">leap second</a>.</p>
+in order to represent the <a href="./index.html#leap-second-handling">leap second</a>.</p>
 
 <p>Returns <code>None</code> on invalid number of seconds and/or nanosecond.</p>
 
@@ -291,7 +258,7 @@ on the supported escape sequences.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>parse_from_str</span>(<span class='string'>&quot;2014-5-17T12:34:56+09:30&quot;</span>, <span class='string'>&quot;%Y-%m-%dT%H:%M:%S%z&quot;</span>),
            <span class='prelude-val'>Ok</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms</span>(<span class='number'>12</span>, <span class='number'>34</span>, <span class='number'>56</span>)));</pre>
 
-<p><a href="#leap-second-what?">Leap seconds</a> are correctly handled by
+<p><a href="./index.html#leap-second-handling">Leap seconds</a> are correctly handled by
 treating any time of the form <code>hh:mm:60</code> as a leap second.
 (This equally applies to the formatting, so the round trip is possible.)</p>
 
@@ -319,7 +286,7 @@ and thus can be independently determined without AM/PM.</p>
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>parse_from_str</span>(<span class='string'>&quot;13:07 AM&quot;</span>, <span class='string'>&quot;%H:%M %p&quot;</span>).<span class='ident'>is_err</span>());</pre>
 </div><h4 id='method.format_with_items' class='method'><code>fn <a href='#method.format_with_items' class='fnname'>format_with_items</a>&lt;'a,&nbsp;I&gt;(&amp;self, items: I) -&gt; <a class='struct' href='../../../chrono/format/struct.DelayedFormat.html' title='chrono::format::DelayedFormat'>DelayedFormat</a>&lt;I&gt; <span class='where'>where I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a>&lt;Item=<a class='enum' href='../../../chrono/format/enum.Item.html' title='chrono::format::Item'>Item</a>&lt;'a&gt;&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a></span></code></h4>
 <div class='docblock'><p>Formats the time with the specified formatting items.
-Otherwise it is same to the ordinary <code>format</code> method.</p>
+Otherwise it is same to the ordinary <a href="#method.format"><code>format</code></a> method.</p>
 
 <p>The <code>Iterator</code> of items should be <code>Clone</code>able,
 since the resulting <code>DelayedFormat</code> value may be formatted multiple times.</p>
@@ -356,16 +323,16 @@ You are recommended to immediately use <code>DelayedFormat</code> for this reaso
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>format</span>(<span class='string'>&quot;%H:%M:%S&quot;</span>).<span class='ident'>to_string</span>(), <span class='string'>&quot;23:56:04&quot;</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>format</span>(<span class='string'>&quot;%H:%M:%S%.6f&quot;</span>).<span class='ident'>to_string</span>(), <span class='string'>&quot;23:56:04.012345&quot;</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>t</span>.<span class='ident'>format</span>(<span class='string'>&quot;%-I:%M %p&quot;</span>).<span class='ident'>to_string</span>(), <span class='string'>&quot;11:56 PM&quot;</span>);</pre>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1098' class='srclink' href='../../../src/chrono/naive/time.rs.html#58' title='goto source code'>[src]</a></span></h3>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1100' class='srclink' href='../../../src/chrono/naive/time.rs.html#60' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1103' class='srclink' href='../../../src/chrono/naive/time.rs.html#58' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1104' class='srclink' href='../../../src/chrono/naive/time.rs.html#58' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1105' class='srclink' href='../../../src/chrono/naive/time.rs.html#60' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1106' class='srclink' href='../../../src/chrono/naive/time.rs.html#60' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.cmp' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#tymethod.cmp' class='fnname'>cmp</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></code></h4>
 <div class='docblock'><p>This method returns an <code>Ordering</code> between <code>self</code> and <code>other</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#tymethod.cmp">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1114' class='srclink' href='../../../src/chrono/naive/time.rs.html#58' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1116' class='srclink' href='../../../src/chrono/naive/time.rs.html#60' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.partial_cmp' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#tymethod.partial_cmp' class='fnname'>partial_cmp</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a>&gt;</code></h4>
 <div class='docblock'><p>This method returns an ordering between <code>self</code> and <code>other</code> values if one exists. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#tymethod.partial_cmp">Read more</a></p>
 </div><h4 id='method.lt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.lt' class='fnname'>lt</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
@@ -376,60 +343,177 @@ You are recommended to immediately use <code>DelayedFormat</code> for this reaso
 <div class='docblock'><p>This method tests greater than (for <code>self</code> and <code>other</code>) and is used by the <code>&gt;</code> operator. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.gt">Read more</a></p>
 </div><h4 id='method.ge' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.ge' class='fnname'>ge</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>This method tests greater than or equal to (for <code>self</code> and <code>other</code>) and is used by the <code>&gt;=</code> operator. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.ge">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1152' class='srclink' href='../../../src/chrono/naive/time.rs.html#58' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1157' class='srclink' href='../../../src/chrono/naive/time.rs.html#58' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1154' class='srclink' href='../../../src/chrono/naive/time.rs.html#60' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1159' class='srclink' href='../../../src/chrono/naive/time.rs.html#60' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
 </div><h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../../chrono/trait.Timelike.html' title='chrono::Timelike'>Timelike</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1246' class='srclink' href='../../../src/chrono/naive/time.rs.html#433-470' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../../chrono/trait.Timelike.html' title='chrono::Timelike'>Timelike</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1248' class='srclink' href='../../../src/chrono/naive/time.rs.html#452-651' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.hour' class='method'><code>fn <a href='../../../chrono/trait.Timelike.html#tymethod.hour' class='fnname'>hour</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
 <div class='docblock'><p>Returns the hour number from 0 to 23.</p>
+
+<h1 id='example-13' class='section-header'><a href='#example-13'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>NaiveTime</span>, <span class='ident'>Timelike</span>};
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms</span>(<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>hour</span>(), <span class='number'>0</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>56</span>, <span class='number'>4</span>, <span class='number'>12_345_678</span>).<span class='ident'>hour</span>(), <span class='number'>23</span>);</pre>
 </div><h4 id='method.minute' class='method'><code>fn <a href='../../../chrono/trait.Timelike.html#tymethod.minute' class='fnname'>minute</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
 <div class='docblock'><p>Returns the minute number from 0 to 59.</p>
+
+<h1 id='example-14' class='section-header'><a href='#example-14'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>NaiveTime</span>, <span class='ident'>Timelike</span>};
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms</span>(<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>minute</span>(), <span class='number'>0</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>56</span>, <span class='number'>4</span>, <span class='number'>12_345_678</span>).<span class='ident'>minute</span>(), <span class='number'>56</span>);</pre>
 </div><h4 id='method.second' class='method'><code>fn <a href='../../../chrono/trait.Timelike.html#tymethod.second' class='fnname'>second</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
 <div class='docblock'><p>Returns the second number from 0 to 59.</p>
+
+<h1 id='example-15' class='section-header'><a href='#example-15'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>NaiveTime</span>, <span class='ident'>Timelike</span>};
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms</span>(<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>second</span>(), <span class='number'>0</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>56</span>, <span class='number'>4</span>, <span class='number'>12_345_678</span>).<span class='ident'>second</span>(), <span class='number'>4</span>);</pre>
+
+<p>This method never returns 60 even when it is a leap second.
+(<a href="./index.html#leap-second-handling">Why?</a>)
+Use the proper <a href="#method.format">formatting method</a> to get a human-readable representation.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>leap</span> <span class='op'>=</span> <span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_milli</span>(<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>1_000</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>leap</span>.<span class='ident'>second</span>(), <span class='number'>59</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>leap</span>.<span class='ident'>format</span>(<span class='string'>&quot;%H:%M:%S&quot;</span>).<span class='ident'>to_string</span>(), <span class='string'>&quot;23:59:60&quot;</span>);</pre>
 </div><h4 id='method.nanosecond' class='method'><code>fn <a href='../../../chrono/trait.Timelike.html#tymethod.nanosecond' class='fnname'>nanosecond</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
-<div class='docblock'><p>Returns the number of nanoseconds since the whole non-leap second. The range from 1,000,000,000 to 1,999,999,999 represents the leap second. <a href="../../../chrono/trait.Timelike.html#tymethod.nanosecond">Read more</a></p>
+<div class='docblock'><p>Returns the number of nanoseconds since the whole non-leap second.
+The range from 1,000,000,000 to 1,999,999,999 represents
+the <a href="./naive/time/index.html#leap-second-handling">leap second</a>.</p>
+
+<h1 id='example-16' class='section-header'><a href='#example-16'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>NaiveTime</span>, <span class='ident'>Timelike</span>};
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms</span>(<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>).<span class='ident'>nanosecond</span>(), <span class='number'>0</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>56</span>, <span class='number'>4</span>, <span class='number'>12_345_678</span>).<span class='ident'>nanosecond</span>(), <span class='number'>12_345_678</span>);</pre>
+
+<p>Leap seconds may have seemingly out-of-range return values.
+You can reduce the range with <code>time.nanosecond() % 1_000_000_000</code>, or
+use the proper <a href="#method.format">formatting method</a> to get a human-readable representation.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>leap</span> <span class='op'>=</span> <span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_milli</span>(<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>1_000</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>leap</span>.<span class='ident'>nanosecond</span>(), <span class='number'>1_000_000_000</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>leap</span>.<span class='ident'>format</span>(<span class='string'>&quot;%H:%M:%S%.9f&quot;</span>).<span class='ident'>to_string</span>(), <span class='string'>&quot;23:59:60.000000000&quot;</span>);</pre>
 </div><h4 id='method.with_hour' class='method'><code>fn <a href='../../../chrono/trait.Timelike.html#tymethod.with_hour' class='fnname'>with_hour</a>(&amp;self, hour: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>&gt;</code></h4>
-<div class='docblock'><p>Makes a new value with the hour number changed. <a href="../../../chrono/trait.Timelike.html#tymethod.with_hour">Read more</a></p>
+<div class='docblock'><p>Makes a new <code>NaiveTime</code> with the hour number changed.</p>
+
+<p>Returns <code>None</code> when the resulting <code>NaiveTime</code> would be invalid.</p>
+
+<h1 id='example-17' class='section-header'><a href='#example-17'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>NaiveTime</span>, <span class='ident'>Timelike</span>};
+
+<span class='kw'>let</span> <span class='ident'>dt</span> <span class='op'>=</span> <span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>56</span>, <span class='number'>4</span>, <span class='number'>12_345_678</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>dt</span>.<span class='ident'>with_hour</span>(<span class='number'>7</span>), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>7</span>, <span class='number'>56</span>, <span class='number'>4</span>, <span class='number'>12_345_678</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>dt</span>.<span class='ident'>with_hour</span>(<span class='number'>24</span>), <span class='prelude-val'>None</span>);</pre>
 </div><h4 id='method.with_minute' class='method'><code>fn <a href='../../../chrono/trait.Timelike.html#tymethod.with_minute' class='fnname'>with_minute</a>(&amp;self, min: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>&gt;</code></h4>
-<div class='docblock'><p>Makes a new value with the minute number changed. <a href="../../../chrono/trait.Timelike.html#tymethod.with_minute">Read more</a></p>
+<div class='docblock'><p>Makes a new <code>NaiveTime</code> with the minute number changed.</p>
+
+<p>Returns <code>None</code> when the resulting <code>NaiveTime</code> would be invalid.</p>
+
+<h1 id='example-18' class='section-header'><a href='#example-18'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>NaiveTime</span>, <span class='ident'>Timelike</span>};
+
+<span class='kw'>let</span> <span class='ident'>dt</span> <span class='op'>=</span> <span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>56</span>, <span class='number'>4</span>, <span class='number'>12_345_678</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>dt</span>.<span class='ident'>with_minute</span>(<span class='number'>45</span>), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>45</span>, <span class='number'>4</span>, <span class='number'>12_345_678</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>dt</span>.<span class='ident'>with_minute</span>(<span class='number'>60</span>), <span class='prelude-val'>None</span>);</pre>
 </div><h4 id='method.with_second' class='method'><code>fn <a href='../../../chrono/trait.Timelike.html#tymethod.with_second' class='fnname'>with_second</a>(&amp;self, sec: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>&gt;</code></h4>
-<div class='docblock'><p>Makes a new value with the second number changed. <a href="../../../chrono/trait.Timelike.html#tymethod.with_second">Read more</a></p>
+<div class='docblock'><p>Makes a new <code>NaiveTime</code> with the second number changed.</p>
+
+<p>Returns <code>None</code> when the resulting <code>NaiveTime</code> would be invalid.
+As with the <a href="#method.second"><code>second</code></a> method,
+the input range is restricted to 0 through 59.</p>
+
+<h1 id='example-19' class='section-header'><a href='#example-19'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>NaiveTime</span>, <span class='ident'>Timelike</span>};
+
+<span class='kw'>let</span> <span class='ident'>dt</span> <span class='op'>=</span> <span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>56</span>, <span class='number'>4</span>, <span class='number'>12_345_678</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>dt</span>.<span class='ident'>with_second</span>(<span class='number'>17</span>), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>56</span>, <span class='number'>17</span>, <span class='number'>12_345_678</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>dt</span>.<span class='ident'>with_second</span>(<span class='number'>60</span>), <span class='prelude-val'>None</span>);</pre>
 </div><h4 id='method.with_nanosecond' class='method'><code>fn <a href='../../../chrono/trait.Timelike.html#tymethod.with_nanosecond' class='fnname'>with_nanosecond</a>(&amp;self, nano: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>&gt;</code></h4>
-<div class='docblock'><p>Makes a new value with nanoseconds since the whole non-leap second changed. <a href="../../../chrono/trait.Timelike.html#tymethod.with_nanosecond">Read more</a></p>
+<div class='docblock'><p>Makes a new <code>NaiveTime</code> with nanoseconds since the whole non-leap second changed.</p>
+
+<p>Returns <code>None</code> when the resulting <code>NaiveTime</code> would be invalid.
+As with the <a href="#method.nanosecond"><code>nanosecond</code></a> method,
+the input range can exceed 1,000,000,000 for leap seconds.</p>
+
+<h1 id='example-20' class='section-header'><a href='#example-20'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>NaiveTime</span>, <span class='ident'>Timelike</span>};
+
+<span class='kw'>let</span> <span class='ident'>dt</span> <span class='op'>=</span> <span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>56</span>, <span class='number'>4</span>, <span class='number'>12_345_678</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>dt</span>.<span class='ident'>with_nanosecond</span>(<span class='number'>333_333_333</span>),
+           <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>56</span>, <span class='number'>4</span>, <span class='number'>333_333_333</span>)));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>dt</span>.<span class='ident'>with_nanosecond</span>(<span class='number'>2_000_000_000</span>), <span class='prelude-val'>None</span>);</pre>
+
+<p>Leap seconds can theoretically follow <em>any</em> whole second.
+The following would be a proper leap second at the time zone offset of UTC-00:03:57
+(there are several historical examples comparable to this &quot;non-sense&quot; offset),
+and therefore is allowed.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>dt</span>.<span class='ident'>with_nanosecond</span>(<span class='number'>1_333_333_333</span>),
+           <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>56</span>, <span class='number'>4</span>, <span class='number'>1_333_333_333</span>)));</pre>
 </div><h4 id='method.num_seconds_from_midnight' class='method'><code>fn <a href='../../../chrono/trait.Timelike.html#method.num_seconds_from_midnight' class='fnname'>num_seconds_from_midnight</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></h4>
 <div class='docblock'><p>Returns the number of non-leap seconds past the last midnight.</p>
+
+<h1 id='example-21' class='section-header'><a href='#example-21'>Example</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>NaiveTime</span>, <span class='ident'>Timelike</span>};
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms</span>(<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>).<span class='ident'>num_seconds_from_midnight</span>(),
+           <span class='number'>3723</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_nano</span>(<span class='number'>23</span>, <span class='number'>56</span>, <span class='number'>4</span>, <span class='number'>12_345_678</span>).<span class='ident'>num_seconds_from_midnight</span>(),
+           <span class='number'>86164</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveTime</span>::<span class='ident'>from_hms_milli</span>(<span class='number'>23</span>, <span class='number'>59</span>, <span class='number'>59</span>, <span class='number'>1_000</span>).<span class='ident'>num_seconds_from_midnight</span>(),
+           <span class='number'>86399</span>);</pre>
 </div><h4 id='method.hour12' class='method'><code>fn <a href='../../../chrono/trait.Timelike.html#method.hour12' class='fnname'>hour12</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></h4>
 <div class='docblock'><p>Returns the hour number from 1 to 12 with a boolean flag, which is false for AM and true for PM. <a href="../../../chrono/trait.Timelike.html#method.hour12">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1272' class='srclink' href='../../../src/chrono/naive/time.rs.html#472-477' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;H:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, state: &amp;mut H)</code></h4>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html' title='core::hash::Hash'>Hash</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1274' class='srclink' href='../../../src/chrono/naive/time.rs.html#657-662' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p><code>NaiveTime</code> can be used as a key to the hash maps (in principle).</p>
+
+<p>Practically this also takes account of fractional seconds, so it is not recommended.
+(For the obvious reason this also distinguishes leap seconds from non-leap seconds.)</p>
+</div><div class='impl-items'><h4 id='method.hash' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;H:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a>&gt;(&amp;self, state: &amp;mut H)</code></h4>
 <div class='docblock'><p>Feeds this value into the state given, updating the hasher as necessary.</p>
 </div><h4 id='method.hash_slice' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[Self]</a>, state: &amp;mut H) <span class='where'>where H: <a class='trait' href='https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html' title='core::hash::Hasher'>Hasher</a></span></code><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div></h4>
 <div class='docblock'><p>Feeds a slice of this type into the state provided.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Add.html' title='core::ops::Add'>Add</a>&lt;<a class='struct' href='../../../chrono/duration/struct.Duration.html' title='chrono::duration::Duration'>Duration</a>&gt; for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1277' class='srclink' href='../../../src/chrono/naive/time.rs.html#479-504' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Add.html' title='core::ops::Add'>Add</a>&lt;<a class='struct' href='../../../chrono/duration/struct.Duration.html' title='chrono::duration::Duration'>Duration</a>&gt; for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1279' class='srclink' href='../../../src/chrono/naive/time.rs.html#664-689' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='associatedtype.Output' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Add.html#associatedtype.Output' class='type'>Output</a> = <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></h4>
 <div class='docblock'><p>The resulting type after applying the <code>+</code> operator</p>
 </div><h4 id='method.add' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Add.html#tymethod.add' class='fnname'>add</a>(self, rhs: <a class='struct' href='../../../chrono/duration/struct.Duration.html' title='chrono::duration::Duration'>Duration</a>) -&gt; <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></h4>
 <div class='docblock'><p>The method for the <code>+</code> operator</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Sub.html' title='core::ops::Sub'>Sub</a>&lt;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>&gt; for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1288' class='srclink' href='../../../src/chrono/naive/time.rs.html#506-523' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Sub.html' title='core::ops::Sub'>Sub</a>&lt;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>&gt; for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1290' class='srclink' href='../../../src/chrono/naive/time.rs.html#691-708' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='associatedtype.Output-1' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Sub.html#associatedtype.Output' class='type'>Output</a> = <a class='struct' href='../../../chrono/duration/struct.Duration.html' title='chrono::duration::Duration'>Duration</a></code></h4>
 <div class='docblock'><p>The resulting type after applying the <code>-</code> operator</p>
 </div><h4 id='method.sub' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Sub.html#tymethod.sub' class='fnname'>sub</a>(self, rhs: <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>) -&gt; <a class='struct' href='../../../chrono/duration/struct.Duration.html' title='chrono::duration::Duration'>Duration</a></code></h4>
 <div class='docblock'><p>The method for the <code>-</code> operator</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Sub.html' title='core::ops::Sub'>Sub</a>&lt;<a class='struct' href='../../../chrono/duration/struct.Duration.html' title='chrono::duration::Duration'>Duration</a>&gt; for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1298' class='srclink' href='../../../src/chrono/naive/time.rs.html#525-530' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Sub.html' title='core::ops::Sub'>Sub</a>&lt;<a class='struct' href='../../../chrono/duration/struct.Duration.html' title='chrono::duration::Duration'>Duration</a>&gt; for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1300' class='srclink' href='../../../src/chrono/naive/time.rs.html#710-715' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='associatedtype.Output-2' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Sub.html#associatedtype.Output' class='type'>Output</a> = <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></h4>
 <div class='docblock'><p>The resulting type after applying the <code>-</code> operator</p>
 </div><h4 id='method.sub-1' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Sub.html#tymethod.sub' class='fnname'>sub</a>(self, rhs: <a class='struct' href='../../../chrono/duration/struct.Duration.html' title='chrono::duration::Duration'>Duration</a>) -&gt; <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></h4>
 <div class='docblock'><p>The method for the <code>-</code> operator</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1303' class='srclink' href='../../../src/chrono/naive/time.rs.html#532-552' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1305' class='srclink' href='../../../src/chrono/naive/time.rs.html#717-737' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1328' class='srclink' href='../../../src/chrono/naive/time.rs.html#554-556' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1330' class='srclink' href='../../../src/chrono/naive/time.rs.html#739-741' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt-1' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html' title='core::str::FromStr'>FromStr</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1332' class='srclink' href='../../../src/chrono/naive/time.rs.html#558-575' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html' title='core::str::FromStr'>FromStr</a> for <a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1334' class='srclink' href='../../../src/chrono/naive/time.rs.html#743-760' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='associatedtype.Err' class='type'><code>type <a href='https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html#associatedtype.Err' class='type'>Err</a> = <a class='struct' href='../../../chrono/format/struct.ParseError.html' title='chrono::format::ParseError'>ParseError</a></code></h4>
 <div class='docblock'><p>The associated error which can be returned from parsing.</p>
 </div><h4 id='method.from_str' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html#tymethod.from_str' class='fnname'>from_str</a>(s: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../../../chrono/format/type.ParseResult.html' title='chrono::format::ParseResult'>ParseResult</a>&lt;<a class='struct' href='../../../chrono/naive/time/struct.NaiveTime.html' title='chrono::naive::time::NaiveTime'>NaiveTime</a>&gt;</code></h4>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-0.2.9/src/sync/ms_queue.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-0.2.10/src/sync/ms_queue.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>ms_queue.rs.html -- source</title>
@@ -549,6 +549,10 @@
 <span id="505">505</span>
 <span id="506">506</span>
 <span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>atomic</span>::<span class='ident'>Ordering</span>::{<span class='ident'>Acquire</span>, <span class='ident'>Release</span>, <span class='ident'>Relaxed</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>atomic</span>::<span class='ident'>AtomicBool</span>;
@@ -565,16 +569,19 @@
 <span class='comment'>// node at the front. In general the `tail` pointer may lag behind the</span>
 <span class='comment'>// actual tail. Non-sentinal nodes are either all `Data` or all</span>
 <span class='comment'>// `Blocked` (requests for data from blocked threads).</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>MsQueue</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='ident'>head</span>: <span class='ident'>CachePadded</span><span class='op'>&lt;</span><span class='ident'>Atomic</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
     <span class='ident'>tail</span>: <span class='ident'>CachePadded</span><span class='op'>&lt;</span><span class='ident'>Atomic</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
 }
 
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>struct</span> <span class='ident'>Node</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='ident'>payload</span>: <span class='ident'>Payload</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
     <span class='ident'>next</span>: <span class='ident'>Atomic</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>,
 }
 
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>enum</span> <span class='ident'>Payload</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// A node with actual data that can be popped.</span>
     <span class='ident'>Data</span>(<span class='ident'>T</span>),
@@ -583,6 +590,7 @@
 }
 
 <span class='doccomment'>/// A blocked request for data, which includes a slot to write the data.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
 <span class='kw'>struct</span> <span class='ident'>Signal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Thread to unpark when data is ready.</span>
     <span class='ident'>thread</span>: <span class='ident'>Thread</span>,
@@ -611,7 +619,7 @@
             <span class='ident'>tail</span>: <span class='ident'>CachePadded</span>::<span class='ident'>new</span>(<span class='ident'>Atomic</span>::<span class='ident'>null</span>()),
         };
         <span class='kw'>let</span> <span class='ident'>sentinel</span> <span class='op'>=</span> <span class='ident'>Owned</span>::<span class='ident'>new</span>(<span class='ident'>Node</span> {
-            <span class='ident'>payload</span>: <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>() },
+            <span class='ident'>payload</span>: <span class='ident'>Payload</span>::<span class='ident'>Data</span>(<span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>() }),
             <span class='ident'>next</span>: <span class='ident'>Atomic</span>::<span class='ident'>null</span>(),
         });
         <span class='kw'>let</span> <span class='ident'>guard</span> <span class='op'>=</span> <span class='ident'>epoch</span>::<span class='ident'>pin</span>();
