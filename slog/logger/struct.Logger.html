@@ -52,7 +52,7 @@
     // some fields omitted
 }</pre><div class='docblock'><p>Logger</p>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-463' class='srclink' href='../../src/slog/src/logger.rs.html#69-133' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new_root' class='method'><code>fn <a href='#method.new_root' class='fnname'>new_root</a>&lt;D:&nbsp;'static + <a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt;(values: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>&gt;, d: D) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h4>
+<div class='impl-items'><h4 id='method.new_root' class='method'><span id='new_root.v' class='invisible'><code>fn <a href='#method.new_root' class='fnname'>new_root</a>&lt;D:&nbsp;'static + <a class='trait' href='../../slog/drain/trait.Drain.html' title='slog::drain::Drain'>Drain</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt;(values: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>&gt;, d: D) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></span></h4>
 <div class='docblock'><p>Build a root logger</p>
 
 <p>All children and their children and so on form one hierarchy
@@ -70,7 +70,7 @@ sharing a common drain.</p>
         <span class='ident'>slog</span>::<span class='ident'>drain</span>::<span class='ident'>discard</span>()
     );
 }</pre>
-</div><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(&amp;self, values: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>&gt;) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h4>
+</div><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(&amp;self, values: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='type' href='../../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>&gt;) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></span></h4>
 <div class='docblock'><p>Build a child logger</p>
 
 <p>Child logger copies all existing values from the parent.</p>
@@ -90,14 +90,14 @@ a common drain.</p>
         .<span class='ident'>into_logger</span>(<span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>));
     <span class='kw'>let</span> <span class='ident'>log</span> <span class='op'>=</span> <span class='ident'>root</span>.<span class='ident'>new</span>(<span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value&quot;</span>));
 }</pre>
-</div><h4 id='method.log' class='method'><code>fn <a href='#method.log' class='fnname'>log</a>(&amp;self, record: &amp;<a class='struct' href='../../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a>)</code></h4>
+</div><h4 id='method.log' class='method'><span id='log.v' class='invisible'><code>fn <a href='#method.log' class='fnname'>log</a>(&amp;self, record: &amp;<a class='struct' href='../../slog/logger/struct.RecordInfo.html' title='slog::logger::RecordInfo'>RecordInfo</a>)</code></span></h4>
 <div class='docblock'><p>Log one logging record</p>
 
 <p>Use specific logging functions instead.</p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-439' class='srclink' href='../../src/slog/src/logger.rs.html#28' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></h4>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../slog/logger/struct.Logger.html' title='slog::logger::Logger'>Logger</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>

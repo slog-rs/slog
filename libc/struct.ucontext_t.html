@@ -55,16 +55,26 @@
     pub uc_mcontext: <a class='struct' href='../libc/struct.mcontext_t.html' title='libc::mcontext_t'>mcontext_t</a>,
     pub uc_sigmask: <a class='struct' href='../libc/struct.sigset_t.html' title='libc::sigset_t'>sigset_t</a>,
     // some fields omitted
-}</pre><h2 class='fields'>Fields</h2><span id='structfield.uc_flags' class='structfield'><code>uc_flags: <a class='type' href='../libc/type.c_ulong.html' title='libc::c_ulong'>c_ulong</a></code>
-                           </span><span class='stab '></span><span id='structfield.uc_link' class='structfield'><code>uc_link: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../libc/struct.ucontext_t.html' title='libc::ucontext_t'>ucontext_t</a></code>
-                           </span><span class='stab '></span><span id='structfield.uc_stack' class='structfield'><code>uc_stack: <a class='struct' href='../libc/struct.stack_t.html' title='libc::stack_t'>stack_t</a></code>
-                           </span><span class='stab '></span><span id='structfield.uc_mcontext' class='structfield'><code>uc_mcontext: <a class='struct' href='../libc/struct.mcontext_t.html' title='libc::mcontext_t'>mcontext_t</a></code>
-                           </span><span class='stab '></span><span id='structfield.uc_sigmask' class='structfield'><code>uc_sigmask: <a class='struct' href='../libc/struct.sigset_t.html' title='libc::sigset_t'>sigset_t</a></code>
-                           </span><span class='stab '></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../libc/struct.ucontext_t.html' title='libc::ucontext_t'>ucontext_t</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3337' class='srclink' href='../src/libc/macros.rs.html#44' title='goto source code'>[src]</a></span></h3>
+}</pre><h2 class='fields'>Fields</h2><span id='structfield.uc_flags' class='structfield'>
+                           <span id='uc_flags.v' class='invisible'>
+                           <code>uc_flags: <a class='type' href='../libc/type.c_ulong.html' title='libc::c_ulong'>c_ulong</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.uc_link' class='structfield'>
+                           <span id='uc_link.v' class='invisible'>
+                           <code>uc_link: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../libc/struct.ucontext_t.html' title='libc::ucontext_t'>ucontext_t</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.uc_stack' class='structfield'>
+                           <span id='uc_stack.v' class='invisible'>
+                           <code>uc_stack: <a class='struct' href='../libc/struct.stack_t.html' title='libc::stack_t'>stack_t</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.uc_mcontext' class='structfield'>
+                           <span id='uc_mcontext.v' class='invisible'>
+                           <code>uc_mcontext: <a class='struct' href='../libc/struct.mcontext_t.html' title='libc::mcontext_t'>mcontext_t</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.uc_sigmask' class='structfield'>
+                           <span id='uc_sigmask.v' class='invisible'>
+                           <code>uc_sigmask: <a class='struct' href='../libc/struct.sigset_t.html' title='libc::sigset_t'>sigset_t</a></code>
+                           </span></span><span class='stab '></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../libc/struct.ucontext_t.html' title='libc::ucontext_t'>ucontext_t</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3337' class='srclink' href='../src/libc/macros.rs.html#44' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../libc/struct.ucontext_t.html' title='libc::ucontext_t'>ucontext_t</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3338' class='srclink' href='../src/libc/macros.rs.html#45-47' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../libc/struct.ucontext_t.html' title='libc::ucontext_t'>ucontext_t</a></code></h4>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../libc/struct.ucontext_t.html' title='libc::ucontext_t'>ucontext_t</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>

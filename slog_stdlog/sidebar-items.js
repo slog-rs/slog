@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["init","Minimal initialization with default drain"],["set_logger","Set a `slog::Logger` as a global `log` create handler"],["set_logger_level","Set a `slog::Logger` as a global `log` create handler"]]});
+initSidebarItems({"fn":[["init","Minimal initialization with default drain"],["scope","Execute code in a logging scope"],["set_logger","Set a `slog::Logger` as a global `log` create handler"],["set_logger_level","Set a `slog::Logger` as a global `log` create handler"],["with_current_logger","Access the currently active logger"]]});
