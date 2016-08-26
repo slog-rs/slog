@@ -19,20 +19,36 @@
 extern crate slog;
 extern crate slog_term;
 extern crate log;
+#[macro_use]
+extern crate lazy_static;
+extern crate crossbeam;
 
 use log::LogMetadata;
-use std::sync;
+use std::sync::Arc;
+use std::cell::RefCell;
+use slog::drain::IntoLogger;
 
 use slog::Level;
+use crossbeam::sync::ArcCell;
 
-// TODO: Change this to use thread local copies
-struct Logger(sync::Mutex<slog::Logger>);
-
-impl Logger {
-    fn new(logger: slog::Logger) -> Self {
-        Logger(sync::Mutex::new(logger))
-    }
+thread_local! {
+    static TL_SCOPES: RefCell<Vec<slog::Logger>> = RefCell::new(Vec::with_capacity(8))
 }
+
+lazy_static! {
+    static ref GLOBAL_LOGGER : ArcCell<slog::Logger> = ArcCell::new(
+        Arc::new(
+            slog::drain::discard().into_logger(o!())
+        )
+    );
+}
+
+fn set_global_logger(l : slog::Logger) {
+    let _ = GLOBAL_LOGGER.set(Arc::new(l));
+}
+
+struct Logger;
+
 
 fn log_to_slog_level(level: log::LogLevel) -> Level {
     match level {
@@ -59,11 +75,9 @@ impl log::Log for Logger {
         let module = r.location().module_path();
         let file = r.location().file();
         let line = r.location().line();
-        {
-            let _ = self.0
-                .lock()
-                .map(|l| (*l).log(&slog::RecordInfo::new(level, args, file, line, module, &[])));
-        }
+        with_current_logger(
+            |l| l.log(&slog::RecordInfo::new(level, args, file, line, module, &[]))
+        )
     }
 }
 
@@ -94,7 +108,8 @@ impl log::Log for Logger {
 pub fn set_logger(logger: slog::Logger) -> Result<(), log::SetLoggerError> {
     log::set_logger(|max_log_level| {
         max_log_level.set(log::LogLevelFilter::max());
-        Box::new(Logger::new(logger))
+        set_global_logger(logger);
+        Box::new(Logger)
     })
 }
 
@@ -106,7 +121,8 @@ pub fn set_logger_level(logger: slog::Logger,
                         -> Result<(), log::SetLoggerError> {
     log::set_logger(|max_log_level| {
         max_log_level.set(log_level_filter);
-        Box::new(Logger::new(logger))
+        set_global_logger(logger);
+        Box::new(Logger)
     })
 }
 
@@ -128,7 +144,69 @@ pub fn set_logger_level(logger: slog::Logger,
 /// }
 /// ```
 pub fn init() -> Result<(), log::SetLoggerError> {
-    use slog::drain::IntoLogger;
     let drain = slog::drain::filter_level(Level::Info, slog_term::stderr());
     set_logger(drain.into_logger(o!()))
+}
+
+struct ScopeGuard;
+
+
+impl ScopeGuard {
+    fn new(logger : slog::Logger) {
+        TL_SCOPES.with(|s| {
+            s.borrow_mut().push(logger);
+        })
+    }
+}
+
+impl Drop for ScopeGuard {
+    fn drop(&mut self) {
+        TL_SCOPES.with(|s| {
+            s.borrow_mut().pop().expect("TL_SCOPES should contain a logger");
+        })
+    }
+}
+
+
+/// Access the currently active logger
+///
+/// The reference logger will be either:
+/// * global logger, or
+/// * currently active scope logger
+///
+/// **Warning**: Calling `scope` inside `f`
+/// will result in a panic.
+pub fn with_current_logger<F, R>(f : F) -> R
+                           where F : FnOnce(&slog::Logger) -> R {
+    TL_SCOPES.with(|s| {
+        let s = s.borrow();
+        if s.is_empty() {
+            f(&GLOBAL_LOGGER.get())
+        } else {
+            f(&s[s.len() - 1])
+        }
+    })
+}
+
+/// Execute code in a logging scope
+///
+/// Logging scopes allow using different logger for legacy logging
+/// statements in part of the code.
+///
+/// Logging scopes can be nested and are panic safe.
+///
+/// `logger` is the `Logger` to use during the duration of `f`.
+/// `with_current_logger` can be used to build it as a child of currently active
+/// logger.
+///
+/// `f` is a code to be executed in the logging scope.
+///
+/// Note: Thread scopes are thread-local. Each newly spawned thread starts
+/// with a global logger, as a current logger.
+pub fn scope<SF, R>(logger : slog::Logger, f : SF) -> R
+    where SF : FnOnce() -> R
+                                  {
+
+    let _guard = ScopeGuard::new(logger);
+    f()
 }
