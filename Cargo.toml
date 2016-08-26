@@ -43,7 +43,7 @@ error-chain = "0.2.1"
 [dev-dependencies]
 slog-json = { path = "crates/json", version = "1.0.0-alpha" }
 slog-term = { path = "crates/term", version = "1.0.0-alpha" }
-slog-stdlog = { path = "crates/stdlog", version = "1.0.0-alpha2" }
+slog-stdlog = { path = "crates/stdlog", version = "1.0.0-alpha3" }
 slog-syslog = { path = "crates/syslog", version = "1.0.0-alpha" }
 slog-bunyan = { path = "crates/bunyan", version = "1.0.0-alpha" }
 log = "0.3.6"
