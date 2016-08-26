@@ -34,7 +34,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 * modular and extensible
 	* small core create with multiple addon crates (`./crates/`) - compile only
 	what you're actually using
-* backward compatibility with standard `log` crate (`slog-stdlog` crate)
+* backward compatibility with standard `log` crate (using `slog-stdlog` crate)
 * drains & output formatting
 	* filtering
 		* compile time log level filter using cargo features (same as in `log` crate)
