@@ -35,6 +35,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 	* small core create with multiple addon crates (`./crates/`) - compile only
 	what you're actually using
 * backward compatibility with standard `log` crate (using `slog-stdlog` crate)
+	* supports logging-scopes
 * drains & output formatting
 	* filtering
 		* compile time log level filter using cargo features (same as in `log` crate)
@@ -50,7 +51,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 
 ### Advantages over `log` crate
 
-* **extensible** - `slog` privides core functionality, and some standard
+* **extensible** - `slog` provides core functionality, and some standard
   feature-set. But using Rust trait system, anyone can easily implement as
   powerful fully-custom features, publish separately and grow `slog` feature-set
   for everyone.
