@@ -368,7 +368,7 @@ enum AsyncIoMsg {
 
 /// Asynchronous io::Writer
 ///
-/// TODO: Publish as a different create / use existing one?
+/// TODO: Publish as a different crate / use existing one?
 ///
 /// Wraps an `io::Writer` and writes to it in separate thread
 /// using channel to send the data.
@@ -440,8 +440,8 @@ pub fn stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> Strea
 }
 
 /// Create `AsyncStreamer` drain
-pub fn async_stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> Streamer<W, F> {
-    Streamer::new(io, format)
+pub fn async_stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> AsyncStreamer<W, F> {
+    AsyncStreamer::new(io, format)
 }
 
 /// Create a Discard drain
