@@ -152,10 +152,12 @@ struct ScopeGuard;
 
 
 impl ScopeGuard {
-    fn new(logger : slog::Logger) {
+    fn new(logger : slog::Logger) -> Self {
         TL_SCOPES.with(|s| {
             s.borrow_mut().push(logger);
-        })
+        });
+
+        ScopeGuard
     }
 }
 
@@ -205,7 +207,7 @@ pub fn with_current_logger<F, R>(f : F) -> R
 /// with a global logger, as a current logger.
 pub fn scope<SF, R>(logger : slog::Logger, f : SF) -> R
     where SF : FnOnce() -> R
-                                  {
+{
 
     let _guard = ScopeGuard::new(logger);
     f()
