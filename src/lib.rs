@@ -19,10 +19,10 @@ use std::ascii::AsciiExt;
 /// ```
 /// #[macro_use]
 /// extern crate slog;
-/// use slog::drain::IntoLogger;
+/// use slog::IntoLogger;
 ///
 /// fn main() {
-///     let drain = slog::drain::discard();
+///     let drain = slog::discard();
 ///     let root = drain.into_logger(o!("key1" => "value1", "key2" => "value2"));
 /// }
 /// ```
@@ -49,10 +49,10 @@ macro_rules! o(
 /// ```
 /// #[macro_use]
 /// extern crate slog;
-/// use slog::drain::IntoLogger;
+/// use slog::IntoLogger;
 ///
 /// fn main() {
-///     let drain = slog::drain::discard();
+///     let drain = slog::discard();
 ///     let root = drain.into_logger(o!("key1" => "value1", "key2" => "value2"));
 ///     info!(root, "test info log", "log-key" => true);
 /// }
@@ -275,10 +275,6 @@ macro_rules! slog_trace(
     };
 );
 
-
-/// Drains - logging outputs
-pub mod drain;
-
 /// Serialization
 pub mod ser;
 
@@ -286,10 +282,10 @@ pub mod ser;
 pub mod format;
 
 pub use ser::{PushLazy, ValueSerializer, Serializer, Serialize};
-pub use self::drain::{Error, Result, ErrorKind};
 
 include!("_level.rs");
 include!("_logger.rs");
+include!("_drain.rs");
 
 /// Key value pair that can be owned by `Logger`
 pub type OwnedKeyValue = (&'static str, Box<ser::SyncSerialize>);

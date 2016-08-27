@@ -2,7 +2,7 @@
 extern crate slog;
 extern crate slog_syslog;
 
-use slog::drain::IntoLogger;
+use slog::IntoLogger;
 use slog_syslog::Facility;
 
 fn main() {

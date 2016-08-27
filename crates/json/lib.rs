@@ -6,10 +6,10 @@
 //! extern crate slog_json;
 //!
 //! use slog::*;
-//! use slog::drain::IntoLogger;
+//! use slog::IntoLogger;
 //!
 //! fn main() {
-//!     let root = drain::stream(
+//!     let root = stream(
 //!                 std::io::stderr(),
 //!                 slog_json::new()
 //!                 ).into_logger(o!("build-id" => "8dfljdf"));

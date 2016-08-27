@@ -2,7 +2,7 @@
 extern crate slog;
 extern crate slog_term;
 
-use slog::drain::IntoLogger;
+use slog::IntoLogger;
 
 fn main() {
     let log = slog_term::stderr().into_logger(o!("version" => "0.5"));

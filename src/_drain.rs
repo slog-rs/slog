@@ -1,24 +1,12 @@
-//! # Drains
-//!
-//! Drains are responsible for filtering, formatting and writing the log records
-//! into given destination.
-use std::io;
-use std::sync::Mutex;
-use std::sync::{mpsc, Arc};
-use std::thread;
-use std::mem;
-
-use super::{Level, Logger};
-use super::format;
-use super::Record;
-use super::{OwnedKeyValue, OwnedKeyValueNode};
+use std::sync::{Mutex, mpsc};
+use std::{mem, io, thread};
 
 use crossbeam::sync::ArcCell;
 
 #[allow(missing_docs)]
 mod error {
-    use super::super::format;
     use std::io;
+    use super::format;
 
     error_chain! {
         types {
@@ -50,9 +38,14 @@ mod error {
 
 pub use self::error::{Error, Result, ErrorKind};
 
-/// Drain for Loggers
+/// Logging drain
 ///
-/// Implementing this trait allows writing own Drains
+/// Drains generally mean destination for logs, but slog generalize the
+/// term. `Drain`-s are responsible for filtering, formatting and writing the
+/// log records into given destination.
+///
+/// Implementing this trait allows writing own Drains, that can be combined
+/// with other drains.
 pub trait Drain: Send + Sync {
     /// Write one logging record
     /// As an optimization (avoiding allocations), loggers are responsible for
@@ -261,22 +254,22 @@ impl<D: Drain> Drain for Filter<D> {
 /// TODO: Remove this type. This drain is a special case of `Filter`, but
 /// because `Filter` can not use static dispatch ATM due to Rust limitations
 /// that will be lifted in the future, it is a standalone type.
-pub struct FilterLevel<D: Drain> {
+pub struct LevelFilter<D: Drain> {
     level: Level,
     drain: D,
 }
 
-impl<D: Drain> FilterLevel<D> {
-    /// Create `FilterLevel`
+impl<D: Drain> LevelFilter<D> {
+    /// Create `LevelFilter`
     pub fn new(drain: D, level: Level) -> Self {
-        FilterLevel {
+        LevelFilter {
             level: level,
             drain: drain,
         }
     }
 }
 
-impl<D: Drain> Drain for FilterLevel<D> {
+impl<D: Drain> Drain for LevelFilter<D> {
     fn log(&self,
            buf: &mut Vec<u8>,
            info: &Record,
@@ -457,8 +450,8 @@ pub fn filter<D: Drain, F: 'static + Send + Sync + Fn(&Record) -> bool>(cond: F,
 }
 
 /// Filter by log level
-pub fn filter_level<D: Drain>(level: Level, d: D) -> FilterLevel<D> {
-    FilterLevel::new(d, level)
+pub fn level_filter<D: Drain>(level: Level, d: D) -> LevelFilter<D> {
+    LevelFilter::new(d, level)
 }
 
 /// Create Duplicate drain

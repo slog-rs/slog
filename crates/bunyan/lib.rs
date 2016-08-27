@@ -6,10 +6,9 @@
 //! extern crate slog_bunyan;
 //!
 //! use slog::*;
-//! use slog::drain::IntoLogger;
 //!
 //! fn main() {
-//!     let root = drain::stream(
+//!     let root = stream(
 //!                 std::io::stderr(),
 //!                 slog_bunyan::new()
 //!                 ).into_logger(o!("build-id" => "8dfljdf"));

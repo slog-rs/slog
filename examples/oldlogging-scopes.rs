@@ -5,7 +5,7 @@ extern crate slog_stdlog;
 #[macro_use]
 extern crate log;
 
-use slog::drain::IntoLogger;
+use slog::IntoLogger;
 
 fn bar() {
     info!("inside bar!");

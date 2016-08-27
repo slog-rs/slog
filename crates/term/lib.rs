@@ -6,7 +6,7 @@
 //! extern crate slog_term;
 //!
 //! use slog::*;
-//! use slog::drain::IntoLogger;
+//! use slog::IntoLogger;
 //!
 //! fn main() {
 //!     let root = slog_term::async_stderr().into_logger(o!("build-id" => "8dfljdf"));
@@ -27,7 +27,7 @@ use ansi_term::Colour;
 use isatty::{stderr_isatty, stdout_isatty};
 
 use slog::Record;
-use slog::drain::{Streamer, AsyncStreamer};
+use slog::{Streamer, AsyncStreamer};
 use slog::{Level, OwnedKeyValueNode};
 use slog::format::Format as SlogFormat;
 

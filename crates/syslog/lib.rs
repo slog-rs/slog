@@ -27,14 +27,9 @@ extern crate syslog;
 extern crate nix;
 extern crate rustc_serialize as serialize;
 
-use slog::format;
 use slog::format::Format;
-use slog::drain;
-use slog::ser;
-use slog::Level;
+use slog::{ser, Drain, Level, Record, OwnedKeyValueNode, format};
 use slog::ser::Serializer;
-use slog::Record;
-use slog::OwnedKeyValueNode;
 use std::io;
 use std::sync::Mutex;
 use serialize::hex::ToHex;
@@ -72,18 +67,18 @@ impl Streamer3164 {
     }
 }
 
-impl drain::Drain for Streamer3164 {
+impl Drain for Streamer3164 {
     fn log(&self,
            mut buf: &mut Vec<u8>,
            info: &Record,
            logger_values: &OwnedKeyValueNode)
-           -> slog::drain::Result<()> {
+           -> slog::Result<()> {
         try!(self.format.format(&mut buf, info, logger_values));
         let sever = level_to_severity(info.level());
         {
             let io = try!(self.io
                 .lock()
-                .map_err(|_| -> drain::Error { drain::ErrorKind::LockError.into() }));
+                .map_err(|_| -> slog::Error { slog::ErrorKind::LockError.into() }));
             try!(io.send(sever, &String::from_utf8_lossy(&buf)));
         }
         Ok(())

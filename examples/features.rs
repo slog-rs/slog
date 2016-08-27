@@ -4,7 +4,6 @@ extern crate slog_json;
 extern crate slog_term;
 
 use slog::*;
-use slog::drain::{IntoLogger, AtomicSwitchCtrl};
 use std::thread;
 
 use std::sync::atomic::Ordering::SeqCst;
@@ -67,9 +66,9 @@ fn main() {
             // `AtomicSwitch` drain can swap it's interior atomically (race-free).
             ctrl.set(
                 // drains are composable and reusable
-                drain::filter_level(
+                level_filter(
                     Level::Info,
-                    drain::async_stream(
+                    async_stream(
                         std::io::stderr(),
                         // multiple outputs formats are supported
                         slog_json::new(),

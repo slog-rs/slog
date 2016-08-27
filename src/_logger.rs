@@ -20,7 +20,7 @@ thread_local! {
 /// Loggers form hierarchies sharing a drain. Setting a drain on
 /// any logger will change it on all loggers in given hierarchy.
 pub struct Logger {
-    drain: Arc<drain::Drain>,
+    drain: Arc<Drain>,
     values: Arc<OwnedKeyValueNode>,
 }
 
@@ -73,10 +73,10 @@ impl Logger {
     /// fn main() {
     ///     let root = slog::Logger::new_root(
     ///         o!("key1" => "value1", "key2" => "value2"),
-    ///         slog::drain::discard()
+    ///         slog::discard()
     ///     );
     /// }
-    pub fn new_root<D: 'static + drain::Drain + Sized>(values: Vec<OwnedKeyValue>, d: D) -> Logger {
+    pub fn new_root<D: 'static + Drain + Sized>(values: Vec<OwnedKeyValue>, d: D) -> Logger {
         Logger {
             drain: Arc::new(d),
             values: Arc::new(OwnedKeyValueNode::new_root(values)),
@@ -95,10 +95,10 @@ impl Logger {
     /// ```
     /// #[macro_use]
     /// extern crate slog;
-    /// use slog::drain::IntoLogger;
+    /// use slog::IntoLogger;
     ///
     /// fn main() {
-    ///     let root = slog::drain::discard()
+    ///     let root = slog::discard()
     ///         .into_logger(o!("key1" => "value1", "key2" => "value2"));
     ///     let log = root.new(o!("key" => "value"));
     /// }

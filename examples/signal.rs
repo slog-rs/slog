@@ -14,12 +14,10 @@ use std::sync::atomic::Ordering::SeqCst;
 use std::{thread, io};
 use slog::*;
 
-use slog::drain::IntoLogger;
-
 lazy_static! {
     // global atomic switch drain control
-    static ref ATOMIC_DRAIN_SWITCH : drain::AtomicSwitchCtrl = drain::AtomicSwitchCtrl::new(
-        drain::discard()
+    static ref ATOMIC_DRAIN_SWITCH : AtomicSwitchCtrl = AtomicSwitchCtrl::new(
+        discard()
     );
 
     // track current state of the atomic switch drain
@@ -32,7 +30,7 @@ fn atomic_drain_switch() {
     ATOMIC_DRAIN_SWITCH_STATE.store(new, SeqCst);
 
     if new {
-        ATOMIC_DRAIN_SWITCH.set(drain::stream(io::stdout(), slog_json::new()))
+        ATOMIC_DRAIN_SWITCH.set(stream(io::stdout(), slog_json::new()))
     } else {
         ATOMIC_DRAIN_SWITCH.set(slog_term::stdout())
     }
@@ -50,7 +48,7 @@ fn main() {
         signal::sigaction(signal::SIGUSR1, &sig_action).unwrap();
     }
 
-    let drain = slog::drain::duplicate(slog_term::stderr(), ATOMIC_DRAIN_SWITCH.drain());
+    let drain = slog::duplicate(slog_term::stderr(), ATOMIC_DRAIN_SWITCH.drain());
 
     atomic_drain_switch();
 

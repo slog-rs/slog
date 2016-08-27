@@ -26,7 +26,7 @@ extern crate crossbeam;
 use log::LogMetadata;
 use std::sync::Arc;
 use std::cell::RefCell;
-use slog::drain::IntoLogger;
+use slog::IntoLogger;
 
 use slog::Level;
 use crossbeam::sync::ArcCell;
@@ -38,7 +38,7 @@ thread_local! {
 lazy_static! {
     static ref GLOBAL_LOGGER : ArcCell<slog::Logger> = ArcCell::new(
         Arc::new(
-            slog::drain::discard().into_logger(o!())
+            slog::discard().into_logger(o!())
         )
     );
 }
@@ -98,7 +98,7 @@ impl log::Log for Logger {
 /// fn main() {
 ///     let root = Logger::new_root(
 ///         o!("build-id" => "8dfljdf"),
-///         slog::drain::discard(),
+///         slog::discard(),
 ///     );
 ///     slog_stdlog::set_logger(root).unwrap();
 ///     // Note: this `info!(...)` macro comes from `log` crate
@@ -144,7 +144,7 @@ pub fn set_logger_level(logger: slog::Logger,
 /// }
 /// ```
 pub fn init() -> Result<(), log::SetLoggerError> {
-    let drain = slog::drain::filter_level(Level::Info, slog_term::stderr());
+    let drain = slog::level_filter(Level::Info, slog_term::stderr());
     set_logger(drain.into_logger(o!()))
 }
 

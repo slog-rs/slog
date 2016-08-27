@@ -20,7 +20,7 @@ use std::thread;
 use slog::Logger;
 
 thread_local!(static TL_LOG: RefCell<Logger> = RefCell::new(
-    Logger::new_root(o!("logger" => "unititalized"), slog::drain::discard() )
+    Logger::new_root(o!("logger" => "unititalized"), slog::discard() )
 ));
 
 fn foo() {
@@ -31,7 +31,7 @@ fn foo() {
 
 fn main() {
     let root = Logger::new_root(o!("version" => "0.0.1", "build-id" => "8dfljdf"),
-                                slog::drain::discard());
+                                slog::discard());
 
     TL_LOG.with(|log| {
         *log.borrow_mut() = root.new(o!("thread-id" => "main"));

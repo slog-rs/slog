@@ -19,7 +19,7 @@ fn main() {
             TL_THREAD_ID.with(|id| { id.borrow().clone() })
         }
         ),
-                                slog::drain::discard());
+                                slog::discard());
 
     let mut join = vec![];
 

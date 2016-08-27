@@ -9,14 +9,14 @@ extern crate test;
 use std::io;
 use test::Bencher;
 use slog::*;
-use slog::drain::IntoLogger;
+use slog::IntoLogger;
 
 struct BlackBoxDrain;
 
-impl drain::Drain for BlackBoxDrain {
+impl Drain for BlackBoxDrain {
     fn log(&self,
            buf: &mut Vec<u8>,
-           ri: &Record, o : &OwnedKeyValueNode) -> drain::Result<()> {
+           ri: &Record, o : &OwnedKeyValueNode) -> Result<()> {
 
         test::black_box((buf, ri, o));
         Ok(())
@@ -111,7 +111,7 @@ fn log_discard_i32closure(b: &mut Bencher) {
 
 #[bench]
 fn log_stream_json_blackbox_i32val(b: &mut Bencher) {
-    let drain = drain::stream(BlackBoxWriter, slog_json::new());
+    let drain = stream(BlackBoxWriter, slog_json::new());
 
     let log = drain.into_logger(o!());
 
@@ -122,7 +122,7 @@ fn log_stream_json_blackbox_i32val(b: &mut Bencher) {
 
 #[bench]
 fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
-    let drain = drain::stream(BlackBoxWriter, slog_json::new());
+    let drain = stream(BlackBoxWriter, slog_json::new());
 
     let log = drain.into_logger(o!());
 
@@ -133,7 +133,7 @@ fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
 
 #[bench]
 fn log_stream_json_blackbox_i32pushclosure(b: &mut Bencher) {
-    let drain = drain::stream(BlackBoxWriter, slog_json::new());
+    let drain = stream(BlackBoxWriter, slog_json::new());
 
     let log = drain.into_logger(o!());
 
@@ -149,7 +149,7 @@ const LONG_STRING : &'static str = "A long string that would take some time to a
 
 #[bench]
 fn log_stream_json_blackbox_strclosure(b: &mut Bencher) {
-    let drain = drain::stream(BlackBoxWriter, slog_json::new());
+    let drain = stream(BlackBoxWriter, slog_json::new());
 
     let log = drain.into_logger(o!());
 
@@ -162,7 +162,7 @@ fn log_stream_json_blackbox_strclosure(b: &mut Bencher) {
 
 #[bench]
 fn log_stream_json_blackbox_strpushclosure(b: &mut Bencher) {
-    let drain = drain::stream(BlackBoxWriter, slog_json::new());
+    let drain = stream(BlackBoxWriter, slog_json::new());
 
     let log = drain.into_logger(o!());
 

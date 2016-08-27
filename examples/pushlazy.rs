@@ -4,7 +4,6 @@ extern crate slog_json;
 extern crate slog_term;
 
 use slog::*;
-use slog::drain::{IntoLogger};
 
 const VERSION: &'static str = "0.1.0";
 
