@@ -10,6 +10,8 @@ homepage = "https://github.com/dpc/slog-rs"
 repository = "https://github.com/dpc/slog-rs"
 readme = "../../README.md"
 
+[lib]
+path = "lib.rs"
 
 [dependencies]
 slog = { version = "1.0.0-alpha", path = "../.." }
