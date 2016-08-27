@@ -368,7 +368,7 @@ enum AsyncIoMsg {
 
 /// Asynchronous io::Writer
 ///
-/// TODO: Publish as a different create / use existing one?
+/// TODO: Publish as a different crate / use existing one?
 ///
 /// Wraps an `io::Writer` and writes to it in separate thread
 /// using channel to send the data.
