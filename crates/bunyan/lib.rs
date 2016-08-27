@@ -24,7 +24,7 @@ extern crate chrono;
 extern crate slog_json;
 
 use slog_json::Json;
-use slog::RecordInfo;
+use slog::Record;
 use slog::Level;
 
 fn get_hostname() -> String {
@@ -57,16 +57,16 @@ pub fn new() -> Json {
         .add_key_values(o!(
                 "pid" => nix::unistd::getpid() as usize,
                 "host" => get_hostname(),
-                "time" => |rinfo : &RecordInfo| {
+                "time" => |rinfo : &Record| {
                     rinfo.ts().to_rfc3339()
                 },
-                "level" => |rinfo : &RecordInfo| {
+                "level" => |rinfo : &Record| {
                     level_to_string(rinfo.level())
                 },
                 // TODO: slog loggers don't have names...
                 "name" => "slog-rs",
                 "v" => 0usize,
-                "msg" => |rinfo : &RecordInfo| {
+                "msg" => |rinfo : &Record| {
                     rinfo.msg().to_string()
                 }
             ));
@@ -79,7 +79,7 @@ mod test {
     use super::get_hostname;
     use chrono::{TimeZone, UTC};
     use nix;
-    use slog::RecordInfo;
+    use slog::Record;
     use slog::Level;
     use slog::format::Format;
     use slog::OwnedKeyValueNode;
@@ -90,7 +90,7 @@ mod test {
 
 
         let msg = &"message";
-        let info = RecordInfo::new(Level::Info, msg, "filepath", 11192, "modulepath", &[]);
+        let info = Record::new(Level::Info, msg, "filepath", 11192, "modulepath", &[]);
 
         info.set_ts(UTC.ymd(2014, 7, 8).and_hms(9, 10, 11));
 

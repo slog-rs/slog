@@ -25,7 +25,7 @@ extern crate serde_json;
 use std::io;
 
 use slog_serde::SerdeSerializer;
-use slog::RecordInfo;
+use slog::Record;
 use slog::{Level, OwnedKeyValue, OwnedKeyValueNode};
 use slog::Level::*;
 use slog::format;
@@ -61,13 +61,13 @@ impl Json {
         Json {
             newlines: true,
             values: o!(
-                "ts" => move |rinfo : &RecordInfo| {
+                "ts" => move |rinfo : &Record| {
                     rinfo.ts().to_rfc3339()
                 },
-                "level" => move |rinfo : &RecordInfo| {
+                "level" => move |rinfo : &Record| {
                     level_to_string(rinfo.level())
                 },
-                "msg" => move |rinfo : &RecordInfo| {
+                "msg" => move |rinfo : &Record| {
                     rinfo.msg().to_string()
                 }
                 ),
@@ -173,7 +173,7 @@ impl<W: io::Write> io::Write for SkipFirstByte<W> {
 impl format::Format for Json {
     fn format(&self,
               io: &mut io::Write,
-              rinfo: &RecordInfo,
+              rinfo: &Record,
               logger_values: &OwnedKeyValueNode)
               -> format::Result<()> {
         let _ = try!(write!(io, "{{"));

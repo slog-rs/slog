@@ -63,7 +63,7 @@ macro_rules! log(
         let lvl = $lvl;
         if lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             $l.log(
-                &$crate::RecordInfo::new(
+                &$crate::Record::new(
                     lvl,
                     &$msg,
                     file!(),
@@ -78,7 +78,7 @@ macro_rules! log(
         let lvl = $lvl;
         if lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             $l.log(
-                &$crate::RecordInfo::new(
+                &$crate::Record::new(
                     $lvl,
                     &$msg,
                     file!(),
@@ -99,7 +99,7 @@ macro_rules! log(
 macro_rules! slog_log(
     ($l:expr, $lvl:expr, $msg:expr) => {
         $l.log(
-            &$crate::RecordInfo::new(
+            &$crate::Record::new(
                 $lvl,
                 &$msg,
                 file!(),
@@ -111,7 +111,7 @@ macro_rules! slog_log(
     };
     ($l:expr, $lvl:expr, $msg:expr, $($k:expr => $v:expr),*) => {
         $l.log(
-            &$crate::RecordInfo::new(
+            &$crate::Record::new(
                 $lvl,
                 &$msg,
                 file!(),

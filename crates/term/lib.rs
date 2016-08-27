@@ -26,7 +26,7 @@ use rustc_serialize::hex::ToHex;
 use ansi_term::Colour;
 use isatty::{stderr_isatty, stdout_isatty};
 
-use slog::RecordInfo;
+use slog::Record;
 use slog::drain::{Streamer, AsyncStreamer};
 use slog::{Level, OwnedKeyValueNode};
 use slog::format::Format as SlogFormat;
@@ -188,7 +188,7 @@ impl<W: io::Write> slog::ser::Serializer for Serializer<W> {
 impl SlogFormat for Format {
     fn format(&self,
               io: &mut io::Write,
-              info: &RecordInfo,
+              info: &Record,
               logger_values: &OwnedKeyValueNode)
               -> slog::format::Result<()> {
         let level_color = Colour::Fixed(severity_to_color(info.level()));

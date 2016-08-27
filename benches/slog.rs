@@ -16,7 +16,7 @@ struct BlackBoxDrain;
 impl drain::Drain for BlackBoxDrain {
     fn log(&self,
            buf: &mut Vec<u8>,
-           ri: &RecordInfo, o : &OwnedKeyValueNode) -> drain::Result<()> {
+           ri: &Record, o : &OwnedKeyValueNode) -> drain::Result<()> {
 
         test::black_box((buf, ri, o));
         Ok(())
@@ -105,7 +105,7 @@ fn log_discard_i32closure(b: &mut Bencher) {
     let log = BlackBoxDrain.into_logger(o!());
 
     b.iter(|| {
-        info!(log, "", "i32" => |_:&RecordInfo|{5});
+        info!(log, "", "i32" => |_:&Record|{5});
     });
 }
 
@@ -127,7 +127,7 @@ fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
     let log = drain.into_logger(o!());
 
     b.iter(|| {
-        info!(log, "", "i32" => |_:&RecordInfo|{5});
+        info!(log, "", "i32" => |_:&Record|{5});
     });
 }
 
@@ -138,7 +138,7 @@ fn log_stream_json_blackbox_i32pushclosure(b: &mut Bencher) {
     let log = drain.into_logger(o!());
 
     b.iter(|| {
-        info!(log, "", "i32" => PushLazy(|_:&RecordInfo, ser : ValueSerializer|{
+        info!(log, "", "i32" => PushLazy(|_:&Record, ser : ValueSerializer|{
             ser.serialize(5)
         }));
     });
@@ -154,7 +154,7 @@ fn log_stream_json_blackbox_strclosure(b: &mut Bencher) {
     let log = drain.into_logger(o!());
 
     b.iter(|| {
-        info!(log, "", "str" => |_:&RecordInfo| {
+        info!(log, "", "str" => |_:&Record| {
             String::from(LONG_STRING)
         });
     });
@@ -167,7 +167,7 @@ fn log_stream_json_blackbox_strpushclosure(b: &mut Bencher) {
     let log = drain.into_logger(o!());
 
     b.iter(|| {
-        info!(log, "", "str" => PushLazy(|_:&RecordInfo, ser : ValueSerializer|{
+        info!(log, "", "str" => PushLazy(|_:&Record, ser : ValueSerializer|{
             ser.serialize(LONG_STRING)
         }));
     });

@@ -1,4 +1,4 @@
-use super::RecordInfo;
+use super::Record;
 
 use super::OwnedKeyValueNode;
 
@@ -30,7 +30,7 @@ pub trait Format: Send + Sync + Sized {
     /// Format one logging record and write into `io`
     fn format(&self,
               io: &mut io::Write,
-              info: &RecordInfo,
+              info: &Record,
               logger_values: &OwnedKeyValueNode)
               -> Result<()>;
 }

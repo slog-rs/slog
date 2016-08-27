@@ -112,7 +112,7 @@ impl Logger {
     /// Log one logging record
     ///
     /// Use specific logging functions instead.
-    pub fn log(&self, record: &RecordInfo) {
+    pub fn log(&self, record: &Record) {
 
         // By default errors in loggers are ignored
         TL_BUF.with(|buf| {
@@ -124,8 +124,8 @@ impl Logger {
     }
 }
 
-/// Common information about a logging record
-pub struct RecordInfo<'a> {
+/// Logging record
+pub struct Record<'a> {
     /// Lazily initialized timestamp
     ///
     /// Since getting current time requires a
@@ -146,8 +146,8 @@ pub struct RecordInfo<'a> {
     values: &'a [BorrowedKeyValue<'a>],
 }
 
-impl<'a> RecordInfo<'a> {
-    /// Create a new `RecordInfo`
+impl<'a> Record<'a> {
+    /// Create a new `Record`
     #[inline]
     pub fn new(level: Level,
                msg: &'a IntoMsg,
@@ -156,7 +156,7 @@ impl<'a> RecordInfo<'a> {
                module: &'a str,
                values: &'a [BorrowedKeyValue<'a>])
                -> Self {
-        RecordInfo {
+        Record {
             ts: RefCell::new(None),
             level: level,
             msg: msg,

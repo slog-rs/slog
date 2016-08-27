@@ -76,7 +76,7 @@ impl log::Log for Logger {
         let file = r.location().file();
         let line = r.location().line();
         with_current_logger(
-            |l| l.log(&slog::RecordInfo::new(level, args, file, line, module, &[]))
+            |l| l.log(&slog::Record::new(level, args, file, line, module, &[]))
         )
     }
 }

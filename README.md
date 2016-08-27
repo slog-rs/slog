@@ -127,7 +127,7 @@ fn main() {
         // and unfortunate `|_ : &_|` that helps
         // current `rustc` limitations. In the future,
         // a `|_|` could work.
-        move |_ : &RecordInfo| { counter.load(SeqCst)}
+        move |_ : &Record| { counter.load(SeqCst)}
     }));
 
     // Loggers  can be cloned, passed between threads and stored without hassle.
@@ -155,7 +155,7 @@ fn main() {
             // Closures can be used for lazy evaluation:
             // This `slow_fib` won't be evaluated, as the current drain discards
             // "trace" level logging records.
-            debug!(log, "debug", "lazy-closure" => |_ : &RecordInfo| slow_fib(40));
+            debug!(log, "debug", "lazy-closure" => |_ : &Record| slow_fib(40));
 
             info!(log, "subthread", "stage" => "start");
             thread::sleep(Duration::new(1, 0));
