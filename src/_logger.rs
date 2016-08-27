@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 use std::borrow::Cow;
+use std::io::Write;
 
 thread_local! {
     static TL_BUF: RefCell<Vec<u8>> = RefCell::new(Vec::with_capacity(128))
@@ -23,37 +24,50 @@ pub struct Logger {
     values: Arc<OwnedKeyValueList>,
 }
 
-/// A type that can be translated into `Msg`
-pub trait IntoMsg {
-    /// Convert to the `&str`
+/// Log Record message
+pub trait Message {
+    /// Take a string
     fn as_str(&self) -> Cow<str>;
+
+    /// Write it into `io` (which might be fast than `as_str()` it does not
+    /// need to allocate anything in certain cases.
+    fn write_to(&self, io : &mut Write) -> Result<()> {
+        try!(write!(io, "{}", self.as_str()));
+        Ok(())
+    }
+
 }
 
 // TODO: why does this conflict with &'a str?
-// impl<T : AsRef<str>> IntoMsg for T {
+// impl<T : AsRef<str>> Into<Cow<'a, str>> for T {
 // fn as_str(&self) -> Cow<str> {
 // Cow::Borrowed(self.as_ref())
 // }
 // }
 //
 
-impl<'a> IntoMsg for &'a str {
+impl<'a> Message for &'a str {
     fn as_str(&self) -> Cow<str> {
         Cow::Borrowed(self)
     }
 }
 
-impl<'a> IntoMsg for String {
+impl Message for String {
     fn as_str(&self) -> Cow<str> {
         Cow::Borrowed(self.as_str())
     }
 }
 
-impl<'a> IntoMsg for fmt::Arguments<'a> {
+impl<'a> Message for fmt::Arguments<'a> {
     fn as_str(&self) -> Cow<str> {
         let mut s = String::new();
         fmt::write(&mut s, *self).unwrap();
         Cow::Owned(s)
+    }
+
+    fn write_to(&self, io : &mut Write) -> Result<()> {
+        try!(write!(io, "{}", self));
+        Ok(())
     }
 }
 
@@ -133,7 +147,7 @@ pub struct Record<'a> {
     /// Logging level
     level: Level,
     /// Message
-    msg: &'a IntoMsg,
+    msg: &'a Message,
     /// File
     file: &'a str,
     /// Line
@@ -148,7 +162,7 @@ impl<'a> Record<'a> {
     /// Create a new `Record`
     #[inline]
     pub fn new(level: Level,
-               msg: &'a IntoMsg,
+               msg: &'a Message,
                file: &'a str,
                line: u32,
                module: &'a str,
