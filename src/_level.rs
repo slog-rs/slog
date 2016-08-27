@@ -61,6 +61,7 @@ impl Level {
     /// Cast `Level` to ordering integer 
     ///
     /// `Critical` is the smallest and `Trace` the biggest value
+    #[inline]
     pub fn as_usize(&self) -> usize {
         match *self {
             Level::Critical => 1,
@@ -75,6 +76,7 @@ impl Level {
     /// Get a `Level` from an `usize`
     ///
     /// This complements `as_usize`
+    #[inline]
     pub fn from_usize(u: usize) -> Option<Level> {
         match u {
             1 => Some(Level::Critical),
@@ -92,6 +94,7 @@ impl FilterLevel {
     /// Convert to `usize` value
     ///
     /// `Off` is 0, and `Trace` 6
+    #[inline]
     pub fn as_usize(&self) -> usize {
         match *self {
             FilterLevel::Off => 0,
@@ -107,6 +110,7 @@ impl FilterLevel {
     /// Get a `FilterLevel` from an `usize`
     ///
     /// This complements `as_usize`
+    #[inline]
     pub fn from_usize(u: usize) -> Option<FilterLevel> {
         match u {
             0 => Some(FilterLevel::Off),
@@ -121,12 +125,14 @@ impl FilterLevel {
     }
 
     /// Maximum logging level (log everything)
+    #[inline]
     pub fn max() -> Self {
         FilterLevel::Trace
     }
 
 
     /// Minimum logging level (log nothing)
+    #[inline]
     pub fn min() -> Self {
         FilterLevel::Off
     }
@@ -149,6 +155,7 @@ impl fmt::Display for Level {
 
 impl Level {
     /// Returns true if `self` is at least `level` logging level
+    #[inline]
     pub fn is_at_least(&self, level : Self) -> bool {
         self.as_usize() <= level.as_usize()
     }
