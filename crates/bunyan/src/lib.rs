@@ -24,7 +24,7 @@ extern crate chrono;
 extern crate slog_json;
 
 use slog_json::Json;
-use slog::logger::RecordInfo;
+use slog::RecordInfo;
 use slog::Level;
 
 fn get_hostname() -> String {
@@ -79,7 +79,7 @@ mod test {
     use super::get_hostname;
     use chrono::{TimeZone, UTC};
     use nix;
-    use slog::logger::RecordInfo;
+    use slog::RecordInfo;
     use slog::Level;
     use slog::format::Format;
     use slog::OwnedKeyValueNode;

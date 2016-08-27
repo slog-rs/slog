@@ -33,7 +33,7 @@ use slog::drain;
 use slog::ser;
 use slog::Level;
 use slog::ser::Serializer;
-use slog::logger::RecordInfo;
+use slog::RecordInfo;
 use slog::OwnedKeyValueNode;
 use std::io;
 use std::sync::Mutex;

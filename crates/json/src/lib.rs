@@ -25,7 +25,7 @@ extern crate serde_json;
 use std::io;
 
 use slog_serde::SerdeSerializer;
-use slog::logger::RecordInfo;
+use slog::RecordInfo;
 use slog::{Level, OwnedKeyValue, OwnedKeyValueNode};
 use slog::Level::*;
 use slog::format;

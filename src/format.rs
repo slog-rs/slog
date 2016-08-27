@@ -1,4 +1,4 @@
-use super::logger::RecordInfo;
+use super::RecordInfo;
 
 use super::OwnedKeyValueNode;
 

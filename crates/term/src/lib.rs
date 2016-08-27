@@ -26,7 +26,7 @@ use rustc_serialize::hex::ToHex;
 use ansi_term::Colour;
 use isatty::{stderr_isatty, stdout_isatty};
 
-use slog::logger::RecordInfo;
+use slog::RecordInfo;
 use slog::drain::{Streamer, AsyncStreamer};
 use slog::{Level, OwnedKeyValueNode};
 use slog::format::Format as SlogFormat;

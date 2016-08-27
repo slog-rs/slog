@@ -1,24 +1,5 @@
-//! # Logger
-//!
-//! Loggers are thread-safe and reference counted, so can be freely
-//! passed around the code.
-//!
-//! Each logger is built with a set of key-values.
-//!
-//! Child loggers are build from existing loggers, and copy
-//! all the key-values from their parents
-//!
-//! Loggers form hierarchies sharing a drain. Setting a drain on
-//! any logger will change it on all loggers in given hierarchy.
-use super::{OwnedKeyValue, Level, BorrowedKeyValue, OwnedKeyValueNode};
-use std::sync::Arc;
 use std::cell::RefCell;
 use std::borrow::Cow;
-use std::fmt;
-
-use drain;
-
-use chrono;
 
 thread_local! {
     static TL_BUF: RefCell<Vec<u8>> = RefCell::new(Vec::with_capacity(128))
@@ -26,7 +7,18 @@ thread_local! {
 
 // TODO: Implement custom clone, that starts with a new buffer
 #[derive(Clone)]
-/// Logger
+/// # Logger
+///
+/// Loggers are thread-safe and reference counted, so can be freely
+/// passed around the code.
+///
+/// Each logger is built with a set of key-values.
+///
+/// Child loggers are build from existing loggers, and copy
+/// all the key-values from their parents
+///
+/// Loggers form hierarchies sharing a drain. Setting a drain on
+/// any logger will change it on all loggers in given hierarchy.
 pub struct Logger {
     drain: Arc<drain::Drain>,
     values: Arc<OwnedKeyValueNode>,

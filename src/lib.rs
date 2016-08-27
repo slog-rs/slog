@@ -279,21 +279,17 @@ macro_rules! slog_trace(
 /// Drains - logging outputs
 pub mod drain;
 
-/// Logger - logging handle
-pub mod logger;
-
 /// Serialization
 pub mod ser;
 
 /// Output formating
 pub mod format;
 
-pub use logger::Logger;
-pub use logger::RecordInfo;
 pub use ser::{PushLazy, ValueSerializer, Serializer, Serialize};
 pub use self::drain::{Error, Result, ErrorKind};
 
 include!("_level.rs");
+include!("_logger.rs");
 
 /// Key value pair that can be owned by `Logger`
 pub type OwnedKeyValue = (&'static str, Box<ser::SyncSerialize>);

@@ -10,7 +10,7 @@ use std::mem;
 
 use super::{Level, Logger};
 use super::format;
-use super::logger::RecordInfo;
+use super::RecordInfo;
 use super::{OwnedKeyValue, OwnedKeyValueNode};
 
 use crossbeam::sync::ArcCell;

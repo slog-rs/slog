@@ -4,7 +4,7 @@ use std;
 use std::sync::Arc;
 use std::rc::Rc;
 
-use super::logger::RecordInfo;
+use super::RecordInfo;
 
 #[allow(missing_docs)]
 mod error {
@@ -43,7 +43,7 @@ pub trait Serialize {
 }
 
 /// Value that can be serialized and stored
-/// in logger itself.
+/// in `Logger` itself.
 ///
 /// As Loggers itself must be thread-safe, they can only
 /// store values implementing this trait.
