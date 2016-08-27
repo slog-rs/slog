@@ -89,7 +89,7 @@ macro_rules! log(
     };
 );
 
-/// Log message of a given level
+/// Log message of a given level (alias)
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
