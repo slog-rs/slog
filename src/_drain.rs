@@ -36,7 +36,14 @@ mod error {
     }
 }
 
-pub use self::error::{Error, Result, ErrorKind};
+/// Logging error
+pub use self::error::Error;
+
+/// Logging result
+pub use self::error::Result;
+
+/// Drain logging error type
+pub use self::error::ErrorKind;
 
 /// Logging drain
 ///
@@ -50,7 +57,7 @@ pub trait Drain: Send + Sync {
     /// Write one logging record
     /// As an optimization (avoiding allocations), loggers are responsible for
     /// providing a byte buffer, that `Drain` can use for their own needs.
-    fn log(&self, buf: &mut Vec<u8>, info: &Record, &OwnedKeyValueNode) -> Result<()>;
+    fn log(&self, buf: &mut Vec<u8>, info: &Record, &OwnedKeyValueList) -> Result<()>;
 }
 
 /// Convenience trait allowing turning drain into root `Logger`
@@ -66,13 +73,13 @@ pub trait IntoLogger: Drain + Sized + 'static {
 impl<D: Drain + Sized + 'static> IntoLogger for D {}
 
 impl<D: Drain> Drain for Box<D> {
-    fn log(&self, buf: &mut Vec<u8>, info: &Record, o: &OwnedKeyValueNode) -> Result<()> {
+    fn log(&self, buf: &mut Vec<u8>, info: &Record, o: &OwnedKeyValueList) -> Result<()> {
         (**self).log(buf, info, o)
     }
 }
 
 impl<D: Drain> Drain for Arc<D> {
-    fn log(&self, buf: &mut Vec<u8>, info: &Record, o: &OwnedKeyValueNode) -> Result<()> {
+    fn log(&self, buf: &mut Vec<u8>, info: &Record, o: &OwnedKeyValueList) -> Result<()> {
         (**self).log(buf, info, o)
     }
 }
@@ -81,15 +88,15 @@ impl<D: Drain> Drain for Arc<D> {
 pub struct Discard;
 
 impl Drain for Discard {
-    fn log(&self, _: &mut Vec<u8>, _: &Record, _: &OwnedKeyValueNode) -> Result<()> {
+    fn log(&self, _: &mut Vec<u8>, _: &Record, _: &OwnedKeyValueList) -> Result<()> {
         Ok(())
     }
 }
 
-/// A handle to `AtomicSwitch` allowing to switch it's sub-drain
+/// Handle to `AtomicSwitch` allowing switching it's sub-drain
 pub struct AtomicSwitchCtrl(Arc<ArcCell<Box<Drain>>>);
 
-/// A drain allowing to atomically switch a sub-drain at runtime
+/// Drain allowing atomically switching a sub-drain in runtime
 pub struct AtomicSwitch(Arc<ArcCell<Box<Drain>>>);
 
 impl AtomicSwitchCtrl {
@@ -123,7 +130,7 @@ impl Drain for AtomicSwitch {
     fn log(&self,
            mut buf: &mut Vec<u8>,
            info: &Record,
-           logger_values: &OwnedKeyValueNode)
+           logger_values: &OwnedKeyValueList)
            -> Result<()> {
         self.0.get().log(buf, info, logger_values)
     }
@@ -153,7 +160,7 @@ impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer
     fn log(&self,
            mut buf: &mut Vec<u8>,
            info: &Record,
-           logger_values: &OwnedKeyValueNode)
+           logger_values: &OwnedKeyValueList)
            -> Result<()> {
 
         let res =
@@ -198,7 +205,7 @@ impl<F: format::Format + Send> Drain for AsyncStreamer<F> {
     fn log(&self,
            mut buf: &mut Vec<u8>,
            info: &Record,
-           logger_values: &OwnedKeyValueNode)
+           logger_values: &OwnedKeyValueList)
            -> Result<()> {
         try!(self.format.format(&mut buf, info, logger_values));
         {
@@ -211,10 +218,10 @@ impl<F: format::Format + Send> Drain for AsyncStreamer<F> {
     }
 }
 
-/// Filter log record
+/// Drain filtering records
 ///
-/// Wraps a drain and passes records to it, only if their `Record`
-/// satisifies a condition `cond`.
+/// Wraps a `Drain` and passes `Record`-s to it, only if they satisifies a
+/// condition `cond`.
 pub struct Filter<D: Drain> {
     drain: D,
     // eliminated dynamic dispatch, after rust learns `-> impl Trait`
@@ -236,7 +243,7 @@ impl<D: Drain> Drain for Filter<D> {
     fn log(&self,
            buf: &mut Vec<u8>,
            info: &Record,
-           logger_values: &OwnedKeyValueNode)
+           logger_values: &OwnedKeyValueList)
            -> Result<()> {
         if (self.cond)(&info) {
             self.drain.log(buf, info, logger_values)
@@ -273,7 +280,7 @@ impl<D: Drain> Drain for LevelFilter<D> {
     fn log(&self,
            buf: &mut Vec<u8>,
            info: &Record,
-           logger_values: &OwnedKeyValueNode)
+           logger_values: &OwnedKeyValueList)
            -> Result<()> {
         if info.level().is_at_least(self.level) {
             self.drain.log(buf, info, logger_values)
@@ -283,7 +290,9 @@ impl<D: Drain> Drain for LevelFilter<D> {
     }
 }
 
-/// Duplicate records into two drains
+/// Drain duplicating records to two sub-drains
+///
+/// Can be nested for more than two outputs.
 pub struct Duplicate<D1: Drain, D2: Drain> {
     drain1: D1,
     drain2: D2,
@@ -304,7 +313,7 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
     fn log(&self,
            buf: &mut Vec<u8>,
            info: &Record,
-           logger_values: &OwnedKeyValueNode)
+           logger_values: &OwnedKeyValueList)
            -> Result<()> {
         let res1 = self.drain1.log(buf, info, logger_values);
         buf.clear();
@@ -343,7 +352,7 @@ impl<D1: Drain, D2: Drain> Drain for Failover<D1, D2> {
     fn log(&self,
            buf: &mut Vec<u8>,
            info: &Record,
-           logger_values: &OwnedKeyValueNode)
+           logger_values: &OwnedKeyValueList)
            -> Result<()> {
         match self.drain1.log(buf, info, logger_values) {
             Ok(_) => Ok(()),
@@ -427,16 +436,22 @@ impl Drop for AsyncIoWriter {
     }
 }
 
+/// Stream logging records to IO
+///
 /// Create `Streamer` drain
 pub fn stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> Streamer<W, F> {
     Streamer::new(io, format)
 }
 
+/// Stream logging records to IO asynchronously
+///
 /// Create `AsyncStreamer` drain
 pub fn async_stream<W: io::Write + Send + 'static, F: format::Format>(io: W, format: F) -> AsyncStreamer<F> {
     AsyncStreamer::new(io, format)
 }
 
+/// Discard all logging records
+///
 /// Create a Discard drain
 pub fn discard() -> Discard {
     Discard
@@ -454,12 +469,18 @@ pub fn level_filter<D: Drain>(level: Level, d: D) -> LevelFilter<D> {
     LevelFilter::new(d, level)
 }
 
-/// Create Duplicate drain
+/// Duplicate records to two drains
+///
+/// Create `Duplicate` drain.
+///
+/// Can be nested for multiple outputs.
 pub fn duplicate<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Duplicate<D1, D2> {
     Duplicate::new(d1, d2)
 }
 
-/// Create Failover drain
+/// Failover logging to secondary drain on primary's failure
+///
+/// Create `Failover` drain
 pub fn failover<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Failover<D1, D2> {
     Failover::new(d1, d2)
 }

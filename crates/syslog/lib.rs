@@ -28,7 +28,7 @@ extern crate nix;
 extern crate rustc_serialize as serialize;
 
 use slog::format::Format;
-use slog::{ser, Drain, Level, Record, OwnedKeyValueNode, format};
+use slog::{ser, Drain, Level, Record, OwnedKeyValueList, format};
 use slog::ser::Serializer;
 use std::io;
 use std::sync::Mutex;
@@ -71,7 +71,7 @@ impl Drain for Streamer3164 {
     fn log(&self,
            mut buf: &mut Vec<u8>,
            info: &Record,
-           logger_values: &OwnedKeyValueNode)
+           logger_values: &OwnedKeyValueList)
            -> slog::Result<()> {
         try!(self.format.format(&mut buf, info, logger_values));
         let sever = level_to_severity(info.level());
@@ -99,7 +99,7 @@ impl format::Format for Format3164 {
     fn format(&self,
               io: &mut io::Write,
               rinfo: &Record,
-              logger_values: &OwnedKeyValueNode)
+              logger_values: &OwnedKeyValueList)
               -> slog::format::Result<()> {
         let mut ser = KSV::new(io, "=".into());
         {

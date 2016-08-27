@@ -28,7 +28,7 @@ use isatty::{stderr_isatty, stdout_isatty};
 
 use slog::Record;
 use slog::{Streamer, AsyncStreamer};
-use slog::{Level, OwnedKeyValueNode};
+use slog::{Level, OwnedKeyValueList};
 use slog::format::Format as SlogFormat;
 
 /// Format formatting with optional color support
@@ -189,7 +189,7 @@ impl SlogFormat for Format {
     fn format(&self,
               io: &mut io::Write,
               info: &Record,
-              logger_values: &OwnedKeyValueNode)
+              logger_values: &OwnedKeyValueList)
               -> slog::format::Result<()> {
         let level_color = Colour::Fixed(severity_to_color(info.level()));
         let bold = ansi_term::Style::new().bold();

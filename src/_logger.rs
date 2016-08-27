@@ -5,9 +5,7 @@ thread_local! {
     static TL_BUF: RefCell<Vec<u8>> = RefCell::new(Vec::with_capacity(128))
 }
 
-// TODO: Implement custom clone, that starts with a new buffer
-#[derive(Clone)]
-/// # Logger
+/// Logger
 ///
 /// Loggers are thread-safe and reference counted, so can be freely
 /// passed around the code.
@@ -19,9 +17,10 @@ thread_local! {
 ///
 /// Loggers form hierarchies sharing a drain. Setting a drain on
 /// any logger will change it on all loggers in given hierarchy.
+#[derive(Clone)]
 pub struct Logger {
     drain: Arc<Drain>,
-    values: Arc<OwnedKeyValueNode>,
+    values: Arc<OwnedKeyValueList>,
 }
 
 /// A type that can be translated into `Msg`
@@ -79,7 +78,7 @@ impl Logger {
     pub fn new_root<D: 'static + Drain + Sized>(values: Vec<OwnedKeyValue>, d: D) -> Logger {
         Logger {
             drain: Arc::new(d),
-            values: Arc::new(OwnedKeyValueNode::new_root(values)),
+            values: Arc::new(OwnedKeyValueList::new_root(values)),
         }
     }
 
@@ -105,7 +104,7 @@ impl Logger {
     pub fn new(&self, values: Vec<OwnedKeyValue>) -> Logger {
         Logger {
             drain: self.drain.clone(),
-            values: Arc::new(OwnedKeyValueNode::new(values, self.values.clone())),
+            values: Arc::new(OwnedKeyValueList::new(values, self.values.clone())),
         }
     }
 
@@ -184,6 +183,8 @@ impl<'a> Record<'a> {
 
 
     /// Set timestamp
+    ///
+    /// Useful for manually forcing timestamp value (eg. in testing).
     pub fn set_ts(&self, ts: chrono::DateTime<chrono::UTC>) {
         *self.ts.borrow_mut() = Some(ts);
     }

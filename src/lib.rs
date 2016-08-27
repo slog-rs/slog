@@ -91,7 +91,7 @@ macro_rules! log(
     };
 );
 
-/// Alias for `log`
+/// Log message of a given level
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
@@ -134,7 +134,7 @@ macro_rules! crit(
     };
 );
 
-/// Log critical level record
+/// Log critical level record (alias)
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
@@ -185,7 +185,7 @@ macro_rules! warn(
     };
 );
 
-/// Log warning level record
+/// Log warning level record (alias)
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
@@ -210,7 +210,7 @@ macro_rules! info(
     };
 );
 
-/// Log info level record
+/// Log info level record (alias)
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
@@ -235,7 +235,7 @@ macro_rules! debug(
     };
 );
 
-/// Log debug level record
+/// Log debug level record (alias)
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
@@ -261,7 +261,7 @@ macro_rules! trace(
     };
 );
 
-/// Log trace level record
+/// Log trace level record (alias)
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
@@ -287,21 +287,24 @@ include!("_level.rs");
 include!("_logger.rs");
 include!("_drain.rs");
 
-/// Key value pair that can be owned by `Logger`
-pub type OwnedKeyValue = (&'static str, Box<ser::SyncSerialize>);
-/// Key value pair that can be part of each logging record
+/// Key value pair that can be part of a logging record
 pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
 
-/// Values specific for this Logger and reference to it's parent values
-pub struct OwnedKeyValueNode {
-    parent: Option<Arc<OwnedKeyValueNode>>,
+/// Key value pair that can be owned by `Logger`
+///
+/// See `o!(...)` macro.
+pub type OwnedKeyValue = (&'static str, Box<ser::SyncSerialize>);
+
+/// Chain of `OwnedKeyValue`-s of a `Logger` and its ancestors
+pub struct OwnedKeyValueList {
+    parent: Option<Arc<OwnedKeyValueList>>,
     values: Vec<OwnedKeyValue>,
 }
 
-impl OwnedKeyValueNode {
+impl OwnedKeyValueList {
     /// New `OwnedKeyValue` with a parent
-    pub fn new(values: Vec<OwnedKeyValue>, parent: Arc<OwnedKeyValueNode>) -> Self {
-        OwnedKeyValueNode {
+    pub fn new(values: Vec<OwnedKeyValue>, parent: Arc<OwnedKeyValueList>) -> Self {
+        OwnedKeyValueList {
             parent: Some(parent),
             values: values,
         }
@@ -309,34 +312,34 @@ impl OwnedKeyValueNode {
 
     /// New `OwnedKeyValue` without a parent (root)
     pub fn new_root(values: Vec<OwnedKeyValue>) -> Self {
-        OwnedKeyValueNode {
+        OwnedKeyValueList {
             parent: None,
             values: values,
         }
     }
 
     /// Iterator over `OwnedKeyValue`-s
-    pub fn iter(&self) -> OwnedKeyValueNodeIterator {
-        OwnedKeyValueNodeIterator::new(self)
+    pub fn iter(&self) -> OwnedKeyValueListIterator {
+        OwnedKeyValueListIterator::new(self)
     }
 }
 
 /// Iterator over `OwnedKeyValue`-s
-pub struct OwnedKeyValueNodeIterator<'a> {
-    next_node: &'a Option<Arc<OwnedKeyValueNode>>,
+pub struct OwnedKeyValueListIterator<'a> {
+    next_node: &'a Option<Arc<OwnedKeyValueList>>,
     iter: std::slice::Iter<'a, OwnedKeyValue>,
 }
 
-impl<'a> OwnedKeyValueNodeIterator<'a> {
-    fn new(node: &'a OwnedKeyValueNode) -> Self {
-        OwnedKeyValueNodeIterator {
+impl<'a> OwnedKeyValueListIterator<'a> {
+    fn new(node: &'a OwnedKeyValueList) -> Self {
+        OwnedKeyValueListIterator {
             next_node: &node.parent,
             iter: node.values.iter(),
         }
     }
 }
 
-impl<'a> Iterator for OwnedKeyValueNodeIterator<'a> {
+impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
     type Item = &'a OwnedKeyValue;
     fn next(&mut self) -> Option<Self::Item> {
         loop {

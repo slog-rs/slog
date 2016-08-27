@@ -1,6 +1,6 @@
 use super::Record;
 
-use super::OwnedKeyValueNode;
+use super::OwnedKeyValueList;
 
 use std::io;
 
@@ -25,12 +25,12 @@ mod error {
 
 pub use self::error::{Error, Result, ErrorKind};
 
-/// Format record information
+/// Formats `Record`-s into IO
 pub trait Format: Send + Sync + Sized {
     /// Format one logging record and write into `io`
     fn format(&self,
               io: &mut io::Write,
               info: &Record,
-              logger_values: &OwnedKeyValueNode)
+              logger_values: &OwnedKeyValueList)
               -> Result<()>;
 }
