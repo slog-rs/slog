@@ -440,8 +440,8 @@ pub fn stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> Strea
 }
 
 /// Create `AsyncStreamer` drain
-pub fn async_stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> Streamer<W, F> {
-    Streamer::new(io, format)
+pub fn async_stream<W: io::Write + Send + 'static, F: format::Format>(io: W, format: F) -> AsyncStreamer<F> {
+    AsyncStreamer::new(io, format)
 }
 
 /// Create a Discard drain
