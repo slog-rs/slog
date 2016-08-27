@@ -48,7 +48,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a id='src-402' class='srclink' href='../../src/slog/src/drain.rs.html#443-445' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn async_stream&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>,&nbsp;F:&nbsp;<a class='trait' href='../../slog/format/trait.Format.html' title='slog::format::Format'>Format</a>&gt;(io: W, format: F) -&gt; <a class='struct' href='../../slog/drain/struct.Streamer.html' title='slog::drain::Streamer'>Streamer</a>&lt;W,&nbsp;F&gt;</pre><div class='docblock'><p>Create <code>AsyncStreamer</code> drain</p>
+<pre class='rust fn'>pub fn async_stream&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + 'static,&nbsp;F:&nbsp;<a class='trait' href='../../slog/format/trait.Format.html' title='slog::format::Format'>Format</a>&gt;(io: W, format: F) -&gt; <a class='struct' href='../../slog/drain/struct.AsyncStreamer.html' title='slog::drain::AsyncStreamer'>AsyncStreamer</a>&lt;F&gt;</pre><div class='docblock'><p>Create <code>AsyncStreamer</code> drain</p>
 </div></section>
     <section id='search' class="content hidden"></section>
 

@@ -885,7 +885,7 @@
 
 <span class='doccomment'>/// Asynchronous io::Writer</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// TODO: Publish as a different create / use existing one?</span>
+<span class='doccomment'>/// TODO: Publish as a different crate / use existing one?</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Wraps an `io::Writer` and writes to it in separate thread</span>
 <span class='doccomment'>/// using channel to send the data.</span>
@@ -957,8 +957,8 @@
 }
 
 <span class='doccomment'>/// Create `AsyncStreamer` drain</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>async_stream</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='op'>+</span> <span class='ident'>Send</span>, <span class='ident'>F</span>: <span class='ident'>format</span>::<span class='ident'>Format</span><span class='op'>&gt;</span>(<span class='ident'>io</span>: <span class='ident'>W</span>, <span class='ident'>format</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>Streamer</span><span class='op'>&lt;</span><span class='ident'>W</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
-    <span class='ident'>Streamer</span>::<span class='ident'>new</span>(<span class='ident'>io</span>, <span class='ident'>format</span>)
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>async_stream</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>io</span>::<span class='ident'>Write</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span>, <span class='ident'>F</span>: <span class='ident'>format</span>::<span class='ident'>Format</span><span class='op'>&gt;</span>(<span class='ident'>io</span>: <span class='ident'>W</span>, <span class='ident'>format</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>AsyncStreamer</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span> {
+    <span class='ident'>AsyncStreamer</span>::<span class='ident'>new</span>(<span class='ident'>io</span>, <span class='ident'>format</span>)
 }
 
 <span class='doccomment'>/// Create a Discard drain</span>
