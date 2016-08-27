@@ -15,7 +15,7 @@ struct BlackBoxDrain;
 impl Drain for BlackBoxDrain {
     fn log(&self,
            buf: &mut Vec<u8>,
-           ri: &Record, o : &OwnedKeyValueNode) -> Result<()> {
+           ri: &Record, o : &OwnedKeyValueList) -> Result<()> {
 
         test::black_box((buf, ri, o));
         Ok(())
@@ -37,7 +37,7 @@ impl io::Write for BlackBoxWriter {
 
 #[bench]
 fn log_discard_empty(b: &mut Bencher) {
-    let log = BlackBoxDrain.into_logger(o!());
+    let log = Logger::root(BlackBoxDrain, o!());
 
     b.iter(|| {
         info!(log, "");
@@ -46,7 +46,7 @@ fn log_discard_empty(b: &mut Bencher) {
 
 #[bench]
 fn log_discard_nonempty(b: &mut Bencher) {
-    let log = BlackBoxDrain.into_logger(o!("build" => "123456", "id" => 123456));
+    let log = Logger::root(BlackBoxDrain, o!("build" => "123456", "id" => 123456));
 
     b.iter(|| {
         info!(log, "", "what" => "write");
@@ -55,7 +55,7 @@ fn log_discard_nonempty(b: &mut Bencher) {
 
 #[bench]
 fn logger_clone_empty(b: &mut Bencher) {
-    let log = BlackBoxDrain.into_logger(o!());
+    let log = Logger::root(BlackBoxDrain, o!());
 
     b.iter(|| {
         log.clone()
@@ -64,7 +64,7 @@ fn logger_clone_empty(b: &mut Bencher) {
 
 #[bench]
 fn logger_clone_nonempty(b: &mut Bencher) {
-    let log = BlackBoxDrain.into_logger(o!("build" => "123456", "id" => 123456));
+    let log = Logger::root(BlackBoxDrain, o!("build" => "123456", "id" => 123456));
 
     b.iter(|| {
         log.clone()
@@ -73,7 +73,7 @@ fn logger_clone_nonempty(b: &mut Bencher) {
 
 #[bench]
 fn logger_new_empty(b: &mut Bencher) {
-    let log = BlackBoxDrain.into_logger(o!());
+    let log = Logger::root(BlackBoxDrain, o!());
 
     b.iter(|| {
         log.new(o!())
@@ -82,7 +82,7 @@ fn logger_new_empty(b: &mut Bencher) {
 
 #[bench]
 fn logger_new_nonempty(b: &mut Bencher) {
-    let log = BlackBoxDrain.into_logger(o!("build" => "123456", "id" => 123456));
+    let log = Logger::root(BlackBoxDrain, o!("build" => "123456", "id" => 123456));
 
     b.iter(|| {
         log.new(o!("what" => "write"));
@@ -91,7 +91,7 @@ fn logger_new_nonempty(b: &mut Bencher) {
 
 #[bench]
 fn log_discard_i32val(b: &mut Bencher) {
-    let log = BlackBoxDrain.into_logger(o!());
+    let log = Logger::root(BlackBoxDrain, o!());
 
     b.iter(|| {
         info!(log, "", "i32" => 5);
@@ -101,7 +101,7 @@ fn log_discard_i32val(b: &mut Bencher) {
 
 #[bench]
 fn log_discard_i32closure(b: &mut Bencher) {
-    let log = BlackBoxDrain.into_logger(o!());
+    let log = Logger::root(BlackBoxDrain, o!());
 
     b.iter(|| {
         info!(log, "", "i32" => |_:&Record|{5});
