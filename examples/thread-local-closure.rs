@@ -15,11 +15,13 @@ fn foo(log: Logger) {
 }
 
 fn main() {
-    let root = Logger::new_root(o!("thread-id" => |_:&Record| {
+    let root = slog::Logger::root(
+        slog::discard(),
+        o!("thread-id" => |_:&Record| {
             TL_THREAD_ID.with(|id| { id.borrow().clone() })
         }
         ),
-                                slog::discard());
+        );
 
     let mut join = vec![];
 

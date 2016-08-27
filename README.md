@@ -110,7 +110,7 @@ fn main() {
     // Turn a drain into new group of loggers, sharing that drain.
     //
     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
-    let root = drain.into_logger(o!("version" => VERSION, "build-id" => "8dfljdf"));
+    let root = Logger::root(drain, o!("version" => VERSION, "build-id" => "8dfljdf"));
 
     // Build logging context as data becomes available.
     //

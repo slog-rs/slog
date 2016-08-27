@@ -10,7 +10,7 @@ const VERSION: &'static str = "0.1.0";
 fn main() {
 
     let drain = slog_term::async_stderr();
-    let log = drain.into_logger(o!("version" => VERSION, "build-id" => "8dfljdf"));
+    let log = Logger::root(drain, o!("version" => VERSION, "build-id" => "8dfljdf"));
 
     let log = log.new(o!("owned-fast-lazy" => {
         PushLazy(move |info : &Record, ser : ValueSerializer| {

@@ -9,7 +9,6 @@ extern crate test;
 use std::io;
 use test::Bencher;
 use slog::*;
-use slog::IntoLogger;
 
 struct BlackBoxDrain;
 
@@ -113,7 +112,7 @@ fn log_discard_i32closure(b: &mut Bencher) {
 fn log_stream_json_blackbox_i32val(b: &mut Bencher) {
     let drain = stream(BlackBoxWriter, slog_json::new());
 
-    let log = drain.into_logger(o!());
+    let log = Logger::root(drain, o!());
 
     b.iter(|| {
         info!(log, "",  "i32" => 5);
@@ -124,7 +123,7 @@ fn log_stream_json_blackbox_i32val(b: &mut Bencher) {
 fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
     let drain = stream(BlackBoxWriter, slog_json::new());
 
-    let log = drain.into_logger(o!());
+    let log = Logger::root(drain, o!());
 
     b.iter(|| {
         info!(log, "", "i32" => |_:&Record|{5});
@@ -135,7 +134,7 @@ fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
 fn log_stream_json_blackbox_i32pushclosure(b: &mut Bencher) {
     let drain = stream(BlackBoxWriter, slog_json::new());
 
-    let log = drain.into_logger(o!());
+    let log = Logger::root(drain, o!());
 
     b.iter(|| {
         info!(log, "", "i32" => PushLazy(|_:&Record, ser : ValueSerializer|{
@@ -151,7 +150,7 @@ const LONG_STRING : &'static str = "A long string that would take some time to a
 fn log_stream_json_blackbox_strclosure(b: &mut Bencher) {
     let drain = stream(BlackBoxWriter, slog_json::new());
 
-    let log = drain.into_logger(o!());
+    let log = Logger::root(drain, o!());
 
     b.iter(|| {
         info!(log, "", "str" => |_:&Record| {
@@ -164,7 +163,7 @@ fn log_stream_json_blackbox_strclosure(b: &mut Bencher) {
 fn log_stream_json_blackbox_strpushclosure(b: &mut Bencher) {
     let drain = stream(BlackBoxWriter, slog_json::new());
 
-    let log = drain.into_logger(o!());
+    let log = Logger::root(drain, o!());
 
     b.iter(|| {
         info!(log, "", "str" => PushLazy(|_:&Record, ser : ValueSerializer|{

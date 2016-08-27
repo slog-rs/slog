@@ -52,7 +52,7 @@ fn main() {
 
     atomic_drain_switch();
 
-    let log = drain.into_logger(o!());
+    let log = Logger::root(drain, o!());
 
     info!(log, "logging a message every 3s");
     info!(log, "send SIGUSR1 signal to switch output with");

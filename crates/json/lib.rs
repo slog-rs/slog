@@ -5,14 +5,14 @@
 //! extern crate slog;
 //! extern crate slog_json;
 //!
-//! use slog::*;
-//! use slog::IntoLogger;
-//!
 //! fn main() {
-//!     let root = stream(
-//!                 std::io::stderr(),
-//!                 slog_json::new()
-//!                 ).into_logger(o!("build-id" => "8dfljdf"));
+//!     let root = slog::Logger::root(
+//!         slog::stream(
+//!             std::io::stderr(),
+//!             slog_json::new()
+//!         ),
+//!         o!("build-id" => "8dfljdf")
+//!     );
 //! }
 //! ```
 #![warn(missing_docs)]

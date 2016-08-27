@@ -5,13 +5,12 @@
 //! extern crate slog;
 //! extern crate slog_bunyan;
 //!
-//! use slog::*;
-//!
 //! fn main() {
-//!     let root = stream(
+//!     let root = slog::Logger::root(
+//!         slog::stream(
 //!                 std::io::stderr(),
 //!                 slog_bunyan::new()
-//!                 ).into_logger(o!("build-id" => "8dfljdf"));
+//!         ), o!("build-id" => "8dfljdf"));
 //! }
 //! ```
 #![warn(missing_docs)]
@@ -81,7 +80,7 @@ mod test {
     use slog::Record;
     use slog::Level;
     use slog::format::Format;
-    use slog::OwnedKeyValueNode;
+    use slog::OwnedKeyValueList;
 
     #[test]
     fn trivial() {
@@ -94,7 +93,7 @@ mod test {
         info.set_ts(UTC.ymd(2014, 7, 8).and_hms(9, 10, 11));
 
         let mut v = vec![];
-        formatter.format(&mut v, &info, &OwnedKeyValueNode::new_root(vec![])).unwrap();
+        formatter.format(&mut v, &info, &OwnedKeyValueList::root(vec![])).unwrap();
 
         assert_eq!(String::from_utf8_lossy(&v),
                    "{\"pid\":".to_string() + &nix::unistd::getpid().to_string() + ",\"host\":\"" +

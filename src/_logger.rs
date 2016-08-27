@@ -70,15 +70,15 @@ impl Logger {
     /// extern crate slog;
     ///
     /// fn main() {
-    ///     let root = slog::Logger::new_root(
+    ///     let root = slog::Logger::root(
+    ///         slog::discard(),
     ///         o!("key1" => "value1", "key2" => "value2"),
-    ///         slog::discard()
     ///     );
     /// }
-    pub fn new_root<D: 'static + Drain + Sized>(values: Vec<OwnedKeyValue>, d: D) -> Logger {
+    pub fn root<D: 'static + Drain + Sized>(d: D, values: Vec<OwnedKeyValue>) -> Logger {
         Logger {
             drain: Arc::new(d),
-            values: Arc::new(OwnedKeyValueList::new_root(values)),
+            values: Arc::new(OwnedKeyValueList::root(values)),
         }
     }
 
@@ -94,11 +94,10 @@ impl Logger {
     /// ```
     /// #[macro_use]
     /// extern crate slog;
-    /// use slog::IntoLogger;
     ///
     /// fn main() {
-    ///     let root = slog::discard()
-    ///         .into_logger(o!("key1" => "value1", "key2" => "value2"));
+    ///     let root = slog::Logger::root(slog::discard(),
+    ///         o!("key1" => "value1", "key2" => "value2"));
     ///     let log = root.new(o!("key" => "value"));
     /// }
     pub fn new(&self, values: Vec<OwnedKeyValue>) -> Logger {

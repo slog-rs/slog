@@ -6,10 +6,9 @@
 //! extern crate slog_term;
 //!
 //! use slog::*;
-//! use slog::IntoLogger;
 //!
 //! fn main() {
-//!     let root = slog_term::async_stderr().into_logger(o!("build-id" => "8dfljdf"));
+//!     let root = Logger::root(slog_term::async_stderr(), o!("build-id" => "8dfljdf"));
 //! }
 //! ```
 #![warn(missing_docs)]

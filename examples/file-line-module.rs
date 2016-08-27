@@ -7,15 +7,18 @@ use slog::*;
 
 fn main() {
     let drain = slog_term::async_stderr();
-    let log = drain.into_logger(o!("place" =>
-        move |info : &Record| {
-            format!("{}:{} {}",
-                    info.file(),
-                    info.line(),
-                    info.module(),
-            )
-        }
-    ));
+    let log = Logger::root(
+        drain,
+        o!("place" =>
+           move |info : &Record| {
+               format!("{}:{} {}",
+                       info.file(),
+                       info.line(),
+                       info.module(),
+                       )
+           }
+          )
+        );
 
     debug!(log, "HERE");
 }

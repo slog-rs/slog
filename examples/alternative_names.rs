@@ -3,10 +3,8 @@ extern crate slog;
 
 extern crate slog_term;
 
-use slog::IntoLogger;
-
 fn main() {
-    let log = slog_term::stderr().into_logger(o!());
+    let log = slog::Logger::root(slog_term::stderr(), o!());
 
     slog_trace!(log, "logging a trace message");
     slog_debug!(log, "debug values", "x" => 1, "y" => -1);

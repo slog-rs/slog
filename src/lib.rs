@@ -19,11 +19,10 @@ use std::ascii::AsciiExt;
 /// ```
 /// #[macro_use]
 /// extern crate slog;
-/// use slog::IntoLogger;
 ///
 /// fn main() {
 ///     let drain = slog::discard();
-///     let root = drain.into_logger(o!("key1" => "value1", "key2" => "value2"));
+///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
 /// }
 /// ```
 #[macro_export]
@@ -49,11 +48,10 @@ macro_rules! o(
 /// ```
 /// #[macro_use]
 /// extern crate slog;
-/// use slog::IntoLogger;
 ///
 /// fn main() {
 ///     let drain = slog::discard();
-///     let root = drain.into_logger(o!("key1" => "value1", "key2" => "value2"));
+///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
 ///     info!(root, "test info log", "log-key" => true);
 /// }
 /// ```
@@ -311,7 +309,7 @@ impl OwnedKeyValueList {
     }
 
     /// New `OwnedKeyValue` without a parent (root)
-    pub fn new_root(values: Vec<OwnedKeyValue>) -> Self {
+    pub fn root(values: Vec<OwnedKeyValue>) -> Self {
         OwnedKeyValueList {
             parent: None,
             values: values,

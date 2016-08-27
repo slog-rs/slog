@@ -60,18 +60,6 @@ pub trait Drain: Send + Sync {
     fn log(&self, buf: &mut Vec<u8>, info: &Record, &OwnedKeyValueList) -> Result<()>;
 }
 
-/// Convenience trait allowing turning drain into root `Logger`
-///
-/// `Logger::new_root` shortcut
-pub trait IntoLogger: Drain + Sized + 'static {
-    /// Turn drain into root `Logger`
-    fn into_logger(self, values: Vec<OwnedKeyValue>) -> Logger {
-        Logger::new_root(values, self)
-    }
-}
-
-impl<D: Drain + Sized + 'static> IntoLogger for D {}
-
 impl<D: Drain> Drain for Box<D> {
     fn log(&self, buf: &mut Vec<u8>, info: &Record, o: &OwnedKeyValueList) -> Result<()> {
         (**self).log(buf, info, o)
