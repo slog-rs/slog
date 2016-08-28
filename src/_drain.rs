@@ -1,8 +1,6 @@
 use std::sync::{Mutex, mpsc};
 use std::{mem, io, thread};
 
-use crossbeam::sync::ArcCell;
-
 #[allow(missing_docs)]
 mod error {
     use std::io;
@@ -80,50 +78,6 @@ impl Drain for Discard {
         Ok(())
     }
 }
-
-/// Handle to `AtomicSwitch` allowing switching it's sub-drain
-pub struct AtomicSwitchCtrl(Arc<ArcCell<Box<Drain>>>);
-
-/// Drain allowing atomically switching a sub-drain in runtime
-pub struct AtomicSwitch(Arc<ArcCell<Box<Drain>>>);
-
-impl AtomicSwitchCtrl {
-    /// Create new `AtomicSwitchCtrl`
-    pub fn new<D: Drain + 'static>(d: D) -> Self {
-        let a = Arc::new(ArcCell::new(Arc::new(Box::new(d) as Box<Drain>)));
-        AtomicSwitchCtrl(a)
-    }
-
-    /// Create new `AtomicSwitchCtrl` from an existing `Arc<...>`
-    pub fn new_from_arc(d: Arc<ArcCell<Box<Drain>>>) -> Self {
-        AtomicSwitchCtrl(d)
-    }
-
-    /// Get a `AtomicSwitch` drain controlled by this `AtomicSwitchCtrl`
-    pub fn drain(&self) -> AtomicSwitch {
-        AtomicSwitch(self.0.clone())
-    }
-
-    /// Set the drain
-    pub fn set<D: Drain>(&self, drain: D) {
-        let _ = self.0.set(Arc::new(Box::new(drain)));
-    }
-
-    /// Swap the existing drain with a new one
-    pub fn swap(&self, drain: Arc<Box<Drain>>) -> Arc<Box<Drain>> {
-        self.0.set(drain)
-    }
-}
-impl Drain for AtomicSwitch {
-    fn log(&self,
-           mut buf: &mut Vec<u8>,
-           info: &Record,
-           logger_values: &OwnedKeyValueList)
-           -> Result<()> {
-        self.0.get().log(buf, info, logger_values)
-    }
-}
-
 
 /// Drain formating records and writing them to a byte-stream (io::Write)
 ///

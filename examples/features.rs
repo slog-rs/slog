@@ -2,8 +2,10 @@
 extern crate slog;
 extern crate slog_json;
 extern crate slog_term;
+extern crate slog_atomic;
 
 use slog::*;
+use slog_atomic::*;
 use std::thread;
 
 use std::sync::atomic::Ordering::SeqCst;

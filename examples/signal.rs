@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate slog;
 extern crate slog_term;
+extern crate slog_atomic;
 extern crate slog_json;
 extern crate nix;
 
@@ -13,6 +14,7 @@ use std::sync::atomic::Ordering::SeqCst;
 
 use std::{thread, io};
 use slog::*;
+use slog_atomic::*;
 
 lazy_static! {
     // global atomic switch drain control
