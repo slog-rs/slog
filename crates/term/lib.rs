@@ -17,10 +17,8 @@
 extern crate slog;
 extern crate isatty;
 extern crate ansi_term;
-extern crate rustc_serialize;
 
 use std::io;
-use rustc_serialize::hex::ToHex;
 
 use ansi_term::Colour;
 use isatty::{stderr_isatty, stdout_isatty};
@@ -108,11 +106,6 @@ impl<W: io::Write> slog::ser::Serializer for Serializer<W> {
     fn emit_char(&mut self, key: &str, val: char) -> slog::ser::Result<()> {
         try!(self.maybe_comma());
         try!(write!(self.io, "{}: {}", self.key.paint(key), val));
-        Ok(())
-    }
-    fn emit_bytes(&mut self, key: &str, val: &[u8]) -> slog::ser::Result<()> {
-        try!(self.maybe_comma());
-        try!(write!(self.io, "{}: {}", self.key.paint(key), val.to_hex()));
         Ok(())
     }
 

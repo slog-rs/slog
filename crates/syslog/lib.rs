@@ -25,14 +25,12 @@
 extern crate slog;
 extern crate syslog;
 extern crate nix;
-extern crate rustc_serialize as serialize;
 
 use slog::format::Format;
 use slog::{ser, Drain, Level, Record, OwnedKeyValueList, format};
 use slog::ser::Serializer;
 use std::io;
 use std::sync::Mutex;
-use serialize::hex::ToHex;
 
 pub use syslog::Facility;
 
@@ -153,10 +151,6 @@ impl<W: io::Write> Serializer for KSV<W> {
 
     fn emit_char(&mut self, key: &str, val: char) -> ser::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
-        Ok(())
-    }
-    fn emit_bytes(&mut self, key: &str, val: &[u8]) -> ser::Result<()> {
-        try!(write!(self.io, "{}{}{}", key, self.separator, val.to_hex()));
         Ok(())
     }
 

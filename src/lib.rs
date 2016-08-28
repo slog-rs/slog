@@ -3,8 +3,6 @@
 #![warn(missing_docs)]
 
 extern crate chrono;
-extern crate rustc_serialize as serialize;
-
 #[macro_use]
 extern crate error_chain;
 

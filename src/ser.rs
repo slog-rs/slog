@@ -1,5 +1,4 @@
 use std::io;
-use serialize::hex::ToHex;
 use std;
 use std::sync::Arc;
 use std::rc::Rc;
@@ -63,8 +62,6 @@ pub trait Serializer {
     fn emit_none(&mut self, key: &str) -> Result<()>;
     /// Emit char
     fn emit_char(&mut self, key: &str, val: char) -> Result<()>;
-    /// Emit bytes
-    fn emit_bytes(&mut self, key: &str, val: &[u8]) -> Result<()>;
     /// Emit u8
     fn emit_u8(&mut self, key: &str, val: u8) -> Result<()>;
     /// Emit i8
@@ -153,22 +150,6 @@ impl<T: Serialize> Serialize for Option<T> {
 }
 
 impl<T: Serialize + Send +Sync + 'static> SyncSerialize for Option<T> {}
-
-impl Serialize for [u8] {
-    fn serialize(&self, _rinfo: &Record, key: &str, serializer: &mut Serializer) -> Result<()> {
-        serializer.emit_bytes(key, self)
-    }
-}
-
-impl SyncSerialize for [u8] {}
-
-impl Serialize for Vec<u8> {
-    fn serialize(&self, _rinfo: &Record, key: &str, serializer: &mut Serializer) -> Result<()> {
-        serializer.emit_bytes(key, self.as_slice())
-    }
-}
-
-impl SyncSerialize for Vec<u8> {}
 
 impl<T> Serialize for Arc<T> where T: Serialize {
     fn serialize(&self, rinfo : &Record, key : &str, serializer : &mut Serializer)
@@ -286,10 +267,6 @@ impl<W: io::Write + ?Sized> Serializer for W {
 
     fn emit_char(&mut self, key: &str, val: char) -> Result<()> {
         try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-    fn emit_bytes(&mut self, key: &str, val: &[u8]) -> Result<()> {
-        try!(write!(self, "{}: {}", key, val.to_hex()));
         Ok(())
     }
 

@@ -17,4 +17,3 @@ path = "lib.rs"
 slog = { version = "1.0.0-alpha2", path = "../.." }
 isatty = "0.1.1"
 ansi_term = "0.7.2"
-rustc-serialize = "0.3.19"

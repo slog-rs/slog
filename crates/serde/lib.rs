@@ -32,11 +32,6 @@ impl<'a, S> slog::ser::Serializer for SerdeSerializer<'a, S>
             .map_err(|_| ser::ErrorKind::Other.into())
     }
 
-    fn emit_bytes(&mut self, key: &str, val: &[u8]) -> ser::Result<()> {
-        serde::Serializer::serialize_map_elt(self.0, key, val)
-            .map_err(|_| ser::ErrorKind::Other.into())
-    }
-
     fn emit_none(&mut self, key: &str) -> ser::Result<()> {
         let none: Option<()> = None;
         serde::Serializer::serialize_map_elt(self.0, key, none)
