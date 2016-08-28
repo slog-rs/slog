@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-7551' class='srclink' href='../../src/serde/de/mod.rs.html#76-172' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-7550' class='srclink' href='../../src/serde/de/mod.rs.html#74-170' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum Type {
     Bool,
     Usize,
@@ -84,57 +84,54 @@
 }</pre><div class='docblock'><p><code>Type</code> represents all the primitive types that can be deserialized. This is used by
 <code>Error::invalid_type</code>.</p>
 </div><h2 class='variants'>Variants</h2>
-<span id='variant.Bool' class='variant'><span id='Bool.v' class='invisible'><code>Bool</code></span></span><div class='docblock'><p>Represents a <code>bool</code> type.</p>
-</div><span id='variant.Usize' class='variant'><span id='Usize.v' class='invisible'><code>Usize</code></span></span><div class='docblock'><p>Represents a <code>usize</code> type.</p>
-</div><span id='variant.U8' class='variant'><span id='U8.v' class='invisible'><code>U8</code></span></span><div class='docblock'><p>Represents a <code>u8</code> type.</p>
-</div><span id='variant.U16' class='variant'><span id='U16.v' class='invisible'><code>U16</code></span></span><div class='docblock'><p>Represents a <code>u16</code> type.</p>
-</div><span id='variant.U32' class='variant'><span id='U32.v' class='invisible'><code>U32</code></span></span><div class='docblock'><p>Represents a <code>u32</code> type.</p>
-</div><span id='variant.U64' class='variant'><span id='U64.v' class='invisible'><code>U64</code></span></span><div class='docblock'><p>Represents a <code>u64</code> type.</p>
-</div><span id='variant.Isize' class='variant'><span id='Isize.v' class='invisible'><code>Isize</code></span></span><div class='docblock'><p>Represents a <code>isize</code> type.</p>
-</div><span id='variant.I8' class='variant'><span id='I8.v' class='invisible'><code>I8</code></span></span><div class='docblock'><p>Represents a <code>i8</code> type.</p>
-</div><span id='variant.I16' class='variant'><span id='I16.v' class='invisible'><code>I16</code></span></span><div class='docblock'><p>Represents a <code>i16</code> type.</p>
-</div><span id='variant.I32' class='variant'><span id='I32.v' class='invisible'><code>I32</code></span></span><div class='docblock'><p>Represents a <code>i32</code> type.</p>
-</div><span id='variant.I64' class='variant'><span id='I64.v' class='invisible'><code>I64</code></span></span><div class='docblock'><p>Represents a <code>i64</code> type.</p>
-</div><span id='variant.F32' class='variant'><span id='F32.v' class='invisible'><code>F32</code></span></span><div class='docblock'><p>Represents a <code>f32</code> type.</p>
-</div><span id='variant.F64' class='variant'><span id='F64.v' class='invisible'><code>F64</code></span></span><div class='docblock'><p>Represents a <code>f64</code> type.</p>
-</div><span id='variant.Char' class='variant'><span id='Char.v' class='invisible'><code>Char</code></span></span><div class='docblock'><p>Represents a <code>char</code> type.</p>
-</div><span id='variant.Str' class='variant'><span id='Str.v' class='invisible'><code>Str</code></span></span><div class='docblock'><p>Represents a <code>&amp;str</code> type.</p>
-</div><span id='variant.String' class='variant'><span id='String.v' class='invisible'><code>String</code></span></span><div class='docblock'><p>Represents a <code>String</code> type.</p>
-</div><span id='variant.Unit' class='variant'><span id='Unit.v' class='invisible'><code>Unit</code></span></span><div class='docblock'><p>Represents a <code>()</code> type.</p>
-</div><span id='variant.Option' class='variant'><span id='Option.v' class='invisible'><code>Option</code></span></span><div class='docblock'><p>Represents an <code>Option&lt;T&gt;</code> type.</p>
-</div><span id='variant.Seq' class='variant'><span id='Seq.v' class='invisible'><code>Seq</code></span></span><div class='docblock'><p>Represents a sequence type.</p>
-</div><span id='variant.Map' class='variant'><span id='Map.v' class='invisible'><code>Map</code></span></span><div class='docblock'><p>Represents a map type.</p>
-</div><span id='variant.UnitStruct' class='variant'><span id='UnitStruct.v' class='invisible'><code>UnitStruct</code></span></span><div class='docblock'><p>Represents a unit struct type.</p>
-</div><span id='variant.NewtypeStruct' class='variant'><span id='NewtypeStruct.v' class='invisible'><code>NewtypeStruct</code></span></span><div class='docblock'><p>Represents a newtype type.</p>
-</div><span id='variant.TupleStruct' class='variant'><span id='TupleStruct.v' class='invisible'><code>TupleStruct</code></span></span><div class='docblock'><p>Represents a tuple struct type.</p>
-</div><span id='variant.Struct' class='variant'><span id='Struct.v' class='invisible'><code>Struct</code></span></span><div class='docblock'><p>Represents a struct type.</p>
-</div><span id='variant.FieldName' class='variant'><span id='FieldName.v' class='invisible'><code>FieldName</code></span></span><div class='docblock'><p>Represents a struct field name.</p>
-</div><span id='variant.Tuple' class='variant'><span id='Tuple.v' class='invisible'><code>Tuple</code></span></span><div class='docblock'><p>Represents a tuple type.</p>
-</div><span id='variant.Enum' class='variant'><span id='Enum.v' class='invisible'><code>Enum</code></span></span><div class='docblock'><p>Represents an <code>enum</code> type.</p>
-</div><span id='variant.VariantName' class='variant'><span id='VariantName.v' class='invisible'><code>VariantName</code></span></span><div class='docblock'><p>Represents an enum variant name.</p>
-</div><span id='variant.StructVariant' class='variant'><span id='StructVariant.v' class='invisible'><code>StructVariant</code></span></span><div class='docblock'><p>Represents a struct variant.</p>
-</div><span id='variant.TupleVariant' class='variant'><span id='TupleVariant.v' class='invisible'><code>TupleVariant</code></span></span><div class='docblock'><p>Represents a tuple variant.</p>
-</div><span id='variant.UnitVariant' class='variant'><span id='UnitVariant.v' class='invisible'><code>UnitVariant</code></span></span><div class='docblock'><p>Represents a unit variant.</p>
-</div><span id='variant.Bytes' class='variant'><span id='Bytes.v' class='invisible'><code>Bytes</code></span></span><div class='docblock'><p>Represents a <code>&amp;[u8]</code> type.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7502' class='srclink' href='../../src/serde/de/mod.rs.html#75' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<span id='variant.Bool' class='variant'><code>Bool</code></span><div class='docblock'><p>Represents a <code>bool</code> type.</p>
+</div><span id='variant.Usize' class='variant'><code>Usize</code></span><div class='docblock'><p>Represents a <code>usize</code> type.</p>
+</div><span id='variant.U8' class='variant'><code>U8</code></span><div class='docblock'><p>Represents a <code>u8</code> type.</p>
+</div><span id='variant.U16' class='variant'><code>U16</code></span><div class='docblock'><p>Represents a <code>u16</code> type.</p>
+</div><span id='variant.U32' class='variant'><code>U32</code></span><div class='docblock'><p>Represents a <code>u32</code> type.</p>
+</div><span id='variant.U64' class='variant'><code>U64</code></span><div class='docblock'><p>Represents a <code>u64</code> type.</p>
+</div><span id='variant.Isize' class='variant'><code>Isize</code></span><div class='docblock'><p>Represents a <code>isize</code> type.</p>
+</div><span id='variant.I8' class='variant'><code>I8</code></span><div class='docblock'><p>Represents a <code>i8</code> type.</p>
+</div><span id='variant.I16' class='variant'><code>I16</code></span><div class='docblock'><p>Represents a <code>i16</code> type.</p>
+</div><span id='variant.I32' class='variant'><code>I32</code></span><div class='docblock'><p>Represents a <code>i32</code> type.</p>
+</div><span id='variant.I64' class='variant'><code>I64</code></span><div class='docblock'><p>Represents a <code>i64</code> type.</p>
+</div><span id='variant.F32' class='variant'><code>F32</code></span><div class='docblock'><p>Represents a <code>f32</code> type.</p>
+</div><span id='variant.F64' class='variant'><code>F64</code></span><div class='docblock'><p>Represents a <code>f64</code> type.</p>
+</div><span id='variant.Char' class='variant'><code>Char</code></span><div class='docblock'><p>Represents a <code>char</code> type.</p>
+</div><span id='variant.Str' class='variant'><code>Str</code></span><div class='docblock'><p>Represents a <code>&amp;str</code> type.</p>
+</div><span id='variant.String' class='variant'><code>String</code></span><div class='docblock'><p>Represents a <code>String</code> type.</p>
+</div><span id='variant.Unit' class='variant'><code>Unit</code></span><div class='docblock'><p>Represents a <code>()</code> type.</p>
+</div><span id='variant.Option' class='variant'><code>Option</code></span><div class='docblock'><p>Represents an <code>Option&lt;T&gt;</code> type.</p>
+</div><span id='variant.Seq' class='variant'><code>Seq</code></span><div class='docblock'><p>Represents a sequence type.</p>
+</div><span id='variant.Map' class='variant'><code>Map</code></span><div class='docblock'><p>Represents a map type.</p>
+</div><span id='variant.UnitStruct' class='variant'><code>UnitStruct</code></span><div class='docblock'><p>Represents a unit struct type.</p>
+</div><span id='variant.NewtypeStruct' class='variant'><code>NewtypeStruct</code></span><div class='docblock'><p>Represents a newtype type.</p>
+</div><span id='variant.TupleStruct' class='variant'><code>TupleStruct</code></span><div class='docblock'><p>Represents a tuple struct type.</p>
+</div><span id='variant.Struct' class='variant'><code>Struct</code></span><div class='docblock'><p>Represents a struct type.</p>
+</div><span id='variant.FieldName' class='variant'><code>FieldName</code></span><div class='docblock'><p>Represents a struct field name.</p>
+</div><span id='variant.Tuple' class='variant'><code>Tuple</code></span><div class='docblock'><p>Represents a tuple type.</p>
+</div><span id='variant.Enum' class='variant'><code>Enum</code></span><div class='docblock'><p>Represents an <code>enum</code> type.</p>
+</div><span id='variant.VariantName' class='variant'><code>VariantName</code></span><div class='docblock'><p>Represents an enum variant name.</p>
+</div><span id='variant.StructVariant' class='variant'><code>StructVariant</code></span><div class='docblock'><p>Represents a struct variant.</p>
+</div><span id='variant.TupleVariant' class='variant'><code>TupleVariant</code></span><div class='docblock'><p>Represents a tuple variant.</p>
+</div><span id='variant.UnitVariant' class='variant'><code>UnitVariant</code></span><div class='docblock'><p>Represents a unit variant.</p>
+</div><span id='variant.Bytes' class='variant'><code>Bytes</code></span><div class='docblock'><p>Represents a <code>&amp;[u8]</code> type.</p>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7501' class='srclink' href='../../src/serde/de/mod.rs.html#73' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='../../core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='../../core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='../../core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7538' class='srclink' href='../../src/serde/de/mod.rs.html#75' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7541' class='srclink' href='../../src/serde/de/mod.rs.html#75' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.eq' class='method'><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
-<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
-</div><h4 id='method.ne' class='method'><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7537' class='srclink' href='../../src/serde/de/mod.rs.html#73' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7540' class='srclink' href='../../src/serde/de/mod.rs.html#73' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='../../core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="../../core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><code>fn <a href='../../core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: &amp;Rhs) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7547' class='srclink' href='../../src/serde/de/mod.rs.html#75' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></span></h4>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7546' class='srclink' href='../../src/serde/de/mod.rs.html#73' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7550' class='srclink' href='../../src/serde/de/mod.rs.html#75' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7584' class='srclink' href='../../src/serde/de/mod.rs.html#174-212' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt-1' class='method'><span id='fmt.v-1' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, formatter: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>,&nbsp;<a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Error.html' title='core::fmt::Error'>Error</a>&gt;</code></span></h4>
-<div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div></section>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../../serde/de/enum.Type.html' title='serde::de::Type'>Type</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-7549' class='srclink' href='../../src/serde/de/mod.rs.html#73' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

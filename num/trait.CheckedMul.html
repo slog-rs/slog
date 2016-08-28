@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-388' class='srclink' href='../num_traits/ops/checked/trait.CheckedMul.html?gotosrc=388' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-373' class='srclink' href='../num_traits/ops/checked/trait.CheckedMul.html?gotosrc=373' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait CheckedMul: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Mul.html' title='core::ops::Mul'>Mul</a>&lt;Self,&nbsp;Output=Self&gt; {
     fn <a href='#tymethod.checked_mul' class='fnname'>checked_mul</a>(&amp;self, v: &amp;Self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;;
 }</pre><div class='docblock'><p>Performs multiplication that returns <code>None</code> instead of wrapping around on underflow or
@@ -55,7 +55,7 @@ overflow.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.checked_mul' class='method stab '><span id='checked_mul.v' class='invisible'><code>fn <a href='#tymethod.checked_mul' class='fnname'>checked_mul</a>(&amp;self, v: &amp;Self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></span></h3><div class='docblock'><p>Multiplies two numbers, checking for underflow or overflow. If underflow
+        <h3 id='tymethod.checked_mul' class='method stab '><code>fn <a href='#tymethod.checked_mul' class='fnname'>checked_mul</a>(&amp;self, v: &amp;Self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt;</code></h3><div class='docblock'><p>Multiplies two numbers, checking for underflow or overflow. If underflow
 or overflow happens, <code>None</code> is returned.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>

@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-881' class='srclink' href='../src/slog/src/_logger.rs.html#28-39' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-851' class='srclink' href='../src/slog/_logger.rs.html#28-39' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Message {
     fn <a href='#tymethod.as_str' class='fnname'>as_str</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;;
 
@@ -56,11 +56,11 @@
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.as_str' class='method stab '><span id='as_str.v' class='invisible'><code>fn <a href='#tymethod.as_str' class='fnname'>as_str</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;</code></span></h3><div class='docblock'><p>Take a string</p>
+        <h3 id='tymethod.as_str' class='method stab '><code>fn <a href='#tymethod.as_str' class='fnname'>as_str</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;</code></h3><div class='docblock'><p>Take a string</p>
 </div></div>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
-        <h3 id='method.write_to' class='method stab '><span id='write_to.v' class='invisible'><code>fn <a href='#method.write_to' class='fnname'>write_to</a>(&amp;self, io: &amp;mut <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>) -&gt; <a class='type' href='../slog/type.Result.html' title='slog::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h3><div class='docblock'><p>Write it into <code>io</code> (which might be fast than <code>as_str()</code> it does not
+        <h3 id='method.write_to' class='method stab '><code>fn <a href='#method.write_to' class='fnname'>write_to</a>(&amp;self, io: &amp;mut <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>) -&gt; <a class='type' href='../slog/type.Result.html' title='slog::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h3><div class='docblock'><p>Write it into <code>io</code> (which might be fast than <code>as_str()</code> it does not
 need to allocate anything in certain cases.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>

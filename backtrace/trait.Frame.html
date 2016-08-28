@@ -60,7 +60,7 @@ until runtime.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.ip' class='method stab '><span id='ip.v' class='invisible'><code>fn <a href='#tymethod.ip' class='fnname'>ip</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='https://doc.rust-lang.org/nightly/std/os/raw/enum.c_void.html' title='std::os::raw::c_void'>c_void</a></code></span></h3><div class='docblock'><p>Returns the current instruction pointer of this frame.</p>
+        <h3 id='tymethod.ip' class='method stab '><code>fn <a href='#tymethod.ip' class='fnname'>ip</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='https://doc.rust-lang.org/nightly/std/os/raw/enum.c_void.html' title='std::os::raw::c_void'>c_void</a></code></h3><div class='docblock'><p>Returns the current instruction pointer of this frame.</p>
 
 <p>This is normally the next instruction to execute in the frame, but not
 all implementations list this with 100% accuracy (but it&#39;s generally
@@ -68,7 +68,7 @@ pretty close).</p>
 
 <p>It is recommended to pass this value to <code>backtrace::resolve</code> to turn it
 into a symbol name.</p>
-</div><h3 id='tymethod.symbol_address' class='method stab '><span id='symbol_address.v' class='invisible'><code>fn <a href='#tymethod.symbol_address' class='fnname'>symbol_address</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='https://doc.rust-lang.org/nightly/std/os/raw/enum.c_void.html' title='std::os::raw::c_void'>c_void</a></code></span></h3><div class='docblock'><p>Returns the starting symbol address of the frame of this function.</p>
+</div><h3 id='tymethod.symbol_address' class='method stab '><code>fn <a href='#tymethod.symbol_address' class='fnname'>symbol_address</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='https://doc.rust-lang.org/nightly/std/os/raw/enum.c_void.html' title='std::os::raw::c_void'>c_void</a></code></h3><div class='docblock'><p>Returns the starting symbol address of the frame of this function.</p>
 
 <p>This will attempt to rewind the instruction pointer returned by <code>ip</code> to
 the start of the function, returning that value. In some cases, however,
@@ -77,7 +77,7 @@ backends will just return <code>ip</code> from this function.</p>
 <p>The returned value can sometimes be used if <code>backtrace::resolve</code> failed
 on the <code>ip</code> given above.</p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='trait' href='../backtrace/trait.Frame.html' title='backtrace::Frame'>Frame</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-22' class='srclink' href='../src/backtrace/backtrace/mod.rs.html#73-80' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>

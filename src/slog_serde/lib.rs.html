@@ -135,11 +135,6 @@
 <span id="91">91</span>
 <span id="92">92</span>
 <span id="93">93</span>
-<span id="94">94</span>
-<span id="95">95</span>
-<span id="96">96</span>
-<span id="97">97</span>
-<span id="98">98</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Serde serialization adapter for slog-rs</span>
 
@@ -171,11 +166,6 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>emit_char</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='ident'>serde</span>::<span class='ident'>Serializer</span>::<span class='ident'>serialize_map_elt</span>(<span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>key</span>, <span class='ident'>val</span>)
-            .<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>ser</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>.<span class='ident'>into</span>())
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>emit_bytes</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='ident'>serde</span>::<span class='ident'>Serializer</span>::<span class='ident'>serialize_map_elt</span>(<span class='self'>self</span>.<span class='number'>0</span>, <span class='ident'>key</span>, <span class='ident'>val</span>)
             .<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>ser</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>.<span class='ident'>into</span>())
     }

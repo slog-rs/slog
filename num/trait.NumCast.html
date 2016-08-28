@@ -47,14 +47,14 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1983' class='srclink' href='../num_traits/cast/trait.NumCast.html?gotosrc=1983' title='goto source code'>[src]</a></span></h1>
-<pre class='rust trait'>pub trait NumCast: <a class='trait' href='../num/cast/trait.ToPrimitive.html' title='num::cast::ToPrimitive'>ToPrimitive</a> {
-    fn <a href='#tymethod.from' class='fnname'>from</a>&lt;T&gt;(n: T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt; <span class='where'>where T: <a class='trait' href='../num/cast/trait.ToPrimitive.html' title='num::cast::ToPrimitive'>ToPrimitive</a></span>;
+               </span><a id='src-1968' class='srclink' href='../num_traits/cast/trait.NumCast.html?gotosrc=1968' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait NumCast: <a class='trait' href='../num/traits/trait.ToPrimitive.html' title='num::traits::ToPrimitive'>ToPrimitive</a> {
+    fn <a href='#tymethod.from' class='fnname'>from</a>&lt;T&gt;(n: T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt; <span class='where'>where T: <a class='trait' href='../num/traits/trait.ToPrimitive.html' title='num::traits::ToPrimitive'>ToPrimitive</a></span>;
 }</pre><div class='docblock'><p>An interface for casting between machine scalars.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.from' class='method stab '><span id='from.v' class='invisible'><code>fn <a href='#tymethod.from' class='fnname'>from</a>&lt;T&gt;(n: T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt; <span class='where'>where T: <a class='trait' href='../num/cast/trait.ToPrimitive.html' title='num::cast::ToPrimitive'>ToPrimitive</a></span></code></span></h3><div class='docblock'><p>Creates a number from another value that can be converted into
+        <h3 id='tymethod.from' class='method stab '><code>fn <a href='#tymethod.from' class='fnname'>from</a>&lt;T&gt;(n: T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;Self&gt; <span class='where'>where T: <a class='trait' href='../num/traits/trait.ToPrimitive.html' title='num::traits::ToPrimitive'>ToPrimitive</a></span></code></h3><div class='docblock'><p>Creates a number from another value that can be converted into
 a primitive via the <code>ToPrimitive</code> trait.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>

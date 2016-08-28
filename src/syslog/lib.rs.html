@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/syslog-3.2.0/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/syslog-3.1.0/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -446,15 +446,6 @@
 <span id="402">402</span>
 <span id="403">403</span>
 <span id="404">404</span>
-<span id="405">405</span>
-<span id="406">406</span>
-<span id="407">407</span>
-<span id="408">408</span>
-<span id="409">409</span>
-<span id="410">410</span>
-<span id="411">411</span>
-<span id="412">412</span>
-<span id="413">413</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Syslog</span>
 <span class='doccomment'>//!</span>
@@ -475,7 +466,7 @@
 <span class='doccomment'>//! fn main() {</span>
 <span class='doccomment'>//!   match syslog::unix(Facility::LOG_USER) {</span>
 <span class='doccomment'>//!     Err(e)         =&gt; println!(&quot;impossible to connect to syslog: {:?}&quot;, e),</span>
-<span class='doccomment'>//!     Ok(writer) =&gt; {</span>
+<span class='doccomment'>//!     Ok(mut writer) =&gt; {</span>
 <span class='doccomment'>//!       let r = writer.send(Severity::LOG_ALERT, &quot;hello world&quot;);</span>
 <span class='doccomment'>//!       if r.is_err() {</span>
 <span class='doccomment'>//!         println!(&quot;error sending the log {}&quot;, r.err().expect(&quot;got error&quot;));</span>
@@ -497,9 +488,8 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::{<span class='ident'>SocketAddr</span>,<span class='ident'>ToSocketAddrs</span>,<span class='ident'>UdpSocket</span>,<span class='ident'>TcpStream</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::{<span class='ident'>Arc</span>, <span class='ident'>Mutex</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
 
-<span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>getpid</span>;
+<span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>funcs</span>::<span class='ident'>posix88</span>::<span class='ident'>unistd</span>::<span class='ident'>getpid</span>;
 <span class='kw'>use</span> <span class='ident'>unix_socket</span>::<span class='ident'>UnixDatagram</span>;
 <span class='kw'>use</span> <span class='ident'>log</span>::{<span class='ident'>Log</span>,<span class='ident'>LogRecord</span>,<span class='ident'>LogMetadata</span>,<span class='ident'>LogLevel</span>,<span class='ident'>SetLoggerError</span>};
 
@@ -541,27 +531,27 @@
   <span class='ident'>s</span>:        <span class='ident'>LoggerBackend</span>
 }
 
-<span class='doccomment'>/// Returns a Logger using unix socket to target local syslog ( using /dev/log or /var/run/syslog)</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>unix</span>(<span class='ident'>facility</span>: <span class='ident'>Facility</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Logger</span><span class='op'>&gt;</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-    <span class='ident'>unix_custom</span>(<span class='ident'>facility</span>, <span class='string'>&quot;/dev/log&quot;</span>).<span class='ident'>or_else</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='kw'>if</span> <span class='ident'>e</span>.<span class='ident'>kind</span>() <span class='op'>==</span> <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>NotFound</span> {
-        <span class='ident'>unix_custom</span>(<span class='ident'>facility</span>, <span class='string'>&quot;/var/run/syslog&quot;</span>)
+<span class='kw'>fn</span> <span class='ident'>detect_unix_socket</span>() <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>UnixDatagram</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+  <span class='kw'>let</span> <span class='ident'>sock</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>UnixDatagram</span>::<span class='ident'>unbound</span>());
+  <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sock</span>.<span class='ident'>connect</span>(<span class='string'>&quot;/dev/log&quot;</span>)
+    .<span class='ident'>or_else</span>(<span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='kw'>if</span> <span class='ident'>e</span>.<span class='ident'>kind</span>() <span class='op'>==</span> <span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>NotFound</span> {
+      <span class='ident'>sock</span>.<span class='ident'>connect</span>(<span class='string'>&quot;/var/run/syslog&quot;</span>)
     } <span class='kw'>else</span> {
-        <span class='prelude-val'>Err</span>(<span class='ident'>e</span>)
-    })
+      <span class='prelude-val'>Err</span>(<span class='ident'>e</span>)
+    }));
+  <span class='prelude-val'>Ok</span>(<span class='ident'>sock</span>)
 }
 
-<span class='doccomment'>/// Returns a Logger using unix socket to target local syslog at user provided path</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>unix_custom</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='ident'>facility</span>: <span class='ident'>Facility</span>, <span class='ident'>path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Logger</span><span class='op'>&gt;</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> (<span class='ident'>process_name</span>, <span class='ident'>pid</span>) <span class='op'>=</span> <span class='ident'>get_process_info</span>().<span class='ident'>unwrap</span>();
-    <span class='kw'>let</span> <span class='ident'>sock</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>UnixDatagram</span>::<span class='ident'>unbound</span>());
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sock</span>.<span class='ident'>connect</span>(<span class='ident'>path</span>));
-    <span class='prelude-val'>Ok</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>Logger</span> {
-        <span class='ident'>facility</span>: <span class='ident'>facility</span>.<span class='ident'>clone</span>(),
-        <span class='ident'>hostname</span>: <span class='prelude-val'>None</span>,
-        <span class='ident'>process</span>:  <span class='ident'>process_name</span>,
-        <span class='ident'>pid</span>:      <span class='ident'>pid</span>,
-        <span class='ident'>s</span>:        <span class='ident'>LoggerBackend</span>::<span class='ident'>Unix</span>(<span class='ident'>sock</span>),
-    }))
+<span class='doccomment'>/// Returns a Logger using unix socket to target local syslog ( using /dev/log or /var/run/syslog)</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>unix</span>(<span class='ident'>facility</span>: <span class='ident'>Facility</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Logger</span><span class='op'>&gt;</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
+  <span class='kw'>let</span> (<span class='ident'>process_name</span>, <span class='ident'>pid</span>) <span class='op'>=</span> <span class='ident'>get_process_info</span>().<span class='ident'>unwrap</span>();
+  <span class='prelude-val'>Ok</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>Logger</span> {
+    <span class='ident'>facility</span>: <span class='ident'>facility</span>.<span class='ident'>clone</span>(),
+    <span class='ident'>hostname</span>: <span class='prelude-val'>None</span>,
+    <span class='ident'>process</span>:  <span class='ident'>process_name</span>,
+    <span class='ident'>pid</span>:      <span class='ident'>pid</span>,
+    <span class='ident'>s</span>:        <span class='ident'>LoggerBackend</span>::<span class='ident'>Unix</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>detect_unix_socket</span>())),
+  }))
 }
 
 <span class='doccomment'>/// returns a UDP logger connecting `local` and `server`</span>
@@ -602,33 +592,25 @@
 }
 
 <span class='doccomment'>/// Unix socket Logger init function compatible with log crate</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init_unix</span>(<span class='ident'>facility</span>: <span class='ident'>Facility</span>, <span class='ident'>log_level</span>: <span class='ident'>log</span>::<span class='ident'>LogLevelFilter</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>SetLoggerError</span><span class='op'>&gt;</span> {
+<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused_variables</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init_unix</span>(<span class='ident'>facility</span>: <span class='ident'>Facility</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>SetLoggerError</span><span class='op'>&gt;</span> {
   <span class='ident'>log</span>::<span class='ident'>set_logger</span>(<span class='op'>|</span><span class='ident'>max_level</span><span class='op'>|</span> {
-    <span class='ident'>max_level</span>.<span class='ident'>set</span>(<span class='ident'>log_level</span>);
     <span class='ident'>unix</span>(<span class='ident'>facility</span>).<span class='ident'>unwrap</span>()
   })
 }
 
-<span class='doccomment'>/// Unix socket Logger init function compatible with log crate and user provided socket path</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init_unix_custom</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='ident'>facility</span>: <span class='ident'>Facility</span>, <span class='ident'>log_level</span>: <span class='ident'>log</span>::<span class='ident'>LogLevelFilter</span>, <span class='ident'>path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>SetLoggerError</span><span class='op'>&gt;</span> {
-    <span class='ident'>log</span>::<span class='ident'>set_logger</span>(<span class='op'>|</span><span class='ident'>max_level</span><span class='op'>|</span> {
-      <span class='ident'>max_level</span>.<span class='ident'>set</span>(<span class='ident'>log_level</span>);
-      <span class='ident'>unix_custom</span>(<span class='ident'>facility</span>, <span class='ident'>path</span>).<span class='ident'>unwrap</span>()
-    })
-}
-
 <span class='doccomment'>/// UDP Logger init function compatible with log crate</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init_udp</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ToSocketAddrs</span><span class='op'>&gt;</span>(<span class='ident'>local</span>: <span class='ident'>T</span>, <span class='ident'>server</span>: <span class='ident'>T</span>, <span class='ident'>hostname</span>:<span class='ident'>String</span>, <span class='ident'>facility</span>: <span class='ident'>Facility</span>, <span class='ident'>log_level</span>: <span class='ident'>log</span>::<span class='ident'>LogLevelFilter</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>SetLoggerError</span><span class='op'>&gt;</span> {
+<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused_variables</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init_udp</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ToSocketAddrs</span><span class='op'>&gt;</span>(<span class='ident'>local</span>: <span class='ident'>T</span>, <span class='ident'>server</span>: <span class='ident'>T</span>, <span class='ident'>hostname</span>:<span class='ident'>String</span>, <span class='ident'>facility</span>: <span class='ident'>Facility</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>SetLoggerError</span><span class='op'>&gt;</span> {
   <span class='ident'>log</span>::<span class='ident'>set_logger</span>(<span class='op'>|</span><span class='ident'>max_level</span><span class='op'>|</span> {
-    <span class='ident'>max_level</span>.<span class='ident'>set</span>(<span class='ident'>log_level</span>);
     <span class='ident'>udp</span>(<span class='ident'>local</span>, <span class='ident'>server</span>, <span class='ident'>hostname</span>, <span class='ident'>facility</span>).<span class='ident'>unwrap</span>()
   })
 }
 
 <span class='doccomment'>/// TCP Logger init function compatible with log crate</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init_tcp</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ToSocketAddrs</span><span class='op'>&gt;</span>(<span class='ident'>server</span>: <span class='ident'>T</span>, <span class='ident'>hostname</span>: <span class='ident'>String</span>, <span class='ident'>facility</span>: <span class='ident'>Facility</span>, <span class='ident'>log_level</span>: <span class='ident'>log</span>::<span class='ident'>LogLevelFilter</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>SetLoggerError</span><span class='op'>&gt;</span> {
+<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused_variables</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init_tcp</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ToSocketAddrs</span><span class='op'>&gt;</span>(<span class='ident'>server</span>: <span class='ident'>T</span>, <span class='ident'>hostname</span>: <span class='ident'>String</span>, <span class='ident'>facility</span>: <span class='ident'>Facility</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>SetLoggerError</span><span class='op'>&gt;</span> {
   <span class='ident'>log</span>::<span class='ident'>set_logger</span>(<span class='op'>|</span><span class='ident'>max_level</span><span class='op'>|</span> {
-    <span class='ident'>max_level</span>.<span class='ident'>set</span>(<span class='ident'>log_level</span>);
     <span class='ident'>tcp</span>(<span class='ident'>server</span>, <span class='ident'>hostname</span>, <span class='ident'>facility</span>).<span class='ident'>unwrap</span>()
   })
 }
@@ -649,7 +631,7 @@
     <span class='ident'>application_name</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span>)
     <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>SetLoggerError</span><span class='op'>&gt;</span>
 {
-  <span class='kw'>let</span> <span class='ident'>backend</span> <span class='op'>=</span> <span class='ident'>unix</span>(<span class='ident'>facility</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>logger</span><span class='op'>|</span> <span class='ident'>logger</span>.<span class='ident'>s</span>)
+  <span class='kw'>let</span> <span class='ident'>backend</span> <span class='op'>=</span> <span class='ident'>detect_unix_socket</span>().<span class='ident'>map</span>(<span class='ident'>LoggerBackend</span>::<span class='ident'>Unix</span>)
     .<span class='ident'>or_else</span>(<span class='op'>|</span>_<span class='op'>|</span> {
         <span class='ident'>TcpStream</span>::<span class='ident'>connect</span>((<span class='string'>&quot;127.0.0.1&quot;</span>, <span class='number'>601</span>))
         .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>LoggerBackend</span>::<span class='ident'>Tcp</span>(<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Mutex</span>::<span class='ident'>new</span>(<span class='ident'>s</span>))))

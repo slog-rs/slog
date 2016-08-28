@@ -47,9 +47,9 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/chrono/lib.rs.html#5-732' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/chrono/lib.rs.html#5-636' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
-<h1 id='chrono-0225' class='section-header'><a href='#chrono-0225'>Chrono 0.2.25</a></h1>
+<h1 id='chrono-0222' class='section-header'><a href='#chrono-0222'>Chrono 0.2.22</a></h1>
 <p>Date and time handling for Rust. (also known as <code>rust-chrono</code>)
 It aims to be a feature-complete superset of
 the <a href="https://github.com/rust-lang-deprecated/time">time</a> library.
@@ -78,62 +78,28 @@ the wiki</a></li>
 chrono = &quot;0.2&quot;
 </code></pre>
 
-<p>Or, if you want <a href="https://github.com/serde-rs/serde">Serde</a> or
-<a href="https://github.com/rust-lang-nursery/rustc-serialize">rustc-serialize</a> support,
-include the features like this:</p>
-
-<pre><code class="language-toml">[dependencies]
-chrono = { version = &quot;0.2&quot;, features = [&quot;serde&quot;, &quot;rustc-serialize&quot;] }
-</code></pre>
-
-<p>Then put this in your crate root:</p>
+<p>And put this in your crate root:</p>
 
 <pre class='rust rust-example-rendered'>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>chrono</span>;</pre>
 
 <h2 id='overview' class='section-header'><a href='#overview'>Overview</a></h2>
 <h3 id='duration' class='section-header'><a href='#duration'>Duration</a></h3>
-<p><a href="./struct.Duration.html"><strong><code>Duration</code></strong></a>
-represents the magnitude of a time span. <code>Duration</code> used to be provided by Chrono.
-It has been moved to the <code>time</code> crate as the
-<a href="https://doc.rust-lang.org/time/time/struct.Duration.html"><code>time::Duration</code></a> type, but is
-still re-exported from Chrono.</p>
+<p>Chrono used to have a <code>Duration</code> type, which represents the time span.
+This is a simple reexport of
+<a href="http://doc.rust-lang.org/time/time/struct.Duration.html"><code>time::Duration</code></a> type
+provided by crates.io <code>time</code> crate (which originally comes from Chrono).</p>
 
 <h3 id='date-and-time' class='section-header'><a href='#date-and-time'>Date and Time</a></h3>
-<p>Chrono provides a
-<a href="./datetime/struct.DateTime.html"><strong><code>DateTime</code></strong></a>
-type to represent a date and a time in a timezone.</p>
+<p>Chrono provides a <code>DateTime</code> type for the combined date and time.</p>
 
-<p>For more abstract moment-in-time tracking such as internal timekeeping
-that is unconcerned with timezones, consider
-<a href="https://doc.rust-lang.org/std/time/struct.SystemTime.html"><code>time::SystemTime</code></a>,
-which tracks your system clock, or
-<a href="https://doc.rust-lang.org/std/time/struct.Instant.html"><code>time::Instant</code></a>, which
-is an opaque but monotonically-increasing representation of a moment in time.</p>
+<p><code>DateTime</code>, among others, is timezone-aware and must be constructed from
+the <code>TimeZone</code> object.
+<code>DateTime</code>s with different time zones do not mix, but can be converted to
+each other using the <code>DateTime::with_timezone</code> method.</p>
 
-<p><code>DateTime</code> is timezone-aware and must be constructed from
-the <a href="./offset/trait.TimeZone.html"><strong><code>TimeZone</code></strong></a> object,
-which defines how the local date is converted to and back from the UTC date.
-There are three well-known <code>TimeZone</code> implementations:</p>
-
-<ul>
-<li><p><a href="./offset/utc/struct.UTC.html"><strong><code>UTC</code></strong></a> specifies the UTC time zone. It is most efficient.</p></li>
-<li><p><a href="./offset/local/struct.Local.html"><strong><code>Local</code></strong></a> specifies the system local time zone.</p></li>
-<li><p><a href="./offset/fixed/struct.FixedOffset.html"><strong><code>FixedOffset</code></strong></a> specifies
-an arbitrary, fixed time zone such as UTC+09:00 or UTC-10:30.
-This often results from the parsed textual date and time.
-Since it stores the most information and does not depend on the system environment,
-you would want to normalize other <code>TimeZone</code>s into this type.</p></li>
-</ul>
-
-<p><code>DateTime</code>s with different <code>TimeZone</code> types are distinct and do not mix,
-but can be converted to each other using
-the <a href="./datetime/struct.DateTime.html#method.with_timezone"><code>DateTime::with_timezone</code></a> method.</p>
-
-<p>You can get the current date and time in the UTC time zone
-(<a href="./offset/utc/struct.UTC.html#method.now"><code>UTC::now()</code></a>)
-or in the local time zone
-(<a href="./offset/local/struct.Local.html#method.now"><code>Local::now()</code></a>).</p>
+<p>You can get the current date and time in the UTC time zone (<code>UTC::now()</code>)
+or in the local time zone (<code>Local::now()</code>).</p>
 
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>chrono</span>::<span class='op'>*</span>;
@@ -171,8 +137,7 @@ but in turn we get a rich combination of initialization methods.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>dt</span>, <span class='ident'>fixed_dt</span>);</pre>
 
 <p>Various properties are available to the date and time, and can be altered individually.
-Most of them are defined in the traits <a href="./trait.Datelike.html"><code>Datelike</code></a> and
-<a href="./trait.Timelike.html"><code>Timelike</code></a> which you should <code>use</code> before.
+Most of them are defined in the traits <code>Datelike</code> and <code>Timelike</code> which you should <code>use</code> before.
 Addition and subtraction is also supported.
 The following illustrates most supported operations to the date and time:</p>
 
@@ -209,15 +174,12 @@ The following illustrates most supported operations to the date and time:</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>UTC</span>.<span class='ident'>ymd</span>(<span class='number'>1970</span>, <span class='number'>1</span>, <span class='number'>1</span>).<span class='ident'>and_hms</span>(<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>) <span class='op'>-</span> <span class='ident'>Duration</span>::<span class='ident'>seconds</span>(<span class='number'>1_000_000_000</span>),
            <span class='ident'>UTC</span>.<span class='ident'>ymd</span>(<span class='number'>1938</span>, <span class='number'>4</span>, <span class='number'>24</span>).<span class='ident'>and_hms</span>(<span class='number'>22</span>, <span class='number'>13</span>, <span class='number'>20</span>));</pre>
 
-<p>Formatting is done via the <a href="./datetime/struct.DateTime.html#method.format"><code>format</code></a> method,
+<p>Formatting is done via the <code>format</code> method,
 which format is equivalent to the familiar <code>strftime</code> format.
-(See the <a href="./format/strftime/index.html#specifiers"><code>format::strftime</code> module documentation</a>
-for full syntax.)</p>
+(See the <code>format::strftime</code> module documentation for full syntax.)</p>
 
 <p>The default <code>to_string</code> method and <code>{:?}</code> specifier also give a reasonable representation.
-Chrono also provides <a href="./datetime/struct.DateTime.html#method.to_rfc2822"><code>to_rfc2822</code></a> and
-<a href="./datetime/struct.DateTime.html#method.to_rfc3339"><code>to_rfc3339</code></a> methods
-for well-known formats.</p>
+Chrono also provides <code>to_rfc{2822,3339}</code> methods for well-known formats.</p>
 
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>chrono</span>::<span class='op'>*</span>;
@@ -235,29 +197,22 @@ for well-known formats.</p>
 <p>Parsing can be done with three methods:</p>
 
 <ol>
-<li><p>The standard <a href="https://doc.rust-lang.org/std/str/trait.FromStr.html"><code>FromStr</code></a> trait
-(and <a href="https://doc.rust-lang.org/std/primitive.str.html#method.parse"><code>parse</code></a> method
-on a string) can be used for parsing <code>DateTime&lt;FixedOffset&gt;</code>, <code>DateTime&lt;UTC&gt;</code> and
-<code>DateTime&lt;Local&gt;</code> values. This parses what the <code>{:?}</code>
-(<a href="https://doc.rust-lang.org/std/fmt/trait.Debug.html"><code>std::fmt::Debug</code></a>)
-format specifier prints, and requires the offset to be present.</p></li>
-<li><p><a href="./datetime/struct.DateTime.html#method.parse_from_str"><code>DateTime::parse_from_str</code></a> parses
-a date and time with offsets and returns <code>DateTime&lt;FixedOffset&gt;</code>.
+<li><p>The standard <code>FromStr</code> trait (and <code>parse</code> method on a string) can be used for
+parsing <code>DateTime&lt;FixedOffset&gt;</code>, <code>DateTime&lt;UTC&gt;</code> and <code>DateTime&lt;Local&gt;</code> values.
+This parses what the <code>{:?}</code> (<code>std::fmt::Debug</code>) format specifier prints,
+and requires the offset to be present.</p></li>
+<li><p><code>DateTime::parse_from_str</code> parses a date and time with offsets and
+returns <code>DateTime&lt;FixedOffset&gt;</code>.
 This should be used when the offset is a part of input and the caller cannot guess that.
 It <em>cannot</em> be used when the offset can be missing.
-<a href="./datetime/struct.DateTime.html#method.parse_from_rfc2822"><code>DateTime::parse_from_rfc2822</code></a>
-and
-<a href="./datetime/struct.DateTime.html#method.parse_from_rfc3339"><code>DateTime::parse_from_rfc3339</code></a>
-are similar but for well-known formats.</p></li>
-<li><p><a href="./offset/trait.TimeZone.html#method.datetime_from_str"><code>Offset::datetime_from_str</code></a> is
-similar but returns <code>DateTime</code> of given offset.
+<code>DateTime::parse_from_rfc{2822,3339}</code> are similar but for well-known formats.</p></li>
+<li><p><code>Offset::datetime_from_str</code> is similar but returns <code>DateTime</code> of given offset.
 When the explicit offset is missing from the input, it simply uses given offset.
 It issues an error when the input contains an explicit offset different
 from the current offset.</p></li>
 </ol>
 
-<p>More detailed control over the parsing process is available via
-<a href="./format/index.html"><code>format</code></a> module.</p>
+<p>More detailed control over the parsing process is available via <code>format</code> module.</p>
 
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>chrono</span>::<span class='op'>*</span>;
@@ -289,7 +244,7 @@ from the current offset.</p></li>
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>UTC</span>.<span class='ident'>datetime_from_str</span>(<span class='string'>&quot;Sat Nov 28 12:00:09 2014&quot;</span>, <span class='string'>&quot;%a %b %e %T %Y&quot;</span>).<span class='ident'>is_err</span>());</pre>
 
 <h3 id='individual-date' class='section-header'><a href='#individual-date'>Individual date</a></h3>
-<p>Chrono also provides an individual date type (<a href="./date/struct.Date.html"><strong><code>Date</code></strong></a>).
+<p>Chrono also provides an individual date type (<code>Date</code>).
 It also has time zones attached, and have to be constructed via time zones.
 Most operations available to <code>DateTime</code> are also available to <code>Date</code> whenever appropriate.</p>
 
@@ -306,26 +261,20 @@ Most operations available to <code>DateTime</code> are also available to <code>D
 
 <p>There is no timezone-aware <code>Time</code> due to the lack of usefulness and also the complexity.</p>
 
-<p><code>DateTime</code> has <a href="./datetime/struct.DateTime.html#method.date"><code>date</code></a> method
-which returns a <code>Date</code> which represents its date component.
-There is also a <a href="./datetime/struct.DateTime.html#method.time"><code>time</code></a> method,
-which simply returns a naive local time described below.</p>
+<p><code>DateTime</code> has <code>date</code> method which returns a <code>Date</code> which represents its date component.
+There is also a <code>time</code> method, which simply returns a naive local time described below.</p>
 
 <h3 id='naive-date-and-time' class='section-header'><a href='#naive-date-and-time'>Naive date and time</a></h3>
 <p>Chrono provides naive counterparts to <code>Date</code>, (non-existent) <code>Time</code> and <code>DateTime</code>
-as <a href="./naive/date/struct.NaiveDate.html"><strong><code>NaiveDate</code></strong></a>,
-<a href="./naive/time/struct.NaiveTime.html"><strong><code>NaiveTime</code></strong></a> and
-<a href="./naive/datetime/struct.NaiveDateTime.html"><strong><code>NaiveDateTime</code></strong></a> respectively.</p>
+as <code>NaiveDate</code>, <code>NaiveTime</code> and <code>NaiveDateTime</code> respectively.</p>
 
 <p>They have almost equivalent interfaces as their timezone-aware twins,
 but are not associated to time zones obviously and can be quite low-level.
 They are mostly useful for building blocks for higher-level types.</p>
 
 <p>Timezone-aware <code>DateTime</code> and <code>Date</code> types have two methods returning naive versions:
-<a href="./datetime/struct.DateTime.html#method.naive_local"><code>naive_local</code></a> returns
-a view to the naive local time,
-and <a href="./datetime/struct.DateTime.html#method.naive_utc"><code>naive_utc</code></a> returns
-a view to the naive UTC time.</p>
+<code>naive_local</code> returns a view to the naive local time,
+and <code>naive_utc</code> returns a view to the naive UTC time.</p>
 
 <h2 id='limitations' class='section-header'><a href='#limitations'>Limitations</a></h2>
 <p>Only proleptic Gregorian calendar (i.e. extended to support older dates) is supported.
@@ -334,8 +283,7 @@ Be very careful if you really have to deal with pre-20C dates, they can be in Ju
 <p>Date types are limited in about +/- 262,000 years from the common epoch.
 Time types are limited in the nanosecond accuracy.</p>
 
-<p><a href="./naive/time/index.html#leap-second-handling">Leap seconds are supported in the representation but
-Chrono doesn&#39;t try to make use of them</a>.
+<p>Leap seconds are supported in the representation but Chrono doesn&#39;t try to make use of them.
 (The main reason is that leap seconds are not really predictable.)
 Almost <em>every</em> operation over the possible leap seconds will ignore them.
 Consider using <code>NaiveDateTime</code> with the implicit TAI (International Atomic Time) scale
@@ -406,7 +354,7 @@ This also allows for the negative duration; see individual methods for details.<
                            <td><a class='enum' href='enum.Weekday.html'
                                   title='chrono::Weekday'>Weekday</a></td>
                            <td class='docblock short'>
-                                <p>The day of week.</p>
+                                <p>The day of week (DOW).</p>
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>

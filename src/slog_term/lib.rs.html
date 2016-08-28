@@ -320,13 +320,6 @@
 <span id="276">276</span>
 <span id="277">277</span>
 <span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Unix terminal formatter and drain for slog-rs</span>
 <span class='doccomment'>//!</span>
@@ -347,10 +340,8 @@
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>isatty</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>ansi_term</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
-<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>hex</span>::<span class='ident'>ToHex</span>;
 
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>;
 <span class='kw'>use</span> <span class='ident'>isatty</span>::{<span class='ident'>stderr_isatty</span>, <span class='ident'>stdout_isatty</span>};
@@ -438,11 +429,6 @@
     <span class='kw'>fn</span> <span class='ident'>emit_char</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>maybe_comma</span>());
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}: {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>key</span>.<span class='ident'>paint</span>(<span class='ident'>key</span>), <span class='ident'>val</span>));
-        <span class='prelude-val'>Ok</span>(())
-    }
-    <span class='kw'>fn</span> <span class='ident'>emit_bytes</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>maybe_comma</span>());
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>io</span>, <span class='string'>&quot;{}: {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>key</span>.<span class='ident'>paint</span>(<span class='ident'>key</span>), <span class='ident'>val</span>.<span class='ident'>to_hex</span>()));
         <span class='prelude-val'>Ok</span>(())
     }
 

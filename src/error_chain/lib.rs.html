@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.2.2/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.2.1/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -546,77 +546,6 @@
 <span id="502">502</span>
 <span id="503">503</span>
 <span id="504">504</span>
-<span id="505">505</span>
-<span id="506">506</span>
-<span id="507">507</span>
-<span id="508">508</span>
-<span id="509">509</span>
-<span id="510">510</span>
-<span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
-<span id="534">534</span>
-<span id="535">535</span>
-<span id="536">536</span>
-<span id="537">537</span>
-<span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
-<span id="547">547</span>
-<span id="548">548</span>
-<span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
-<span id="552">552</span>
-<span id="553">553</span>
-<span id="554">554</span>
-<span id="555">555</span>
-<span id="556">556</span>
-<span id="557">557</span>
-<span id="558">558</span>
-<span id="559">559</span>
-<span id="560">560</span>
-<span id="561">561</span>
-<span id="562">562</span>
-<span id="563">563</span>
-<span id="564">564</span>
-<span id="565">565</span>
-<span id="566">566</span>
-<span id="567">567</span>
-<span id="568">568</span>
-<span id="569">569</span>
-<span id="570">570</span>
-<span id="571">571</span>
-<span id="572">572</span>
-<span id="573">573</span>
-<span id="574">574</span>
-<span id="575">575</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! A library for consistent and reliable error handling</span>
 <span class='doccomment'>//!</span>
@@ -687,8 +616,6 @@
 <span class='doccomment'>//! error_chain! {</span>
 <span class='doccomment'>//!     // The type defined for this error. These are the conventional</span>
 <span class='doccomment'>//!     // and recommended names, but they can be arbitrarily chosen.</span>
-<span class='doccomment'>//!     // It is also possible to leave this block out entirely, or</span>
-<span class='doccomment'>//!     // leave it empty, and these names will be used automatically.</span>
 <span class='doccomment'>//!     types {</span>
 <span class='doccomment'>//!         Error, ErrorKind, ChainErr, Result;</span>
 <span class='doccomment'>//!     }</span>
@@ -878,77 +805,6 @@
 
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>error_chain</span> {
-    (
-        <span class='ident'>links</span> {
-            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_error_path</span>:<span class='ident'>path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_kind_path</span>:<span class='ident'>path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_variant</span>:<span class='ident'>ident</span>;  ) <span class='op'>*</span>
-        }
-
-        <span class='ident'>foreign_links</span> {
-            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_error_path</span>:<span class='ident'>path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_variant</span>:<span class='ident'>ident</span>,
-               <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_desc</span>:<span class='ident'>expr</span>;  ) <span class='op'>*</span>
-        }
-
-        <span class='ident'>errors</span> {
-            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>error_chunks</span>:<span class='ident'>tt</span> ) <span class='op'>*</span>
-        }
-
-    ) <span class='op'>=&gt;</span> (
-        <span class='macro'>error_chain</span><span class='macro'>!</span> {
-            <span class='ident'>types</span> {
-                <span class='ident'>Error</span>, <span class='ident'>ErrorKind</span>, <span class='ident'>ChainErr</span>, <span class='prelude-ty'>Result</span>;
-            }
-
-            <span class='ident'>links</span> {
-                $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_error_path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_kind_path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_variant</span>;  ) <span class='op'>*</span>
-            }
-
-            <span class='ident'>foreign_links</span> {
-                $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_error_path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_variant</span>,
-                   <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_desc</span>;  ) <span class='op'>*</span>
-            }
-
-            <span class='ident'>errors</span> {
-                $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>error_chunks</span> ) <span class='op'>*</span>
-            }
-        }
-    );
-    (
-        <span class='ident'>types</span> {
-        }
-
-        <span class='ident'>links</span> {
-            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_error_path</span>:<span class='ident'>path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_kind_path</span>:<span class='ident'>path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_variant</span>:<span class='ident'>ident</span>;  ) <span class='op'>*</span>
-        }
-
-        <span class='ident'>foreign_links</span> {
-            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_error_path</span>:<span class='ident'>path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_variant</span>:<span class='ident'>ident</span>,
-               <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_desc</span>:<span class='ident'>expr</span>;  ) <span class='op'>*</span>
-        }
-
-        <span class='ident'>errors</span> {
-            $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>error_chunks</span>:<span class='ident'>tt</span> ) <span class='op'>*</span>
-        }
-
-    ) <span class='op'>=&gt;</span> (
-        <span class='macro'>error_chain</span><span class='macro'>!</span> {
-            <span class='ident'>types</span> {
-                <span class='ident'>Error</span>, <span class='ident'>ErrorKind</span>, <span class='ident'>ChainErr</span>, <span class='prelude-ty'>Result</span>;
-            }
-
-            <span class='ident'>links</span> {
-                $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_error_path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_kind_path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>link_variant</span>;  ) <span class='op'>*</span>
-            }
-
-            <span class='ident'>foreign_links</span> {
-                $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_error_path</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_variant</span>,
-                   <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>foreign_link_desc</span>;  ) <span class='op'>*</span>
-            }
-
-            <span class='ident'>errors</span> {
-                $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>error_chunks</span> ) <span class='op'>*</span>
-            }
-        }
-    );
     (
         <span class='ident'>types</span> {
             <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>error_name</span>:<span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>error_kind_name</span>:<span class='ident'>ident</span>,
@@ -1181,6 +1037,7 @@
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ErrorChainIter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw'>pub</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>StdError</span><span class='op'>&gt;</span>);
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>ErrorChainIter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+
     <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>StdError</span>;
 
     <span class='kw'>fn</span> <span class='ident'>next</span><span class='op'>&lt;</span><span class='lifetime'>&#39;b</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>StdError</span><span class='op'>&gt;</span> {
@@ -1189,10 +1046,11 @@
                 <span class='self'>self</span>.<span class='number'>0</span> <span class='op'>=</span> <span class='ident'>e</span>.<span class='ident'>cause</span>();
                 <span class='prelude-val'>Some</span>(<span class='ident'>e</span>)
             }
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>
         }
     }
 }
+
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

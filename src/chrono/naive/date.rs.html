@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.2.25/src/naive/date.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.2.22/src/naive/date.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>date.rs.html -- source</title>
@@ -2363,540 +2363,14 @@
 <span id="2319">2319</span>
 <span id="2320">2320</span>
 <span id="2321">2321</span>
-<span id="2322">2322</span>
-<span id="2323">2323</span>
-<span id="2324">2324</span>
-<span id="2325">2325</span>
-<span id="2326">2326</span>
-<span id="2327">2327</span>
-<span id="2328">2328</span>
-<span id="2329">2329</span>
-<span id="2330">2330</span>
-<span id="2331">2331</span>
-<span id="2332">2332</span>
-<span id="2333">2333</span>
-<span id="2334">2334</span>
-<span id="2335">2335</span>
-<span id="2336">2336</span>
-<span id="2337">2337</span>
-<span id="2338">2338</span>
-<span id="2339">2339</span>
-<span id="2340">2340</span>
-<span id="2341">2341</span>
-<span id="2342">2342</span>
-<span id="2343">2343</span>
-<span id="2344">2344</span>
-<span id="2345">2345</span>
-<span id="2346">2346</span>
-<span id="2347">2347</span>
-<span id="2348">2348</span>
-<span id="2349">2349</span>
-<span id="2350">2350</span>
-<span id="2351">2351</span>
-<span id="2352">2352</span>
-<span id="2353">2353</span>
-<span id="2354">2354</span>
-<span id="2355">2355</span>
-<span id="2356">2356</span>
-<span id="2357">2357</span>
-<span id="2358">2358</span>
-<span id="2359">2359</span>
-<span id="2360">2360</span>
-<span id="2361">2361</span>
-<span id="2362">2362</span>
-<span id="2363">2363</span>
-<span id="2364">2364</span>
-<span id="2365">2365</span>
-<span id="2366">2366</span>
-<span id="2367">2367</span>
-<span id="2368">2368</span>
-<span id="2369">2369</span>
-<span id="2370">2370</span>
-<span id="2371">2371</span>
-<span id="2372">2372</span>
-<span id="2373">2373</span>
-<span id="2374">2374</span>
-<span id="2375">2375</span>
-<span id="2376">2376</span>
-<span id="2377">2377</span>
-<span id="2378">2378</span>
-<span id="2379">2379</span>
-<span id="2380">2380</span>
-<span id="2381">2381</span>
-<span id="2382">2382</span>
-<span id="2383">2383</span>
-<span id="2384">2384</span>
-<span id="2385">2385</span>
-<span id="2386">2386</span>
-<span id="2387">2387</span>
-<span id="2388">2388</span>
-<span id="2389">2389</span>
-<span id="2390">2390</span>
-<span id="2391">2391</span>
-<span id="2392">2392</span>
-<span id="2393">2393</span>
-<span id="2394">2394</span>
-<span id="2395">2395</span>
-<span id="2396">2396</span>
-<span id="2397">2397</span>
-<span id="2398">2398</span>
-<span id="2399">2399</span>
-<span id="2400">2400</span>
-<span id="2401">2401</span>
-<span id="2402">2402</span>
-<span id="2403">2403</span>
-<span id="2404">2404</span>
-<span id="2405">2405</span>
-<span id="2406">2406</span>
-<span id="2407">2407</span>
-<span id="2408">2408</span>
-<span id="2409">2409</span>
-<span id="2410">2410</span>
-<span id="2411">2411</span>
-<span id="2412">2412</span>
-<span id="2413">2413</span>
-<span id="2414">2414</span>
-<span id="2415">2415</span>
-<span id="2416">2416</span>
-<span id="2417">2417</span>
-<span id="2418">2418</span>
-<span id="2419">2419</span>
-<span id="2420">2420</span>
-<span id="2421">2421</span>
-<span id="2422">2422</span>
-<span id="2423">2423</span>
-<span id="2424">2424</span>
-<span id="2425">2425</span>
-<span id="2426">2426</span>
-<span id="2427">2427</span>
-<span id="2428">2428</span>
-<span id="2429">2429</span>
-<span id="2430">2430</span>
-<span id="2431">2431</span>
-<span id="2432">2432</span>
-<span id="2433">2433</span>
-<span id="2434">2434</span>
-<span id="2435">2435</span>
-<span id="2436">2436</span>
-<span id="2437">2437</span>
-<span id="2438">2438</span>
-<span id="2439">2439</span>
-<span id="2440">2440</span>
-<span id="2441">2441</span>
-<span id="2442">2442</span>
-<span id="2443">2443</span>
-<span id="2444">2444</span>
-<span id="2445">2445</span>
-<span id="2446">2446</span>
-<span id="2447">2447</span>
-<span id="2448">2448</span>
-<span id="2449">2449</span>
-<span id="2450">2450</span>
-<span id="2451">2451</span>
-<span id="2452">2452</span>
-<span id="2453">2453</span>
-<span id="2454">2454</span>
-<span id="2455">2455</span>
-<span id="2456">2456</span>
-<span id="2457">2457</span>
-<span id="2458">2458</span>
-<span id="2459">2459</span>
-<span id="2460">2460</span>
-<span id="2461">2461</span>
-<span id="2462">2462</span>
-<span id="2463">2463</span>
-<span id="2464">2464</span>
-<span id="2465">2465</span>
-<span id="2466">2466</span>
-<span id="2467">2467</span>
-<span id="2468">2468</span>
-<span id="2469">2469</span>
-<span id="2470">2470</span>
-<span id="2471">2471</span>
-<span id="2472">2472</span>
-<span id="2473">2473</span>
-<span id="2474">2474</span>
-<span id="2475">2475</span>
-<span id="2476">2476</span>
-<span id="2477">2477</span>
-<span id="2478">2478</span>
-<span id="2479">2479</span>
-<span id="2480">2480</span>
-<span id="2481">2481</span>
-<span id="2482">2482</span>
-<span id="2483">2483</span>
-<span id="2484">2484</span>
-<span id="2485">2485</span>
-<span id="2486">2486</span>
-<span id="2487">2487</span>
-<span id="2488">2488</span>
-<span id="2489">2489</span>
-<span id="2490">2490</span>
-<span id="2491">2491</span>
-<span id="2492">2492</span>
-<span id="2493">2493</span>
-<span id="2494">2494</span>
-<span id="2495">2495</span>
-<span id="2496">2496</span>
-<span id="2497">2497</span>
-<span id="2498">2498</span>
-<span id="2499">2499</span>
-<span id="2500">2500</span>
-<span id="2501">2501</span>
-<span id="2502">2502</span>
-<span id="2503">2503</span>
-<span id="2504">2504</span>
-<span id="2505">2505</span>
-<span id="2506">2506</span>
-<span id="2507">2507</span>
-<span id="2508">2508</span>
-<span id="2509">2509</span>
-<span id="2510">2510</span>
-<span id="2511">2511</span>
-<span id="2512">2512</span>
-<span id="2513">2513</span>
-<span id="2514">2514</span>
-<span id="2515">2515</span>
-<span id="2516">2516</span>
-<span id="2517">2517</span>
-<span id="2518">2518</span>
-<span id="2519">2519</span>
-<span id="2520">2520</span>
-<span id="2521">2521</span>
-<span id="2522">2522</span>
-<span id="2523">2523</span>
-<span id="2524">2524</span>
-<span id="2525">2525</span>
-<span id="2526">2526</span>
-<span id="2527">2527</span>
-<span id="2528">2528</span>
-<span id="2529">2529</span>
-<span id="2530">2530</span>
-<span id="2531">2531</span>
-<span id="2532">2532</span>
-<span id="2533">2533</span>
-<span id="2534">2534</span>
-<span id="2535">2535</span>
-<span id="2536">2536</span>
-<span id="2537">2537</span>
-<span id="2538">2538</span>
-<span id="2539">2539</span>
-<span id="2540">2540</span>
-<span id="2541">2541</span>
-<span id="2542">2542</span>
-<span id="2543">2543</span>
-<span id="2544">2544</span>
-<span id="2545">2545</span>
-<span id="2546">2546</span>
-<span id="2547">2547</span>
-<span id="2548">2548</span>
-<span id="2549">2549</span>
-<span id="2550">2550</span>
-<span id="2551">2551</span>
-<span id="2552">2552</span>
-<span id="2553">2553</span>
-<span id="2554">2554</span>
-<span id="2555">2555</span>
-<span id="2556">2556</span>
-<span id="2557">2557</span>
-<span id="2558">2558</span>
-<span id="2559">2559</span>
-<span id="2560">2560</span>
-<span id="2561">2561</span>
-<span id="2562">2562</span>
-<span id="2563">2563</span>
-<span id="2564">2564</span>
-<span id="2565">2565</span>
-<span id="2566">2566</span>
-<span id="2567">2567</span>
-<span id="2568">2568</span>
-<span id="2569">2569</span>
-<span id="2570">2570</span>
-<span id="2571">2571</span>
-<span id="2572">2572</span>
-<span id="2573">2573</span>
-<span id="2574">2574</span>
-<span id="2575">2575</span>
-<span id="2576">2576</span>
-<span id="2577">2577</span>
-<span id="2578">2578</span>
-<span id="2579">2579</span>
-<span id="2580">2580</span>
-<span id="2581">2581</span>
-<span id="2582">2582</span>
-<span id="2583">2583</span>
-<span id="2584">2584</span>
-<span id="2585">2585</span>
-<span id="2586">2586</span>
-<span id="2587">2587</span>
-<span id="2588">2588</span>
-<span id="2589">2589</span>
-<span id="2590">2590</span>
-<span id="2591">2591</span>
-<span id="2592">2592</span>
-<span id="2593">2593</span>
-<span id="2594">2594</span>
-<span id="2595">2595</span>
-<span id="2596">2596</span>
-<span id="2597">2597</span>
-<span id="2598">2598</span>
-<span id="2599">2599</span>
-<span id="2600">2600</span>
-<span id="2601">2601</span>
-<span id="2602">2602</span>
-<span id="2603">2603</span>
-<span id="2604">2604</span>
-<span id="2605">2605</span>
-<span id="2606">2606</span>
-<span id="2607">2607</span>
-<span id="2608">2608</span>
-<span id="2609">2609</span>
-<span id="2610">2610</span>
-<span id="2611">2611</span>
-<span id="2612">2612</span>
-<span id="2613">2613</span>
-<span id="2614">2614</span>
-<span id="2615">2615</span>
-<span id="2616">2616</span>
-<span id="2617">2617</span>
-<span id="2618">2618</span>
-<span id="2619">2619</span>
-<span id="2620">2620</span>
-<span id="2621">2621</span>
-<span id="2622">2622</span>
-<span id="2623">2623</span>
-<span id="2624">2624</span>
-<span id="2625">2625</span>
-<span id="2626">2626</span>
-<span id="2627">2627</span>
-<span id="2628">2628</span>
-<span id="2629">2629</span>
-<span id="2630">2630</span>
-<span id="2631">2631</span>
-<span id="2632">2632</span>
-<span id="2633">2633</span>
-<span id="2634">2634</span>
-<span id="2635">2635</span>
-<span id="2636">2636</span>
-<span id="2637">2637</span>
-<span id="2638">2638</span>
-<span id="2639">2639</span>
-<span id="2640">2640</span>
-<span id="2641">2641</span>
-<span id="2642">2642</span>
-<span id="2643">2643</span>
-<span id="2644">2644</span>
-<span id="2645">2645</span>
-<span id="2646">2646</span>
-<span id="2647">2647</span>
-<span id="2648">2648</span>
-<span id="2649">2649</span>
-<span id="2650">2650</span>
-<span id="2651">2651</span>
-<span id="2652">2652</span>
-<span id="2653">2653</span>
-<span id="2654">2654</span>
-<span id="2655">2655</span>
-<span id="2656">2656</span>
-<span id="2657">2657</span>
-<span id="2658">2658</span>
-<span id="2659">2659</span>
-<span id="2660">2660</span>
-<span id="2661">2661</span>
-<span id="2662">2662</span>
-<span id="2663">2663</span>
-<span id="2664">2664</span>
-<span id="2665">2665</span>
-<span id="2666">2666</span>
-<span id="2667">2667</span>
-<span id="2668">2668</span>
-<span id="2669">2669</span>
-<span id="2670">2670</span>
-<span id="2671">2671</span>
-<span id="2672">2672</span>
-<span id="2673">2673</span>
-<span id="2674">2674</span>
-<span id="2675">2675</span>
-<span id="2676">2676</span>
-<span id="2677">2677</span>
-<span id="2678">2678</span>
-<span id="2679">2679</span>
-<span id="2680">2680</span>
-<span id="2681">2681</span>
-<span id="2682">2682</span>
-<span id="2683">2683</span>
-<span id="2684">2684</span>
-<span id="2685">2685</span>
-<span id="2686">2686</span>
-<span id="2687">2687</span>
-<span id="2688">2688</span>
-<span id="2689">2689</span>
-<span id="2690">2690</span>
-<span id="2691">2691</span>
-<span id="2692">2692</span>
-<span id="2693">2693</span>
-<span id="2694">2694</span>
-<span id="2695">2695</span>
-<span id="2696">2696</span>
-<span id="2697">2697</span>
-<span id="2698">2698</span>
-<span id="2699">2699</span>
-<span id="2700">2700</span>
-<span id="2701">2701</span>
-<span id="2702">2702</span>
-<span id="2703">2703</span>
-<span id="2704">2704</span>
-<span id="2705">2705</span>
-<span id="2706">2706</span>
-<span id="2707">2707</span>
-<span id="2708">2708</span>
-<span id="2709">2709</span>
-<span id="2710">2710</span>
-<span id="2711">2711</span>
-<span id="2712">2712</span>
-<span id="2713">2713</span>
-<span id="2714">2714</span>
-<span id="2715">2715</span>
-<span id="2716">2716</span>
-<span id="2717">2717</span>
-<span id="2718">2718</span>
-<span id="2719">2719</span>
-<span id="2720">2720</span>
-<span id="2721">2721</span>
-<span id="2722">2722</span>
-<span id="2723">2723</span>
-<span id="2724">2724</span>
-<span id="2725">2725</span>
-<span id="2726">2726</span>
-<span id="2727">2727</span>
-<span id="2728">2728</span>
-<span id="2729">2729</span>
-<span id="2730">2730</span>
-<span id="2731">2731</span>
-<span id="2732">2732</span>
-<span id="2733">2733</span>
-<span id="2734">2734</span>
-<span id="2735">2735</span>
-<span id="2736">2736</span>
-<span id="2737">2737</span>
-<span id="2738">2738</span>
-<span id="2739">2739</span>
-<span id="2740">2740</span>
-<span id="2741">2741</span>
-<span id="2742">2742</span>
-<span id="2743">2743</span>
-<span id="2744">2744</span>
-<span id="2745">2745</span>
-<span id="2746">2746</span>
-<span id="2747">2747</span>
-<span id="2748">2748</span>
-<span id="2749">2749</span>
-<span id="2750">2750</span>
-<span id="2751">2751</span>
-<span id="2752">2752</span>
-<span id="2753">2753</span>
-<span id="2754">2754</span>
-<span id="2755">2755</span>
-<span id="2756">2756</span>
-<span id="2757">2757</span>
-<span id="2758">2758</span>
-<span id="2759">2759</span>
-<span id="2760">2760</span>
-<span id="2761">2761</span>
-<span id="2762">2762</span>
-<span id="2763">2763</span>
-<span id="2764">2764</span>
-<span id="2765">2765</span>
-<span id="2766">2766</span>
-<span id="2767">2767</span>
-<span id="2768">2768</span>
-<span id="2769">2769</span>
-<span id="2770">2770</span>
-<span id="2771">2771</span>
-<span id="2772">2772</span>
-<span id="2773">2773</span>
-<span id="2774">2774</span>
-<span id="2775">2775</span>
-<span id="2776">2776</span>
-<span id="2777">2777</span>
-<span id="2778">2778</span>
-<span id="2779">2779</span>
-<span id="2780">2780</span>
-<span id="2781">2781</span>
-<span id="2782">2782</span>
-<span id="2783">2783</span>
-<span id="2784">2784</span>
-<span id="2785">2785</span>
-<span id="2786">2786</span>
-<span id="2787">2787</span>
-<span id="2788">2788</span>
-<span id="2789">2789</span>
-<span id="2790">2790</span>
-<span id="2791">2791</span>
-<span id="2792">2792</span>
-<span id="2793">2793</span>
-<span id="2794">2794</span>
-<span id="2795">2795</span>
-<span id="2796">2796</span>
-<span id="2797">2797</span>
-<span id="2798">2798</span>
-<span id="2799">2799</span>
-<span id="2800">2800</span>
-<span id="2801">2801</span>
-<span id="2802">2802</span>
-<span id="2803">2803</span>
-<span id="2804">2804</span>
-<span id="2805">2805</span>
-<span id="2806">2806</span>
 </pre><pre class='rust '>
 <span class='comment'>// This is a part of rust-chrono.</span>
 <span class='comment'>// Copyright (c) 2014-2015, Kang Seonghoon.</span>
 <span class='comment'>// See README.md and LICENSE.txt for details.</span>
 
-<span class='doccomment'>//! ISO 8601 calendar date without timezone.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Calendar Date</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The ISO 8601 **calendar date** follows the proleptic Gregorian calendar.</span>
-<span class='doccomment'>//! It is like a normal civil calendar but note some slight differences:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * Dates before the Gregorian calendar&#39;s inception in 1582 are defined via the extrapolation.</span>
-<span class='doccomment'>//!   Be careful, as historical dates are often noted in the Julian calendar and others</span>
-<span class='doccomment'>//!   and the transition to Gregorian may differ across countries (as late as early 20C).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!   (Some example: Both Shakespeare from Britain and Cervantes from Spain seemingly died</span>
-<span class='doccomment'>//!   on the same calendar date---April 23, 1616---but in the different calendar.</span>
-<span class='doccomment'>//!   Britain used the Julian calendar at that time, so Shakespeare&#39;s death is later.)</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * ISO 8601 calendars has the year 0, which is 1 BCE (a year before 1 CE).</span>
-<span class='doccomment'>//!   If you need a typical BCE/BC and CE/AD notation for year numbers,</span>
-<span class='doccomment'>//!   use the [`Datelike::year_ce`](../../trait.Datelike.html#method.year_ce) method.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Week Date</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The ISO 8601 **week date** is a triple of year number, week number</span>
-<span class='doccomment'>//! and [day of the week](../../enum.Weekday.html) with the following rules:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * A week consists of Monday through Sunday, and is always numbered within some year.</span>
-<span class='doccomment'>//!   The week number ranges from 1 to 52 or 53 depending on the year.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * The week 1 of given year is defined as the first week containing January 4 of that year,</span>
-<span class='doccomment'>//!   or equivalently, the first week containing four or more days in that year.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! * The year number in the week date may *not* correspond to the actual Gregorian year.</span>
-<span class='doccomment'>//!   For example, January 3, 2016 (Sunday) was on the last (53rd) week of 2015.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Chrono&#39;s date types default to the ISO 8601 [calendar date](#calendar-date),</span>
-<span class='doccomment'>//! but the [`Datelike::isoweekdate`](../../trait.Datelike.html#tymethod.isoweekdate) method</span>
-<span class='doccomment'>//! can be used to get the corresponding week date.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Ordinal Date</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The ISO 8601 **ordinal date** is a pair of year number and day of the year (&quot;ordinal&quot;).</span>
-<span class='doccomment'>//! The ordinal number ranges from 1 to 365 or 366 depending on the year.</span>
-<span class='doccomment'>//! The year number is same to that of the [calendar date](#calendar-date).</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This is currently the internal format of Chrono&#39;s date types.</span>
+<span class='doccomment'>/*!
+ * ISO 8601 calendar date without timezone.
+ */</span>
 
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>str</span>, <span class='ident'>fmt</span>, <span class='ident'>hash</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::{<span class='ident'>Add</span>, <span class='ident'>Sub</span>};
@@ -2938,17 +2412,17 @@
                                   (<span class='ident'>MIN_YEAR</span> <span class='op'>+</span> <span class='number'>400_000</span>) <span class='op'>/</span> <span class='number'>400</span> <span class='op'>-</span> <span class='number'>146097_000</span>;
 
 <span class='doccomment'>/// ISO 8601 calendar date without timezone.</span>
-<span class='doccomment'>/// Allows for every [proleptic Gregorian date](./index.html#calendar-date)</span>
-<span class='doccomment'>/// from Jan 1, 262145 BCE to Dec 31, 262143 CE.</span>
+<span class='doccomment'>/// Allows for every proleptic Gregorian date from Jan 1, 262145 BCE to Dec 31, 262143 CE.</span>
 <span class='doccomment'>/// Also supports the conversion from ISO 8601 ordinal and week date.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Ord</span>, <span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc-serialize&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>))]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>NaiveDate</span> {
     <span class='ident'>ymdf</span>: <span class='ident'>DateImpl</span>, <span class='comment'>// (year &lt;&lt; 13) | of</span>
 }
 
-<span class='doccomment'>/// The minimum possible `NaiveDate` (January 1, 262145 BCE).</span>
+<span class='doccomment'>/// The minimum possible `NaiveDate`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>MIN</span>: <span class='ident'>NaiveDate</span> <span class='op'>=</span> <span class='ident'>NaiveDate</span> { <span class='ident'>ymdf</span>: (<span class='ident'>MIN_YEAR</span> <span class='op'>&lt;&lt;</span> <span class='number'>13</span>) <span class='op'>|</span> (<span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='number'>4</span>) <span class='op'>|</span> <span class='number'>0o07</span> <span class='comment'>/*FE*/</span> };
-<span class='doccomment'>/// The maximum possible `NaiveDate` (December 31, 262143 CE).</span>
+<span class='doccomment'>/// The maximum possible `NaiveDate`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>MAX</span>: <span class='ident'>NaiveDate</span> <span class='op'>=</span> <span class='ident'>NaiveDate</span> { <span class='ident'>ymdf</span>: (<span class='ident'>MAX_YEAR</span> <span class='op'>&lt;&lt;</span> <span class='number'>13</span>) <span class='op'>|</span> (<span class='number'>365</span> <span class='op'>&lt;&lt;</span> <span class='number'>4</span>) <span class='op'>|</span> <span class='number'>0o17</span> <span class='comment'>/*F*/</span> };
 
 <span class='comment'>// as it is hard to verify year flags in `MIN` and `MAX`, we use a separate run-time test.</span>
@@ -2978,28 +2452,8 @@
         <span class='ident'>NaiveDate</span>::<span class='ident'>from_of</span>(<span class='ident'>year</span>, <span class='ident'>mdf</span>.<span class='ident'>to_of</span>())
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` from the serialized representation.</span>
-    <span class='doccomment'>/// Used for serialization formats.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc-serialize&quot;</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>from_serialized</span>(<span class='ident'>ymdf</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDate</span><span class='op'>&gt;</span> {
-        <span class='comment'>// check if the year flag is correct</span>
-        <span class='kw'>if</span> (<span class='ident'>ymdf</span> <span class='kw-2'>&amp;</span> <span class='number'>0b1111</span>) <span class='kw'>as</span> <span class='ident'>u8</span> <span class='op'>!=</span> <span class='ident'>YearFlags</span>::<span class='ident'>from_year</span>(<span class='ident'>ymdf</span> <span class='op'>&gt;&gt;</span> <span class='number'>13</span>).<span class='number'>0</span> { <span class='kw'>return</span> <span class='prelude-val'>None</span>; }
-
-        <span class='comment'>// check if the ordinal is in the range</span>
-        <span class='kw'>let</span> <span class='ident'>date</span> <span class='op'>=</span> <span class='ident'>NaiveDate</span> { <span class='ident'>ymdf</span>: <span class='ident'>ymdf</span> };
-        <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>date</span>.<span class='ident'>of</span>().<span class='ident'>valid</span>() { <span class='kw'>return</span> <span class='prelude-val'>None</span>; }
-
-        <span class='prelude-val'>Some</span>(<span class='ident'>date</span>)
-    }
-
-    <span class='doccomment'>/// Returns a serialized representation of this `NaiveDate`.</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc-serialize&quot;</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>to_serialized</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-        <span class='self'>self</span>.<span class='ident'>ymdf</span>
-    }
-
-    <span class='doccomment'>/// Makes a new `NaiveDate` from the [calendar date](./index.html#calendar-date)</span>
-    <span class='doccomment'>/// (year, month and day).</span>
+    <span class='doccomment'>/// Makes a new `NaiveDate` from year, month and day.</span>
+    <span class='doccomment'>/// This assumes the proleptic Gregorian calendar, with the year 0 being 1 BCE.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Panics on the out-of-range date, invalid month and/or day.</span>
     <span class='doccomment'>///</span>
@@ -3020,8 +2474,8 @@
         <span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd_opt</span>(<span class='ident'>year</span>, <span class='ident'>month</span>, <span class='ident'>day</span>).<span class='ident'>expect</span>(<span class='string'>&quot;invalid or out-of-range date&quot;</span>)
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` from the [calendar date](./index.html#calendar-date)</span>
-    <span class='doccomment'>/// (year, month and day).</span>
+    <span class='doccomment'>/// Makes a new `NaiveDate` from year, month and day.</span>
+    <span class='doccomment'>/// This assumes the proleptic Gregorian calendar, with the year 0 being 1 BCE.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` on the out-of-range date, invalid month and/or day.</span>
     <span class='doccomment'>///</span>
@@ -3043,10 +2497,10 @@
         <span class='ident'>NaiveDate</span>::<span class='ident'>from_mdf</span>(<span class='ident'>year</span>, <span class='ident'>Mdf</span>::<span class='ident'>new</span>(<span class='ident'>month</span>, <span class='ident'>day</span>, <span class='ident'>flags</span>))
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` from the [ordinal date](./index.html#ordinal-date)</span>
-    <span class='doccomment'>/// (year and day of the year).</span>
+    <span class='doccomment'>/// Makes a new `NaiveDate` from year and day of year (DOY or &quot;ordinal&quot;).</span>
+    <span class='doccomment'>/// This assumes the proleptic Gregorian calendar, with the year 0 being 1 BCE.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Panics on the out-of-range date and/or invalid day of year.</span>
+    <span class='doccomment'>/// Panics on the out-of-range date and/or invalid DOY.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Example</span>
     <span class='doccomment'>///</span>
@@ -3065,10 +2519,10 @@
         <span class='ident'>NaiveDate</span>::<span class='ident'>from_yo_opt</span>(<span class='ident'>year</span>, <span class='ident'>ordinal</span>).<span class='ident'>expect</span>(<span class='string'>&quot;invalid or out-of-range date&quot;</span>)
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` from the [ordinal date](./index.html#ordinal-date)</span>
-    <span class='doccomment'>/// (year and day of the year).</span>
+    <span class='doccomment'>/// Makes a new `NaiveDate` from year and day of year (DOY or &quot;ordinal&quot;).</span>
+    <span class='doccomment'>/// This assumes the proleptic Gregorian calendar, with the year 0 being 1 BCE.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns `None` on the out-of-range date and/or invalid day of year.</span>
+    <span class='doccomment'>/// Returns `None` on the out-of-range date and/or invalid DOY.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// # Example</span>
     <span class='doccomment'>///</span>
@@ -3089,8 +2543,8 @@
         <span class='ident'>NaiveDate</span>::<span class='ident'>from_of</span>(<span class='ident'>year</span>, <span class='ident'>Of</span>::<span class='ident'>new</span>(<span class='ident'>ordinal</span>, <span class='ident'>flags</span>))
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` from the [ISO week date](./index.html#week-date)</span>
-    <span class='doccomment'>/// (year, week number and day of the week).</span>
+    <span class='doccomment'>/// Makes a new `NaiveDate` from ISO week date (year and week number) and day of the week (DOW).</span>
+    <span class='doccomment'>/// This assumes the proleptic Gregorian calendar, with the year 0 being 1 BCE.</span>
     <span class='doccomment'>/// The resulting `NaiveDate` may have a different year from the input year.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Panics on the out-of-range date and/or invalid week number.</span>
@@ -3112,8 +2566,8 @@
         <span class='ident'>NaiveDate</span>::<span class='ident'>from_isoywd_opt</span>(<span class='ident'>year</span>, <span class='ident'>week</span>, <span class='ident'>weekday</span>).<span class='ident'>expect</span>(<span class='string'>&quot;invalid or out-of-range date&quot;</span>)
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` from the [ISO week date](./index.html#week-date)</span>
-    <span class='doccomment'>/// (year, week number and day of the week).</span>
+    <span class='doccomment'>/// Makes a new `NaiveDate` from ISO week date (year and week number) and day of the week (DOW).</span>
+    <span class='doccomment'>/// This assumes the proleptic Gregorian calendar, with the year 0 being 1 BCE.</span>
     <span class='doccomment'>/// The resulting `NaiveDate` may have a different year from the input year.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` on the out-of-range date and/or invalid week number.</span>
@@ -3131,16 +2585,12 @@
     <span class='doccomment'>/// assert_eq!(isoywd(2015, 30, Weekday::Mon), Some(ymd(2015, 7, 20)));</span>
     <span class='doccomment'>/// assert_eq!(isoywd(2015, 60, Weekday::Mon), None);</span>
     <span class='doccomment'>///</span>
+    <span class='doccomment'>/// // out-of-range dates</span>
     <span class='doccomment'>/// assert_eq!(isoywd(400000, 10, Weekday::Fri), None);</span>
     <span class='doccomment'>/// assert_eq!(isoywd(-400000, 10, Weekday::Sat), None);</span>
-    <span class='doccomment'>/// ~~~~</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The year number of ISO week date may differ from that of the calendar date.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// # use chrono::{NaiveDate, Weekday};</span>
-    <span class='doccomment'>/// # let ymd = |y,m,d| NaiveDate::from_ymd(y, m, d);</span>
-    <span class='doccomment'>/// # let isoywd = |y,w,d| NaiveDate::from_isoywd_opt(y, w, d);</span>
+    <span class='doccomment'>/// // year boundary behaviors</span>
+    <span class='doccomment'>/// //</span>
     <span class='doccomment'>/// //           Mo Tu We Th Fr Sa Su</span>
     <span class='doccomment'>/// // 2014-W52  22 23 24 25 26 27 28    has 4+ days of new year,</span>
     <span class='doccomment'>/// // 2015-W01  29 30 31  1  2  3  4 &lt;- so this is the first week</span>
@@ -3199,29 +2649,6 @@
     <span class='doccomment'>/// assert_eq!(d.day(), 14);</span>
     <span class='doccomment'>/// assert_eq!(d.ordinal(), 73); // day of year</span>
     <span class='doccomment'>/// assert_eq!(d.isoweekdate(), (2015, 11, Weekday::Sat)); // ISO week and weekday</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// While not directly supported by Chrono,</span>
-    <span class='doccomment'>/// it is easy to convert from the Julian day number</span>
-    <span class='doccomment'>/// (January 1, 4713 BCE in the *Julian* calendar being Day 0)</span>
-    <span class='doccomment'>/// to Gregorian with this method.</span>
-    <span class='doccomment'>/// (Note that this panics when `jd` is out of range.)</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::NaiveDate;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// fn jd_to_date(jd: i32) -&gt; NaiveDate {</span>
-    <span class='doccomment'>///     // keep in mind that the Julian day number is 0-based</span>
-    <span class='doccomment'>///     // while this method requires an 1-based number.</span>
-    <span class='doccomment'>///     NaiveDate::from_num_days_from_ce(jd - 1721425)</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// // January 1, 4713 BCE in Julian = November 24, 4714 BCE in Gregorian</span>
-    <span class='doccomment'>/// assert_eq!(jd_to_date(0), NaiveDate::from_ymd(-4713, 11, 24));</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(jd_to_date(1721426), NaiveDate::from_ymd(1, 1, 1));</span>
-    <span class='doccomment'>/// assert_eq!(jd_to_date(2450000), NaiveDate::from_ymd(1995, 10, 9));</span>
-    <span class='doccomment'>/// assert_eq!(jd_to_date(2451545), NaiveDate::from_ymd(2000, 1, 1));</span>
     <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_num_days_from_ce</span>(<span class='ident'>days</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>NaiveDate</span> {
@@ -3319,7 +2746,7 @@
 
     <span class='doccomment'>/// Makes a new `NaiveDateTime` from the current date, hour, minute and second.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// No [leap second](../time/index.html#leap-second-handling) is allowed here;</span>
+    <span class='doccomment'>/// No [leap second](../time/struct.NaiveTime.html#leap-second-what?) is allowed here;</span>
     <span class='doccomment'>/// use `NaiveDate::and_hms_*` methods with a subsecond parameter instead.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Panics on invalid hour, minute and/or second.</span>
@@ -3343,7 +2770,7 @@
 
     <span class='doccomment'>/// Makes a new `NaiveDateTime` from the current date, hour, minute and second.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// No [leap second](../time/index.html#leap-second-handling) is allowed here;</span>
+    <span class='doccomment'>/// No [leap second](../time/struct.NaiveTime.html#leap-second-what?) is allowed here;</span>
     <span class='doccomment'>/// use `NaiveDate::and_hms_*_opt` methods with a subsecond parameter instead.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` on invalid hour, minute and/or second.</span>
@@ -3367,7 +2794,7 @@
     <span class='doccomment'>/// Makes a new `NaiveDateTime` from the current date, hour, minute, second and millisecond.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// The millisecond part can exceed 1,000</span>
-    <span class='doccomment'>/// in order to represent the [leap second](../time/index.html#leap-second-handling).</span>
+    <span class='doccomment'>/// in order to represent the [leap second](../time/struct.NaiveTime.html#leap-second-what?).</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Panics on invalid hour, minute, second and/or millisecond.</span>
     <span class='doccomment'>///</span>
@@ -3392,7 +2819,7 @@
     <span class='doccomment'>/// Makes a new `NaiveDateTime` from the current date, hour, minute, second and millisecond.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// The millisecond part can exceed 1,000</span>
-    <span class='doccomment'>/// in order to represent the [leap second](../time/index.html#leap-second-handling).</span>
+    <span class='doccomment'>/// in order to represent the [leap second](../time/struct.NaiveTime.html#leap-second-what?).</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` on invalid hour, minute, second and/or millisecond.</span>
     <span class='doccomment'>///</span>
@@ -3418,7 +2845,7 @@
     <span class='doccomment'>/// Makes a new `NaiveDateTime` from the current date, hour, minute, second and microsecond.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// The microsecond part can exceed 1,000,000</span>
-    <span class='doccomment'>/// in order to represent the [leap second](../time/index.html#leap-second-handling).</span>
+    <span class='doccomment'>/// in order to represent the [leap second](../time/struct.NaiveTime.html#leap-second-what?).</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Panics on invalid hour, minute, second and/or microsecond.</span>
     <span class='doccomment'>///</span>
@@ -3443,7 +2870,7 @@
     <span class='doccomment'>/// Makes a new `NaiveDateTime` from the current date, hour, minute, second and microsecond.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// The microsecond part can exceed 1,000,000</span>
-    <span class='doccomment'>/// in order to represent the [leap second](../time/index.html#leap-second-handling).</span>
+    <span class='doccomment'>/// in order to represent the [leap second](../time/struct.NaiveTime.html#leap-second-what?).</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` on invalid hour, minute, second and/or microsecond.</span>
     <span class='doccomment'>///</span>
@@ -3469,7 +2896,7 @@
     <span class='doccomment'>/// Makes a new `NaiveDateTime` from the current date, hour, minute, second and nanosecond.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// The nanosecond part can exceed 1,000,000,000</span>
-    <span class='doccomment'>/// in order to represent the [leap second](../time/index.html#leap-second-handling).</span>
+    <span class='doccomment'>/// in order to represent the [leap second](../time/struct.NaiveTime.html#leap-second-what?).</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Panics on invalid hour, minute, second and/or nanosecond.</span>
     <span class='doccomment'>///</span>
@@ -3494,7 +2921,7 @@
     <span class='doccomment'>/// Makes a new `NaiveDateTime` from the current date, hour, minute, second and nanosecond.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// The nanosecond part can exceed 1,000,000,000</span>
-    <span class='doccomment'>/// in order to represent the [leap second](../time/index.html#leap-second-handling).</span>
+    <span class='doccomment'>/// in order to represent the [leap second](../time/struct.NaiveTime.html#leap-second-what?).</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` on invalid hour, minute, second and/or nanosecond.</span>
     <span class='doccomment'>///</span>
@@ -3550,7 +2977,7 @@
         }
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` for the next calendar date.</span>
+    <span class='doccomment'>/// Makes a new `NaiveDate` for the next date.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Panics when `self` is the last representable date.</span>
     <span class='doccomment'>///</span>
@@ -3568,7 +2995,7 @@
         <span class='self'>self</span>.<span class='ident'>succ_opt</span>().<span class='ident'>expect</span>(<span class='string'>&quot;out of bound&quot;</span>)
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` for the next calendar date.</span>
+    <span class='doccomment'>/// Makes a new `NaiveDate` for the next date.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when `self` is the last representable date.</span>
     <span class='doccomment'>///</span>
@@ -3587,7 +3014,7 @@
         <span class='self'>self</span>.<span class='ident'>with_of</span>(<span class='self'>self</span>.<span class='ident'>of</span>().<span class='ident'>succ</span>()).<span class='ident'>or_else</span>(<span class='op'>||</span> <span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd_opt</span>(<span class='self'>self</span>.<span class='ident'>year</span>() <span class='op'>+</span> <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>1</span>))
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` for the previous calendar date.</span>
+    <span class='doccomment'>/// Makes a new `NaiveDate` for the prior date.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Panics when `self` is the first representable date.</span>
     <span class='doccomment'>///</span>
@@ -3605,7 +3032,7 @@
         <span class='self'>self</span>.<span class='ident'>pred_opt</span>().<span class='ident'>expect</span>(<span class='string'>&quot;out of bound&quot;</span>)
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` for the previous calendar date.</span>
+    <span class='doccomment'>/// Makes a new `NaiveDate` for the prior date.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Returns `None` when `self` is the first representable date.</span>
     <span class='doccomment'>///</span>
@@ -3739,182 +3166,14 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>Datelike</span> <span class='kw'>for</span> <span class='ident'>NaiveDate</span> {
-    <span class='doccomment'>/// Returns the year number in the [calendar date](./index.html#calendar-date).</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).year(), 2015);</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(-308, 3, 14).year(), -308); // 309 BCE</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>year</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-        <span class='self'>self</span>.<span class='ident'>ymdf</span> <span class='op'>&gt;&gt;</span> <span class='number'>13</span>
-    }
-
-    <span class='doccomment'>/// Returns the month number starting from 1.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The return value ranges from 1 to 12.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).month(), 9);</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(-308, 3, 14).month(), 3);</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>month</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='self'>self</span>.<span class='ident'>mdf</span>().<span class='ident'>month</span>()
-    }
-
-    <span class='doccomment'>/// Returns the month number starting from 0.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The return value ranges from 0 to 11.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).month0(), 8);</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(-308, 3, 14).month0(), 2);</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>month0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='self'>self</span>.<span class='ident'>mdf</span>().<span class='ident'>month</span>() <span class='op'>-</span> <span class='number'>1</span>
-    }
-
-    <span class='doccomment'>/// Returns the day of month starting from 1.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The return value ranges from 1 to 31. (The last day of month differs by months.)</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).day(), 8);</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(-308, 3, 14).day(), 14);</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Combined with [`NaiveDate::pred`](./struct.NaiveDate.html#method.pred),</span>
-    <span class='doccomment'>/// one can determine the number of days in a particular month.</span>
-    <span class='doccomment'>/// (Note that this panics when `year` is out of range.)</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// fn ndays_in_month(year: i32, month: u32) -&gt; u32 {</span>
-    <span class='doccomment'>///     // the first day of the next month...</span>
-    <span class='doccomment'>///     let (y, m) = if month == 12 { (year + 1, 1) } else { (year, month + 1) };</span>
-    <span class='doccomment'>///     let d = NaiveDate::from_ymd(y, m, 1);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///     // ...is preceded by the last day of the original month</span>
-    <span class='doccomment'>///     d.pred().day()</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(ndays_in_month(2015, 8), 31);</span>
-    <span class='doccomment'>/// assert_eq!(ndays_in_month(2015, 9), 30);</span>
-    <span class='doccomment'>/// assert_eq!(ndays_in_month(2015, 12), 31);</span>
-    <span class='doccomment'>/// assert_eq!(ndays_in_month(2016, 2), 29);</span>
-    <span class='doccomment'>/// assert_eq!(ndays_in_month(2017, 2), 28);</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>day</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='self'>self</span>.<span class='ident'>mdf</span>().<span class='ident'>day</span>()
-    }
-
-    <span class='doccomment'>/// Returns the day of month starting from 0.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The return value ranges from 0 to 30. (The last day of month differs by months.)</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).day0(), 7);</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(-308, 3, 14).day0(), 13);</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>day0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='self'>self</span>.<span class='ident'>mdf</span>().<span class='ident'>day</span>() <span class='op'>-</span> <span class='number'>1</span>
-    }
-
-    <span class='doccomment'>/// Returns the day of year starting from 1.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The return value ranges from 1 to 366. (The last day of year differs by years.)</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).ordinal(), 251);</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(-308, 3, 14).ordinal(), 74);</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Combined with [`NaiveDate::pred`](./struct.NaiveDate.html#method.pred),</span>
-    <span class='doccomment'>/// one can determine the number of days in a particular year.</span>
-    <span class='doccomment'>/// (Note that this panics when `year` is out of range.)</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// fn ndays_in_year(year: i32) -&gt; u32 {</span>
-    <span class='doccomment'>///     // the first day of the next year...</span>
-    <span class='doccomment'>///     let d = NaiveDate::from_ymd(year + 1, 1, 1);</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>///     // ...is preceded by the last day of the original year</span>
-    <span class='doccomment'>///     d.pred().ordinal()</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(ndays_in_year(2015), 365);</span>
-    <span class='doccomment'>/// assert_eq!(ndays_in_year(2016), 366);</span>
-    <span class='doccomment'>/// assert_eq!(ndays_in_year(2017), 365);</span>
-    <span class='doccomment'>/// assert_eq!(ndays_in_year(2000), 366);</span>
-    <span class='doccomment'>/// assert_eq!(ndays_in_year(2100), 365);</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>ordinal</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='self'>self</span>.<span class='ident'>of</span>().<span class='ident'>ordinal</span>()
-    }
-
-    <span class='doccomment'>/// Returns the day of year starting from 0.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The return value ranges from 0 to 365. (The last day of year differs by years.)</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).ordinal0(), 250);</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(-308, 3, 14).ordinal0(), 73);</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>ordinal0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='self'>self</span>.<span class='ident'>of</span>().<span class='ident'>ordinal</span>() <span class='op'>-</span> <span class='number'>1</span>
-    }
-
-    <span class='doccomment'>/// Returns the day of week.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike, Weekday};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).weekday(), Weekday::Tue);</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(-308, 3, 14).weekday(), Weekday::Fri);</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>weekday</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Weekday</span> {
-        <span class='self'>self</span>.<span class='ident'>of</span>().<span class='ident'>weekday</span>()
-    }
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span> <span class='kw'>fn</span> <span class='ident'>year</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> { <span class='self'>self</span>.<span class='ident'>ymdf</span> <span class='op'>&gt;&gt;</span> <span class='number'>13</span> }
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span> <span class='kw'>fn</span> <span class='ident'>month</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='self'>self</span>.<span class='ident'>mdf</span>().<span class='ident'>month</span>() }
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span> <span class='kw'>fn</span> <span class='ident'>month0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='self'>self</span>.<span class='ident'>mdf</span>().<span class='ident'>month</span>() <span class='op'>-</span> <span class='number'>1</span> }
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span> <span class='kw'>fn</span> <span class='ident'>day</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='self'>self</span>.<span class='ident'>mdf</span>().<span class='ident'>day</span>() }
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span> <span class='kw'>fn</span> <span class='ident'>day0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='self'>self</span>.<span class='ident'>mdf</span>().<span class='ident'>day</span>() <span class='op'>-</span> <span class='number'>1</span> }
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span> <span class='kw'>fn</span> <span class='ident'>ordinal</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='self'>self</span>.<span class='ident'>of</span>().<span class='ident'>ordinal</span>() }
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span> <span class='kw'>fn</span> <span class='ident'>ordinal0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> { <span class='self'>self</span>.<span class='ident'>of</span>().<span class='ident'>ordinal</span>() <span class='op'>-</span> <span class='number'>1</span> }
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span> <span class='kw'>fn</span> <span class='ident'>weekday</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Weekday</span> { <span class='self'>self</span>.<span class='ident'>of</span>().<span class='ident'>weekday</span>() }
 
     <span class='kw'>fn</span> <span class='ident'>isoweekdate</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>i32</span>, <span class='ident'>u32</span>, <span class='ident'>Weekday</span>) {
         <span class='kw'>let</span> <span class='ident'>of</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>of</span>();
@@ -3933,28 +3192,6 @@
         }
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` with the year number changed.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns `None` when the resulting `NaiveDate` would be invalid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).with_year(2016),</span>
-    <span class='doccomment'>///            Some(NaiveDate::from_ymd(2016, 9, 8)));</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).with_year(-308),</span>
-    <span class='doccomment'>///            Some(NaiveDate::from_ymd(-308, 9, 8)));</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A leap day (February 29) is a good example that this method can return `None`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// # use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>/// assert!(NaiveDate::from_ymd(2016, 2, 29).with_year(2015).is_none());</span>
-    <span class='doccomment'>/// assert!(NaiveDate::from_ymd(2016, 2, 29).with_year(2020).is_some());</span>
-    <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_year</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDate</span><span class='op'>&gt;</span> {
         <span class='comment'>// we need to operate with `mdf` since we should keep the month and day number as is</span>
@@ -3967,144 +3204,46 @@
         <span class='ident'>NaiveDate</span>::<span class='ident'>from_mdf</span>(<span class='ident'>year</span>, <span class='ident'>mdf</span>)
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` with the month number (starting from 1) changed.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns `None` when the resulting `NaiveDate` would be invalid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).with_month(10),</span>
-    <span class='doccomment'>///            Some(NaiveDate::from_ymd(2015, 10, 8)));</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).with_month(13), None); // no month 13</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 30).with_month(2), None); // no February 30</span>
-    <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_month</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>month</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDate</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>with_mdf</span>(<span class='self'>self</span>.<span class='ident'>mdf</span>().<span class='ident'>with_month</span>(<span class='ident'>month</span>))
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` with the month number (starting from 0) changed.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns `None` when the resulting `NaiveDate` would be invalid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).with_month0(9),</span>
-    <span class='doccomment'>///            Some(NaiveDate::from_ymd(2015, 10, 8)));</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).with_month0(12), None); // no month 13</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 30).with_month0(1), None); // no February 30</span>
-    <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_month0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>month0</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDate</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>with_mdf</span>(<span class='self'>self</span>.<span class='ident'>mdf</span>().<span class='ident'>with_month</span>(<span class='ident'>month0</span> <span class='op'>+</span> <span class='number'>1</span>))
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` with the day of month (starting from 1) changed.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns `None` when the resulting `NaiveDate` would be invalid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).with_day(30),</span>
-    <span class='doccomment'>///            Some(NaiveDate::from_ymd(2015, 9, 30)));</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).with_day(31),</span>
-    <span class='doccomment'>///            None); // no September 31</span>
-    <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_day</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>day</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDate</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>with_mdf</span>(<span class='self'>self</span>.<span class='ident'>mdf</span>().<span class='ident'>with_day</span>(<span class='ident'>day</span>))
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` with the day of month (starting from 0) changed.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns `None` when the resulting `NaiveDate` would be invalid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).with_day0(29),</span>
-    <span class='doccomment'>///            Some(NaiveDate::from_ymd(2015, 9, 30)));</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 9, 8).with_day0(30),</span>
-    <span class='doccomment'>///            None); // no September 31</span>
-    <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_day0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>day0</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDate</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>with_mdf</span>(<span class='self'>self</span>.<span class='ident'>mdf</span>().<span class='ident'>with_day</span>(<span class='ident'>day0</span> <span class='op'>+</span> <span class='number'>1</span>))
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` with the day of year (starting from 1) changed.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns `None` when the resulting `NaiveDate` would be invalid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 1, 1).with_ordinal(60),</span>
-    <span class='doccomment'>///            Some(NaiveDate::from_ymd(2015, 3, 1)));</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 1, 1).with_ordinal(366),</span>
-    <span class='doccomment'>///            None); // 2015 had only 365 days</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2016, 1, 1).with_ordinal(60),</span>
-    <span class='doccomment'>///            Some(NaiveDate::from_ymd(2016, 2, 29)));</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2016, 1, 1).with_ordinal(366),</span>
-    <span class='doccomment'>///            Some(NaiveDate::from_ymd(2016, 12, 31)));</span>
-    <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_ordinal</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ordinal</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDate</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>with_of</span>(<span class='self'>self</span>.<span class='ident'>of</span>().<span class='ident'>with_ordinal</span>(<span class='ident'>ordinal</span>))
     }
 
-    <span class='doccomment'>/// Makes a new `NaiveDate` with the day of year (starting from 0) changed.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns `None` when the resulting `NaiveDate` would be invalid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ~~~~</span>
-    <span class='doccomment'>/// use chrono::{NaiveDate, Datelike};</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 1, 1).with_ordinal0(59),</span>
-    <span class='doccomment'>///            Some(NaiveDate::from_ymd(2015, 3, 1)));</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2015, 1, 1).with_ordinal0(365),</span>
-    <span class='doccomment'>///            None); // 2015 had only 365 days</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2016, 1, 1).with_ordinal0(59),</span>
-    <span class='doccomment'>///            Some(NaiveDate::from_ymd(2016, 2, 29)));</span>
-    <span class='doccomment'>/// assert_eq!(NaiveDate::from_ymd(2016, 1, 1).with_ordinal0(365),</span>
-    <span class='doccomment'>///            Some(NaiveDate::from_ymd(2016, 12, 31)));</span>
-    <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_ordinal0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ordinal0</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDate</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>with_of</span>(<span class='self'>self</span>.<span class='ident'>of</span>().<span class='ident'>with_ordinal</span>(<span class='ident'>ordinal0</span> <span class='op'>+</span> <span class='number'>1</span>))
     }
 }
 
-<span class='doccomment'>/// `NaiveDate` can be used as a key to the hash maps.</span>
 <span class='kw'>impl</span> <span class='ident'>hash</span>::<span class='ident'>Hash</span> <span class='kw'>for</span> <span class='ident'>NaiveDate</span> {
-    <span class='kw'>fn</span> <span class='ident'>hash</span><span class='op'>&lt;</span><span class='ident'>H</span>: <span class='ident'>hash</span>::<span class='ident'>Hasher</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>state</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>H</span>) {
-        <span class='comment'>// don&#39;t need to strip flags, as we can safely assume that it is correct</span>
-        <span class='self'>self</span>.<span class='ident'>ymdf</span>.<span class='ident'>hash</span>(<span class='ident'>state</span>);
-    }
+    <span class='kw'>fn</span> <span class='ident'>hash</span><span class='op'>&lt;</span><span class='ident'>H</span>: <span class='ident'>hash</span>::<span class='ident'>Hasher</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>state</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>H</span>) { <span class='self'>self</span>.<span class='ident'>ymdf</span>.<span class='ident'>hash</span>(<span class='ident'>state</span>) }
 }
 
 <span class='doccomment'>/// An addition of `Duration` to `NaiveDate` discards the fractional days,</span>
 <span class='doccomment'>/// rounding to the closest integral number of days towards `Duration::zero()`.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Panics on underflow or overflow.</span>
-<span class='doccomment'>/// Use [`NaiveDate::checked_add`](#method.checked_add) to detect that.</span>
+<span class='doccomment'>/// Use `NaiveDate::checked_add` for detecting that.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// # Example</span>
 <span class='doccomment'>///</span>
@@ -4130,10 +3269,8 @@
     }
 }
 
-<span class='doccomment'>/// A subtraction of `NaiveDate` from `NaiveDate` yields a `Duration` of integral numbers.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This does not overflow or underflow at all,</span>
-<span class='doccomment'>/// as all possible output fits in the range of `Duration`.</span>
+<span class='doccomment'>/// A subtraction of `NaiveDate` from `NaiveDate` yields a `Duration` of integral numbers,</span>
+<span class='doccomment'>/// and does not overflow or underflow at all.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// # Example</span>
 <span class='doccomment'>///</span>
@@ -4167,7 +3304,7 @@
 <span class='doccomment'>/// rounding to the closest integral number of days towards `Duration::zero()`.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Panics on underflow or overflow.</span>
-<span class='doccomment'>/// Use [`NaiveDate::checked_sub`](#method.checked_sub) to detect that.</span>
+<span class='doccomment'>/// Use `NaiveDate::checked_sub` for detecting that.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// # Example</span>
 <span class='doccomment'>///</span>
@@ -4194,6 +3331,7 @@
 }
 
 <span class='doccomment'>/// The `Debug` output of the naive date `d` is same to `d.format(&quot;%Y-%m-%d&quot;)`.</span>
+<span class='doccomment'>/// Note that ISO 8601 requires an explicit sign for years before 1 BCE or after 9999 CE.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// The string printed can be readily parsed via the `parse` method on `str`.</span>
 <span class='doccomment'>///</span>
@@ -4205,12 +3343,8 @@
 <span class='doccomment'>/// assert_eq!(format!(&quot;{:?}&quot;, NaiveDate::from_ymd(2015,  9,  5)), &quot;2015-09-05&quot;);</span>
 <span class='doccomment'>/// assert_eq!(format!(&quot;{:?}&quot;, NaiveDate::from_ymd(   0,  1,  1)), &quot;0000-01-01&quot;);</span>
 <span class='doccomment'>/// assert_eq!(format!(&quot;{:?}&quot;, NaiveDate::from_ymd(9999, 12, 31)), &quot;9999-12-31&quot;);</span>
-<span class='doccomment'>/// ~~~~</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// ISO 8601 requires an explicit sign for years before 1 BCE or after 9999 CE.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ~~~~</span>
-<span class='doccomment'>/// # use chrono::NaiveDate;</span>
+<span class='doccomment'>/// // examples of an explicit year sign</span>
 <span class='doccomment'>/// assert_eq!(format!(&quot;{:?}&quot;, NaiveDate::from_ymd(   -1,  1,  1)),  &quot;-0001-01-01&quot;);</span>
 <span class='doccomment'>/// assert_eq!(format!(&quot;{:?}&quot;, NaiveDate::from_ymd(10000, 12, 31)), &quot;+10000-12-31&quot;);</span>
 <span class='doccomment'>/// ~~~~</span>
@@ -4228,6 +3362,7 @@
 }
 
 <span class='doccomment'>/// The `Display` output of the naive date `d` is same to `d.format(&quot;%Y-%m-%d&quot;)`.</span>
+<span class='doccomment'>/// Note that ISO 8601 requires an explicit sign for years before 1 BCE or after 9999 CE.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// The string printed can be readily parsed via the `parse` method on `str`.</span>
 <span class='doccomment'>///</span>
@@ -4239,12 +3374,8 @@
 <span class='doccomment'>/// assert_eq!(format!(&quot;{}&quot;, NaiveDate::from_ymd(2015,  9,  5)), &quot;2015-09-05&quot;);</span>
 <span class='doccomment'>/// assert_eq!(format!(&quot;{}&quot;, NaiveDate::from_ymd(   0,  1,  1)), &quot;0000-01-01&quot;);</span>
 <span class='doccomment'>/// assert_eq!(format!(&quot;{}&quot;, NaiveDate::from_ymd(9999, 12, 31)), &quot;9999-12-31&quot;);</span>
-<span class='doccomment'>/// ~~~~</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// ISO 8601 requires an explicit sign for years before 1 BCE or after 9999 CE.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ~~~~</span>
-<span class='doccomment'>/// # use chrono::NaiveDate;</span>
+<span class='doccomment'>/// // examples of an explicit year sign</span>
 <span class='doccomment'>/// assert_eq!(format!(&quot;{}&quot;, NaiveDate::from_ymd(   -1,  1,  1)),  &quot;-0001-01-01&quot;);</span>
 <span class='doccomment'>/// assert_eq!(format!(&quot;{}&quot;, NaiveDate::from_ymd(10000, 12, 31)), &quot;+10000-12-31&quot;);</span>
 <span class='doccomment'>/// ~~~~</span>
@@ -4286,92 +3417,11 @@
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc-serialize&quot;</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>rustc_serialize</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>NaiveDate</span>;
-    <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::{<span class='ident'>Encodable</span>, <span class='ident'>Encoder</span>, <span class='ident'>Decodable</span>, <span class='ident'>Decoder</span>};
-
-    <span class='comment'>// TODO the current serialization format is NEVER intentionally defined.</span>
-    <span class='comment'>// this basically follows the automatically generated implementation for those traits,</span>
-    <span class='comment'>// plus manual verification steps for avoiding security problem.</span>
-    <span class='comment'>// in the future it is likely to be redefined to more sane and reasonable format.</span>
-
-    <span class='kw'>impl</span> <span class='ident'>Encodable</span> <span class='kw'>for</span> <span class='ident'>NaiveDate</span> {
-        <span class='kw'>fn</span> <span class='ident'>encode</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Encoder</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>S</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-            <span class='kw'>let</span> <span class='ident'>ymdf</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>to_serialized</span>();
-            <span class='ident'>s</span>.<span class='ident'>emit_struct</span>(<span class='string'>&quot;NaiveDate&quot;</span>, <span class='number'>1</span>, <span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>s</span>.<span class='ident'>emit_struct_field</span>(<span class='string'>&quot;ymdf&quot;</span>, <span class='number'>0</span>, <span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>ymdf</span>.<span class='ident'>encode</span>(<span class='ident'>s</span>)));
-                <span class='prelude-val'>Ok</span>(())
-            })
-        }
-    }
-
-    <span class='kw'>impl</span> <span class='ident'>Decodable</span> <span class='kw'>for</span> <span class='ident'>NaiveDate</span> {
-        <span class='kw'>fn</span> <span class='ident'>decode</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Decoder</span><span class='op'>&gt;</span>(<span class='ident'>d</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>NaiveDate</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-            <span class='ident'>d</span>.<span class='ident'>read_struct</span>(<span class='string'>&quot;NaiveDate&quot;</span>, <span class='number'>1</span>, <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
-                <span class='kw'>let</span> <span class='ident'>ymdf</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;ymdf&quot;</span>, <span class='number'>0</span>, <span class='ident'>Decodable</span>::<span class='ident'>decode</span>));
-                <span class='ident'>NaiveDate</span>::<span class='ident'>from_serialized</span>(<span class='ident'>ymdf</span>).<span class='ident'>ok_or_else</span>(<span class='op'>||</span> <span class='ident'>d</span>.<span class='ident'>error</span>(<span class='string'>&quot;invalid date&quot;</span>))
-            })
-        }
-    }
-
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_encodable</span>() {
-        <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>json</span>::<span class='ident'>encode</span>;
-
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>2016</span>, <span class='number'>7</span>, <span class='number'>8</span>)).<span class='ident'>ok</span>(),
-                   <span class='prelude-val'>Some</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:16518115}&quot;#</span>.<span class='ident'>into</span>()));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>1</span>)).<span class='ident'>ok</span>(),
-                   <span class='prelude-val'>Some</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:20}&quot;#</span>.<span class='ident'>into</span>()));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='op'>-</span><span class='number'>1</span>, <span class='number'>12</span>, <span class='number'>31</span>)).<span class='ident'>ok</span>(),
-                   <span class='prelude-val'>Some</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:-2341}&quot;#</span>.<span class='ident'>into</span>()));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='kw'>super</span>::<span class='ident'>MIN</span>).<span class='ident'>ok</span>(),
-                   <span class='prelude-val'>Some</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:-2147483625}&quot;#</span>.<span class='ident'>into</span>()));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='kw'>super</span>::<span class='ident'>MAX</span>).<span class='ident'>ok</span>(),
-                   <span class='prelude-val'>Some</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:2147481311}&quot;#</span>.<span class='ident'>into</span>()));
-    }
-
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_decodable</span>() {
-        <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>json</span>;
-        <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>i32</span>, <span class='ident'>i64</span>};
-
-        <span class='kw'>let</span> <span class='ident'>decode</span> <span class='op'>=</span> <span class='op'>|</span><span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>|</span> <span class='ident'>json</span>::<span class='ident'>decode</span>::<span class='op'>&lt;</span><span class='ident'>NaiveDate</span><span class='op'>&gt;</span>(<span class='ident'>s</span>);
-
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:16518115}&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>2016</span>, <span class='number'>7</span>, <span class='number'>8</span>)));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:20}&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>1</span>)));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:-2341}&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='op'>-</span><span class='number'>1</span>, <span class='number'>12</span>, <span class='number'>31</span>)));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:-2147483625}&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='kw'>super</span>::<span class='ident'>MIN</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:2147481311}&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='kw'>super</span>::<span class='ident'>MAX</span>));
-
-        <span class='comment'>// some extreme values and zero are always invalid</span>
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:0}&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:1}&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:-1}&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>r#&quot;{{&quot;ymdf&quot;:{}}}&quot;#</span>, <span class='ident'>i32</span>::<span class='ident'>MIN</span>)).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>r#&quot;{{&quot;ymdf&quot;:{}}}&quot;#</span>, <span class='ident'>i32</span>::<span class='ident'>MAX</span>)).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>r#&quot;{{&quot;ymdf&quot;:{}}}&quot;#</span>, <span class='ident'>i64</span>::<span class='ident'>MIN</span>)).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>r#&quot;{{&quot;ymdf&quot;:{}}}&quot;#</span>, <span class='ident'>i64</span>::<span class='ident'>MAX</span>)).<span class='ident'>is_err</span>());
-
-        <span class='comment'>// bad formats</span>
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:20.01}&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:&quot;string&quot;}&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:null}&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{}&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;{&quot;date&quot;:20}&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;20&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;&quot;string&quot;&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;&quot;2016-07-08&quot;&quot;#</span>).<span class='ident'>is_err</span>()); <span class='comment'>// :(</span>
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>decode</span>(<span class='string'>r#&quot;null&quot;#</span>).<span class='ident'>is_err</span>());
-    }
-}
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde&quot;</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>serde</span> {
     <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>NaiveDate</span>;
     <span class='kw'>use</span> <span class='ident'>serde</span>::{<span class='ident'>ser</span>, <span class='ident'>de</span>};
-
-    <span class='comment'>// TODO not very optimized for space (binary formats would want something better)</span>
 
     <span class='kw'>impl</span> <span class='ident'>ser</span>::<span class='ident'>Serialize</span> <span class='kw'>for</span> <span class='ident'>NaiveDate</span> {
         <span class='kw'>fn</span> <span class='ident'>serialize</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>serializer</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>S</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
@@ -4380,9 +3430,9 @@
             <span class='ident'>serializer</span>.<span class='ident'>serialize_str</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='self'>self</span>))
         }
     }
-
+    
     <span class='kw'>struct</span> <span class='ident'>NaiveDateVisitor</span>;
-
+    
     <span class='kw'>impl</span> <span class='ident'>de</span>::<span class='ident'>Visitor</span> <span class='kw'>for</span> <span class='ident'>NaiveDateVisitor</span> {
         <span class='kw'>type</span> <span class='ident'>Value</span> <span class='op'>=</span> <span class='ident'>NaiveDate</span>;
 
@@ -4392,66 +3442,13 @@
             <span class='ident'>value</span>.<span class='ident'>parse</span>().<span class='ident'>map_err</span>(<span class='op'>|</span><span class='ident'>err</span><span class='op'>|</span> <span class='ident'>E</span>::<span class='ident'>custom</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>err</span>)))
         }
     }
-
+    
     <span class='kw'>impl</span> <span class='ident'>de</span>::<span class='ident'>Deserialize</span> <span class='kw'>for</span> <span class='ident'>NaiveDate</span> {
         <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='ident'>deserializer</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
             <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>de</span>::<span class='ident'>Deserializer</span>
         {
             <span class='ident'>deserializer</span>.<span class='ident'>deserialize</span>(<span class='ident'>NaiveDateVisitor</span>)
         }
-    }
-
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde_json</span>;
-
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_serde_serialize</span>() {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>serde_json</span>::<span class='ident'>to_string</span>;
-
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>to_string</span>(<span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>2014</span>, <span class='number'>7</span>, <span class='number'>24</span>)).<span class='ident'>ok</span>(),
-                   <span class='prelude-val'>Some</span>(<span class='string'>r#&quot;&quot;2014-07-24&quot;&quot;#</span>.<span class='ident'>into</span>()));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>to_string</span>(<span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>1</span>)).<span class='ident'>ok</span>(),
-                   <span class='prelude-val'>Some</span>(<span class='string'>r#&quot;&quot;0000-01-01&quot;&quot;#</span>.<span class='ident'>into</span>()));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>to_string</span>(<span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='op'>-</span><span class='number'>1</span>, <span class='number'>12</span>, <span class='number'>31</span>)).<span class='ident'>ok</span>(),
-                   <span class='prelude-val'>Some</span>(<span class='string'>r#&quot;&quot;-0001-12-31&quot;&quot;#</span>.<span class='ident'>into</span>()));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>to_string</span>(<span class='kw-2'>&amp;</span><span class='kw'>super</span>::<span class='ident'>MIN</span>).<span class='ident'>ok</span>(),
-                   <span class='prelude-val'>Some</span>(<span class='string'>r#&quot;&quot;-262144-01-01&quot;&quot;#</span>.<span class='ident'>into</span>()));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>to_string</span>(<span class='kw-2'>&amp;</span><span class='kw'>super</span>::<span class='ident'>MAX</span>).<span class='ident'>ok</span>(),
-                   <span class='prelude-val'>Some</span>(<span class='string'>r#&quot;&quot;+262143-12-31&quot;&quot;#</span>.<span class='ident'>into</span>()));
-    }
-
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_serde_deserialize</span>() {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>serde_json</span>;
-        <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>i32</span>, <span class='ident'>i64</span>};
-
-        <span class='kw'>let</span> <span class='ident'>from_str</span> <span class='op'>=</span> <span class='op'>|</span><span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>|</span> <span class='ident'>serde_json</span>::<span class='ident'>from_str</span>::<span class='op'>&lt;</span><span class='ident'>NaiveDate</span><span class='op'>&gt;</span>(<span class='ident'>s</span>);
-
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;2016-07-08&quot;&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>2016</span>, <span class='number'>7</span>, <span class='number'>8</span>)));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;2016-7-8&quot;&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>2016</span>, <span class='number'>7</span>, <span class='number'>8</span>)));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;+002016-07-08&quot;&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>2016</span>, <span class='number'>7</span>, <span class='number'>8</span>)));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;0000-01-01&quot;&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>1</span>)));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;0-1-1&quot;&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>1</span>)));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;-0001-12-31&quot;&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='op'>-</span><span class='number'>1</span>, <span class='number'>12</span>, <span class='number'>31</span>)));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;-262144-01-01&quot;&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='kw'>super</span>::<span class='ident'>MIN</span>));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;+262143-12-31&quot;&quot;#</span>).<span class='ident'>ok</span>(), <span class='prelude-val'>Some</span>(<span class='kw'>super</span>::<span class='ident'>MAX</span>));
-
-        <span class='comment'>// bad formats</span>
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;&quot;&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;20001231&quot;&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;2000-00-00&quot;&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;2000-02-30&quot;&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;2001-02-29&quot;&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;2002-002-28&quot;&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;&quot;yyyy-mm-dd&quot;&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;0&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;20.01&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>i32</span>::<span class='ident'>MIN</span>.<span class='ident'>to_string</span>()).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>i32</span>::<span class='ident'>MAX</span>.<span class='ident'>to_string</span>()).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>i64</span>::<span class='ident'>MIN</span>.<span class='ident'>to_string</span>()).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>i64</span>::<span class='ident'>MAX</span>.<span class='ident'>to_string</span>()).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;{}&quot;#</span>).<span class='ident'>is_err</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;{&quot;ymdf&quot;:20}&quot;#</span>).<span class='ident'>is_err</span>()); <span class='comment'>// :(</span>
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>from_str</span>(<span class='string'>r#&quot;null&quot;#</span>).<span class='ident'>is_err</span>());
     }
 }
 
@@ -4463,6 +3460,9 @@
     <span class='kw'>use</span> {<span class='ident'>Datelike</span>, <span class='ident'>Weekday</span>};
     <span class='kw'>use</span> <span class='ident'>duration</span>::<span class='ident'>Duration</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>i32</span>, <span class='ident'>u32</span>};
+
+     <span class='comment'>// TODO replace with range notion and adapters</span>
+    <span class='kw'>use</span> <span class='ident'>num</span>::<span class='ident'>iter</span>::{<span class='ident'>range_inclusive</span>, <span class='ident'>range_step_inclusive</span>};
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_date_from_ymd</span>() {
@@ -4541,8 +3541,8 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_date_from_isoymd_and_isoweekdate</span>() {
-        <span class='kw'>for</span> <span class='ident'>year</span> <span class='kw'>in</span> <span class='number'>2000</span>..<span class='number'>2401</span> {
-            <span class='kw'>for</span> <span class='ident'>week</span> <span class='kw'>in</span> <span class='number'>1</span>..<span class='number'>54</span> {
+        <span class='kw'>for</span> <span class='ident'>year</span> <span class='kw'>in</span> <span class='ident'>range_inclusive</span>(<span class='number'>2000i32</span>, <span class='number'>2400</span>) {
+            <span class='kw'>for</span> <span class='ident'>week</span> <span class='kw'>in</span> <span class='ident'>range_inclusive</span>(<span class='number'>1u32</span>, <span class='number'>53</span>) {
                 <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='ident'>weekday</span> <span class='kw'>in</span> [<span class='ident'>Weekday</span>::<span class='ident'>Mon</span>, <span class='ident'>Weekday</span>::<span class='ident'>Tue</span>, <span class='ident'>Weekday</span>::<span class='ident'>Wed</span>, <span class='ident'>Weekday</span>::<span class='ident'>Thu</span>,
                                  <span class='ident'>Weekday</span>::<span class='ident'>Fri</span>, <span class='ident'>Weekday</span>::<span class='ident'>Sat</span>, <span class='ident'>Weekday</span>::<span class='ident'>Sun</span>].<span class='ident'>iter</span>() {
                     <span class='kw'>let</span> <span class='ident'>d</span> <span class='op'>=</span> <span class='ident'>NaiveDate</span>::<span class='ident'>from_isoywd_opt</span>(<span class='ident'>year</span>, <span class='ident'>week</span>, <span class='ident'>weekday</span>);
@@ -4558,9 +3558,9 @@
             }
         }
 
-        <span class='kw'>for</span> <span class='ident'>year</span> <span class='kw'>in</span> <span class='number'>2000</span>..<span class='number'>2401</span> {
-            <span class='kw'>for</span> <span class='ident'>month</span> <span class='kw'>in</span> <span class='number'>1</span>..<span class='number'>13</span> {
-                <span class='kw'>for</span> <span class='ident'>day</span> <span class='kw'>in</span> <span class='number'>1</span>..<span class='number'>32</span> {
+        <span class='kw'>for</span> <span class='ident'>year</span> <span class='kw'>in</span> <span class='ident'>range_inclusive</span>(<span class='number'>2000i32</span>, <span class='number'>2400</span>) {
+            <span class='kw'>for</span> <span class='ident'>month</span> <span class='kw'>in</span> <span class='ident'>range_inclusive</span>(<span class='number'>1u32</span>, <span class='number'>12</span>) {
+                <span class='kw'>for</span> <span class='ident'>day</span> <span class='kw'>in</span> <span class='ident'>range_inclusive</span>(<span class='number'>1u32</span>, <span class='number'>31</span>) {
                     <span class='kw'>let</span> <span class='ident'>d</span> <span class='op'>=</span> <span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd_opt</span>(<span class='ident'>year</span>, <span class='ident'>month</span>, <span class='ident'>day</span>);
                     <span class='kw'>if</span> <span class='ident'>d</span>.<span class='ident'>is_some</span>() {
                         <span class='kw'>let</span> <span class='ident'>d</span> <span class='op'>=</span> <span class='ident'>d</span>.<span class='ident'>unwrap</span>();
@@ -4594,7 +3594,7 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>from_ndays_from_ce</span>(<span class='op'>-</span><span class='number'>365</span>), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>1</span>)));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>from_ndays_from_ce</span>(<span class='op'>-</span><span class='number'>366</span>), <span class='prelude-val'>Some</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='op'>-</span><span class='number'>1</span>, <span class='number'>12</span>, <span class='number'>31</span>))); <span class='comment'>// 2 BCE</span>
 
-        <span class='kw'>for</span> <span class='ident'>days</span> <span class='kw'>in</span> (<span class='op'>-</span><span class='number'>9999</span>..<span class='number'>10001</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span> <span class='op'>*</span> <span class='number'>100</span>) {
+        <span class='kw'>for</span> <span class='ident'>days</span> <span class='kw'>in</span> <span class='ident'>range_step_inclusive</span>(<span class='op'>-</span><span class='number'>999900i32</span>, <span class='number'>1000000</span>, <span class='number'>100</span>) {
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>from_ndays_from_ce</span>(<span class='ident'>days</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>d</span>.<span class='ident'>num_days_from_ce</span>()), <span class='prelude-val'>Some</span>(<span class='ident'>days</span>));
         }
 
@@ -4694,7 +3694,7 @@
     <span class='kw'>fn</span> <span class='ident'>test_date_num_days_from_ce</span>() {
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>1</span>).<span class='ident'>num_days_from_ce</span>(), <span class='number'>1</span>);
 
-        <span class='kw'>for</span> <span class='ident'>year</span> <span class='kw'>in</span> <span class='op'>-</span><span class='number'>9999</span>..<span class='number'>10001</span> {
+        <span class='kw'>for</span> <span class='ident'>year</span> <span class='kw'>in</span> <span class='ident'>range_inclusive</span>(<span class='op'>-</span><span class='number'>9999i32</span>, <span class='number'>10000</span>) {
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='ident'>year</span>, <span class='number'>1</span>, <span class='number'>1</span>).<span class='ident'>num_days_from_ce</span>(),
                        <span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='ident'>year</span> <span class='op'>-</span> <span class='number'>1</span>, <span class='number'>12</span>, <span class='number'>31</span>).<span class='ident'>num_days_from_ce</span>() <span class='op'>+</span> <span class='number'>1</span>);
         }
@@ -4878,19 +3878,46 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>2010</span>, <span class='number'>1</span>, <span class='number'>3</span>).<span class='ident'>format</span>(<span class='string'>&quot;%G,%g,%U,%W,%V&quot;</span>).<span class='ident'>to_string</span>(),
                    <span class='string'>&quot;2009,09,01,00,53&quot;</span>);
     }
+
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde&quot;</span>)]</span>
+    <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde_json</span>;
+
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde&quot;</span>)]</span>
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>test_serde_serialize</span>() {
+        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>serde_json</span>::<span class='ident'>to_string</span>;
+        
+        <span class='kw'>let</span> <span class='ident'>date</span> <span class='op'>=</span> <span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>2014</span>, <span class='number'>7</span>, <span class='number'>24</span>);
+        <span class='kw'>let</span> <span class='ident'>serialized</span> <span class='op'>=</span> <span class='ident'>to_string</span>(<span class='kw-2'>&amp;</span><span class='ident'>date</span>).<span class='ident'>unwrap</span>();
+
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>serialized</span>, <span class='string'>&quot;\&quot;2014-07-24\&quot;&quot;</span>);
+    }
+    
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde&quot;</span>)]</span>
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>test_serde_deserialize</span>() {
+        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>serde_json</span>::<span class='ident'>from_str</span>;
+        
+        <span class='kw'>let</span> <span class='ident'>date</span> <span class='op'>=</span> <span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='number'>2014</span>, <span class='number'>7</span>, <span class='number'>24</span>);
+        <span class='kw'>let</span> <span class='ident'>deserialized</span>: <span class='ident'>NaiveDate</span> <span class='op'>=</span> <span class='ident'>from_str</span>(<span class='string'>&quot;\&quot;2014-07-24\&quot;&quot;</span>).<span class='ident'>unwrap</span>();
+
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>deserialized</span>, <span class='ident'>date</span>);
+    }
 }
 
-<span class='doccomment'>/// The internal implementation of the calendar and ordinal date.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The current implementation is optimized for determining year, month, day and day of week.</span>
-<span class='doccomment'>/// 4-bit `YearFlags` map to one of 14 possible classes of year in the Gregorian calendar,</span>
-<span class='doccomment'>/// which are included in every packed `NaiveDate` instance.</span>
-<span class='doccomment'>/// The conversion between the packed calendar date (`Mdf`) and the ordinal date (`Of`) is</span>
-<span class='doccomment'>/// based on the moderately-sized lookup table (~1.5KB)</span>
-<span class='doccomment'>/// and the packed representation is chosen for the efficient lookup.</span>
-<span class='doccomment'>/// Every internal data structure does not validate its input,</span>
-<span class='doccomment'>/// but the conversion keeps the valid value valid and the invalid value invalid</span>
-<span class='doccomment'>/// so that the user-facing `NaiveDate` can validate the input as late as possible.</span>
+<span class='doccomment'>/**
+ * The internal implementation of the calendar and ordinal date.
+ *
+ * The current implementation is optimized for determining year, month, day and day of week.
+ * 4-bit `YearFlags` map to one of 14 possible classes of year in the Gregorian calendar,
+ * which are included in every packed `NaiveDate` instance.
+ * The conversion between the packed calendar date (`Mdf`) and the ordinal date (`Of`) is
+ * based on the moderately-sized lookup table (~1.5KB)
+ * and the packed representation is chosen for the efficient lookup.
+ * Every internal data structure does not validate its input,
+ * but the conversion keeps the valid value valid and the invalid value invalid
+ * so that the user-facing `NaiveDate` can validate the input as late as possible.
+ */</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span> <span class='comment'>// some internal methods have been left for consistency</span>
 <span class='kw'>mod</span> <span class='ident'>internals</span> {
     <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>i32</span>, <span class='ident'>fmt</span>};
@@ -4913,6 +3940,7 @@
     <span class='doccomment'>/// and `bbb` is a non-zero `Weekday` (mapping `Mon` to 7) of the last day in the past year</span>
     <span class='doccomment'>/// (simplifies the day of week calculation from the 1-based ordinal).</span>
     <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+    <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc-serialize&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>))]</span>
     <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>YearFlags</span>(<span class='kw'>pub</span> <span class='ident'>u8</span>);
 
     <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>A</span>: <span class='ident'>YearFlags</span> <span class='op'>=</span> <span class='ident'>YearFlags</span>(<span class='number'>0o15</span>); <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>AG</span>: <span class='ident'>YearFlags</span> <span class='op'>=</span> <span class='ident'>YearFlags</span>(<span class='number'>0o05</span>);
@@ -5153,6 +4181,7 @@
     <span class='doccomment'>/// The whole bits except for the least 3 bits are referred as `Ol` (ordinal and leap flag),</span>
     <span class='doccomment'>/// which is an index to the `OL_TO_MDL` lookup table.</span>
     <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+    <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc-serialize&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>))]</span>
     <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Of</span>(<span class='kw'>pub</span> <span class='ident'>u32</span>);
 
     <span class='kw'>impl</span> <span class='ident'>Of</span> {
@@ -5254,6 +4283,7 @@
     <span class='doccomment'>/// (month, day of month and leap flag),</span>
     <span class='doccomment'>/// which is an index to the `MDL_TO_OL` lookup table.</span>
     <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>PartialOrd</span>, <span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+    <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc-serialize&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>))]</span>
     <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Mdf</span>(<span class='kw'>pub</span> <span class='ident'>u32</span>);
 
     <span class='kw'>impl</span> <span class='ident'>Mdf</span> {
