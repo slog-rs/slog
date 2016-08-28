@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ErrorKind",""]],"struct":[["Error",""]],"trait":[["Format","Format record information"]],"type":[["Result",""]]});
+initSidebarItems({"enum":[["ErrorKind",""]],"struct":[["Error",""]],"trait":[["Format","Formats `Record`-s into IO"]],"type":[["Result",""]]});

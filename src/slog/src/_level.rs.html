@@ -211,6 +211,13 @@
 <span id="167">167</span>
 <span id="168">168</span>
 <span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
 </pre><pre class='rust '>
 <span class='doccomment'>/// Official capitalized logging (and logging filtering) level names</span>
 <span class='doccomment'>///</span>
@@ -275,6 +282,7 @@
     <span class='doccomment'>/// Cast `Level` to ordering integer </span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// `Critical` is the smallest and `Trace` the biggest value</span>
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_usize</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
         <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
             <span class='ident'>Level</span>::<span class='ident'>Critical</span> <span class='op'>=&gt;</span> <span class='number'>1</span>,
@@ -289,6 +297,7 @@
     <span class='doccomment'>/// Get a `Level` from an `usize`</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// This complements `as_usize`</span>
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_usize</span>(<span class='ident'>u</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Level</span><span class='op'>&gt;</span> {
         <span class='kw'>match</span> <span class='ident'>u</span> {
             <span class='number'>1</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>Level</span>::<span class='ident'>Critical</span>),
@@ -306,6 +315,7 @@
     <span class='doccomment'>/// Convert to `usize` value</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// `Off` is 0, and `Trace` 6</span>
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_usize</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
         <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
             <span class='ident'>FilterLevel</span>::<span class='ident'>Off</span> <span class='op'>=&gt;</span> <span class='number'>0</span>,
@@ -321,6 +331,7 @@
     <span class='doccomment'>/// Get a `FilterLevel` from an `usize`</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// This complements `as_usize`</span>
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_usize</span>(<span class='ident'>u</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>FilterLevel</span><span class='op'>&gt;</span> {
         <span class='kw'>match</span> <span class='ident'>u</span> {
             <span class='number'>0</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>FilterLevel</span>::<span class='ident'>Off</span>),
@@ -335,12 +346,14 @@
     }
 
     <span class='doccomment'>/// Maximum logging level (log everything)</span>
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>max</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>FilterLevel</span>::<span class='ident'>Trace</span>
     }
 
 
     <span class='doccomment'>/// Minimum logging level (log nothing)</span>
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>min</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>FilterLevel</span>::<span class='ident'>Off</span>
     }
@@ -363,6 +376,7 @@
 
 <span class='kw'>impl</span> <span class='ident'>Level</span> {
     <span class='doccomment'>/// Returns true if `self` is at least `level` logging level</span>
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_at_least</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>level</span> : <span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
         <span class='self'>self</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='ident'>level</span>.<span class='ident'>as_usize</span>()
     }

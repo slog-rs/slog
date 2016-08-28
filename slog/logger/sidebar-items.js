@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Logger","Logger"],["RecordInfo","Common information about a logging record"]],"trait":[["IntoMsg","A type that can be translated into `Msg`"]]});

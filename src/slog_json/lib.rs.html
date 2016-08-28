@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/lab/rust/slog-rs/crates/json/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/lab/rust/slog-rs/crates/json/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -262,14 +262,14 @@
 <span class='doccomment'>//! extern crate slog;</span>
 <span class='doccomment'>//! extern crate slog_json;</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! use slog::*;</span>
-<span class='doccomment'>//! use slog::drain::IntoLogger;</span>
-<span class='doccomment'>//!</span>
 <span class='doccomment'>//! fn main() {</span>
-<span class='doccomment'>//!     let root = drain::stream(</span>
-<span class='doccomment'>//!                 std::io::stderr(),</span>
-<span class='doccomment'>//!                 slog_json::new()</span>
-<span class='doccomment'>//!                 ).into_logger(o!(&quot;build-id&quot; =&gt; &quot;8dfljdf&quot;));</span>
+<span class='doccomment'>//!     let root = slog::Logger::root(</span>
+<span class='doccomment'>//!         slog::stream(</span>
+<span class='doccomment'>//!             std::io::stderr(),</span>
+<span class='doccomment'>//!             slog_json::new()</span>
+<span class='doccomment'>//!         ),</span>
+<span class='doccomment'>//!         o!(&quot;build-id&quot; =&gt; &quot;8dfljdf&quot;)</span>
+<span class='doccomment'>//!     );</span>
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//! ```</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>missing_docs</span>)]</span>
@@ -282,8 +282,8 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 
 <span class='kw'>use</span> <span class='ident'>slog_serde</span>::<span class='ident'>SerdeSerializer</span>;
-<span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>logger</span>::<span class='ident'>RecordInfo</span>;
-<span class='kw'>use</span> <span class='ident'>slog</span>::{<span class='ident'>Level</span>, <span class='ident'>OwnedKeyValue</span>, <span class='ident'>OwnedKeyValueNode</span>};
+<span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>Record</span>;
+<span class='kw'>use</span> <span class='ident'>slog</span>::{<span class='ident'>Level</span>, <span class='ident'>OwnedKeyValue</span>, <span class='ident'>OwnedKeyValueList</span>};
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>Level</span>::<span class='op'>*</span>;
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>format</span>;
 
@@ -318,13 +318,13 @@
         <span class='ident'>Json</span> {
             <span class='ident'>newlines</span>: <span class='bool-val'>true</span>,
             <span class='ident'>values</span>: <span class='macro'>o</span><span class='macro'>!</span>(
-                <span class='string'>&quot;ts&quot;</span> <span class='op'>=&gt;</span> <span class='kw'>move</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span><span class='op'>|</span> {
+                <span class='string'>&quot;ts&quot;</span> <span class='op'>=&gt;</span> <span class='kw'>move</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span><span class='op'>|</span> {
                     <span class='ident'>rinfo</span>.<span class='ident'>ts</span>().<span class='ident'>to_rfc3339</span>()
                 },
-                <span class='string'>&quot;level&quot;</span> <span class='op'>=&gt;</span> <span class='kw'>move</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span><span class='op'>|</span> {
+                <span class='string'>&quot;level&quot;</span> <span class='op'>=&gt;</span> <span class='kw'>move</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span><span class='op'>|</span> {
                     <span class='ident'>level_to_string</span>(<span class='ident'>rinfo</span>.<span class='ident'>level</span>())
                 },
-                <span class='string'>&quot;msg&quot;</span> <span class='op'>=&gt;</span> <span class='kw'>move</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span><span class='op'>|</span> {
+                <span class='string'>&quot;msg&quot;</span> <span class='op'>=&gt;</span> <span class='kw'>move</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span><span class='op'>|</span> {
                     <span class='ident'>rinfo</span>.<span class='ident'>msg</span>().<span class='ident'>to_string</span>()
                 }
                 ),
@@ -430,8 +430,8 @@
 <span class='kw'>impl</span> <span class='ident'>format</span>::<span class='ident'>Format</span> <span class='kw'>for</span> <span class='ident'>Json</span> {
     <span class='kw'>fn</span> <span class='ident'>format</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
               <span class='ident'>io</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>io</span>::<span class='ident'>Write</span>,
-              <span class='ident'>rinfo</span>: <span class='kw-2'>&amp;</span><span class='ident'>RecordInfo</span>,
-              <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueNode</span>)
+              <span class='ident'>rinfo</span>: <span class='kw-2'>&amp;</span><span class='ident'>Record</span>,
+              <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueList</span>)
               <span class='op'>-&gt;</span> <span class='ident'>format</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>io</span>, <span class='string'>&quot;{{&quot;</span>));
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>serializer</span> <span class='op'>=</span> <span class='ident'>serde_json</span>::<span class='ident'>Serializer</span>::<span class='ident'>new</span>(<span class='ident'>SkipFirstByte</span>::<span class='ident'>new</span>(<span class='ident'>io</span>));
