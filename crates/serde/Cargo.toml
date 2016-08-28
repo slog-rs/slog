@@ -1,6 +1,6 @@
 [package]
 name = "slog-serde"
-version = "1.0.0-alpha"
+version = "1.0.0-alpha2"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Serde serialization adapter for slog-rs"
 keywords = ["slog", "logging", "serde"]
@@ -14,5 +14,5 @@ readme = "../../README.md"
 path = "lib.rs"
 
 [dependencies]
-slog = { version = "1.0.0-alpha", path = "../.." }
+slog = { version = "1.0.0-alpha2", path = "../.." }
 serde = "0.7.10"

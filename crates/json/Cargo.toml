@@ -1,6 +1,6 @@
 [package]
 name = "slog-json"
-version = "1.0.0-alpha"
+version = "1.0.0-alpha2"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Json formatter for slog-rs"
 keywords = ["slog", "logging", "json"]
@@ -14,7 +14,7 @@ readme = "../../README.md"
 path = "lib.rs"
 
 [dependencies]
-slog = { version = "1.0.0-alpha", path = "../.." }
-slog-serde = { version = "1.0.0-alpha", path = "../serde"}
+slog = { version = "1.0.0-alpha2", path = "../.." }
+slog-serde = { version = "1.0.0-alpha2", path = "../serde"}
 serde_json = "0.7.1"
 

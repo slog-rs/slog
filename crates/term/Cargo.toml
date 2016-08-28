@@ -1,6 +1,6 @@
 [package]
 name = "slog-term"
-version = "1.0.0-alpha"
+version = "1.0.0-alpha2"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Unix terminal drain and formatter for slog-rs"
 keywords = ["slog", "logging", "json"]
@@ -14,7 +14,7 @@ readme = "../../README.md"
 path = "lib.rs"
 
 [dependencies]
-slog = { version = "1.0.0-alpha", path = "../.." }
+slog = { version = "1.0.0-alpha2", path = "../.." }
 isatty = "0.1.1"
 ansi_term = "0.7.2"
 rustc-serialize = "0.3.19"
