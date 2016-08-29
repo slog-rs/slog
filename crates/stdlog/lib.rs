@@ -69,13 +69,12 @@ impl log::Log for Logger {
         let level = log_to_slog_level(r.metadata().level());
 
         let args = r.args();
-        // TODO: What to do with it?
-        let _target = r.target();
-        let module = r.location().module_path();
-        let file = r.location().file();
+        let target = r.target();
+        let module = r.location().__module_path;
+        let file = r.location().__file;
         let line = r.location().line();
         with_current_logger(
-            |l| l.log(&slog::Record::new(level, args, file, line, module, &[]))
+            |l| l.log(&slog::Record::new(level, args, file, line, module, target, &[]))
         )
     }
 }
@@ -205,7 +204,44 @@ pub fn with_current_logger<F, R>(f : F) -> R
 pub fn scope<SF, R>(logger : slog::Logger, f : SF) -> R
     where SF : FnOnce() -> R
 {
-
     let _guard = ScopeGuard::new(logger);
     f()
+}
+
+/// Drain logging `Record`s into `log` crate
+///
+/// Using `StdLog` is effectively the same as using `log::info!(...)` and
+/// other standard logging statements.
+///
+/// Caution needs to be taken to prevent circular loop where `Logger`
+/// installed via `slog-stdlog::set_logger` would log things to a `StdLog`
+/// drain, which would again log things to the global `Logger` and so on
+/// leading to an infinite recursion.
+pub struct StdLog;
+
+impl slog::Drain for StdLog {
+    fn log(&self, buf: &mut Vec<u8>, info: &slog::Record, _ : &slog::OwnedKeyValueList) -> slog::Result<()> {
+
+        let level = match info.level() {
+            slog::Level::Critical => log::LogLevel::Error,
+            slog::Level::Error => log::LogLevel::Error,
+            slog::Level::Warning => log::LogLevel::Warn,
+            slog::Level::Info => log::LogLevel::Info,
+            slog::Level::Debug => log::LogLevel::Debug,
+            slog::Level::Trace => log::LogLevel::Trace,
+        };
+
+        let target = info.target();
+
+        let location = log::LogLocation {
+            __module_path: info.module(),
+            __file: info.file(),
+            __line: info.line(),
+        };
+
+        // Please don't yell at me for this! :D
+        log::__log(level, target, &location, format_args!("{}", info.msg()));
+
+        Ok(())
+    }
 }

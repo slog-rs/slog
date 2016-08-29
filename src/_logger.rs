@@ -149,11 +149,13 @@ pub struct Record<'a> {
     /// Message
     msg: &'a Message,
     /// File
-    file: &'a str,
+    file: &'static str,
     /// Line
     line: u32,
     /// Module
-    module: &'a str,
+    module: &'static str,
+    /// Target - for backward compatibility with `log`
+    target: &'a str,
     /// Values
     values: &'a [BorrowedKeyValue<'a>],
 }
@@ -163,9 +165,10 @@ impl<'a> Record<'a> {
     #[inline]
     pub fn new(level: Level,
                msg: &'a Message,
-               file: &'a str,
+               file: &'static str,
                line: u32,
-               module: &'a str,
+               module: &'static str,
+               target: &'a str,
                values: &'a [BorrowedKeyValue<'a>])
                -> Self {
         Record {
@@ -175,6 +178,7 @@ impl<'a> Record<'a> {
             file: file,
             line: line,
             module: module,
+            target: target,
             values: values,
         }
     }
@@ -218,13 +222,19 @@ impl<'a> Record<'a> {
     }
 
     /// Get file path
-    pub fn file(&self) -> &str {
+    pub fn file(&self) -> &'static str {
         self.file
+    }
 
+    /// Get target
+    ///
+    /// Mostly for backward compatibility with `log`
+    pub fn target(&self) -> &str {
+        self.target
     }
 
     /// Get module
-    pub fn module(&self) -> &str {
+    pub fn module(&self) -> &'static str {
         self.module
     }
 

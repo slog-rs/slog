@@ -88,7 +88,7 @@ mod test {
 
 
         let msg = &"message";
-        let info = Record::new(Level::Info, msg, "filepath", 11192, "modulepath", &[]);
+        let info = Record::new(Level::Info, msg, "filepath", 11192, "modulepath", "target", &[]);
 
         info.set_ts(UTC.ymd(2014, 7, 8).and_hms(9, 10, 11));
 

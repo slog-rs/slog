@@ -64,6 +64,7 @@ macro_rules! log(
                     file!(),
                     line!(),
                     module_path!(),
+                    module_path!(),
                     &[]
                 )
             )
@@ -78,6 +79,7 @@ macro_rules! log(
                     &$msg,
                     file!(),
                     line!(),
+                    module_path!(),
                     module_path!(),
                     &[$(($k, &$v)),*]
                 )
@@ -100,6 +102,7 @@ macro_rules! slog_log(
                 file!(),
                 line!(),
                 module_path!(),
+                module_path!(),
                 &[]
             )
         )
@@ -111,6 +114,7 @@ macro_rules! slog_log(
                 &$msg,
                 file!(),
                 line!(),
+                module_path!(),
                 module_path!(),
                 &[$(($k, &$v)),*]
             )
