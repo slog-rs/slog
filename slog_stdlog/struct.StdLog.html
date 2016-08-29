@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `discard` fn in crate `slog`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, discard">
+    <meta name="description" content="API documentation for the Rust `StdLog` struct in crate `slog_stdlog`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, StdLog">
 
-    <title>slog::discard - Rust</title>
+    <title>slog_stdlog::StdLog - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>slog</a></p><script>window.sidebarCurrent = {name: 'discard', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>slog_stdlog</a></p><script>window.sidebarCurrent = {name: 'StdLog', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,16 +42,25 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>slog</a>::<wbr><a class='fn' href=''>discard</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>slog_stdlog</a>::<wbr><a class='struct' href=''>StdLog</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1292' class='srclink' href='../src/slog/_drain.rs.html#398-400' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn discard() -&gt; <a class='struct' href='../slog/struct.Discard.html' title='slog::Discard'>Discard</a></pre><div class='docblock'><p>Discard all logging records</p>
+               </span><a id='src-86' class='srclink' href='../src/slog_stdlog/lib.rs.html#220' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct StdLog;</pre><div class='docblock'><p>Drain logging <code>Record</code>s into <code>log</code> crate</p>
 
-<p>Create a Discard drain</p>
-</div></section>
+<p>Using <code>StdLog</code> is effectively the same as using <code>log::info!(...)</code> and
+other standard logging statements.</p>
+
+<p>Caution needs to be taken to prevent circular loop where <code>Logger</code>
+installed via <code>slog-stdlog::set_logger</code> would log things to a <code>StdLog</code>
+drain, which would again log things to the global <code>Logger</code> and so on
+leading to an infinite recursion.</p>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a> for <a class='struct' href='../slog_stdlog/struct.StdLog.html' title='slog_stdlog::StdLog'>StdLog</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-88' class='srclink' href='../src/slog_stdlog/lib.rs.html#222-247' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.log' class='method'><code>fn <a href='../slog/trait.Drain.html#tymethod.log' class='fnname'>log</a>(&amp;self, buf: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, _: &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='../slog/error/type.Result.html' title='slog::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Write one logging record As an optimization (avoiding allocations), loggers are responsible for providing a byte buffer, that <code>Drain</code> can use for their own needs. <a href="../slog/trait.Drain.html#tymethod.log">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -106,7 +115,7 @@
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "slog";
+        window.currentCrate = "slog_stdlog";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>

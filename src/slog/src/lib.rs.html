@@ -434,6 +434,10 @@
 <span id="390">390</span>
 <span id="391">391</span>
 <span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 
@@ -501,6 +505,7 @@
                     <span class='macro'>file</span><span class='macro'>!</span>(),
                     <span class='macro'>line</span><span class='macro'>!</span>(),
                     <span class='macro'>module_path</span><span class='macro'>!</span>(),
+                    <span class='macro'>module_path</span><span class='macro'>!</span>(),
                     <span class='kw-2'>&amp;</span>[]
                 )
             )
@@ -515,6 +520,7 @@
                     <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>,
                     <span class='macro'>file</span><span class='macro'>!</span>(),
                     <span class='macro'>line</span><span class='macro'>!</span>(),
+                    <span class='macro'>module_path</span><span class='macro'>!</span>(),
                     <span class='macro'>module_path</span><span class='macro'>!</span>(),
                     <span class='kw-2'>&amp;</span>[$((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>, <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>)),<span class='op'>*</span>]
                 )
@@ -537,6 +543,7 @@
                 <span class='macro'>file</span><span class='macro'>!</span>(),
                 <span class='macro'>line</span><span class='macro'>!</span>(),
                 <span class='macro'>module_path</span><span class='macro'>!</span>(),
+                <span class='macro'>module_path</span><span class='macro'>!</span>(),
                 <span class='kw-2'>&amp;</span>[]
             )
         )
@@ -548,6 +555,7 @@
                 <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>,
                 <span class='macro'>file</span><span class='macro'>!</span>(),
                 <span class='macro'>line</span><span class='macro'>!</span>(),
+                <span class='macro'>module_path</span><span class='macro'>!</span>(),
                 <span class='macro'>module_path</span><span class='macro'>!</span>(),
                 <span class='kw-2'>&amp;</span>[$((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>, <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>)),<span class='op'>*</span>]
             )
