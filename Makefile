@@ -33,6 +33,7 @@ test-all:
 	cd "crates/bunyan"; cargo test $(CARGO_FLAGS)
 	cd "crates/syslog"; cargo test $(CARGO_FLAGS)
 	cd "crates/stdlog"; cargo test $(CARGO_FLAGS)
+	cd "crates/atomic"; cargo test $(CARGO_FLAGS)
 
 check:
 	$(info Running check; use `make build` to actually build)
@@ -75,6 +76,7 @@ doc: FORCE
 	cd "crates/bunyan"; cargo doc -p slog-bunyan
 	cd "crates/syslog"; cargo doc -p slog-syslog
 	cd "crates/stdlog"; cargo doc -p slog-stdlog
+	cd "crates/atomic"; cargo doc -p slog-atomic
 
 .PHONY: publishdoc
 publishdoc:
