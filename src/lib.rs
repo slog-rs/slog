@@ -317,6 +317,19 @@ impl OwnedKeyValueList {
         }
     }
 
+    /// Get the parent element on the chain of values
+    pub fn parent(&self) -> &Option<Arc<OwnedKeyValueList>> {
+        &self.parent
+    }
+
+    /// Get the top-node values
+    ///
+    /// Since `OwnedKeyValueList` is just a chain of `Vec<OwnedKeyValue>`
+    /// it's possible to iterate through it group-by-group.
+    pub fn values(&self) -> &Vec<OwnedKeyValue> {
+        &self.values
+    }
+
     /// Iterator over `OwnedKeyValue`-s
     pub fn iter(&self) -> OwnedKeyValueListIterator {
         OwnedKeyValueListIterator::new(self)

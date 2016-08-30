@@ -1,9 +1,9 @@
 [package]
-name = "slog-term"
-version = "1.0.0-alpha2"
+name = "slog-compact"
+version = "0.1.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
-description = "Unix terminal drain and formatter for slog-rs"
-keywords = ["slog", "logging", "log", "term"]
+description = "Compact logging format skipping context data that didn't change"
+keywords = ["slog", "logging", "compact"]
 license = "MPL-2.0"
 documentation = "https://dpc.github.io/slog-rs/"
 homepage = "https://github.com/dpc/slog-rs"
@@ -15,5 +15,3 @@ path = "lib.rs"
 
 [dependencies]
 slog = { version = "1.0.0-alpha2", path = "../.." }
-isatty = "0.1.1"
-ansi_term = "0.7.2"
