@@ -220,7 +220,7 @@ pub fn scope<SF, R>(logger : slog::Logger, f : SF) -> R
 pub struct StdLog;
 
 impl slog::Drain for StdLog {
-    fn log(&self, buf: &mut Vec<u8>, info: &slog::Record, _ : &slog::OwnedKeyValueList) -> slog::Result<()> {
+    fn log(&self, _buf: &mut Vec<u8>, info: &slog::Record, _ : &slog::OwnedKeyValueList) -> slog::Result<()> {
 
         let level = match info.level() {
             slog::Level::Critical => log::LogLevel::Error,
@@ -240,6 +240,7 @@ impl slog::Drain for StdLog {
         };
 
         // Please don't yell at me for this! :D
+        // https://github.com/rust-lang-nursery/log/issues/95
         log::__log(level, target, &location, format_args!("{}", info.msg()));
 
         Ok(())
