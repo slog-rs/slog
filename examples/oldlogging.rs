@@ -6,7 +6,7 @@ extern crate slog_stdlog;
 extern crate log;
 
 fn main() {
-    let log = slog::Logger::root(slog_term::stderr(), o!("version" => "0.5"));
+    let log = slog::Logger::root(slog_term::streamer().stderr().build(), o!("version" => "0.5"));
     slog_stdlog::set_logger(log.clone()).unwrap();
 
     info!("standard logging redirected to slog");

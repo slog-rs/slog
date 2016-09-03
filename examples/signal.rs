@@ -34,7 +34,7 @@ fn atomic_drain_switch() {
     if new {
         ATOMIC_DRAIN_SWITCH.set(stream(io::stdout(), slog_json::new()))
     } else {
-        ATOMIC_DRAIN_SWITCH.set(slog_term::stdout())
+        ATOMIC_DRAIN_SWITCH.set(slog_term::streamer().full().stdout().build())
     }
 }
 
@@ -50,7 +50,7 @@ fn main() {
         signal::sigaction(signal::SIGUSR1, &sig_action).unwrap();
     }
 
-    let drain = slog::duplicate(slog_term::stderr(), ATOMIC_DRAIN_SWITCH.drain());
+    let drain = slog::duplicate(slog_term::streamer().stderr().full().build(), ATOMIC_DRAIN_SWITCH.drain());
 
     atomic_drain_switch();
 

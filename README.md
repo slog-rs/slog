@@ -89,7 +89,13 @@ Long term goal is to make it a go-to logging crate for Rust.
 
 ### Terminal output example
 
-![slog-rs terminal output](http://i.imgur.com/IUe80gU.png)
+Full mode:
+
+![slog-rs terminal full-format output](http://i.imgur.com/IUe80gU.png)
+
+Compact mode:
+
+![slog-rs terminal compact output](http://i.imgur.com/P9u2sWP.png)
 
 ## Using & help
 
@@ -100,7 +106,7 @@ fn main() {
     // Create a new drain hierarchy, for the need of your program.
     // Choose from collection of existing drains, or write your own
     // `struct`-s implementing `Drain` trait.
-    let drain = slog_term::async_stderr();
+    let drain = slog_term::streamer().async().full().build();
 
     // `AtomicSwitch` is a drain that wraps other drain and allows to change
     // it atomically in runtime.

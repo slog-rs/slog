@@ -4,7 +4,7 @@ extern crate slog;
 extern crate slog_term;
 
 fn main() {
-    let log = slog::Logger::root(slog_term::stderr(), o!());
+    let log = slog::Logger::root(slog_term::streamer().build(), o!());
 
     slog_trace!(log, "logging a trace message");
     slog_debug!(log, "debug values", "x" => 1, "y" => -1);

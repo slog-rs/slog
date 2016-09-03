@@ -1,15 +1,9 @@
 #[macro_use]
 extern crate slog;
 extern crate slog_term;
-extern crate slog_compact;
-
-use std::io;
 
 fn main() {
-    let drain = slog::Streamer::new(
-        io::stderr(),
-        slog_compact::Format::new()
-            );
+    let drain = slog_term::streamer().compact().build();
 
     let root_log = slog::Logger::root(drain, o!("version" => "0.5"));
     let server_log = root_log.new(o!("host" => "localhost", "port" => "8080"));

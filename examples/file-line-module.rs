@@ -6,7 +6,7 @@ extern crate slog_term;
 use slog::*;
 
 fn main() {
-    let drain = slog_term::async_stderr();
+    let drain = slog_term::streamer().full().build();
     let log = Logger::root(
         drain,
         o!("place" =>

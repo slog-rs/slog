@@ -26,7 +26,7 @@ fn main() {
     // Create a new drain hierarchy, for the need of your program.
     // Choose from collection of existing drains, or write your own
     // `struct`-s implementing `Drain` trait.
-    let drain = slog_term::async_stderr();
+    let drain = slog_term::streamer().async().full().build();
 
     // `AtomicSwitch` is a drain that wraps other drain and allows to change
     // it atomically in runtime.
