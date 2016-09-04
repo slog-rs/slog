@@ -58,13 +58,13 @@ pub trait Drain: Send + Sync {
     fn log(&self, buf: &mut Vec<u8>, info: &Record, &OwnedKeyValueList) -> Result<()>;
 }
 
-impl<D: Drain> Drain for Box<D> {
+impl<D: Drain+?Sized> Drain for Box<D> {
     fn log(&self, buf: &mut Vec<u8>, info: &Record, o: &OwnedKeyValueList) -> Result<()> {
         (**self).log(buf, info, o)
     }
 }
 
-impl<D: Drain> Drain for Arc<D> {
+impl<D: Drain+?Sized> Drain for Arc<D> {
     fn log(&self, buf: &mut Vec<u8>, info: &Record, o: &OwnedKeyValueList) -> Result<()> {
         (**self).log(buf, info, o)
     }
