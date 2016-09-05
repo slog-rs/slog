@@ -47,8 +47,45 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1090' class='srclink' href='../../../src/chrono/naive/time.rs.html#5-839' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-1092' class='srclink' href='../../../src/chrono/naive/time.rs.html#5-1163' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>ISO 8601 time without timezone.</p>
+
+<h1 id='leap-second-handling' class='section-header'><a href='#leap-second-handling'>Leap Second Handling</a></h1>
+<p>Since 1960s, the manmade atomic clock has been so accurate that
+it is much more accurate than Earth&#39;s own motion.
+It became desirable to define the civil time in terms of the atomic clock,
+but that risks the desynchronization of the civil time from Earth.
+To account for this, the designers of the Coordinated Universal Time (UTC)
+made that the UTC should be kept within 0.9 seconds of the observed Earth-bound time.
+When the mean solar day is longer than the ideal (86,400 seconds),
+the error slowly accumulates and it is necessary to add a <strong>leap second</strong>
+to slow the UTC down a bit.
+(We may also remove a second to speed the UTC up a bit, but it never happened.)
+The leap second, if any, follows 23:59:59 of June 30 or December 31 in the UTC.</p>
+
+<p>Fast forward to the 21st century,
+we have seen 26 leap seconds from January 1972 to December 2015.
+Yes, 26 seconds. Probably you can read this paragraph within 26 seconds.
+But those 26 seconds, and possibly more in the future, are never predictable,
+and whether to add a leap second or not is known only before 6 months.
+Internet-based clocks (via NTP) do account for known leap seconds,
+but the system API normally doesn&#39;t (and often can&#39;t, with no network connection)
+and there is no reliable way to retrieve leap second information.</p>
+
+<p>Chrono does not try to accurately implement leap seconds; it is impossible.
+Rather, <strong>it allows for leap seconds but behaves as if there are <em>no other</em> leap seconds.</strong>
+Various time arithmetics will ignore any possible leap second(s)
+except when the operand were actually a leap second.
+The leap second is indicated via fractional seconds more than 1 second,
+so values like <code>NaiveTime::from_hms_milli(23, 56, 4, 1_005)</code> are allowed;
+that value would mean 5ms after the beginning of a leap second following 23:56:04.
+Parsing and formatting will correctly handle times that look like leap seconds,
+and you can then conveniently ignore leap seconds if you are not prepared for them.</p>
+
+<p>If you cannot tolerate this behavior,
+you must use a separate <code>TimeZone</code> for the International Atomic Time (TAI).
+TAI is like UTC but has no leap seconds, and thus slightly differs from UTC.
+Chrono 0.2 does not provide such implementation, but it is planned for 0.3.</p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>

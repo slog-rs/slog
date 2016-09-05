@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/syslog/lib.rs.html#1-403' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/syslog/lib.rs.html#1-412' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Syslog</p>
 
 <p>This crate provides facilities to send log messages via syslog.
@@ -66,7 +66,7 @@ It supports Unix sockets for local syslog, UDP and TCP for remote servers.</p>
 <span class='kw'>fn</span> <span class='ident'>main</span>() {
   <span class='kw'>match</span> <span class='ident'>syslog</span>::<span class='ident'>unix</span>(<span class='ident'>Facility</span>::<span class='ident'>LOG_USER</span>) {
     <span class='prelude-val'>Err</span>(<span class='ident'>e</span>)         <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;impossible to connect to syslog: {:?}&quot;</span>, <span class='ident'>e</span>),
-    <span class='prelude-val'>Ok</span>(<span class='kw-2'>mut</span> <span class='ident'>writer</span>) <span class='op'>=&gt;</span> {
+    <span class='prelude-val'>Ok</span>(<span class='ident'>writer</span>) <span class='op'>=&gt;</span> {
       <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>writer</span>.<span class='ident'>send</span>(<span class='ident'>Severity</span>::<span class='ident'>LOG_ALERT</span>, <span class='string'>&quot;hello world&quot;</span>);
       <span class='kw'>if</span> <span class='ident'>r</span>.<span class='ident'>is_err</span>() {
         <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;error sending the log {}&quot;</span>, <span class='ident'>r</span>.<span class='ident'>err</span>().<span class='ident'>expect</span>(<span class='string'>&quot;got error&quot;</span>));
@@ -128,6 +128,13 @@ It supports Unix sockets for local syslog, UDP and TCP for remote servers.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class='fn' href='fn.init_unix_custom.html'
+                                  title='syslog::init_unix_custom'>init_unix_custom</a></td>
+                           <td class='docblock short'>
+                                <p>Unix socket Logger init function compatible with log crate and user provided socket path</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class='fn' href='fn.tcp.html'
                                   title='syslog::tcp'>tcp</a></td>
                            <td class='docblock short'>
@@ -146,6 +153,13 @@ It supports Unix sockets for local syslog, UDP and TCP for remote servers.</p>
                                   title='syslog::unix'>unix</a></td>
                            <td class='docblock short'>
                                 <p>Returns a Logger using unix socket to target local syslog ( using /dev/log or /var/run/syslog)</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.unix_custom.html'
+                                  title='syslog::unix_custom'>unix_custom</a></td>
+                           <td class='docblock short'>
+                                <p>Returns a Logger using unix socket to target local syslog at user provided path</p>
                            </td>
                        </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>

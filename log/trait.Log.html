@@ -55,13 +55,13 @@
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.enabled' class='method stab '><code>fn <a href='#tymethod.enabled' class='fnname'>enabled</a>(&amp;self, metadata: &amp;<a class='struct' href='../log/struct.LogMetadata.html' title='log::LogMetadata'>LogMetadata</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h3><div class='docblock'><p>Determines if a log message with the specified metadata would be
+        <h3 id='tymethod.enabled' class='method stab '><span id='enabled.v' class='invisible'><code>fn <a href='#tymethod.enabled' class='fnname'>enabled</a>(&amp;self, metadata: &amp;<a class='struct' href='../log/struct.LogMetadata.html' title='log::LogMetadata'>LogMetadata</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h3><div class='docblock'><p>Determines if a log message with the specified metadata would be
 logged.</p>
 
 <p>This is used by the <code>log_enabled!</code> macro to allow callers to avoid
 expensive computation of log message arguments if the message would be
 discarded anyway.</p>
-</div><h3 id='tymethod.log' class='method stab '><code>fn <a href='#tymethod.log' class='fnname'>log</a>(&amp;self, record: &amp;<a class='struct' href='../log/struct.LogRecord.html' title='log::LogRecord'>LogRecord</a>)</code></h3><div class='docblock'><p>Logs the <code>LogRecord</code>.</p>
+</div><h3 id='tymethod.log' class='method stab '><span id='log.v' class='invisible'><code>fn <a href='#tymethod.log' class='fnname'>log</a>(&amp;self, record: &amp;<a class='struct' href='../log/struct.LogRecord.html' title='log::LogRecord'>LogRecord</a>)</code></span></h3><div class='docblock'><p>Logs the <code>LogRecord</code>.</p>
 
 <p>Note that <code>enabled</code> is <em>not</em> necessarily called before this method.
 Implementations of <code>log</code> should perform all necessary filtering

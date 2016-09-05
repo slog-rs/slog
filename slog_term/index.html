@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog_term/lib.rs.html#1-278' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog_term/lib.rs.html#1-497' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Unix terminal formatter and drain for slog-rs</p>
 
 <pre class='rust rust-example-rendered'>
@@ -58,58 +58,52 @@
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='op'>*</span>;
 
 <span class='kw'>fn</span> <span class='ident'>main</span>() {
-    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>slog_term</span>::<span class='ident'>async_stderr</span>(), <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;build-id&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;8dfljdf&quot;</span>));
+    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>slog_term</span>::<span class='ident'>streamer</span>().<span class='ident'>build</span>(), <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;build-id&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;8dfljdf&quot;</span>));
 }</pre>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ColorDecorator.html'
+                                  title='slog_term::ColorDecorator'>ColorDecorator</a></td>
+                           <td class='docblock short'>
+                                <p>Decorator that can colors things</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ColorRecordDecorator.html'
+                                  title='slog_term::ColorRecordDecorator'>ColorRecordDecorator</a></td>
+                           <td class='docblock short'>
+                                <p>Decorator that colors things</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class='struct' href='struct.Format.html'
                                   title='slog_term::Format'>Format</a></td>
                            <td class='docblock short'>
-                                <p>Format formatting with optional color support</p>
+                                <p>Full formatting with optional color support</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.StreamerBuilder.html'
+                                  title='slog_term::StreamerBuilder'>StreamerBuilder</a></td>
+                           <td class='docblock short'>
+                                <p>Streamer builder</p>
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.FormatMode.html'
+                                  title='slog_term::FormatMode'>FormatMode</a></td>
+                           <td class='docblock short'>
+                                <p>Formatting mode</p>
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.async_stderr.html'
-                                  title='slog_term::async_stderr'>async_stderr</a></td>
+                           <td><a class='fn' href='fn.streamer.html'
+                                  title='slog_term::streamer'>streamer</a></td>
                            <td class='docblock short'>
-                                <p>Asynchronos drain to <code>stderr</code></p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.async_stdout.html'
-                                  title='slog_term::async_stdout'>async_stdout</a></td>
-                           <td class='docblock short'>
-                                <p>Asynchronous drain to <code>stdout</code></p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.format_colored.html'
-                                  title='slog_term::format_colored'>format_colored</a></td>
-                           <td class='docblock short'>
-                                <p>Short for <code>Format::colored()</code></p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.format_plain.html'
-                                  title='slog_term::format_plain'>format_plain</a></td>
-                           <td class='docblock short'>
-                                <p>Short for <code>Format::plain()</code></p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.stderr.html'
-                                  title='slog_term::stderr'>stderr</a></td>
-                           <td class='docblock short'>
-                                <p>Drain to <code>stderr</code></p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.stdout.html'
-                                  title='slog_term::stdout'>stdout</a></td>
-                           <td class='docblock short'>
-                                <p>Drain to <code>stdout</code></p>
+                                <p>Build <code>Streamer</code>/<code>AsyncStreamer</code></p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

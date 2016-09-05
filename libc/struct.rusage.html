@@ -65,28 +65,60 @@
     pub ru_nsignals: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a>,
     pub ru_nvcsw: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a>,
     pub ru_nivcsw: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a>,
-}</pre><h2 class='fields'>Fields</h2><span id='structfield.ru_utime' class='structfield'><code>ru_utime: <a class='struct' href='../libc/struct.timeval.html' title='libc::timeval'>timeval</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_stime' class='structfield'><code>ru_stime: <a class='struct' href='../libc/struct.timeval.html' title='libc::timeval'>timeval</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_maxrss' class='structfield'><code>ru_maxrss: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_ixrss' class='structfield'><code>ru_ixrss: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_idrss' class='structfield'><code>ru_idrss: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_isrss' class='structfield'><code>ru_isrss: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_minflt' class='structfield'><code>ru_minflt: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_majflt' class='structfield'><code>ru_majflt: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_nswap' class='structfield'><code>ru_nswap: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_inblock' class='structfield'><code>ru_inblock: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_oublock' class='structfield'><code>ru_oublock: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_msgsnd' class='structfield'><code>ru_msgsnd: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_msgrcv' class='structfield'><code>ru_msgrcv: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_nsignals' class='structfield'><code>ru_nsignals: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_nvcsw' class='structfield'><code>ru_nvcsw: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><span id='structfield.ru_nivcsw' class='structfield'><code>ru_nivcsw: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
-                           </span><span class='stab '></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../libc/struct.rusage.html' title='libc::rusage'>rusage</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-310' class='srclink' href='../src/libc/macros.rs.html#44' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../libc/struct.rusage.html' title='libc::rusage'>rusage</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-311' class='srclink' href='../src/libc/macros.rs.html#45-47' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='../core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../libc/struct.rusage.html' title='libc::rusage'>rusage</a></code></h4>
-<div class='docblock'><p>Returns a copy of the value. <a href="../core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><code>fn <a href='../core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
-<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="../core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+}</pre><h2 class='fields'>Fields</h2><span id='structfield.ru_utime' class='structfield'>
+                           <span id='ru_utime.v' class='invisible'>
+                           <code>ru_utime: <a class='struct' href='../libc/struct.timeval.html' title='libc::timeval'>timeval</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_stime' class='structfield'>
+                           <span id='ru_stime.v' class='invisible'>
+                           <code>ru_stime: <a class='struct' href='../libc/struct.timeval.html' title='libc::timeval'>timeval</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_maxrss' class='structfield'>
+                           <span id='ru_maxrss.v' class='invisible'>
+                           <code>ru_maxrss: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_ixrss' class='structfield'>
+                           <span id='ru_ixrss.v' class='invisible'>
+                           <code>ru_ixrss: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_idrss' class='structfield'>
+                           <span id='ru_idrss.v' class='invisible'>
+                           <code>ru_idrss: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_isrss' class='structfield'>
+                           <span id='ru_isrss.v' class='invisible'>
+                           <code>ru_isrss: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_minflt' class='structfield'>
+                           <span id='ru_minflt.v' class='invisible'>
+                           <code>ru_minflt: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_majflt' class='structfield'>
+                           <span id='ru_majflt.v' class='invisible'>
+                           <code>ru_majflt: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_nswap' class='structfield'>
+                           <span id='ru_nswap.v' class='invisible'>
+                           <code>ru_nswap: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_inblock' class='structfield'>
+                           <span id='ru_inblock.v' class='invisible'>
+                           <code>ru_inblock: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_oublock' class='structfield'>
+                           <span id='ru_oublock.v' class='invisible'>
+                           <code>ru_oublock: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_msgsnd' class='structfield'>
+                           <span id='ru_msgsnd.v' class='invisible'>
+                           <code>ru_msgsnd: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_msgrcv' class='structfield'>
+                           <span id='ru_msgrcv.v' class='invisible'>
+                           <code>ru_msgrcv: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_nsignals' class='structfield'>
+                           <span id='ru_nsignals.v' class='invisible'>
+                           <code>ru_nsignals: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_nvcsw' class='structfield'>
+                           <span id='ru_nvcsw.v' class='invisible'>
+                           <code>ru_nvcsw: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.ru_nivcsw' class='structfield'>
+                           <span id='ru_nivcsw.v' class='invisible'>
+                           <code>ru_nivcsw: <a class='type' href='../libc/type.c_long.html' title='libc::c_long'>c_long</a></code>
+                           </span></span><span class='stab '></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../libc/struct.rusage.html' title='libc::rusage'>rusage</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-310' class='srclink' href='../src/libc/macros.rs.html#44' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../libc/struct.rusage.html' title='libc::rusage'>rusage</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-311' class='srclink' href='../src/libc/macros.rs.html#45-47' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../libc/struct.rusage.html' title='libc::rusage'>rusage</a></code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 

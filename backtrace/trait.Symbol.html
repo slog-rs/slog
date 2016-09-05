@@ -65,7 +65,7 @@ always available in a symbol, however, so all methods return an <code>Option</co
 </div>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
-        <h3 id='method.name' class='method stab '><code>fn <a href='#method.name' class='fnname'>name</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../backtrace/struct.SymbolName.html' title='backtrace::SymbolName'>SymbolName</a>&gt;</code></h3><div class='docblock'><p>Returns the name of this function.</p>
+        <h3 id='method.name' class='method stab '><span id='name.v' class='invisible'><code>fn <a href='#method.name' class='fnname'>name</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../backtrace/struct.SymbolName.html' title='backtrace::SymbolName'>SymbolName</a>&gt;</code></span></h3><div class='docblock'><p>Returns the name of this function.</p>
 
 <p>The returned structure can be used to query various properties about the
 symbol name:</p>
@@ -76,19 +76,19 @@ symbol name:</p>
 utf-8).</li>
 <li>The raw bytes for the symbol name can be accessed.</li>
 </ul>
-</div><h3 id='method.addr' class='method stab '><code>fn <a href='#method.addr' class='fnname'>addr</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='https://doc.rust-lang.org/nightly/std/os/raw/enum.c_void.html' title='std::os::raw::c_void'>c_void</a>&gt;</code></h3><div class='docblock'><p>Returns the starting address of this function.</p>
-</div><h3 id='method.filename' class='method stab '><code>fn <a href='#method.filename' class='fnname'>filename</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;</code></h3><div class='docblock'><p>Returns the file name where this function was defined.</p>
+</div><h3 id='method.addr' class='method stab '><span id='addr.v' class='invisible'><code>fn <a href='#method.addr' class='fnname'>addr</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='https://doc.rust-lang.org/nightly/std/os/raw/enum.c_void.html' title='std::os::raw::c_void'>c_void</a>&gt;</code></span></h3><div class='docblock'><p>Returns the starting address of this function.</p>
+</div><h3 id='method.filename' class='method stab '><span id='filename.v' class='invisible'><code>fn <a href='#method.filename' class='fnname'>filename</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;</code></span></h3><div class='docblock'><p>Returns the file name where this function was defined.</p>
 
 <p>This is currently only available when libbacktrace is being used (e.g.
 unix platforms other than OSX) and when a binary is compiled with
 debuginfo. If neither of these conditions is met then this will likely
 return <code>None</code>.</p>
-</div><h3 id='method.lineno' class='method stab '><code>fn <a href='#method.lineno' class='fnname'>lineno</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code></h3><div class='docblock'><p>Returns the line number for where this symbol is currently executing.</p>
+</div><h3 id='method.lineno' class='method stab '><span id='lineno.v' class='invisible'><code>fn <a href='#method.lineno' class='fnname'>lineno</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code></span></h3><div class='docblock'><p>Returns the line number for where this symbol is currently executing.</p>
 
 <p>This return value is typically <code>Some</code> if <code>filename</code> returns <code>Some</code>, and
 is consequently subject to similar caveats.</p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='trait' href='../backtrace/trait.Symbol.html' title='backtrace::Symbol'>Symbol</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-110' class='srclink' href='../src/backtrace/symbolize/mod.rs.html#87-104' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
