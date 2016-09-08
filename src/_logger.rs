@@ -31,7 +31,7 @@ pub trait Message {
 
     /// Write it into `io` (which might be fast than `as_str()` it does not
     /// need to allocate anything in certain cases.
-    fn write_to(&self, io : &mut Write) -> Result<()> {
+    fn write_to(&self, io : &mut Write) -> io::Result<()> {
         try!(write!(io, "{}", self.as_str()));
         Ok(())
     }
@@ -65,7 +65,7 @@ impl<'a> Message for fmt::Arguments<'a> {
         Cow::Owned(s)
     }
 
-    fn write_to(&self, io : &mut Write) -> Result<()> {
+    fn write_to(&self, io : &mut Write) -> io::Result<()> {
         try!(write!(io, "{}", self));
         Ok(())
     }

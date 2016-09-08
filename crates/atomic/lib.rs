@@ -13,6 +13,7 @@
 extern crate slog;
 extern crate crossbeam;
 
+use std::io;
 use slog::*;
 use std::sync::Arc;
 use crossbeam::sync::ArcCell;
@@ -56,7 +57,7 @@ impl Drain for AtomicSwitch {
            mut buf: &mut Vec<u8>,
            info: &Record,
            logger_values: &OwnedKeyValueList)
-           -> Result<()> {
+           -> io::Result<()> {
         self.0.get().log(buf, info, logger_values)
     }
 }

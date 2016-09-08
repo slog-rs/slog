@@ -54,7 +54,7 @@ impl<D : Decorator> Format<D> {
         }
     }
 
-    fn print_msg_header(&self, io: &mut io::Write, rd : &D::RecordDecorator, info : &Record) -> slog::format::Result<()> {
+    fn print_msg_header(&self, io: &mut io::Write, rd : &D::RecordDecorator, info : &Record) -> io::Result<()> {
         let ts = chrono::Local::now();
         try!(rd.fmt_timestamp(
             io,
@@ -76,7 +76,7 @@ impl<D : Decorator> Format<D> {
                    io: &mut io::Write,
                    info: &Record,
                    logger_values: &OwnedKeyValueList)
-                   -> slog::format::Result<()> {
+                   -> io::Result<()> {
 
         let r_decorator = self.decorator.decorate(info);
 
@@ -105,7 +105,7 @@ impl<D : Decorator> Format<D> {
                       io: &mut io::Write,
                       info: &Record,
                       logger_values: &OwnedKeyValueList)
-                      -> slog::format::Result<()> {
+                      -> io::Result<()> {
 
         let r_decorator = self.decorator.decorate(info);
         let mut ser = Serializer::new(io, r_decorator);
@@ -154,7 +154,7 @@ impl<D : Decorator> Format<D> {
                                     ser : &mut Serializer<W, D::RecordDecorator>,
                                     info: &slog::Record,
                                     logger_values: &slog::OwnedKeyValueList)
-                                    -> slog::format::Result<usize> {
+                                    -> io::Result<usize> {
         let mut indent = if logger_values.parent().is_none() {
             0
         } else {
@@ -273,7 +273,7 @@ impl<W: io::Write, D: RecordDecorator> Serializer<W, D> {
         }
     }
 
-    fn print_comma(&mut self) -> slog::ser::Result<()> {
+    fn print_comma(&mut self) -> io::Result<()> {
         try!(self.decorator.fmt_separator(
             &mut self.io,
             format_args!(", ")
@@ -296,75 +296,75 @@ macro_rules! s(
 
 
 impl<W: io::Write, D : RecordDecorator> slog::ser::Serializer for Serializer<W, D> {
-    fn emit_none(&mut self, key: &str) -> slog::ser::Result<()> {
+    fn emit_none(&mut self, key: &str) -> io::Result<()> {
         s!(self, key, "None");
         Ok(())
     }
-    fn emit_unit(&mut self, key: &str) -> slog::ser::Result<()> {
+    fn emit_unit(&mut self, key: &str) -> io::Result<()> {
         s!(self, key, "()");
         Ok(())
     }
 
-    fn emit_bool(&mut self, key: &str, val: bool) -> slog::ser::Result<()> {
+    fn emit_bool(&mut self, key: &str, val: bool) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
 
-    fn emit_char(&mut self, key: &str, val: char) -> slog::ser::Result<()> {
+    fn emit_char(&mut self, key: &str, val: char) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
 
-    fn emit_usize(&mut self, key: &str, val: usize) -> slog::ser::Result<()> {
+    fn emit_usize(&mut self, key: &str, val: usize) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_isize(&mut self, key: &str, val: isize) -> slog::ser::Result<()> {
+    fn emit_isize(&mut self, key: &str, val: isize) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
 
-    fn emit_u8(&mut self, key: &str, val: u8) -> slog::ser::Result<()> {
+    fn emit_u8(&mut self, key: &str, val: u8) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_i8(&mut self, key: &str, val: i8) -> slog::ser::Result<()> {
+    fn emit_i8(&mut self, key: &str, val: i8) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_u16(&mut self, key: &str, val: u16) -> slog::ser::Result<()> {
+    fn emit_u16(&mut self, key: &str, val: u16) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_i16(&mut self, key: &str, val: i16) -> slog::ser::Result<()> {
+    fn emit_i16(&mut self, key: &str, val: i16) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_u32(&mut self, key: &str, val: u32) -> slog::ser::Result<()> {
+    fn emit_u32(&mut self, key: &str, val: u32) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_i32(&mut self, key: &str, val: i32) -> slog::ser::Result<()> {
+    fn emit_i32(&mut self, key: &str, val: i32) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_f32(&mut self, key: &str, val: f32) -> slog::ser::Result<()> {
+    fn emit_f32(&mut self, key: &str, val: f32) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_u64(&mut self, key: &str, val: u64) -> slog::ser::Result<()> {
+    fn emit_u64(&mut self, key: &str, val: u64) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_i64(&mut self, key: &str, val: i64) -> slog::ser::Result<()> {
+    fn emit_i64(&mut self, key: &str, val: i64) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_f64(&mut self, key: &str, val: f64) -> slog::ser::Result<()> {
+    fn emit_f64(&mut self, key: &str, val: f64) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_str(&mut self, key: &str, val: &str) -> slog::ser::Result<()> {
+    fn emit_str(&mut self, key: &str, val: &str) -> io::Result<()> {
         s!(self, key, val);
         Ok(())
     }
@@ -375,7 +375,7 @@ impl<D : Decorator+Send+Sync> SlogFormat for Format<D> {
               io: &mut io::Write,
               info: &Record,
               logger_values: &OwnedKeyValueList)
-              -> slog::format::Result<()> {
+              -> io::Result<()> {
         match self.mode {
             FormatMode::Compact => self.format_compact(io, info, logger_values),
             FormatMode::Full => self.format_full(io, info, logger_values),

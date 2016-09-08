@@ -33,10 +33,6 @@ release_max_level_trace = []
 
 [workspace]
 
-[dependencies]
-error-chain = "0.2.1"
-
-
 [dev-dependencies]
 slog-json = { path = "crates/json", version = "1.0.0-alpha2" }
 slog-term = { path = "crates/term", version = "1.0.0-alpha2" }

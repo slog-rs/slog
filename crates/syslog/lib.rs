@@ -27,7 +27,7 @@ extern crate syslog;
 extern crate nix;
 
 use slog::format::Format;
-use slog::{ser, Drain, Level, Record, OwnedKeyValueList, format};
+use slog::{Drain, Level, Record, OwnedKeyValueList, format};
 use slog::ser::Serializer;
 use std::io;
 use std::sync::Mutex;
@@ -70,13 +70,13 @@ impl Drain for Streamer3164 {
            mut buf: &mut Vec<u8>,
            info: &Record,
            logger_values: &OwnedKeyValueList)
-           -> slog::Result<()> {
+           -> io::Result<()> {
         try!(self.format.format(&mut buf, info, logger_values));
         let sever = level_to_severity(info.level());
         {
             let io = try!(self.io
                 .lock()
-                .map_err(|_| -> slog::Error { slog::ErrorKind::LockError.into() }));
+                .map_err(|_| io::Error::new( io::ErrorKind::Other, "locking error")));
             try!(io.send(sever, &String::from_utf8_lossy(&buf)));
         }
         Ok(())
@@ -98,7 +98,7 @@ impl format::Format for Format3164 {
               io: &mut io::Write,
               rinfo: &Record,
               logger_values: &OwnedKeyValueList)
-              -> slog::format::Result<()> {
+              -> io::Result<()> {
         let mut ser = KSV::new(io, "=".into());
         {
             for &(ref k, ref v) in logger_values.iter() {
@@ -135,75 +135,75 @@ impl<W: io::Write> KSV<W> {
 }
 
 impl<W: io::Write> Serializer for KSV<W> {
-    fn emit_none(&mut self, key: &str) -> ser::Result<()> {
+    fn emit_none(&mut self, key: &str) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, "None"));
         Ok(())
     }
-    fn emit_unit(&mut self, key: &str) -> ser::Result<()> {
+    fn emit_unit(&mut self, key: &str) -> io::Result<()> {
         try!(write!(self.io, "{}", key));
         Ok(())
     }
 
-    fn emit_bool(&mut self, key: &str, val: bool) -> ser::Result<()> {
+    fn emit_bool(&mut self, key: &str, val: bool) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
 
-    fn emit_char(&mut self, key: &str, val: char) -> ser::Result<()> {
+    fn emit_char(&mut self, key: &str, val: char) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
 
-    fn emit_usize(&mut self, key: &str, val: usize) -> ser::Result<()> {
+    fn emit_usize(&mut self, key: &str, val: usize) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_isize(&mut self, key: &str, val: isize) -> ser::Result<()> {
+    fn emit_isize(&mut self, key: &str, val: isize) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
 
-    fn emit_u8(&mut self, key: &str, val: u8) -> ser::Result<()> {
+    fn emit_u8(&mut self, key: &str, val: u8) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_i8(&mut self, key: &str, val: i8) -> ser::Result<()> {
+    fn emit_i8(&mut self, key: &str, val: i8) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_u16(&mut self, key: &str, val: u16) -> ser::Result<()> {
+    fn emit_u16(&mut self, key: &str, val: u16) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_i16(&mut self, key: &str, val: i16) -> ser::Result<()> {
+    fn emit_i16(&mut self, key: &str, val: i16) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_u32(&mut self, key: &str, val: u32) -> ser::Result<()> {
+    fn emit_u32(&mut self, key: &str, val: u32) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_i32(&mut self, key: &str, val: i32) -> ser::Result<()> {
+    fn emit_i32(&mut self, key: &str, val: i32) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_f32(&mut self, key: &str, val: f32) -> ser::Result<()> {
+    fn emit_f32(&mut self, key: &str, val: f32) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_u64(&mut self, key: &str, val: u64) -> ser::Result<()> {
+    fn emit_u64(&mut self, key: &str, val: u64) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_i64(&mut self, key: &str, val: i64) -> ser::Result<()> {
+    fn emit_i64(&mut self, key: &str, val: i64) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_f64(&mut self, key: &str, val: f64) -> ser::Result<()> {
+    fn emit_f64(&mut self, key: &str, val: f64) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_str(&mut self, key: &str, val: &str) -> ser::Result<()> {
+    fn emit_str(&mut self, key: &str, val: &str) -> io::Result<()> {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }

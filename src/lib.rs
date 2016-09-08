@@ -2,9 +2,6 @@
 
 #![warn(missing_docs)]
 
-#[macro_use]
-extern crate error_chain;
-
 use std::sync::Arc;
 use std::fmt;
 use std::str::FromStr;

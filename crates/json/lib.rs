@@ -176,7 +176,7 @@ impl format::Format for Json {
               io: &mut io::Write,
               rinfo: &Record,
               logger_values: &OwnedKeyValueList)
-              -> format::Result<()> {
+              -> io::Result<()> {
         let _ = try!(write!(io, "{{"));
         let mut serializer = serde_json::Serializer::new(SkipFirstByte::new(io));
         {
