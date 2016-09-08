@@ -146,6 +146,13 @@
 <span id="102">102</span>
 <span id="103">103</span>
 <span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! [Bunyan](https://www.npmjs.com/package/bunyan) formatting for `slog-rs`</span>
 <span class='doccomment'>//!</span>
@@ -197,32 +204,37 @@
     }
 }
 
-<span class='doccomment'>/// Create bunyan formatter</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>Json</span> {
+<span class='kw'>fn</span> <span class='ident'>new_with_ts_fn</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>ts_f</span> : <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>Json</span>
+<span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>Record</span>)<span class='op'>-&gt;</span><span class='ident'>String</span><span class='op'>+</span><span class='ident'>Send</span><span class='op'>+</span><span class='ident'>Sync</span><span class='op'>+</span><span class='lifetime'>&#39;static</span> {
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>Json</span>::<span class='ident'>build</span>();
     <span class='ident'>b</span>.<span class='ident'>set_newlines</span>(<span class='bool-val'>true</span>)
         .<span class='ident'>add_key_values</span>(<span class='macro'>o</span><span class='macro'>!</span>(
-                <span class='string'>&quot;pid&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>nix</span>::<span class='ident'>unistd</span>::<span class='ident'>getpid</span>() <span class='kw'>as</span> <span class='ident'>usize</span>,
-                <span class='string'>&quot;host&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>get_hostname</span>(),
-                <span class='string'>&quot;time&quot;</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span><span class='op'>|</span> {
-                    <span class='ident'>rinfo</span>.<span class='ident'>ts</span>().<span class='ident'>to_rfc3339</span>()
-                },
-                <span class='string'>&quot;level&quot;</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span><span class='op'>|</span> {
-                    <span class='ident'>level_to_string</span>(<span class='ident'>rinfo</span>.<span class='ident'>level</span>())
-                },
-                <span class='comment'>// TODO: slog loggers don&#39;t have names...</span>
-                <span class='string'>&quot;name&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;slog-rs&quot;</span>,
-                <span class='string'>&quot;v&quot;</span> <span class='op'>=&gt;</span> <span class='number'>0usize</span>,
-                <span class='string'>&quot;msg&quot;</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span><span class='op'>|</span> {
-                    <span class='ident'>rinfo</span>.<span class='ident'>msg</span>().<span class='ident'>to_string</span>()
-                }
-            ));
+            <span class='string'>&quot;pid&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>nix</span>::<span class='ident'>unistd</span>::<span class='ident'>getpid</span>() <span class='kw'>as</span> <span class='ident'>usize</span>,
+            <span class='string'>&quot;host&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>get_hostname</span>(),
+            <span class='string'>&quot;time&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>ts_f</span>,
+            <span class='string'>&quot;level&quot;</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span><span class='op'>|</span> {
+                <span class='ident'>level_to_string</span>(<span class='ident'>rinfo</span>.<span class='ident'>level</span>())
+            },
+            <span class='comment'>// TODO: slog loggers don&#39;t have names...</span>
+            <span class='string'>&quot;name&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;slog-rs&quot;</span>,
+            <span class='string'>&quot;v&quot;</span> <span class='op'>=&gt;</span> <span class='number'>0usize</span>,
+            <span class='string'>&quot;msg&quot;</span> <span class='op'>=&gt;</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span><span class='op'>|</span> {
+                <span class='ident'>rinfo</span>.<span class='ident'>msg</span>().<span class='ident'>to_string</span>()
+            }
+        ));
     <span class='ident'>b</span>.<span class='ident'>build</span>()
+}
+
+<span class='doccomment'>/// Create bunyan formatter</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>Json</span> {
+    <span class='ident'>new_with_ts_fn</span>(<span class='op'>|</span>_: <span class='kw-2'>&amp;</span><span class='ident'>Record</span><span class='op'>|</span> {
+        <span class='ident'>chrono</span>::<span class='ident'>Local</span>::<span class='ident'>now</span>().<span class='ident'>to_rfc3339</span>()
+    })
 }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>new_with_ts_fn</span>;
     <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>get_hostname</span>;
     <span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>TimeZone</span>, <span class='ident'>UTC</span>};
     <span class='kw'>use</span> <span class='ident'>nix</span>;
@@ -233,13 +245,15 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>trivial</span>() {
-        <span class='kw'>let</span> <span class='ident'>formatter</span> <span class='op'>=</span> <span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='ident'>formatter</span> <span class='op'>=</span> <span class='ident'>new_with_ts_fn</span>(
+            <span class='op'>|</span>_ : <span class='kw-2'>&amp;</span><span class='ident'>Record</span><span class='op'>|</span> {
+                <span class='ident'>UTC</span>.<span class='ident'>ymd</span>(<span class='number'>2014</span>, <span class='number'>7</span>, <span class='number'>8</span>).<span class='ident'>and_hms</span>(<span class='number'>9</span>, <span class='number'>10</span>, <span class='number'>11</span>).<span class='ident'>to_rfc3339</span>()
+            }
+        );
 
 
         <span class='kw'>let</span> <span class='ident'>msg</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='string'>&quot;message&quot;</span>;
         <span class='kw'>let</span> <span class='ident'>info</span> <span class='op'>=</span> <span class='ident'>Record</span>::<span class='ident'>new</span>(<span class='ident'>Level</span>::<span class='ident'>Info</span>, <span class='ident'>msg</span>, <span class='string'>&quot;filepath&quot;</span>, <span class='number'>11192</span>, <span class='string'>&quot;modulepath&quot;</span>, <span class='string'>&quot;target&quot;</span>, <span class='kw-2'>&amp;</span>[]);
-
-        <span class='ident'>info</span>.<span class='ident'>set_ts</span>(<span class='ident'>UTC</span>.<span class='ident'>ymd</span>(<span class='number'>2014</span>, <span class='number'>7</span>, <span class='number'>8</span>).<span class='ident'>and_hms</span>(<span class='number'>9</span>, <span class='number'>10</span>, <span class='number'>11</span>));
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
         <span class='ident'>formatter</span>.<span class='ident'>format</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>v</span>, <span class='kw-2'>&amp;</span><span class='ident'>info</span>, <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueList</span>::<span class='ident'>root</span>(<span class='macro'>vec</span><span class='macro'>!</span>[])).<span class='ident'>unwrap</span>();

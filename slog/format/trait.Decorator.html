@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-711' class='srclink' href='../../src/slog/src/format.rs.html#43-49' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-455' class='srclink' href='../../src/slog/src/format.rs.html#22-28' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Decorator: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> {
     type <a href='#associatedtype.RecordDecorator' class='type'>RecordDecorator</a>: <a class='trait' href='../../slog/format/trait.RecordDecorator.html' title='slog::format::RecordDecorator'>RecordDecorator</a>;
     fn <a href='#tymethod.decorate' class='fnname'>decorate</a>(&amp;self, record: &amp;<a class='struct' href='../../slog/struct.Record.html' title='slog::Record'>Record</a>) -&gt; Self::RecordDecorator;

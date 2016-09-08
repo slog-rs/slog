@@ -47,9 +47,9 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1124' class='srclink' href='../src/slog/src/_drain.rs.html#54-59' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-700' class='srclink' href='../src/slog/src/_drain.rs.html#16-21' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Drain: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> {
-    fn <a href='#tymethod.log' class='fnname'>log</a>(&amp;self, buf: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='../slog/type.Result.html' title='slog::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;;
+    fn <a href='#tymethod.log' class='fnname'>log</a>(&amp;self, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;;
 }</pre><div class='docblock'><p>Logging drain</p>
 
 <p>Drains generally mean destination for logs, but slog generalize the
@@ -61,7 +61,7 @@ with other drains.</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.log' class='method stab '><span id='log.v' class='invisible'><code>fn <a href='#tymethod.log' class='fnname'>log</a>(&amp;self, buf: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='../slog/type.Result.html' title='slog::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h3><div class='docblock'><p>Write one logging record
+        <h3 id='tymethod.log' class='method stab '><span id='log.v' class='invisible'><code>fn <a href='#tymethod.log' class='fnname'>log</a>(&amp;self, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h3><div class='docblock'><p>Write one logging record
 As an optimization (avoiding allocations), loggers are responsible for
 providing a byte buffer, that <code>Drain</code> can use for their own needs.</p>
 </div></div>

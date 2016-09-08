@@ -606,6 +606,8 @@
 <span id="562">562</span>
 <span id="563">563</span>
 <span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Unix terminal formatter and drain for slog-rs</span>
 <span class='doccomment'>//!</span>
@@ -626,6 +628,7 @@
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>isatty</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>ansi_term</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>chrono</span>;
 
 <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>io</span>, <span class='ident'>fmt</span>, <span class='ident'>sync</span>};
 
@@ -662,10 +665,11 @@
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>print_msg_header</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>io</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>io</span>::<span class='ident'>Write</span>, <span class='ident'>rd</span> : <span class='kw-2'>&amp;</span><span class='ident'>D</span>::<span class='ident'>RecordDecorator</span>, <span class='ident'>info</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>format</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>print_msg_header</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>io</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>io</span>::<span class='ident'>Write</span>, <span class='ident'>rd</span> : <span class='kw-2'>&amp;</span><span class='ident'>D</span>::<span class='ident'>RecordDecorator</span>, <span class='ident'>info</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='ident'>ts</span> <span class='op'>=</span> <span class='ident'>chrono</span>::<span class='ident'>Local</span>::<span class='ident'>now</span>();
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>rd</span>.<span class='ident'>fmt_timestamp</span>(
             <span class='ident'>io</span>,
-            <span class='macro'>format_args</span><span class='macro'>!</span>(<span class='string'>&quot;{} &quot;</span>, <span class='ident'>info</span>.<span class='ident'>ts</span>().<span class='ident'>format</span>(<span class='string'>&quot;%b %d %H:%M:%S%.3f&quot;</span>))
+            <span class='macro'>format_args</span><span class='macro'>!</span>(<span class='string'>&quot;{} &quot;</span>, <span class='ident'>ts</span>.<span class='ident'>format</span>(<span class='string'>&quot;%b %d %H:%M:%S%.3f&quot;</span>))
         ));
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>rd</span>.<span class='ident'>fmt_level</span>(
             <span class='ident'>io</span>,
@@ -683,7 +687,7 @@
                    <span class='ident'>io</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>io</span>::<span class='ident'>Write</span>,
                    <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>Record</span>,
                    <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueList</span>)
-                   <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>format</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+                   <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
 
         <span class='kw'>let</span> <span class='ident'>r_decorator</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>decorator</span>.<span class='ident'>decorate</span>(<span class='ident'>info</span>);
 
@@ -712,7 +716,7 @@
                       <span class='ident'>io</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>io</span>::<span class='ident'>Write</span>,
                       <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>Record</span>,
                       <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueList</span>)
-                      <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>format</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+                      <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
 
         <span class='kw'>let</span> <span class='ident'>r_decorator</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>decorator</span>.<span class='ident'>decorate</span>(<span class='ident'>info</span>);
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ser</span> <span class='op'>=</span> <span class='ident'>Serializer</span>::<span class='ident'>new</span>(<span class='ident'>io</span>, <span class='ident'>r_decorator</span>);
@@ -761,7 +765,7 @@
                                     <span class='ident'>ser</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Serializer</span><span class='op'>&lt;</span><span class='ident'>W</span>, <span class='ident'>D</span>::<span class='ident'>RecordDecorator</span><span class='op'>&gt;</span>,
                                     <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>slog</span>::<span class='ident'>Record</span>,
                                     <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>slog</span>::<span class='ident'>OwnedKeyValueList</span>)
-                                    <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>format</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
+                                    <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>indent</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>logger_values</span>.<span class='ident'>parent</span>().<span class='ident'>is_none</span>() {
             <span class='number'>0</span>
         } <span class='kw'>else</span> {
@@ -880,7 +884,7 @@
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>print_comma</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>print_comma</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>decorator</span>.<span class='ident'>fmt_separator</span>(
             <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>io</span>,
             <span class='macro'>format_args</span><span class='macro'>!</span>(<span class='string'>&quot;, &quot;</span>)
@@ -903,75 +907,75 @@
 
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>io</span>::<span class='ident'>Write</span>, <span class='ident'>D</span> : <span class='ident'>RecordDecorator</span><span class='op'>&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='ident'>Serializer</span> <span class='kw'>for</span> <span class='ident'>Serializer</span><span class='op'>&lt;</span><span class='ident'>W</span>, <span class='ident'>D</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>emit_none</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_none</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='string'>&quot;None&quot;</span>);
         <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_unit</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_unit</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='string'>&quot;()&quot;</span>);
         <span class='prelude-val'>Ok</span>(())
     }
 
-    <span class='kw'>fn</span> <span class='ident'>emit_bool</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_bool</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
 
-    <span class='kw'>fn</span> <span class='ident'>emit_char</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_char</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
 
-    <span class='kw'>fn</span> <span class='ident'>emit_usize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_usize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_isize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>isize</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_isize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>isize</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
 
-    <span class='kw'>fn</span> <span class='ident'>emit_u8</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_u8</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_i8</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i8</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_i8</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i8</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_u16</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u16</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_u16</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u16</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_i16</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i16</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_i16</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i16</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_u32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_u32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_i32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_i32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_f32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>f32</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_f32</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>f32</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_u64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_u64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_i64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_i64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_f64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_f64</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
-    <span class='kw'>fn</span> <span class='ident'>emit_str</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>ser</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>emit_str</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>val</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='macro'>s</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='ident'>key</span>, <span class='ident'>val</span>);
         <span class='prelude-val'>Ok</span>(())
     }
@@ -982,7 +986,7 @@
               <span class='ident'>io</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>io</span>::<span class='ident'>Write</span>,
               <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>Record</span>,
               <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueList</span>)
-              <span class='op'>-&gt;</span> <span class='ident'>slog</span>::<span class='ident'>format</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+              <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>mode</span> {
             <span class='ident'>FormatMode</span>::<span class='ident'>Compact</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>format_compact</span>(<span class='ident'>io</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>),
             <span class='ident'>FormatMode</span>::<span class='ident'>Full</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>format_full</span>(<span class='ident'>io</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>),

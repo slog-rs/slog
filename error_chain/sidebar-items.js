@@ -1,1 +1,0 @@
-initSidebarItems({"macro":[["error_chain",""],["quick_error",""]],"struct":[["Backtrace","Representation of an owned and self-contained backtrace."],["ErrorChainIter",""]]});

@@ -122,6 +122,7 @@
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>crossbeam</span>;
 
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='op'>*</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
 <span class='kw'>use</span> <span class='ident'>crossbeam</span>::<span class='ident'>sync</span>::<span class='ident'>ArcCell</span>;
@@ -162,11 +163,10 @@
 
 <span class='kw'>impl</span> <span class='ident'>Drain</span> <span class='kw'>for</span> <span class='ident'>AtomicSwitch</span> {
     <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-           <span class='kw-2'>mut</span> <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
            <span class='ident'>info</span>: <span class='kw-2'>&amp;</span><span class='ident'>Record</span>,
            <span class='ident'>logger_values</span>: <span class='kw-2'>&amp;</span><span class='ident'>OwnedKeyValueList</span>)
-           <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>get</span>().<span class='ident'>log</span>(<span class='ident'>buf</span>, <span class='ident'>info</span>, <span class='ident'>logger_values</span>)
+           <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
+        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>get</span>().<span class='ident'>log</span>(<span class='ident'>info</span>, <span class='ident'>logger_values</span>)
     }
 }
 
