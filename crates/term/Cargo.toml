@@ -15,5 +15,6 @@ path = "lib.rs"
 
 [dependencies]
 slog = { version = "1.0.0-alpha2", path = "../.." }
-isatty = "0.1.1"
-ansi_term = "0.7.2"
+isatty = "0.1"
+ansi_term = "0.7"
+chrono = "0.2"

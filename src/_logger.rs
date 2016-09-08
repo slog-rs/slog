@@ -138,12 +138,6 @@ impl Logger {
 
 /// Logging record
 pub struct Record<'a> {
-    /// Lazily initialized timestamp
-    ///
-    /// Since getting current time requires a
-    /// syscall and most log records won't make it to the final drain it will be
-    /// delayed until ts is actually needed.
-    ts: RefCell<Option<chrono::DateTime<chrono::UTC>>>,
     /// Logging level
     level: Level,
     /// Message
@@ -160,10 +154,12 @@ pub struct Record<'a> {
     values: &'a [BorrowedKeyValue<'a>],
 }
 
+
 impl<'a> Record<'a> {
     /// Create a new `Record`
     #[inline]
-    pub fn new(level: Level,
+    pub fn new(
+               level: Level,
                msg: &'a Message,
                file: &'static str,
                line: u32,
@@ -172,7 +168,6 @@ impl<'a> Record<'a> {
                values: &'a [BorrowedKeyValue<'a>])
                -> Self {
         Record {
-            ts: RefCell::new(None),
             level: level,
             msg: msg,
             file: file,
@@ -181,29 +176,6 @@ impl<'a> Record<'a> {
             target: target,
             values: values,
         }
-    }
-
-    /// Timestamp
-    ///
-    /// Lazily evaluated timestamp
-    pub fn ts(&self) -> chrono::DateTime<chrono::UTC> {
-        let mut ts = self.ts.borrow_mut();
-        match *ts {
-            None => {
-                let now = chrono::UTC::now();
-                *ts = Some(now);
-                now
-            }
-            Some(ts) => ts,
-        }
-    }
-
-
-    /// Set timestamp
-    ///
-    /// Useful for manually forcing timestamp value (eg. in testing).
-    pub fn set_ts(&self, ts: chrono::DateTime<chrono::UTC>) {
-        *self.ts.borrow_mut() = Some(ts);
     }
 
     /// Get a log record message

@@ -34,7 +34,6 @@ release_max_level_trace = []
 [workspace]
 
 [dependencies]
-chrono = "0.2.22"
 rustc-serialize = "0.3.19"
 error-chain = "0.2.1"
 

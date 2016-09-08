@@ -21,6 +21,7 @@
 extern crate slog;
 extern crate slog_serde;
 extern crate serde_json;
+extern crate chrono;
 
 use std::io;
 
@@ -61,8 +62,8 @@ impl Json {
         Json {
             newlines: true,
             values: o!(
-                "ts" => move |rinfo : &Record| {
-                    rinfo.ts().to_rfc3339()
+                "ts" => move |_ : &Record| {
+                    chrono::Local::now().to_rfc3339()
                 },
                 "level" => move |rinfo : &Record| {
                     level_to_string(rinfo.level())

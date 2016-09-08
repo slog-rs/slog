@@ -17,6 +17,7 @@
 extern crate slog;
 extern crate isatty;
 extern crate ansi_term;
+extern crate chrono;
 
 use std::{io, fmt, sync};
 
@@ -54,9 +55,10 @@ impl<D : Decorator> Format<D> {
     }
 
     fn print_msg_header(&self, io: &mut io::Write, rd : &D::RecordDecorator, info : &Record) -> slog::format::Result<()> {
+        let ts = chrono::Local::now();
         try!(rd.fmt_timestamp(
             io,
-            format_args!("{} ", info.ts().format("%b %d %H:%M:%S%.3f"))
+            format_args!("{} ", ts.format("%b %d %H:%M:%S%.3f"))
         ));
         try!(rd.fmt_level(
             io,

@@ -17,4 +17,4 @@ path = "lib.rs"
 slog = { version = "1.0.0-alpha2", path = "../.." }
 slog-serde = { version = "1.0.0-alpha2", path = "../serde"}
 serde_json = "0.7.1"
-
+chrono = "0.2"

@@ -48,32 +48,37 @@ fn level_to_string(level: Level) -> i8 {
     }
 }
 
-/// Create bunyan formatter
-pub fn new() -> Json {
+fn new_with_ts_fn<F>(ts_f : F) -> Json
+where F: Fn(&Record)->String+Send+Sync+'static {
     let mut b = Json::build();
     b.set_newlines(true)
         .add_key_values(o!(
-                "pid" => nix::unistd::getpid() as usize,
-                "host" => get_hostname(),
-                "time" => |rinfo : &Record| {
-                    rinfo.ts().to_rfc3339()
-                },
-                "level" => |rinfo : &Record| {
-                    level_to_string(rinfo.level())
-                },
-                // TODO: slog loggers don't have names...
-                "name" => "slog-rs",
-                "v" => 0usize,
-                "msg" => |rinfo : &Record| {
-                    rinfo.msg().to_string()
-                }
-            ));
+            "pid" => nix::unistd::getpid() as usize,
+            "host" => get_hostname(),
+            "time" => ts_f,
+            "level" => |rinfo : &Record| {
+                level_to_string(rinfo.level())
+            },
+            // TODO: slog loggers don't have names...
+            "name" => "slog-rs",
+            "v" => 0usize,
+            "msg" => |rinfo : &Record| {
+                rinfo.msg().to_string()
+            }
+        ));
     b.build()
+}
+
+/// Create bunyan formatter
+pub fn new() -> Json {
+    new_with_ts_fn(|_: &Record| {
+        chrono::Local::now().to_rfc3339()
+    })
 }
 
 #[cfg(test)]
 mod test {
-    use super::*;
+    use super::new_with_ts_fn;
     use super::get_hostname;
     use chrono::{TimeZone, UTC};
     use nix;
@@ -84,13 +89,15 @@ mod test {
 
     #[test]
     fn trivial() {
-        let formatter = new();
+        let formatter = new_with_ts_fn(
+            |_ : &Record| {
+                UTC.ymd(2014, 7, 8).and_hms(9, 10, 11).to_rfc3339()
+            }
+        );
 
 
         let msg = &"message";
         let info = Record::new(Level::Info, msg, "filepath", 11192, "modulepath", "target", &[]);
-
-        info.set_ts(UTC.ymd(2014, 7, 8).and_hms(9, 10, 11));
 
         let mut v = vec![];
         formatter.format(&mut v, &info, &OwnedKeyValueList::root(vec![])).unwrap();
