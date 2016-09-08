@@ -16,6 +16,12 @@ debug = false
 lto = true
 debug-assertions = false
 
+[profile.bench]
+opt-level = 3
+debug = false
+lto = true
+debug-assertions = false
+
 [features]
 max_level_off   = []
 max_level_error = []
