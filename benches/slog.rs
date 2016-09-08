@@ -34,6 +34,14 @@ impl io::Write for BlackBoxWriter {
         Ok(())
     }
 }
+#[bench]
+fn log_filter_out_empty(b: &mut Bencher) {
+    let log = Logger::root(LevelFilter::new(BlackBoxDrain, Level::Warning), o!());
+
+    b.iter(|| {
+        info!(log, "");
+    });
+}
 
 #[bench]
 fn log_discard_empty(b: &mut Bencher) {
