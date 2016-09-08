@@ -68,14 +68,11 @@ impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer
 
             TL_BUF.with(|buf| {
                 let mut buf = buf.borrow_mut();
-                let res =
-                {
+                let res = {
                     || {
                         try!(self.format.format(&mut *buf, info, logger_values));
                         {
-                            let mut io = try!(self.io
-                                              .lock()
-                                              .map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
+                            let mut io = try!(self.io.lock().map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
                             try!(io.write_all(&buf));
                         }
                         Ok(())
@@ -113,18 +110,28 @@ impl<F: format::Format + Send> Drain for AsyncStreamer<F> {
            logger_values: &OwnedKeyValueList)
            -> io::Result<()> {
 
-
                TL_BUF.with(|buf| {
                    let mut buf = buf.borrow_mut();
-                   try!(self.format.format(&mut *buf, info, logger_values));
-                   {
-                       let mut io = try!(self.io.lock().map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
-                       let mut new_buf = Vec::with_capacity(128);
-                       mem::swap(&mut *buf, &mut new_buf);
-                       try!(io.write_nocopy(new_buf));
+
+                   let res = {
+                       || {
+                           try!(self.format.format(&mut *buf, info, logger_values));
+                           {
+                               let mut io = try!(self.io.lock().map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
+                               let mut new_buf = Vec::with_capacity(128);
+                               mem::swap(&mut *buf, &mut new_buf);
+                               try!(io.write_nocopy(new_buf));
+                           }
+                           Ok(())
+
+                       }}()
+                   ;
+
+                   if res.is_err() {
+                       buf.clear();
                    }
 
-                   Ok(())
+                   res
                })
     }
 }
