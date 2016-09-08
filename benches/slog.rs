@@ -13,11 +13,9 @@ use slog::*;
 struct BlackBoxDrain;
 
 impl Drain for BlackBoxDrain {
-    fn log(&self,
-           buf: &mut Vec<u8>,
-           ri: &Record, o : &OwnedKeyValueList) -> io::Result<()> {
+    fn log(&self, ri: &Record, o : &OwnedKeyValueList) -> io::Result<()> {
 
-        test::black_box((buf, ri, o));
+        test::black_box((ri, o));
         Ok(())
     }
 }

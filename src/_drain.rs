@@ -1,6 +1,10 @@
 use std::sync::{Mutex, mpsc};
 use std::{mem, io, thread};
 
+thread_local! {
+    static TL_BUF: RefCell<Vec<u8>> = RefCell::new(Vec::with_capacity(128))
+}
+
 /// Logging drain
 ///
 /// Drains generally mean destination for logs, but slog generalize the
@@ -13,18 +17,18 @@ pub trait Drain: Send + Sync {
     /// Write one logging record
     /// As an optimization (avoiding allocations), loggers are responsible for
     /// providing a byte buffer, that `Drain` can use for their own needs.
-    fn log(&self, buf: &mut Vec<u8>, info: &Record, &OwnedKeyValueList) -> io::Result<()>;
+    fn log(&self, info: &Record, &OwnedKeyValueList) -> io::Result<()>;
 }
 
 impl<D: Drain+?Sized> Drain for Box<D> {
-    fn log(&self, buf: &mut Vec<u8>, info: &Record, o: &OwnedKeyValueList) -> io::Result<()> {
-        (**self).log(buf, info, o)
+    fn log(&self, info: &Record, o: &OwnedKeyValueList) -> io::Result<()> {
+        (**self).log(info, o)
     }
 }
 
 impl<D: Drain+?Sized> Drain for Arc<D> {
-    fn log(&self, buf: &mut Vec<u8>, info: &Record, o: &OwnedKeyValueList) -> io::Result<()> {
-        (**self).log(buf, info, o)
+    fn log(&self, info: &Record, o: &OwnedKeyValueList) -> io::Result<()> {
+        (**self).log(info, o)
     }
 }
 
@@ -32,7 +36,7 @@ impl<D: Drain+?Sized> Drain for Arc<D> {
 pub struct Discard;
 
 impl Drain for Discard {
-    fn log(&self, _: &mut Vec<u8>, _: &Record, _: &OwnedKeyValueList) -> io::Result<()> {
+    fn log(&self, _: &Record, _: &OwnedKeyValueList) -> io::Result<()> {
         Ok(())
     }
 }
@@ -58,27 +62,29 @@ impl<W: io::Write, F: format::Format> Streamer<W, F> {
 
 impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer<W, F> {
     fn log(&self,
-           mut buf: &mut Vec<u8>,
            info: &Record,
            logger_values: &OwnedKeyValueList)
-           -> io::Result<()> {
+        -> io::Result<()> {
 
-        let res =
-            {
-                || {
-                    try!(self.format.format(&mut buf, info, logger_values));
-                    {
-                        let mut io = try!(self.io
-                            .lock()
-                            .map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
-                        try!(io.write_all(&buf));
+            TL_BUF.with(|buf| {
+                let mut buf = buf.borrow_mut();
+                let res =
+                {
+                    || {
+                        try!(self.format.format(&mut *buf, info, logger_values));
+                        {
+                            let mut io = try!(self.io
+                                              .lock()
+                                              .map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
+                            try!(io.write_all(&buf));
+                        }
+                        Ok(())
                     }
-                    Ok(())
-                }
-            }();
-        buf.clear();
-        res
-    }
+                }();
+                buf.clear();
+                res
+            })
+        }
 }
 
 /// Drain formating records and writing them to a byte-stream (io::Write)
@@ -103,18 +109,23 @@ impl<F: format::Format> AsyncStreamer<F> {
 
 impl<F: format::Format + Send> Drain for AsyncStreamer<F> {
     fn log(&self,
-           mut buf: &mut Vec<u8>,
            info: &Record,
            logger_values: &OwnedKeyValueList)
            -> io::Result<()> {
-        try!(self.format.format(&mut buf, info, logger_values));
-        {
-            let mut io = try!(self.io.lock().map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
-            let mut new_buf = Vec::with_capacity(128);
-            mem::swap(buf, &mut new_buf);
-            try!(io.write_nocopy(new_buf));
-        }
-        Ok(())
+
+
+               TL_BUF.with(|buf| {
+                   let mut buf = buf.borrow_mut();
+                   try!(self.format.format(&mut *buf, info, logger_values));
+                   {
+                       let mut io = try!(self.io.lock().map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
+                       let mut new_buf = Vec::with_capacity(128);
+                       mem::swap(&mut *buf, &mut new_buf);
+                       try!(io.write_nocopy(new_buf));
+                   }
+
+                   Ok(())
+               })
     }
 }
 
@@ -141,12 +152,11 @@ impl<D: Drain> Filter<D> {
 
 impl<D: Drain> Drain for Filter<D> {
     fn log(&self,
-           buf: &mut Vec<u8>,
            info: &Record,
            logger_values: &OwnedKeyValueList)
            -> io::Result<()> {
         if (self.cond)(&info) {
-            self.drain.log(buf, info, logger_values)
+            self.drain.log(info, logger_values)
         } else {
             Ok(())
         }
@@ -178,12 +188,11 @@ impl<D: Drain> LevelFilter<D> {
 
 impl<D: Drain> Drain for LevelFilter<D> {
     fn log(&self,
-           buf: &mut Vec<u8>,
            info: &Record,
            logger_values: &OwnedKeyValueList)
            -> io::Result<()> {
         if info.level().is_at_least(self.level) {
-            self.drain.log(buf, info, logger_values)
+            self.drain.log(info, logger_values)
         } else {
             Ok(())
         }
@@ -211,13 +220,11 @@ impl<D1: Drain, D2: Drain> Duplicate<D1, D2> {
 
 impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
     fn log(&self,
-           buf: &mut Vec<u8>,
            info: &Record,
            logger_values: &OwnedKeyValueList)
            -> io::Result<()> {
-        let res1 = self.drain1.log(buf, info, logger_values);
-        buf.clear();
-        let res2 = self.drain2.log(buf, info, logger_values);
+        let res1 = self.drain1.log(info, logger_values);
+        let res2 = self.drain2.log(info, logger_values);
 
         // TODO: Don't discard e2 in case of two errors at once?
         match (res1, res2) {
@@ -250,13 +257,12 @@ impl<D1: Drain, D2: Drain> Failover<D1, D2> {
 
 impl<D1: Drain, D2: Drain> Drain for Failover<D1, D2> {
     fn log(&self,
-           buf: &mut Vec<u8>,
            info: &Record,
            logger_values: &OwnedKeyValueList)
            -> io::Result<()> {
-        match self.drain1.log(buf, info, logger_values) {
+        match self.drain1.log(info, logger_values) {
             Ok(_) => Ok(()),
-            Err(_) => self.drain2.log(buf, info, logger_values),
+            Err(_) => self.drain2.log(info, logger_values),
         }
     }
 }

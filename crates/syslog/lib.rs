@@ -31,8 +31,13 @@ use slog::{Drain, Level, Record, OwnedKeyValueList, format};
 use slog::ser::Serializer;
 use std::io;
 use std::sync::Mutex;
+use std::cell::RefCell;
 
 pub use syslog::Facility;
+
+thread_local! {
+    static TL_BUF: RefCell<Vec<u8>> = RefCell::new(Vec::with_capacity(128))
+}
 
 fn level_to_severity(level: slog::Level) -> syslog::Severity {
     match level {
@@ -67,20 +72,23 @@ impl Streamer3164 {
 
 impl Drain for Streamer3164 {
     fn log(&self,
-           mut buf: &mut Vec<u8>,
            info: &Record,
            logger_values: &OwnedKeyValueList)
            -> io::Result<()> {
-        try!(self.format.format(&mut buf, info, logger_values));
-        let sever = level_to_severity(info.level());
-        {
-            let io = try!(self.io
-                .lock()
-                .map_err(|_| io::Error::new( io::ErrorKind::Other, "locking error")));
-            try!(io.send(sever, &String::from_utf8_lossy(&buf)));
-        }
-        Ok(())
-    }
+
+               TL_BUF.with(|buf| {
+                   let mut buf = buf.borrow_mut();
+                   try!(self.format.format(&mut *buf, info, logger_values));
+                   let sever = level_to_severity(info.level());
+                   {
+                       let io = try!(self.io
+                                     .lock()
+                                     .map_err(|_| io::Error::new( io::ErrorKind::Other, "locking error")));
+                       try!(io.send(sever, &String::from_utf8_lossy(&buf)));
+                   }
+                   Ok(())
+               })
+           }
 }
 
 /// Formatter to format defined in RFC 3164

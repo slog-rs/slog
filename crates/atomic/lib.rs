@@ -54,11 +54,10 @@ impl AtomicSwitchCtrl {
 
 impl Drain for AtomicSwitch {
     fn log(&self,
-           mut buf: &mut Vec<u8>,
            info: &Record,
            logger_values: &OwnedKeyValueList)
            -> io::Result<()> {
-        self.0.get().log(buf, info, logger_values)
+        self.0.get().log(info, logger_values)
     }
 }
 

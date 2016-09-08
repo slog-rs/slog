@@ -221,7 +221,7 @@ pub fn scope<SF, R>(logger : slog::Logger, f : SF) -> R
 pub struct StdLog;
 
 impl slog::Drain for StdLog {
-    fn log(&self, _buf: &mut Vec<u8>, info: &slog::Record, _ : &slog::OwnedKeyValueList) -> io::Result<()> {
+    fn log(&self, info: &slog::Record, _ : &slog::OwnedKeyValueList) -> io::Result<()> {
 
         let level = match info.level() {
             slog::Level::Critical => log::LogLevel::Error,

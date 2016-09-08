@@ -2,9 +2,6 @@ use std::cell::RefCell;
 use std::borrow::Cow;
 use std::io::Write;
 
-thread_local! {
-    static TL_BUF: RefCell<Vec<u8>> = RefCell::new(Vec::with_capacity(128))
-}
 
 /// Logger
 ///
@@ -124,15 +121,9 @@ impl Logger {
     /// Log one logging record
     ///
     /// Use specific logging functions instead.
+    #[inline]
     pub fn log(&self, record: &Record) {
-
-        // By default errors in loggers are ignored
-        TL_BUF.with(|buf| {
-            let mut buf = buf.borrow_mut();
-            let _ = self.drain.log(&mut *buf, &record, &*self.values);
-            // TODO: Double check if this will not zero the old bytes as it costs time
-            debug_assert!(buf.is_empty());
-        });
+        let _ = self.drain.log(&record, &*self.values);
     }
 }
 
