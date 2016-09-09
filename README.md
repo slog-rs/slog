@@ -28,18 +28,18 @@ Long term goal is to make it a go-to logging crate for Rust.
 ### Features
 
 * easy to use
-* good performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
+* great performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
 * hierarchical loggers
 * lazily evaluated values
-* modular and extensible
-	* small core create with multiple addon crates (`./crates/`) - compile only
-	what you're actually using
-* backward compatibility with standard `log` crate (using `slog-stdlog` crate)
+* modular, lightweight and very extensible
+	* tiny core create that does not pull any other dependencies
+	* feature-crates for specific functionality
+* backward compatibility for standard `log` crate (`slog-stdlog` crate)
 	* supports logging-scopes
 * drains & output formatting
 	* filtering
-		* compile time log level filter using cargo features (same as in `log` crate)
-		* by level, msg, and other meta-data
+		* compile-time log level filter using cargo features (same as in `log` crate)
+		* by level, msg, and any other meta-data
 		* [`slog-envlogger`](https://github.com/dpc/slog-envlogger) - port of `env_logger`
 	* multiple outputs
 	* asynchronous IO writing
@@ -52,7 +52,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 ### Advantages over `log` crate
 
 * **extensible** - `slog` provides core functionality, and some standard
-  feature-set. But using Rust trait system, anyone can easily implement as
+  feature-set. But using traits, anyone can easily implement as
   powerful fully-custom features, publish separately and grow `slog` feature-set
   for everyone.
 * **composable** - Wouldn't it be nice if you could use
