@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["build","Short for `Json::build()`"],["new","Short for `Json::new()`"]],"struct":[["Json","Json formatter"],["JsonBuilder","Json formatter builder"]]});
+initSidebarItems({"fn":[["build","Short for `FormatBuilder::build()`"],["new","Short for `Format::new()`"]],"struct":[["Format","Json formatter"],["FormatBuilder","Json formatter builder"]]});
