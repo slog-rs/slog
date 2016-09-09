@@ -10,6 +10,8 @@ use std::io;
 use test::Bencher;
 use slog::*;
 
+const LONG_STRING : &'static str = "A long string that would take some time to allocate";
+
 struct BlackBoxDrain;
 
 impl Drain for BlackBoxDrain {
@@ -32,6 +34,15 @@ impl io::Write for BlackBoxWriter {
         Ok(())
     }
 }
+
+fn empty_json_blackbox() -> Streamer<BlackBoxWriter, slog_json::Json> {
+    stream(BlackBoxWriter, slog_json::build().build())
+}
+
+fn json_blackbox() -> Streamer<BlackBoxWriter, slog_json::Json> {
+    stream(BlackBoxWriter, slog_json::new())
+}
+
 #[bench]
 fn log_filter_out_empty(b: &mut Bencher) {
     let log = Logger::root(LevelFilter::new(BlackBoxDrain, Level::Warning), o!());
@@ -104,7 +115,6 @@ fn log_discard_i32val(b: &mut Bencher) {
     });
 }
 
-
 #[bench]
 fn log_discard_i32closure(b: &mut Bencher) {
     let log = Logger::root(BlackBoxDrain, o!());
@@ -115,10 +125,8 @@ fn log_discard_i32closure(b: &mut Bencher) {
 }
 
 #[bench]
-fn log_stream_json_blackbox_i32val(b: &mut Bencher) {
-    let drain = stream(BlackBoxWriter, slog_json::new());
-
-    let log = Logger::root(drain, o!());
+fn log_stream_empty_json_blackbox_i32val(b: &mut Bencher) {
+    let log = Logger::root(empty_json_blackbox(), o!());
 
     b.iter(|| {
         info!(log, "",  "i32" => 5);
@@ -126,10 +134,9 @@ fn log_stream_json_blackbox_i32val(b: &mut Bencher) {
 }
 
 #[bench]
-fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
-    let drain = stream(BlackBoxWriter, slog_json::new());
+fn log_stream_empty_json_blackbox_i32closure(b: &mut Bencher) {
 
-    let log = Logger::root(drain, o!());
+    let log = Logger::root(empty_json_blackbox(), o!());
 
     b.iter(|| {
         info!(log, "", "i32" => |_:&Record|{5});
@@ -137,10 +144,8 @@ fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
 }
 
 #[bench]
-fn log_stream_json_blackbox_i32pushclosure(b: &mut Bencher) {
-    let drain = stream(BlackBoxWriter, slog_json::new());
-
-    let log = Logger::root(drain, o!());
+fn log_stream_empty_json_blackbox_i32pushclosure(b: &mut Bencher) {
+    let log = Logger::root(empty_json_blackbox(), o!());
 
     b.iter(|| {
         info!(log, "", "i32" => PushLazy(|_:&Record, ser : ValueSerializer|{
@@ -150,13 +155,62 @@ fn log_stream_json_blackbox_i32pushclosure(b: &mut Bencher) {
 }
 
 
-const LONG_STRING : &'static str = "A long string that would take some time to allocate";
+
+#[bench]
+fn log_stream_empty_json_blackbox_strclosure(b: &mut Bencher) {
+    let log = Logger::root(empty_json_blackbox(), o!());
+
+    b.iter(|| {
+        info!(log, "", "str" => |_:&Record| {
+            String::from(LONG_STRING)
+        });
+    });
+}
+
+#[bench]
+fn log_stream_empty_json_blackbox_strpushclosure(b: &mut Bencher) {
+    let log = Logger::root(empty_json_blackbox(), o!());
+
+    b.iter(|| {
+        info!(log, "", "str" => PushLazy(|_:&Record, ser : ValueSerializer|{
+            ser.serialize(LONG_STRING)
+        }));
+    });
+}
+
+#[bench]
+fn log_stream_json_blackbox_i32val(b: &mut Bencher) {
+    let log = Logger::root(json_blackbox(), o!());
+
+    b.iter(|| {
+        info!(log, "",  "i32" => 5);
+    });
+}
+
+#[bench]
+fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
+
+    let log = Logger::root(json_blackbox(), o!());
+
+    b.iter(|| {
+        info!(log, "", "i32" => |_:&Record|{5});
+    });
+}
+
+#[bench]
+fn log_stream_json_blackbox_i32pushclosure(b: &mut Bencher) {
+    let log = Logger::root(json_blackbox(), o!());
+
+    b.iter(|| {
+        info!(log, "", "i32" => PushLazy(|_:&Record, ser : ValueSerializer|{
+            ser.serialize(5)
+        }));
+    });
+}
 
 #[bench]
 fn log_stream_json_blackbox_strclosure(b: &mut Bencher) {
-    let drain = stream(BlackBoxWriter, slog_json::new());
-
-    let log = Logger::root(drain, o!());
+    let log = Logger::root(json_blackbox(), o!());
 
     b.iter(|| {
         info!(log, "", "str" => |_:&Record| {
@@ -167,9 +221,7 @@ fn log_stream_json_blackbox_strclosure(b: &mut Bencher) {
 
 #[bench]
 fn log_stream_json_blackbox_strpushclosure(b: &mut Bencher) {
-    let drain = stream(BlackBoxWriter, slog_json::new());
-
-    let log = Logger::root(drain, o!());
+    let log = Logger::root(json_blackbox(), o!());
 
     b.iter(|| {
         info!(log, "", "str" => PushLazy(|_:&Record, ser : ValueSerializer|{
@@ -177,3 +229,4 @@ fn log_stream_json_blackbox_strpushclosure(b: &mut Bencher) {
         }));
     });
 }
+
