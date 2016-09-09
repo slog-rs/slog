@@ -38,38 +38,32 @@ pub enum FormatMode {
 }
 
 /// Full formatting with optional color support
-pub struct Format<D : Decorator> {
-    mode : FormatMode,
-    decorator : D,
-    history : sync::Mutex<Vec<usize>>,
+pub struct Format<D: Decorator> {
+    mode: FormatMode,
+    decorator: D,
+    history: sync::Mutex<Vec<usize>>,
 }
 
-impl<D : Decorator> Format<D> {
+impl<D: Decorator> Format<D> {
     /// New Format format that prints using color
-    pub fn new(mode : FormatMode, d : D) -> Self {
+    pub fn new(mode: FormatMode, d: D) -> Self {
         Format {
             decorator: d,
             mode: mode,
-            history : sync::Mutex::new(vec!()),
+            history: sync::Mutex::new(vec![]),
         }
     }
 
-    fn print_msg_header(&self, io: &mut io::Write, rd : &D::RecordDecorator, info : &Record) -> io::Result<()> {
+    fn print_msg_header(&self,
+                        io: &mut io::Write,
+                        rd: &D::RecordDecorator,
+                        info: &Record)
+                        -> io::Result<()> {
         let ts = chrono::Local::now();
-        try!(rd.fmt_timestamp(
-            io,
-            format_args!("{} ", ts.format("%b %d %H:%M:%S%.3f"))
-        ));
-        try!(rd.fmt_level(
-            io,
-            format_args!("{} ", info.level().as_short_str())
-        ));
+        try!(rd.fmt_timestamp(io, format_args!("{} ", ts.format("%b %d %H:%M:%S%.3f"))));
+        try!(rd.fmt_level(io, format_args!("{} ", info.level().as_short_str())));
 
-        try!(rd.fmt_msg(
-            io,
-            format_args!("{}", info.msg()
-            )
-        ));
+        try!(rd.fmt_msg(io, format_args!("{}", info.msg())));
         Ok(())
     }
     fn format_full(&self,
@@ -125,10 +119,7 @@ impl<D : Decorator> Format<D> {
         Ok(())
     }
 
-    fn print_indent<W: io::Write>(
-        &self,
-        io: &mut W,
-        indent : usize) -> io::Result<()> {
+    fn print_indent<W: io::Write>(&self, io: &mut W, indent: usize) -> io::Result<()> {
         for _ in 0..indent {
             try!(write!(io, "  "));
         }
@@ -137,7 +128,7 @@ impl<D : Decorator> Format<D> {
 
     // record in the history, and check if should print
     // given set of values
-    fn should_print(&self, address : usize, indent : usize) -> bool {
+    fn should_print(&self, address: usize, indent: usize) -> bool {
         let mut history = self.history.lock().unwrap();
         if history.len() <= indent {
             debug_assert_eq!(history.len(), indent);
@@ -151,7 +142,7 @@ impl<D : Decorator> Format<D> {
     }
 
     fn format_recurse<W: io::Write>(&self,
-                                    ser : &mut Serializer<W, D::RecordDecorator>,
+                                    ser: &mut Serializer<W, D::RecordDecorator>,
                                     info: &slog::Record,
                                     logger_values: &slog::OwnedKeyValueList)
                                     -> io::Result<usize> {
@@ -179,7 +170,6 @@ impl<D : Decorator> Format<D> {
 
         Ok(indent)
     }
-
 }
 
 fn severity_to_color(lvl: Level) -> u8 {
@@ -195,32 +185,31 @@ fn severity_to_color(lvl: Level) -> u8 {
 
 /// Decorator that can colors things
 pub struct ColorDecorator {
-    use_color : bool,
+    use_color: bool,
 }
 
 impl ColorDecorator {
     /// New decorator that does color records
     pub fn new_colored() -> Self {
-        ColorDecorator { use_color: true}
+        ColorDecorator { use_color: true }
     }
     /// New decorator that does not color records
     pub fn new_plain() -> Self {
-        ColorDecorator { use_color: true}
+        ColorDecorator { use_color: true }
     }
 }
 
 /// Decorator that colors things
 pub struct ColorRecordDecorator {
-    level_color : Option<Colour>,
+    level_color: Option<Colour>,
     key_style: Option<ansi_term::Style>,
 }
 
 
 impl Decorator for ColorDecorator {
-
     type RecordDecorator = ColorRecordDecorator;
 
-    fn decorate(&self, record : &Record) -> ColorRecordDecorator {
+    fn decorate(&self, record: &Record) -> ColorRecordDecorator {
         if self.use_color {
             ColorRecordDecorator {
                 level_color: Some(Colour::Fixed(severity_to_color(record.level()))),
@@ -237,8 +226,7 @@ impl Decorator for ColorDecorator {
 
 
 impl RecordDecorator for ColorRecordDecorator {
-
-    fn fmt_level(&self, io : &mut io::Write, args : fmt::Arguments) -> io::Result<()> {
+    fn fmt_level(&self, io: &mut io::Write, args: fmt::Arguments) -> io::Result<()> {
         if let Some(level_color) = self.level_color {
             write!(io, "{}", level_color.paint(format!("{}", args)))
         } else {
@@ -247,7 +235,7 @@ impl RecordDecorator for ColorRecordDecorator {
     }
 
 
-    fn fmt_msg(&self, io : &mut io::Write, args : fmt::Arguments) -> io::Result<()> {
+    fn fmt_msg(&self, io: &mut io::Write, args: fmt::Arguments) -> io::Result<()> {
         if let Some(key_style) = self.key_style {
             write!(io, "{}", key_style.paint(format!("{}", args)))
         } else {
@@ -255,18 +243,18 @@ impl RecordDecorator for ColorRecordDecorator {
         }
     }
 
-    fn fmt_key(&self, io : &mut io::Write, args : fmt::Arguments) -> io::Result<()> {
+    fn fmt_key(&self, io: &mut io::Write, args: fmt::Arguments) -> io::Result<()> {
         self.fmt_msg(io, args)
     }
 }
 
-struct Serializer<W, D : RecordDecorator> {
+struct Serializer<W, D: RecordDecorator> {
     io: W,
-    decorator : D,
+    decorator: D,
 }
 
 impl<W: io::Write, D: RecordDecorator> Serializer<W, D> {
-    fn new(io: W, d : D) -> Self {
+    fn new(io: W, d: D) -> Self {
         Serializer {
             io: io,
             decorator: d,
@@ -274,10 +262,7 @@ impl<W: io::Write, D: RecordDecorator> Serializer<W, D> {
     }
 
     fn print_comma(&mut self) -> io::Result<()> {
-        try!(self.decorator.fmt_separator(
-            &mut self.io,
-            format_args!(", ")
-        ));
+        try!(self.decorator.fmt_separator(&mut self.io, format_args!(", ")));
         Ok(())
     }
 
@@ -295,7 +280,7 @@ macro_rules! s(
 );
 
 
-impl<W: io::Write, D : RecordDecorator> slog::ser::Serializer for Serializer<W, D> {
+impl<W: io::Write, D: RecordDecorator> slog::ser::Serializer for Serializer<W, D> {
     fn emit_none(&mut self, key: &str) -> io::Result<()> {
         s!(self, key, "None");
         Ok(())
@@ -370,7 +355,7 @@ impl<W: io::Write, D : RecordDecorator> slog::ser::Serializer for Serializer<W, 
     }
 }
 
-impl<D : Decorator+Send+Sync> SlogFormat for Format<D> {
+impl<D: Decorator + Send + Sync> SlogFormat for Format<D> {
     fn format(&self,
               io: &mut io::Write,
               info: &Record,
@@ -392,7 +377,6 @@ pub struct StreamerBuilder {
 }
 
 impl StreamerBuilder {
-
     /// New `StreamerBuilder`
     pub fn new() -> Self {
         StreamerBuilder {
@@ -460,35 +444,23 @@ impl StreamerBuilder {
 
     /// Build the streamer
     pub fn build(self) -> Box<slog::Drain> {
-        let color = self.color.unwrap_or(
-            if self.stdout {
-                stdout_isatty()
-            } else {
-                stderr_isatty()
-            });
-
-        let format = Format::new(
-            self.mode,
-            ColorDecorator{use_color: color}
-        );
-        let io = if self.stdout {
-            Box::new(io::stdout()) as Box<io::Write+Send>
+        let color = self.color.unwrap_or(if self.stdout {
+            stdout_isatty()
         } else {
-            Box::new(io::stderr()) as Box<io::Write+Send>
+            stderr_isatty()
+        });
+
+        let format = Format::new(self.mode, ColorDecorator { use_color: color });
+        let io = if self.stdout {
+            Box::new(io::stdout()) as Box<io::Write + Send>
+        } else {
+            Box::new(io::stderr()) as Box<io::Write + Send>
         };
 
         if self.async {
-            Box::new(
-                slog::AsyncStreamer::new(
-                    io ,
-                    format,
-                ))
+            Box::new(slog::AsyncStreamer::new(io, format))
         } else {
-            Box::new(
-                slog::Streamer::new(
-                    io ,
-                    format,
-                ))
+            Box::new(slog::Streamer::new(io, format))
         }
     }
 }

@@ -127,35 +127,39 @@ impl<T: Serialize> Serialize for Option<T> {
     }
 }
 
-impl<T: Serialize + Send +Sync + 'static> SyncSerialize for Option<T> {}
+impl<T: Serialize + Send + Sync + 'static> SyncSerialize for Option<T> {}
 
-impl<T> Serialize for Arc<T> where T: Serialize {
-    fn serialize(&self, rinfo : &Record, key : &str, serializer : &mut Serializer)
-                 -> io::Result<()> {
+impl<T> Serialize for Arc<T>
+    where T: Serialize
+{
+    fn serialize(&self, rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
         (**self).serialize(rinfo, key, serializer)
     }
 }
 
-impl<T> SyncSerialize for Arc<T> where T : SyncSerialize { }
+impl<T> SyncSerialize for Arc<T> where T: SyncSerialize {}
 
-impl<T> Serialize for Rc<T> where T: Serialize {
-    fn serialize(&self, rinfo : &Record, key : &str, serializer : &mut Serializer)
-                 -> io::Result<()> {
+impl<T> Serialize for Rc<T>
+    where T: Serialize
+{
+    fn serialize(&self, rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
         (**self).serialize(rinfo, key, serializer)
     }
 }
 
-impl<T> Serialize for std::num::Wrapping<T> where T: Serialize {
-    fn serialize(&self, rinfo : &Record, key : &str, serializer : &mut Serializer)
-                 -> io::Result<()> {
+impl<T> Serialize for std::num::Wrapping<T>
+    where T: Serialize
+{
+    fn serialize(&self, rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
         self.0.serialize(rinfo, key, serializer)
     }
 }
 
-impl<T> SyncSerialize for std::num::Wrapping<T> where T : SyncSerialize { }
+impl<T> SyncSerialize for std::num::Wrapping<T> where T: SyncSerialize {}
 
 impl<S: 'static + Serialize, F> Serialize for F
-    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> S {
+    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> S
+{
     fn serialize(&self, rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
         (*self)(&rinfo).serialize(rinfo, key, serializer)
     }
@@ -185,17 +189,17 @@ pub struct PushLazy<F>(pub F);
 
 /// A handle to `Serializer` for `PushLazy` closure
 pub struct ValueSerializer<'a> {
-    rinfo : &'a Record<'a>,
-    key : &'a str,
-    serializer : &'a mut Serializer,
-    done : bool,
+    rinfo: &'a Record<'a>,
+    key: &'a str,
+    serializer: &'a mut Serializer,
+    done: bool,
 }
 
 impl<'a> ValueSerializer<'a> {
     /// Serialize a value
     ///
     /// This consumes `self` to prevent serializing one value multiple times
-    pub fn serialize<'b, S: 'b + Serialize>(mut self, s : S) -> io::Result<()> {
+    pub fn serialize<'b, S: 'b + Serialize>(mut self, s: S) -> io::Result<()> {
         self.done = true;
         s.serialize(self.rinfo, self.key, self.serializer)
     }
@@ -211,7 +215,8 @@ impl<'a> Drop for ValueSerializer<'a> {
 }
 
 impl<F> Serialize for PushLazy<F>
-     where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>) -> io::Result<()> {
+    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>) -> io::Result<()>
+{
     fn serialize(&self, rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
         let ser = ValueSerializer {
             rinfo: rinfo,
@@ -224,7 +229,8 @@ impl<F> Serialize for PushLazy<F>
 }
 
 impl<F> SyncSerialize for PushLazy<F>
-     where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>) -> io::Result<()> {
+     where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>)
+     -> io::Result<()> {
 }
 
 

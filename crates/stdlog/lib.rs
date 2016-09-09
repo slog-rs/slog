@@ -43,7 +43,7 @@ lazy_static! {
     );
 }
 
-fn set_global_logger(l : slog::Logger) {
+fn set_global_logger(l: slog::Logger) {
     let _ = GLOBAL_LOGGER.set(Arc::new(l));
 }
 
@@ -74,9 +74,9 @@ impl log::Log for Logger {
         let module = r.location().__module_path;
         let file = r.location().__file;
         let line = r.location().line();
-        with_current_logger(
-            |l| l.log(&slog::Record::new(level, args, file, line, module, target, &[]))
-        )
+        with_current_logger(|l| {
+            l.log(&slog::Record::new(level, args, file, line, module, target, &[]))
+        })
     }
 }
 
@@ -149,7 +149,7 @@ struct ScopeGuard;
 
 
 impl ScopeGuard {
-    fn new(logger : slog::Logger) -> Self {
+    fn new(logger: slog::Logger) -> Self {
         TL_SCOPES.with(|s| {
             s.borrow_mut().push(logger);
         });
@@ -175,8 +175,9 @@ impl Drop for ScopeGuard {
 ///
 /// **Warning**: Calling `scope` inside `f`
 /// will result in a panic.
-pub fn with_current_logger<F, R>(f : F) -> R
-                           where F : FnOnce(&slog::Logger) -> R {
+pub fn with_current_logger<F, R>(f: F) -> R
+    where F: FnOnce(&slog::Logger) -> R
+{
     TL_SCOPES.with(|s| {
         let s = s.borrow();
         if s.is_empty() {
@@ -202,8 +203,8 @@ pub fn with_current_logger<F, R>(f : F) -> R
 ///
 /// Note: Thread scopes are thread-local. Each newly spawned thread starts
 /// with a global logger, as a current logger.
-pub fn scope<SF, R>(logger : slog::Logger, f : SF) -> R
-    where SF : FnOnce() -> R
+pub fn scope<SF, R>(logger: slog::Logger, f: SF) -> R
+    where SF: FnOnce() -> R
 {
     let _guard = ScopeGuard::new(logger);
     f()
@@ -221,7 +222,7 @@ pub fn scope<SF, R>(logger : slog::Logger, f : SF) -> R
 pub struct StdLog;
 
 impl slog::Drain for StdLog {
-    fn log(&self, info: &slog::Record, _ : &slog::OwnedKeyValueList) -> io::Result<()> {
+    fn log(&self, info: &slog::Record, _: &slog::OwnedKeyValueList) -> io::Result<()> {
 
         let level = match info.level() {
             slog::Level::Critical => log::LogLevel::Error,

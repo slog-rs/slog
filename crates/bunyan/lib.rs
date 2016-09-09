@@ -47,8 +47,9 @@ fn level_to_string(level: Level) -> i8 {
     }
 }
 
-fn new_with_ts_fn<F>(ts_f : F) -> slog_json::Format
-where F: Fn(&Record)->String+Send+Sync+'static {
+fn new_with_ts_fn<F>(ts_f: F) -> slog_json::Format
+    where F: Fn(&Record) -> String + Send + Sync + 'static
+{
     let mut b = slog_json::Format::build();
     b.set_newlines(true)
         .add_key_values(o!(
@@ -70,9 +71,7 @@ where F: Fn(&Record)->String+Send+Sync+'static {
 
 /// Create bunyan formatter
 pub fn new() -> slog_json::Format {
-    new_with_ts_fn(|_: &Record| {
-        chrono::Local::now().to_rfc3339()
-    })
+    new_with_ts_fn(|_: &Record| chrono::Local::now().to_rfc3339())
 }
 
 #[cfg(test)]
@@ -88,15 +87,18 @@ mod test {
 
     #[test]
     fn trivial() {
-        let formatter = new_with_ts_fn(
-            |_ : &Record| {
-                UTC.ymd(2014, 7, 8).and_hms(9, 10, 11).to_rfc3339()
-            }
-        );
+        let formatter =
+            new_with_ts_fn(|_: &Record| UTC.ymd(2014, 7, 8).and_hms(9, 10, 11).to_rfc3339());
 
 
         let msg = &"message";
-        let info = Record::new(Level::Info, msg, "filepath", 11192, "modulepath", "target", &[]);
+        let info = Record::new(Level::Info,
+                               msg,
+                               "filepath",
+                               11192,
+                               "modulepath",
+                               "target",
+                               &[]);
 
         let mut v = vec![];
         formatter.format(&mut v, &info, &OwnedKeyValueList::root(vec![])).unwrap();

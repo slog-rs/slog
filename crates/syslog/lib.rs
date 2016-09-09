@@ -71,31 +71,28 @@ impl Streamer3164 {
 }
 
 impl Drain for Streamer3164 {
-    fn log(&self,
-           info: &Record,
-           logger_values: &OwnedKeyValueList)
-           -> io::Result<()> {
+    fn log(&self, info: &Record, logger_values: &OwnedKeyValueList) -> io::Result<()> {
 
-               TL_BUF.with(|buf| {
-                   let mut buf = buf.borrow_mut();
-                   let res = {
-                       || {
-                           try!(self.format.format(&mut *buf, info, logger_values));
-                           let sever = level_to_severity(info.level());
-                           {
-                               let io = try!(self.io
-                                             .lock()
-                                             .map_err(|_| io::Error::new( io::ErrorKind::Other, "locking error")));
-                               try!(io.send(sever, &String::from_utf8_lossy(&buf)));
-                           }
+        TL_BUF.with(|buf| {
+            let mut buf = buf.borrow_mut();
+            let res = {
+                || {
+                    try!(self.format.format(&mut *buf, info, logger_values));
+                    let sever = level_to_severity(info.level());
+                    {
+                        let io = try!(self.io
+                            .lock()
+                            .map_err(|_| io::Error::new(io::ErrorKind::Other, "locking error")));
+                        try!(io.send(sever, &String::from_utf8_lossy(&buf)));
+                    }
 
-                           Ok(())
+                    Ok(())
 
-                       }
-                   }();
-                   res
-               })
-           }
+                }
+            }();
+            res
+        })
+    }
 }
 
 /// Formatter to format defined in RFC 3164

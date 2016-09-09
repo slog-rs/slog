@@ -373,17 +373,17 @@ impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
 pub fn __slog_static_max_level() -> FilterLevel {
     if !cfg!(debug_assertions) {
         if cfg!(feature = "release_max_level_off") {
-            return FilterLevel::Off
+            return FilterLevel::Off;
         } else if cfg!(feature = "release_max_level_error") {
-            return FilterLevel::Error
+            return FilterLevel::Error;
         } else if cfg!(feature = "release_max_level_warn") {
-            return FilterLevel::Warning
+            return FilterLevel::Warning;
         } else if cfg!(feature = "release_max_level_info") {
-            return FilterLevel::Info
+            return FilterLevel::Info;
         } else if cfg!(feature = "release_max_level_debug") {
-            return FilterLevel::Debug
+            return FilterLevel::Debug;
         } else if cfg!(feature = "release_max_level_trace") {
-            return FilterLevel::Trace
+            return FilterLevel::Trace;
         }
     }
     if cfg!(feature = "max_level_off") {
