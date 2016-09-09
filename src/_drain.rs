@@ -41,7 +41,7 @@ impl Drain for Discard {
     }
 }
 
-/// Drain formating records and writing them to a byte-stream (io::Write)
+/// Drain formating records and writing them to a byte-stream (`io::Write`)
 ///
 /// Uses mutex to serialize writes.
 /// TODO: Add one that does not serialize?
@@ -84,7 +84,7 @@ impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer
         }
 }
 
-/// Drain formating records and writing them to a byte-stream (io::Write)
+/// Drain formating records and writing them to a byte-stream (`io::Write`)
 /// asynchronously.
 ///
 /// Internally, new thread will be spawned taking care of actually writing
@@ -281,7 +281,7 @@ enum AsyncIoMsg {
     Eof,
 }
 
-/// Asynchronous io::Writer
+/// Asynchronous `io::Write`r
 ///
 /// TODO: Publish as a different crate / use existing one?
 ///

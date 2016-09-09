@@ -354,12 +354,12 @@ impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
             match self.iter.next() {
                 Some(x) => return Some(&*x),
                 None => {
-                    match self.next_node {
-                        &Some(ref node) => {
+                    match *self.next_node {
+                        Some(ref node) => {
                             self.iter = node.values.iter();
                             self.next_node = &node.parent;
                         }
-                        &None => return None,
+                        None => return None,
                     }
                 }
             }
@@ -367,6 +367,8 @@ impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
     }
 }
 
+#[allow(unknown_lints)]
+#[allow(inline_always)]
 #[inline(always)]
 #[doc(hidden)]
 /// Not an API

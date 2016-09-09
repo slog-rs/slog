@@ -16,7 +16,7 @@ pub trait Serialize {
     ///
     /// Structs implementing this trait should generally
     /// only call respective methods of `serializer`.
-    fn serialize(&self, rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()>;
+    fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()>;
 }
 
 /// Value that can be serialized and stored
@@ -71,7 +71,7 @@ pub trait Serializer {
 macro_rules! impl_serialize_for{
     ($t:ty, $f:ident) => {
         impl Serialize for $t {
-            fn serialize(&self, _rinfo : &Record, key : &str, serializer : &mut Serializer)
+            fn serialize(&self, _record : &Record, key : &str, serializer : &mut Serializer)
                          -> io::Result<()> {
                 serializer.$f(key, *self)
             }
@@ -97,13 +97,13 @@ impl_serialize_for!(i64, emit_i64);
 impl_serialize_for!(f64, emit_f64);
 
 impl Serialize for str {
-    fn serialize(&self, _rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
+    fn serialize(&self, _record: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
         serializer.emit_str(key, self)
     }
 }
 
 impl<'a> Serialize for &'a str {
-    fn serialize(&self, _rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
+    fn serialize(&self, _record: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
         serializer.emit_str(key, self)
     }
 }
@@ -111,7 +111,7 @@ impl<'a> Serialize for &'a str {
 impl SyncSerialize for &'static str {}
 
 impl Serialize for String {
-    fn serialize(&self, _rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
+    fn serialize(&self, _record: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
         serializer.emit_str(key, self.as_str())
     }
 }
@@ -119,9 +119,9 @@ impl Serialize for String {
 impl SyncSerialize for String {}
 
 impl<T: Serialize> Serialize for Option<T> {
-    fn serialize(&self, rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
+    fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
         match *self {
-            Some(ref s) => s.serialize(rinfo, key, serializer),
+            Some(ref s) => s.serialize(record, key, serializer),
             None => serializer.emit_none(key),
         }
     }
@@ -132,8 +132,8 @@ impl<T: Serialize + Send + Sync + 'static> SyncSerialize for Option<T> {}
 impl<T> Serialize for Arc<T>
     where T: Serialize
 {
-    fn serialize(&self, rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
-        (**self).serialize(rinfo, key, serializer)
+    fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
+        (**self).serialize(record, key, serializer)
     }
 }
 
@@ -142,16 +142,16 @@ impl<T> SyncSerialize for Arc<T> where T: SyncSerialize {}
 impl<T> Serialize for Rc<T>
     where T: Serialize
 {
-    fn serialize(&self, rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
-        (**self).serialize(rinfo, key, serializer)
+    fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
+        (**self).serialize(record, key, serializer)
     }
 }
 
 impl<T> Serialize for std::num::Wrapping<T>
     where T: Serialize
 {
-    fn serialize(&self, rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
-        self.0.serialize(rinfo, key, serializer)
+    fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
+        self.0.serialize(record, key, serializer)
     }
 }
 
@@ -160,8 +160,8 @@ impl<T> SyncSerialize for std::num::Wrapping<T> where T: SyncSerialize {}
 impl<S: 'static + Serialize, F> Serialize for F
     where F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> S
 {
-    fn serialize(&self, rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
-        (*self)(&rinfo).serialize(rinfo, key, serializer)
+    fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
+        (*self)(record).serialize(record, key, serializer)
     }
 }
 
@@ -189,7 +189,7 @@ pub struct PushLazy<F>(pub F);
 
 /// A handle to `Serializer` for `PushLazy` closure
 pub struct ValueSerializer<'a> {
-    rinfo: &'a Record<'a>,
+    record: &'a Record<'a>,
     key: &'a str,
     serializer: &'a mut Serializer,
     done: bool,
@@ -201,7 +201,7 @@ impl<'a> ValueSerializer<'a> {
     /// This consumes `self` to prevent serializing one value multiple times
     pub fn serialize<'b, S: 'b + Serialize>(mut self, s: S) -> io::Result<()> {
         self.done = true;
-        s.serialize(self.rinfo, self.key, self.serializer)
+        s.serialize(self.record, self.key, self.serializer)
     }
 }
 
@@ -217,14 +217,14 @@ impl<'a> Drop for ValueSerializer<'a> {
 impl<F> Serialize for PushLazy<F>
     where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>) -> io::Result<()>
 {
-    fn serialize(&self, rinfo: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
+    fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
         let ser = ValueSerializer {
-            rinfo: rinfo,
+            record: record,
             key: key,
             serializer: serializer,
             done: false,
         };
-        (self.0)(&rinfo, ser)
+        (self.0)(record, ser)
     }
 }
 
