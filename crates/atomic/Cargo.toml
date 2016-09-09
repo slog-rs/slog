@@ -1,6 +1,6 @@
 [package]
 name = "slog-atomic"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Unix terminal drain and formatter for slog-rs"
 keywords = ["slog", "logging", "log",  "atomic"]
@@ -14,5 +14,5 @@ readme = "../../README.md"
 path = "lib.rs"
 
 [dependencies]
-slog = { version = "1.0.0-alpha2", path = "../.." }
+slog = { version = "1.0.0-alpha3", path = "../.." }
 crossbeam = "0.2.9"
