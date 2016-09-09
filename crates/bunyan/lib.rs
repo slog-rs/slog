@@ -21,7 +21,6 @@ extern crate nix;
 extern crate chrono;
 extern crate slog_json;
 
-use slog_json::Json;
 use slog::Record;
 use slog::Level;
 
@@ -48,9 +47,9 @@ fn level_to_string(level: Level) -> i8 {
     }
 }
 
-fn new_with_ts_fn<F>(ts_f : F) -> Json
+fn new_with_ts_fn<F>(ts_f : F) -> slog_json::Format
 where F: Fn(&Record)->String+Send+Sync+'static {
-    let mut b = Json::build();
+    let mut b = slog_json::Format::build();
     b.set_newlines(true)
         .add_key_values(o!(
             "pid" => nix::unistd::getpid() as usize,
@@ -70,7 +69,7 @@ where F: Fn(&Record)->String+Send+Sync+'static {
 }
 
 /// Create bunyan formatter
-pub fn new() -> Json {
+pub fn new() -> slog_json::Format {
     new_with_ts_fn(|_: &Record| {
         chrono::Local::now().to_rfc3339()
     })

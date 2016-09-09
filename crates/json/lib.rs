@@ -47,21 +47,21 @@ fn level_to_string(level: Level) -> &'static str {
 /// Json formatter
 ///
 /// Each record will be printed as a Json map.
-pub struct Json {
+pub struct Format {
     newlines: bool,
     values: Vec<OwnedKeyValue>,
 }
 
-impl Json {
-    /// Create new `Json` format.
+impl Format {
+    /// Create new Json formatter
     ///
     /// It comes with some default fields (`ts`, `level`, `msg`)
     /// and uses newlines.
     ///
-    /// Use `Json::build()` to build a custom Json formatter from
+    /// Use `Format::build()` to build a custom Json formatter from
     /// scratch.
     pub fn new() -> Self {
-        Json {
+        Format {
             newlines: true,
             values: o!(
                 "ts" => PushLazy(move |_ : &Record, ser : ValueSerializer| {
@@ -78,14 +78,14 @@ impl Json {
     }
 
     /// Build a Json formatter with custom settings
-    pub fn build() -> JsonBuilder {
-        JsonBuilder::new()
+    pub fn build() -> FormatBuilder {
+        FormatBuilder::new()
     }
 
     /// Create new `Json` format that does not add
     /// newlines after each record.
     pub fn new_nonewline() -> Self {
-        let mut json = Json::new();
+        let mut json = Format::new();
         json.newlines = false;
         json
     }
@@ -93,15 +93,15 @@ impl Json {
 
 /// Json formatter builder
 ///
-/// Create with `Json::build`.
-pub struct JsonBuilder {
+/// Create with `Format::build`.
+pub struct FormatBuilder {
     newlines: bool,
     values: Vec<OwnedKeyValue>,
 }
 
-impl JsonBuilder {
+impl FormatBuilder {
     fn new() -> Self {
-        JsonBuilder {
+        FormatBuilder {
             newlines: true,
             values: vec![],
         }
@@ -110,8 +110,8 @@ impl JsonBuilder {
     /// Build `Json` format
     ///
     /// This consumes the builder.
-    pub fn build(self) -> Json {
-        Json {
+    pub fn build(self) -> Format {
+        Format {
             values: self.values,
             newlines: self.newlines,
         }
@@ -173,7 +173,7 @@ impl<W: io::Write> io::Write for SkipFirstByte<W> {
     }
 }
 
-impl format::Format for Json {
+impl format::Format for Format {
     fn format(&self,
               io: &mut io::Write,
               rinfo: &Record,
@@ -204,12 +204,12 @@ impl format::Format for Json {
     }
 }
 
-/// Short for `Json::new()`
-pub fn new() -> Json {
-    Json::new()
+/// Short for `Format::new()`
+pub fn new() -> Format {
+    Format::new()
 }
 
-/// Short for `Json::build()`
-pub fn build() -> JsonBuilder {
-    Json::build()
+/// Short for `FormatBuilder::build()`
+pub fn build() -> FormatBuilder {
+    Format::build()
 }

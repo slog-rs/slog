@@ -35,11 +35,11 @@ impl io::Write for BlackBoxWriter {
     }
 }
 
-fn empty_json_blackbox() -> Streamer<BlackBoxWriter, slog_json::Json> {
+fn empty_json_blackbox() -> Streamer<BlackBoxWriter, slog_json::Format> {
     stream(BlackBoxWriter, slog_json::build().build())
 }
 
-fn json_blackbox() -> Streamer<BlackBoxWriter, slog_json::Json> {
+fn json_blackbox() -> Streamer<BlackBoxWriter, slog_json::Format> {
     stream(BlackBoxWriter, slog_json::new())
 }
 
