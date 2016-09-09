@@ -30,6 +30,8 @@ use slog::Record;
 use slog::{Level, OwnedKeyValue, OwnedKeyValueList};
 use slog::Level::*;
 use slog::format;
+use slog::ser::{PushLazy, ValueSerializer};
+use std::borrow::Borrow;
 
 fn level_to_string(level: Level) -> &'static str {
     match level {
@@ -62,15 +64,15 @@ impl Json {
         Json {
             newlines: true,
             values: o!(
-                "ts" => move |_ : &Record| {
-                    chrono::Local::now().to_rfc3339()
-                },
+                "ts" => PushLazy(move |_ : &Record, ser : ValueSerializer| {
+                   ser.serialize(chrono::Local::now().to_rfc3339())
+                }),
                 "level" => move |rinfo : &Record| {
                     level_to_string(rinfo.level())
                 },
-                "msg" => move |rinfo : &Record| {
-                    rinfo.msg().to_string()
-                }
+                "msg" => PushLazy(move |record : &Record, ser : ValueSerializer| {
+                   ser.serialize::<&str>(record.msg().borrow())
+                })
                 ),
         }
     }
