@@ -1,6 +1,5 @@
-use std::sync::{Mutex, mpsc};
-use std::{mem, io, thread};
 
+#[cfg(not(feature = "no_std"))]
 thread_local! {
     static TL_BUF: RefCell<Vec<u8>> = RefCell::new(Vec::with_capacity(128))
 }
@@ -45,11 +44,13 @@ impl Drain for Discard {
 ///
 /// Uses mutex to serialize writes.
 /// TODO: Add one that does not serialize?
+#[cfg(not(feature = "no_std"))]
 pub struct Streamer<W: io::Write, F: format::Format> {
     io: Mutex<W>,
     format: F,
 }
 
+#[cfg(not(feature = "no_std"))]
 impl<W: io::Write, F: format::Format> Streamer<W, F> {
     /// Create new `Streamer` writing to `io` using `format`
     pub fn new(io: W, format: F) -> Self {
@@ -60,6 +61,7 @@ impl<W: io::Write, F: format::Format> Streamer<W, F> {
     }
 }
 
+#[cfg(not(feature = "no_std"))]
 impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer<W, F> {
     fn log(&self,
            info: &Record,
@@ -89,11 +91,13 @@ impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer
 ///
 /// Internally, new thread will be spawned taking care of actually writing
 /// the data.
+#[cfg(not(feature = "no_std"))]
 pub struct AsyncStreamer<F: format::Format> {
     format: F,
     io: Mutex<AsyncIoWriter>,
 }
 
+#[cfg(not(feature = "no_std"))]
 impl<F: format::Format> AsyncStreamer<F> {
     /// Create new `AsyncStreamer` writing to `io` using `format`
     pub fn new<W: io::Write + Send + 'static>(io: W, format: F) -> Self {
@@ -104,6 +108,7 @@ impl<F: format::Format> AsyncStreamer<F> {
     }
 }
 
+#[cfg(not(feature = "no_std"))]
 impl<F: format::Format + Send> Drain for AsyncStreamer<F> {
     fn log(&self,
            info: &Record,
@@ -292,11 +297,13 @@ enum AsyncIoMsg {
 ///
 /// Note: Dropping `AsyncIoWriter` waits for it's io-thread to finish.
 /// If you can't tolerate the delay, make sure to use `Logger::
+#[cfg(not(feature = "no_std"))]
 struct AsyncIoWriter {
     sender: mpsc::Sender<AsyncIoMsg>,
     join: Option<thread::JoinHandle<()>>,
 }
 
+#[cfg(not(feature = "no_std"))]
 impl AsyncIoWriter {
     /// Create `AsyncIoWriter`
     pub fn new<W: io::Write + Send + 'static>(mut io: W) -> Self {
@@ -329,6 +336,7 @@ impl AsyncIoWriter {
     }
 }
 
+#[cfg(not(feature = "no_std"))]
 impl io::Write for AsyncIoWriter {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         let _ = self.sender.send(AsyncIoMsg::Bytes(buf.to_vec())).unwrap();
@@ -342,6 +350,7 @@ impl io::Write for AsyncIoWriter {
 }
 
 
+#[cfg(not(feature = "no_std"))]
 impl Drop for AsyncIoWriter {
     fn drop(&mut self) {
         let _ = self.sender.send(AsyncIoMsg::Eof);
@@ -352,6 +361,7 @@ impl Drop for AsyncIoWriter {
 /// Stream logging records to IO
 ///
 /// Create `Streamer` drain
+#[cfg(not(feature = "no_std"))]
 pub fn stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> Streamer<W, F> {
     Streamer::new(io, format)
 }
@@ -359,6 +369,7 @@ pub fn stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> Strea
 /// Stream logging records to IO asynchronously
 ///
 /// Create `AsyncStreamer` drain
+#[cfg(not(feature = "no_std"))]
 pub fn async_stream<W: io::Write + Send + 'static, F: format::Format>(io: W, format: F) -> AsyncStreamer<F> {
     AsyncStreamer::new(io, format)
 }

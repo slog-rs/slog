@@ -23,6 +23,9 @@ lto = true
 debug-assertions = false
 
 [features]
+
+no_std = []
+
 max_level_off   = []
 max_level_error = []
 max_level_warn  = []

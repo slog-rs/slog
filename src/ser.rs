@@ -1,10 +1,25 @@
+use core;
+
+#[cfg(not(feature = "no_std"))]
 use std::io;
-use std;
+
+#[cfg(not(feature = "no_std"))]
 use std::sync::Arc;
+#[cfg(feature = "no_std")]
+use alloc::arc::Arc;
+
+#[cfg(not(feature = "no_std"))]
 use std::rc::Rc;
+#[cfg(feature = "no_std")]
+use alloc::rc::Rc;
+
+
+#[cfg(not(feature = "no_std"))]
+use std::string::String;
+#[cfg(feature = "no_std")]
+use collections::string::String;
 
 use super::Record;
-
 
 /// Value that can be serialized
 ///
@@ -147,7 +162,7 @@ impl<T> Serialize for Rc<T>
     }
 }
 
-impl<T> Serialize for std::num::Wrapping<T>
+impl<T> Serialize for core::num::Wrapping<T>
     where T: Serialize
 {
     fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer) -> io::Result<()> {
@@ -155,7 +170,7 @@ impl<T> Serialize for std::num::Wrapping<T>
     }
 }
 
-impl<T> SyncSerialize for std::num::Wrapping<T> where T: SyncSerialize {}
+impl<T> SyncSerialize for core::num::Wrapping<T> where T: SyncSerialize {}
 
 impl<S: 'static + Serialize, F> Serialize for F
     where F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> S
@@ -233,7 +248,8 @@ impl<F> SyncSerialize for PushLazy<F>
      -> io::Result<()> {
 }
 
-
+/*
+#[cfg(not(feature = "no_std"))]
 impl<W: io::Write + ?Sized> Serializer for W {
     fn emit_none(&mut self, key: &str) -> io::Result<()> {
         try!(write!(self, "{}: {}", key, "None"));
@@ -308,3 +324,4 @@ impl<W: io::Write + ?Sized> Serializer for W {
         Ok(())
     }
 }
+*/

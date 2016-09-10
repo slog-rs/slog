@@ -1,11 +1,65 @@
 //! # Slog -  Structured, composable logging for Rust
 
+#![cfg_attr(feature = "no_std", feature(alloc))]
+#![cfg_attr(feature = "no_std", feature(collections))]
 #![warn(missing_docs)]
 
+#![no_std]
+
+#[macro_use]
+#[cfg(not(feature = "no_std"))]
+extern crate std;
+#[cfg(feature = "no_std")]
+extern crate alloc;
+#[cfg(feature = "no_std")]
+extern crate collections;
+
+use core::cell::RefCell;
+use core::str::FromStr;
+use core::fmt;
+
+#[cfg(not(feature = "no_std"))]
 use std::sync::Arc;
-use std::fmt;
-use std::str::FromStr;
-use std::ascii::AsciiExt;
+#[cfg(feature = "no_std")]
+use alloc::arc::Arc;
+
+#[cfg(not(feature = "no_std"))]
+use std::slice;
+#[cfg(feature = "no_std")]
+use core::slice;
+
+#[cfg(not(feature = "no_std"))]
+use std::vec::Vec;
+#[cfg(feature = "no_std")]
+use collections::vec::Vec;
+
+#[cfg(not(feature = "no_std"))]
+use std::string::String;
+#[cfg(feature = "no_std")]
+use collections::string::String;
+
+
+#[cfg(not(feature = "no_std"))]
+use std::borrow::Cow;
+#[cfg(feature = "no_std")]
+use collections::borrow::Cow;
+
+#[cfg(not(feature = "no_std"))]
+use std::io::Write;
+
+
+
+#[cfg(not(feature = "no_std"))]
+use std::sync::{Mutex, mpsc};
+#[cfg(not(feature = "no_std"))]
+use std::{mem, io, thread};
+
+#[cfg(not(feature = "no_std"))]
+use std::boxed::Box;
+#[cfg(feature = "no_std")]
+use alloc::boxed::Box;
+
+
 
 /// Convenience function for building `&[OwnedKeyValue]`
 ///
@@ -274,6 +328,7 @@ macro_rules! slog_trace(
 pub mod ser;
 
 /// Output formating
+#[cfg(not(feature = "no_std"))]
 pub mod format;
 
 pub use ser::{PushLazy, ValueSerializer, Serializer, Serialize};
@@ -335,7 +390,7 @@ impl OwnedKeyValueList {
 /// Iterator over `OwnedKeyValue`-s
 pub struct OwnedKeyValueListIterator<'a> {
     next_node: &'a Option<Arc<OwnedKeyValueList>>,
-    iter: std::slice::Iter<'a, OwnedKeyValue>,
+    iter: slice::Iter<'a, OwnedKeyValue>,
 }
 
 impl<'a> OwnedKeyValueListIterator<'a> {
