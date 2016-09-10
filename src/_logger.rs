@@ -13,7 +13,7 @@
 /// any logger will change it on all loggers in given hierarchy.
 #[derive(Clone)]
 pub struct Logger {
-    drain: Arc<Drain>,
+    drain: Arc<Drain<Error=()>>,
     values: Arc<OwnedKeyValueList>,
 }
 
@@ -84,7 +84,7 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
-    pub fn root<D: 'static + Drain + Sized>(d: D, values: Vec<OwnedKeyValue>) -> Logger {
+    pub fn root<D: 'static + Drain<Error=()> + Sized>(d: D, values: Vec<OwnedKeyValue>) -> Logger {
         Logger {
             drain: Arc::new(d),
             values: Arc::new(OwnedKeyValueList::root(values)),

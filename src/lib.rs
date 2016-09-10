@@ -17,6 +17,7 @@ extern crate collections;
 use core::cell::RefCell;
 use core::str::FromStr;
 use core::fmt;
+use core::result;
 
 #[cfg(not(feature = "no_std"))]
 use std::sync::Arc;

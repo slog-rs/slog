@@ -13,20 +13,24 @@ thread_local! {
 /// Implementing this trait allows writing own Drains, that can be combined
 /// with other drains.
 pub trait Drain: Send + Sync {
+    /// Type of potential error returned during logging
+    type Error;
     /// Write one logging record
     /// As an optimization (avoiding allocations), loggers are responsible for
     /// providing a byte buffer, that `Drain` can use for their own needs.
-    fn log(&self, info: &Record, &OwnedKeyValueList) -> io::Result<()>;
+    fn log(&self, info: &Record, &OwnedKeyValueList) -> result::Result<(), Self::Error>;
 }
 
 impl<D: Drain+?Sized> Drain for Box<D> {
-    fn log(&self, info: &Record, o: &OwnedKeyValueList) -> io::Result<()> {
+    type Error = D::Error;
+    fn log(&self, info: &Record, o: &OwnedKeyValueList) -> result::Result<(), D::Error> {
         (**self).log(info, o)
     }
 }
 
 impl<D: Drain+?Sized> Drain for Arc<D> {
-    fn log(&self, info: &Record, o: &OwnedKeyValueList) -> io::Result<()> {
+    type Error = D::Error;
+    fn log(&self, info: &Record, o: &OwnedKeyValueList) -> result::Result<(), D::Error> {
         (**self).log(info, o)
     }
 }
@@ -35,7 +39,8 @@ impl<D: Drain+?Sized> Drain for Arc<D> {
 pub struct Discard;
 
 impl Drain for Discard {
-    fn log(&self, _: &Record, _: &OwnedKeyValueList) -> io::Result<()> {
+    type Error = ();
+    fn log(&self, _: &Record, _: &OwnedKeyValueList) -> result::Result<(), ()> {
         Ok(())
     }
 }
@@ -63,6 +68,8 @@ impl<W: io::Write, F: format::Format> Streamer<W, F> {
 
 #[cfg(not(feature = "no_std"))]
 impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer<W, F> {
+    type Error = io::Error;
+
     fn log(&self,
            info: &Record,
            logger_values: &OwnedKeyValueList)
@@ -110,6 +117,8 @@ impl<F: format::Format> AsyncStreamer<F> {
 
 #[cfg(not(feature = "no_std"))]
 impl<F: format::Format + Send> Drain for AsyncStreamer<F> {
+    type Error = io::Error;
+
     fn log(&self,
            info: &Record,
            logger_values: &OwnedKeyValueList)
@@ -163,10 +172,11 @@ impl<D: Drain> Filter<D> {
 }
 
 impl<D: Drain> Drain for Filter<D> {
+    type Error = D::Error;
     fn log(&self,
            info: &Record,
            logger_values: &OwnedKeyValueList)
-           -> io::Result<()> {
+           -> result::Result<(), Self::Error> {
         if (self.cond)(&info) {
             self.drain.log(info, logger_values)
         } else {
@@ -199,10 +209,11 @@ impl<D: Drain> LevelFilter<D> {
 }
 
 impl<D: Drain> Drain for LevelFilter<D> {
+    type Error = D::Error;
     fn log(&self,
            info: &Record,
            logger_values: &OwnedKeyValueList)
-           -> io::Result<()> {
+           -> result::Result<(), Self::Error> {
         if info.level().is_at_least(self.level) {
             self.drain.log(info, logger_values)
         } else {
@@ -214,7 +225,8 @@ impl<D: Drain> Drain for LevelFilter<D> {
 /// Drain duplicating records to two sub-drains
 ///
 /// Can be nested for more than two outputs.
-pub struct Duplicate<D1: Drain, D2: Drain> {
+pub struct Duplicate<D1: Drain, D2: Drain> 
+ {
     drain1: D1,
     drain2: D2,
 }
@@ -230,11 +242,16 @@ impl<D1: Drain, D2: Drain> Duplicate<D1, D2> {
     }
 }
 
-impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
+impl<D1, D2, E> Drain for Duplicate<D1, D2>
+where
+D1 : Drain<Error = E>,
+D2 : Drain<Error = E>
+{
+    type Error = D1::Error;
     fn log(&self,
            info: &Record,
            logger_values: &OwnedKeyValueList)
-           -> io::Result<()> {
+           -> result::Result<(), Self::Error> {
         let res1 = self.drain1.log(info, logger_values);
         let res2 = self.drain2.log(info, logger_values);
 
@@ -267,11 +284,16 @@ impl<D1: Drain, D2: Drain> Failover<D1, D2> {
     }
 }
 
-impl<D1: Drain, D2: Drain> Drain for Failover<D1, D2> {
+impl<D1, D2, E> Drain for Failover<D1, D2>
+where
+D1 : Drain<Error = E>,
+D2 : Drain<Error = E>
+{
+    type Error = D1::Error;
     fn log(&self,
            info: &Record,
            logger_values: &OwnedKeyValueList)
-           -> io::Result<()> {
+           -> result::Result<(), Self::Error> {
         match self.drain1.log(info, logger_values) {
             Ok(_) => Ok(()),
             Err(_) => self.drain2.log(info, logger_values),
@@ -280,6 +302,7 @@ impl<D1: Drain, D2: Drain> Drain for Failover<D1, D2> {
 }
 
 
+#[cfg(not(feature = "no_std"))]
 enum AsyncIoMsg {
     Bytes(Vec<u8>),
     Flush,
