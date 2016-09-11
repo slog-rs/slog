@@ -39,6 +39,9 @@ pub enum Error {
     Other
 }
 
+/// Serialization `Result`
+pub type Result = result::Result<(), Error>;
+
 #[cfg(not(feature = "no_std"))]
 impl From<std::io::Error> for Error {
     fn from(err: std::io::Error) -> Error {
@@ -51,7 +54,26 @@ impl From<core::fmt::Error> for Error {
         Error::Other
     }
 }
+/*
+#[cfg(not(feature = "no_std"))]
+impl Into<std::io::Error> for Error {
+    fn into(self) -> std::io::Error {
+        match self {
+            Error::Io(e) => e,
+            Error::Other => std::io::Error::new(std::io::ErrorKind::Other, "other error"),
+        }
+    }
+}*/
 
+#[cfg(not(feature = "no_std"))]
+impl From<Error> for std::io::Error {
+    fn from(e : Error) -> std::io::Error {
+        match e {
+            Error::Io(e) => e,
+            Error::Other => std::io::Error::new(std::io::ErrorKind::Other, "other error"),
+        }
+    }
+}
 /// Value that can be serialized
 ///
 /// Loggers require values in key-value pairs to
@@ -79,39 +101,39 @@ pub trait SyncSerialize: Send + Sync + 'static + Serialize {}
 /// types implementing this trait.
 pub trait Serializer {
     /// Emit bool
-    fn emit_bool(&mut self, key: &str, val: bool) -> result::Result<(), Error>;
+    fn emit_bool(&mut self, key: &str, val: bool) -> Result;
     /// Emit `()`
-    fn emit_unit(&mut self, key: &str) -> result::Result<(), Error>;
+    fn emit_unit(&mut self, key: &str) -> Result;
     /// Emit `None`
-    fn emit_none(&mut self, key: &str) -> result::Result<(), Error>;
+    fn emit_none(&mut self, key: &str) -> Result;
     /// Emit char
-    fn emit_char(&mut self, key: &str, val: char) -> result::Result<(), Error>;
+    fn emit_char(&mut self, key: &str, val: char) -> Result;
     /// Emit u8
-    fn emit_u8(&mut self, key: &str, val: u8) -> result::Result<(), Error>;
+    fn emit_u8(&mut self, key: &str, val: u8) -> Result;
     /// Emit i8
-    fn emit_i8(&mut self, key: &str, val: i8) -> result::Result<(), Error>;
+    fn emit_i8(&mut self, key: &str, val: i8) -> Result;
     /// Emit u16
-    fn emit_u16(&mut self, key: &str, val: u16) -> result::Result<(), Error>;
+    fn emit_u16(&mut self, key: &str, val: u16) -> Result;
     /// Emit i16
-    fn emit_i16(&mut self, key: &str, val: i16) -> result::Result<(), Error>;
+    fn emit_i16(&mut self, key: &str, val: i16) -> Result;
     /// Emit u32
-    fn emit_u32(&mut self, key: &str, val: u32) -> result::Result<(), Error>;
+    fn emit_u32(&mut self, key: &str, val: u32) -> Result;
     /// Emit i32
-    fn emit_i32(&mut self, key: &str, val: i32) -> result::Result<(), Error>;
+    fn emit_i32(&mut self, key: &str, val: i32) -> Result;
     /// Emit f32
-    fn emit_f32(&mut self, key: &str, val: f32) -> result::Result<(), Error>;
+    fn emit_f32(&mut self, key: &str, val: f32) -> Result;
     /// Emit u64
-    fn emit_u64(&mut self, key: &str, val: u64) -> result::Result<(), Error>;
+    fn emit_u64(&mut self, key: &str, val: u64) -> Result;
     /// Emit i64
-    fn emit_i64(&mut self, key: &str, val: i64) -> result::Result<(), Error>;
+    fn emit_i64(&mut self, key: &str, val: i64) -> Result;
     /// Emit f64
-    fn emit_f64(&mut self, key: &str, val: f64) -> result::Result<(), Error>;
+    fn emit_f64(&mut self, key: &str, val: f64) -> Result;
     /// Emit usize
-    fn emit_usize(&mut self, key: &str, val: usize) -> result::Result<(), Error>;
+    fn emit_usize(&mut self, key: &str, val: usize) -> Result;
     /// Emit isize
-    fn emit_isize(&mut self, key: &str, val: isize) -> result::Result<(), Error>;
+    fn emit_isize(&mut self, key: &str, val: isize) -> Result;
     /// Emit str
-    fn emit_str(&mut self, key: &str, val: &str) -> result::Result<(), Error>;
+    fn emit_str(&mut self, key: &str, val: &str) -> Result;
 }
 
 macro_rules! impl_serialize_for{
@@ -278,81 +300,3 @@ impl<F> SyncSerialize for PushLazy<F>
      where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>)
      -> result::Result<(), Error> {
 }
-
-/*
-#[cfg(not(feature = "no_std"))]
-impl<W: io::Write + ?Sized> Serializer for W {
-    fn emit_none(&mut self, key: &str) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, "None"));
-        Ok(())
-    }
-    fn emit_unit(&mut self, key: &str) -> result::Result<(), Error> {
-        try!(write!(self, "{}: ()", key, ));
-        Ok(())
-    }
-
-    fn emit_bool(&mut self, key: &str, val: bool) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-
-    fn emit_char(&mut self, key: &str, val: char) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-
-    fn emit_usize(&mut self, key: &str, val: usize) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-    fn emit_isize(&mut self, key: &str, val: isize) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-
-    fn emit_u8(&mut self, key: &str, val: u8) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-    fn emit_i8(&mut self, key: &str, val: i8) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-    fn emit_u16(&mut self, key: &str, val: u16) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-    fn emit_i16(&mut self, key: &str, val: i16) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-    fn emit_u32(&mut self, key: &str, val: u32) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-    fn emit_i32(&mut self, key: &str, val: i32) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-    fn emit_f32(&mut self, key: &str, val: f32) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-    fn emit_u64(&mut self, key: &str, val: u64) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-    fn emit_i64(&mut self, key: &str, val: i64) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-    fn emit_f64(&mut self, key: &str, val: f64) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-    fn emit_str(&mut self, key: &str, val: &str) -> result::Result<(), Error> {
-        try!(write!(self, "{}: {}", key, val));
-        Ok(())
-    }
-}
-*/

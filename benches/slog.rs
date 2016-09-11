@@ -3,19 +3,22 @@
 #[macro_use]
 extern crate slog;
 extern crate slog_json;
+extern crate slog_stream;
 
 extern crate test;
 
 use std::io;
 use test::Bencher;
 use slog::*;
+use slog_stream::*;
 
 const LONG_STRING : &'static str = "A long string that would take some time to allocate";
 
 struct BlackBoxDrain;
 
 impl Drain for BlackBoxDrain {
-    fn log(&self, ri: &Record, o : &OwnedKeyValueList) -> io::Result<()> {
+    type Error = ();
+    fn log(&self, ri: &Record, o : &OwnedKeyValueList) -> std::result::Result<(), ()> {
 
         test::black_box((ri, o));
         Ok(())
@@ -35,12 +38,12 @@ impl io::Write for BlackBoxWriter {
     }
 }
 
-fn empty_json_blackbox() -> Streamer<BlackBoxWriter, slog_json::Format> {
-    stream(BlackBoxWriter, slog_json::build().build())
+fn empty_json_blackbox() -> IgnoreFuse<Streamer<BlackBoxWriter, slog_json::Format>> {
+    ignore_fuse(stream(BlackBoxWriter, slog_json::build().build()))
 }
 
-fn json_blackbox() -> Streamer<BlackBoxWriter, slog_json::Format> {
-    stream(BlackBoxWriter, slog_json::new())
+fn json_blackbox() -> IgnoreFuse<Streamer<BlackBoxWriter, slog_json::Format>> {
+    ignore_fuse(stream(BlackBoxWriter, slog_json::new()))
 }
 
 #[bench]

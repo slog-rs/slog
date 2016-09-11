@@ -60,7 +60,6 @@ fn log_to_slog_level(level: log::LogLevel) -> Level {
     }
 }
 
-
 impl log::Log for Logger {
     fn enabled(&self, _: &LogMetadata) -> bool {
         true
@@ -142,7 +141,7 @@ pub fn set_logger_level(logger: slog::Logger,
 /// ```
 pub fn init() -> Result<(), log::SetLoggerError> {
     let drain = slog::level_filter(Level::Info, slog_term::streamer().compact().build());
-    set_logger(slog::Logger::root(drain, o!()))
+    set_logger(slog::Logger::root(slog::panic_fuse(drain), o!()))
 }
 
 struct ScopeGuard;
@@ -222,6 +221,7 @@ pub fn scope<SF, R>(logger: slog::Logger, f: SF) -> R
 pub struct StdLog;
 
 impl slog::Drain for StdLog {
+    type Error = io::Error;
     fn log(&self, info: &slog::Record, _: &slog::OwnedKeyValueList) -> io::Result<()> {
 
         let level = match info.level() {

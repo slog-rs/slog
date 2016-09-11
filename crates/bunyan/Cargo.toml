@@ -18,3 +18,6 @@ slog = { version = "1.0.0-alpha3", path = "../.." }
 slog-json = { version = "1.0.0-alpha3", path = "../json" }
 nix = "0.6.0"
 chrono = "0.2.22"
+
+[dev-dependencies]
+slog-stream = { path = "../stream", version = "1.0.0-alpha3" }

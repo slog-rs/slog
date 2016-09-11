@@ -1,8 +1,3 @@
-use super::Record;
-
-use super::OwnedKeyValueList;
-
-use std::{fmt, io};
 
 /// Formats `Record`-s into IO
 pub trait Format: Send + Sync + Sized {

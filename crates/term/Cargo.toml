@@ -15,6 +15,7 @@ path = "lib.rs"
 
 [dependencies]
 slog = { version = "1.0.0-alpha3", path = "../.." }
+slog-stream = { version = "1.0.0-alpha3", path = "../stream" }
 isatty = "0.1"
 ansi_term = "0.7"
 chrono = "0.2"

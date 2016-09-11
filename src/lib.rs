@@ -14,10 +14,6 @@ extern crate alloc;
 #[cfg(feature = "no_std")]
 extern crate collections;
 
-// TODO: Remove after streamers are gone
-#[cfg(not(feature = "no_std"))]
-use core::cell::RefCell;
-
 use core::str::FromStr;
 use core::fmt;
 use core::result;
@@ -50,15 +46,12 @@ use collections::borrow::Cow;
 
 
 #[cfg(not(feature = "no_std"))]
-use std::sync::{Mutex, mpsc};
-#[cfg(not(feature = "no_std"))]
-use std::{mem, io, thread};
-
-#[cfg(not(feature = "no_std"))]
 use std::boxed::Box;
 #[cfg(feature = "no_std")]
 use alloc::boxed::Box;
 
+#[cfg(not(feature = "no_std"))]
+use std::io;
 
 
 /// Convenience function for building `&[OwnedKeyValue]`
@@ -326,10 +319,6 @@ macro_rules! slog_trace(
 
 /// Serialization
 pub mod ser;
-
-/// Output formating
-#[cfg(not(feature = "no_std"))]
-pub mod format;
 
 pub use ser::{PushLazy, ValueSerializer, Serializer, Serialize};
 

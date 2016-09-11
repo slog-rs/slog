@@ -3,8 +3,10 @@ extern crate slog;
 
 extern crate slog_term;
 
+use slog::Fuse;
+
 fn main() {
-    let log = slog::Logger::root(slog_term::streamer().build(), o!());
+    let log = slog::Logger::root(slog_term::streamer().build().fused(), o!());
 
     slog_trace!(log, "logging a trace message");
     slog_debug!(log, "debug values", "x" => 1, "y" => -1);

@@ -2,8 +2,10 @@
 extern crate slog;
 extern crate slog_term;
 
+use slog::Fuse;
+
 fn main() {
-    let drain = slog_term::streamer().compact().build();
+    let drain = slog_term::streamer().compact().build().fused();
 
     let root_log = slog::Logger::root(drain, o!("version" => "0.5"));
     let server_log = root_log.new(o!("host" => "localhost", "port" => "8080"));

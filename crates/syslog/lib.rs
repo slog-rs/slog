@@ -23,15 +23,18 @@
 
 #[macro_use]
 extern crate slog;
+extern crate slog_stream;
 extern crate syslog;
 extern crate nix;
 
-use slog::format::Format;
-use slog::{Drain, Level, Record, OwnedKeyValueList, format};
+use slog_stream::Format;
+use slog::{Drain, Level, Record, OwnedKeyValueList};
 use slog::ser::Serializer;
 use std::io;
 use std::sync::Mutex;
 use std::cell::RefCell;
+
+use slog::ser;
 
 pub use syslog::Facility;
 
@@ -71,6 +74,8 @@ impl Streamer3164 {
 }
 
 impl Drain for Streamer3164 {
+    type Error = io::Error;
+
     fn log(&self, info: &Record, logger_values: &OwnedKeyValueList) -> io::Result<()> {
 
         TL_BUF.with(|buf| {
@@ -105,7 +110,7 @@ impl Format3164 {
     }
 }
 
-impl format::Format for Format3164 {
+impl slog_stream::Format for Format3164 {
     fn format(&self,
               io: &mut io::Write,
               rinfo: &Record,
@@ -147,75 +152,75 @@ impl<W: io::Write> KSV<W> {
 }
 
 impl<W: io::Write> Serializer for KSV<W> {
-    fn emit_none(&mut self, key: &str) -> io::Result<()> {
+    fn emit_none(&mut self, key: &str) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, "None"));
         Ok(())
     }
-    fn emit_unit(&mut self, key: &str) -> io::Result<()> {
+    fn emit_unit(&mut self, key: &str) -> ser::Result {
         try!(write!(self.io, "{}", key));
         Ok(())
     }
 
-    fn emit_bool(&mut self, key: &str, val: bool) -> io::Result<()> {
+    fn emit_bool(&mut self, key: &str, val: bool) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
 
-    fn emit_char(&mut self, key: &str, val: char) -> io::Result<()> {
+    fn emit_char(&mut self, key: &str, val: char) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
 
-    fn emit_usize(&mut self, key: &str, val: usize) -> io::Result<()> {
+    fn emit_usize(&mut self, key: &str, val: usize) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_isize(&mut self, key: &str, val: isize) -> io::Result<()> {
+    fn emit_isize(&mut self, key: &str, val: isize) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
 
-    fn emit_u8(&mut self, key: &str, val: u8) -> io::Result<()> {
+    fn emit_u8(&mut self, key: &str, val: u8) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_i8(&mut self, key: &str, val: i8) -> io::Result<()> {
+    fn emit_i8(&mut self, key: &str, val: i8) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_u16(&mut self, key: &str, val: u16) -> io::Result<()> {
+    fn emit_u16(&mut self, key: &str, val: u16) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_i16(&mut self, key: &str, val: i16) -> io::Result<()> {
+    fn emit_i16(&mut self, key: &str, val: i16) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_u32(&mut self, key: &str, val: u32) -> io::Result<()> {
+    fn emit_u32(&mut self, key: &str, val: u32) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_i32(&mut self, key: &str, val: i32) -> io::Result<()> {
+    fn emit_i32(&mut self, key: &str, val: i32) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_f32(&mut self, key: &str, val: f32) -> io::Result<()> {
+    fn emit_f32(&mut self, key: &str, val: f32) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_u64(&mut self, key: &str, val: u64) -> io::Result<()> {
+    fn emit_u64(&mut self, key: &str, val: u64) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_i64(&mut self, key: &str, val: i64) -> io::Result<()> {
+    fn emit_i64(&mut self, key: &str, val: i64) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_f64(&mut self, key: &str, val: f64) -> io::Result<()> {
+    fn emit_f64(&mut self, key: &str, val: f64) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }
-    fn emit_str(&mut self, key: &str, val: &str) -> io::Result<()> {
+    fn emit_str(&mut self, key: &str, val: &str) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }

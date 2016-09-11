@@ -4,13 +4,16 @@
 //! #[macro_use]
 //! extern crate slog;
 //! extern crate slog_bunyan;
+//! extern crate slog_stream;
+//!
+//! use slog::Fuse;
 //!
 //! fn main() {
 //!     let root = slog::Logger::root(
-//!         slog::stream(
+//!         slog_stream::stream(
 //!                 std::io::stderr(),
 //!                 slog_bunyan::new()
-//!         ), o!("build-id" => "8dfljdf"));
+//!         ).fused(), o!("build-id" => "8dfljdf"));
 //! }
 //! ```
 #![warn(missing_docs)]
@@ -20,6 +23,8 @@ extern crate slog;
 extern crate nix;
 extern crate chrono;
 extern crate slog_json;
+#[cfg(test)]
+extern crate slog_stream;
 
 use slog::Record;
 use slog::Level;
@@ -82,7 +87,7 @@ mod test {
     use nix;
     use slog::Record;
     use slog::Level;
-    use slog::format::Format;
+    use slog_stream::Format;
     use slog::OwnedKeyValueList;
 
     #[test]

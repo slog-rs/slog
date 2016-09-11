@@ -15,5 +15,6 @@ path = "lib.rs"
 
 [dependencies]
 slog = { version = "1.0.0-alpha3", path = "../.." }
+slog-stream = { version = "1.0.0-alpha3", path = "../stream" }
 syslog = "3.1.0"
 nix = "0.6.0"

@@ -1,9 +1,3 @@
-
-#[cfg(not(feature = "no_std"))]
-thread_local! {
-    static TL_BUF: RefCell<Vec<u8>> = RefCell::new(Vec::with_capacity(128))
-}
-
 /// Logging drain
 ///
 /// Drains generally mean destination for logs, but slog generalize the
@@ -35,6 +29,25 @@ impl<D: Drain+?Sized> Drain for Arc<D> {
     }
 }
 
+/// Fusing trait
+///
+/// This trait is implemented for all the `Drain`s,
+/// allowing convenient error handling.
+pub trait Fuse : Sized + Drain {
+    /// Make `Self` panic when returning any errors
+    fn fused(self) -> PanicFuse<Self> {
+        panic_fuse(self)
+
+    }
+
+    /// Make `Self` ignore and not report any error
+    fn unfused(self) -> IgnoreFuse<Self> {
+        ignore_fuse(self)
+    }
+}
+
+impl<D : Drain> Fuse for D where D::Error : core::fmt::Display{}
+
 /// Drain discarding everything
 pub struct Discard;
 
@@ -42,111 +55,6 @@ impl Drain for Discard {
     type Error = ();
     fn log(&self, _: &Record, _: &OwnedKeyValueList) -> result::Result<(), ()> {
         Ok(())
-    }
-}
-
-/// Drain formating records and writing them to a byte-stream (`io::Write`)
-///
-/// Uses mutex to serialize writes.
-/// TODO: Add one that does not serialize?
-#[cfg(not(feature = "no_std"))]
-pub struct Streamer<W: io::Write, F: format::Format> {
-    io: Mutex<W>,
-    format: F,
-}
-
-#[cfg(not(feature = "no_std"))]
-impl<W: io::Write, F: format::Format> Streamer<W, F> {
-    /// Create new `Streamer` writing to `io` using `format`
-    pub fn new(io: W, format: F) -> Self {
-        Streamer {
-            io: Mutex::new(io),
-            format: format,
-        }
-    }
-}
-
-#[cfg(not(feature = "no_std"))]
-impl<W: 'static + io::Write + Send, F: format::Format + Send> Drain for Streamer<W, F> {
-    type Error = io::Error;
-
-    fn log(&self,
-           info: &Record,
-           logger_values: &OwnedKeyValueList)
-        -> io::Result<()> {
-
-            TL_BUF.with(|buf| {
-                let mut buf = buf.borrow_mut();
-                let res = {
-                    || {
-                        try!(self.format.format(&mut *buf, info, logger_values));
-                        {
-                            let mut io = try!(self.io.lock().map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
-                            try!(io.write_all(&buf));
-                        }
-                        Ok(())
-                    }
-                }();
-                buf.clear();
-                res
-            })
-        }
-}
-
-/// Drain formating records and writing them to a byte-stream (`io::Write`)
-/// asynchronously.
-///
-/// Internally, new thread will be spawned taking care of actually writing
-/// the data.
-#[cfg(not(feature = "no_std"))]
-pub struct AsyncStreamer<F: format::Format> {
-    format: F,
-    io: Mutex<AsyncIoWriter>,
-}
-
-#[cfg(not(feature = "no_std"))]
-impl<F: format::Format> AsyncStreamer<F> {
-    /// Create new `AsyncStreamer` writing to `io` using `format`
-    pub fn new<W: io::Write + Send + 'static>(io: W, format: F) -> Self {
-        AsyncStreamer {
-            io: Mutex::new(AsyncIoWriter::new(io)),
-            format: format,
-        }
-    }
-}
-
-#[cfg(not(feature = "no_std"))]
-impl<F: format::Format + Send> Drain for AsyncStreamer<F> {
-    type Error = io::Error;
-
-    fn log(&self,
-           info: &Record,
-           logger_values: &OwnedKeyValueList)
-           -> io::Result<()> {
-
-               TL_BUF.with(|buf| {
-                   let mut buf = buf.borrow_mut();
-
-                   let res = {
-                       || {
-                           try!(self.format.format(&mut *buf, info, logger_values));
-                           {
-                               let mut io = try!(self.io.lock().map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
-                               let mut new_buf = Vec::with_capacity(128);
-                               mem::swap(&mut *buf, &mut new_buf);
-                               try!(io.write_nocopy(new_buf));
-                           }
-                           Ok(())
-
-                       }}()
-                   ;
-
-                   if res.is_err() {
-                       buf.clear();
-                   }
-
-                   res
-               })
     }
 }
 
@@ -225,8 +133,7 @@ impl<D: Drain> Drain for LevelFilter<D> {
 /// Drain duplicating records to two sub-drains
 ///
 /// Can be nested for more than two outputs.
-pub struct Duplicate<D1: Drain, D2: Drain> 
- {
+pub struct Duplicate<D1: Drain, D2: Drain> {
     drain1: D1,
     drain2: D2,
 }
@@ -284,12 +191,12 @@ impl<D1: Drain, D2: Drain> Failover<D1, D2> {
     }
 }
 
-impl<D1, D2, E> Drain for Failover<D1, D2>
+impl<D1, D2, E1, E2> Drain for Failover<D1, D2>
 where
-D1 : Drain<Error = E>,
-D2 : Drain<Error = E>
+D1 : Drain<Error = E1>,
+D2 : Drain<Error = E2>
 {
-    type Error = D1::Error;
+    type Error = D2::Error;
     fn log(&self,
            info: &Record,
            logger_values: &OwnedKeyValueList)
@@ -301,100 +208,67 @@ D2 : Drain<Error = E>
     }
 }
 
-
-#[cfg(not(feature = "no_std"))]
-enum AsyncIoMsg {
-    Bytes(Vec<u8>),
-    Flush,
-    Eof,
+/// Panicking fuse
+///
+/// `Logger` requires a root drain to handle all errors (`Drain::Error == ()`),
+/// `PanicFuse` will wrap a `Drain` and panic if it returns any errors.
+///
+/// Note: `Drain::Error` must implement `Display`. It's easy to create own
+/// `Fuse` drain if this requirement can't be fulfilled.
+pub struct PanicFuse<D: Drain> {
+    drain: D,
 }
 
-/// Asynchronous `io::Write`r
-///
-/// TODO: Publish as a different crate / use existing one?
-///
-/// Wraps an `io::Writer` and writes to it in separate thread
-/// using channel to send the data.
-///
-/// This makes logging not block on potentially-slow IO operations.
-///
-/// Note: Dropping `AsyncIoWriter` waits for it's io-thread to finish.
-/// If you can't tolerate the delay, make sure to use `Logger::
-#[cfg(not(feature = "no_std"))]
-struct AsyncIoWriter {
-    sender: mpsc::Sender<AsyncIoMsg>,
-    join: Option<thread::JoinHandle<()>>,
-}
-
-#[cfg(not(feature = "no_std"))]
-impl AsyncIoWriter {
-    /// Create `AsyncIoWriter`
-    pub fn new<W: io::Write + Send + 'static>(mut io: W) -> Self {
-        let (tx, rx) = mpsc::channel();
-        let join = thread::spawn(move || {
-            loop {
-                match rx.recv().unwrap() {
-                    AsyncIoMsg::Bytes(buf) => io.write_all(&buf).unwrap(),
-                    AsyncIoMsg::Flush => io.flush().unwrap(),
-                    AsyncIoMsg::Eof => return,
-                }
-            }
-        });
-
-        AsyncIoWriter {
-            sender: tx,
-            join: Some(join),
+impl<D: Drain> PanicFuse<D> {
+    /// Create PanicFuse wrapping given `subdrain`
+    pub fn new(drain: D) -> Self {
+        PanicFuse {
+            drain: drain,
         }
     }
-
-    /// Write data to IO, without copying
-    ///
-    /// As an optimization, when `buf` is already an owned
-    /// `Vec`, it can be sent over channel without copying.
-    pub fn write_nocopy(&mut self, buf: Vec<u8>) -> io::Result<()> {
-        try!(self.sender
-            .send(AsyncIoMsg::Bytes(buf))
-            .map_err(|e| io::Error::new(io::ErrorKind::BrokenPipe, e)));
-        Ok(())
-    }
 }
 
-#[cfg(not(feature = "no_std"))]
-impl io::Write for AsyncIoWriter {
-    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        let _ = self.sender.send(AsyncIoMsg::Bytes(buf.to_vec())).unwrap();
-        Ok(buf.len())
-    }
-
-    fn flush(&mut self) -> io::Result<()> {
-        let _ = self.sender.send(AsyncIoMsg::Flush);
-        Ok(())
-    }
+impl<D: Drain> Drain for PanicFuse<D> where D::Error : core::fmt::Display {
+    type Error = ();
+    fn log(&self,
+           info: &Record,
+           logger_values: &OwnedKeyValueList)
+        -> result::Result<(), ()> {
+            Ok(
+                self.drain.log(info, logger_values).unwrap_or_else(
+                    |e| panic!("PanicFuse: {}", e)
+                    )
+                )
+        }
 }
 
 
-#[cfg(not(feature = "no_std"))]
-impl Drop for AsyncIoWriter {
-    fn drop(&mut self) {
-        let _ = self.sender.send(AsyncIoMsg::Eof);
-        let _ = self.join.take().unwrap().join();
-    }
-}
-
-/// Stream logging records to IO
+/// Error ignoring fuse
 ///
-/// Create `Streamer` drain
-#[cfg(not(feature = "no_std"))]
-pub fn stream<W: io::Write + Send, F: format::Format>(io: W, format: F) -> Streamer<W, F> {
-    Streamer::new(io, format)
+/// `Logger` requires a root drain to handle all errors (`Drain::Error == ()`),
+/// `IgnoreFuse` will ignore all errors of the drain it wraps.
+pub struct IgnoreFuse<D: Drain> {
+    drain: D,
 }
 
-/// Stream logging records to IO asynchronously
-///
-/// Create `AsyncStreamer` drain
-#[cfg(not(feature = "no_std"))]
-pub fn async_stream<W: io::Write + Send + 'static, F: format::Format>(io: W, format: F) -> AsyncStreamer<F> {
-    AsyncStreamer::new(io, format)
+impl<D: Drain> IgnoreFuse<D> {
+    /// Create `IgnoreFuse` wrapping given `subdrain`
+    pub fn new(drain: D) -> Self {
+        IgnoreFuse {
+            drain: drain,
+        }
+    }
+}
+
+impl<D: Drain> Drain for IgnoreFuse<D> {
+    type Error = ();
+    fn log(&self,
+           info: &Record,
+           logger_values: &OwnedKeyValueList)
+        -> result::Result<(), ()> {
+            let _ = self.drain.log(info, logger_values);
+            Ok(())
+        }
 }
 
 /// Discard all logging records
@@ -405,9 +279,10 @@ pub fn discard() -> Discard {
 }
 
 /// Filter by `cond` closure
-pub fn filter<D: Drain, F: 'static + Send + Sync + Fn(&Record) -> bool>(cond: F,
-                                                                            d: D)
-                                                                            -> Filter<D> {
+pub fn filter<D: Drain, F: 'static + Send + Sync + Fn(&Record) -> bool>(
+    cond: F,
+    d: D
+    ) -> Filter<D> {
     Filter::new(d, cond)
 }
 
@@ -430,4 +305,18 @@ pub fn duplicate<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Duplicate<D1, D2> {
 /// Create `Failover` drain
 pub fn failover<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Failover<D1, D2> {
     Failover::new(d1, d2)
+}
+
+/// Panic if the subdrain returns an error.
+///
+/// Create `PanicFuse` drain
+pub fn panic_fuse<D: Drain>(d: D) -> PanicFuse<D> {
+    PanicFuse::new(d)
+}
+
+/// Ignore any errors returned by the subdrain
+///
+/// Create `IgnoreFuse` drain
+pub fn ignore_fuse<D: Drain>(d: D) -> IgnoreFuse<D> {
+    IgnoreFuse::new(d)
 }

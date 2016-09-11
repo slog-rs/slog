@@ -16,5 +16,6 @@ path = "lib.rs"
 [dependencies]
 slog = { version = "1.0.0-alpha3", path = "../.." }
 slog-serde = { version = "1.0.0-alpha3", path = "../serde"}
+slog-stream = { version = "1.0.0-alpha3", path = "../stream" }
 serde_json = "0.7.1"
 chrono = "0.2"

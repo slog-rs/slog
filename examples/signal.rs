@@ -3,6 +3,7 @@ extern crate slog;
 extern crate slog_term;
 extern crate slog_atomic;
 extern crate slog_json;
+extern crate slog_stream;
 extern crate nix;
 
 #[macro_use]
@@ -15,10 +16,11 @@ use std::sync::atomic::Ordering::SeqCst;
 use std::{thread, io};
 use slog::*;
 use slog_atomic::*;
+use slog_stream::*;
 
 lazy_static! {
     // global atomic switch drain control
-    static ref ATOMIC_DRAIN_SWITCH : AtomicSwitchCtrl = AtomicSwitchCtrl::new(
+    static ref ATOMIC_DRAIN_SWITCH : AtomicSwitchCtrl<()> = AtomicSwitchCtrl::new(
         discard()
     );
 
@@ -32,9 +34,9 @@ fn atomic_drain_switch() {
     ATOMIC_DRAIN_SWITCH_STATE.store(new, SeqCst);
 
     if new {
-        ATOMIC_DRAIN_SWITCH.set(stream(io::stdout(), slog_json::new()))
+        ATOMIC_DRAIN_SWITCH.set(stream(io::stdout(), slog_json::new()).fused())
     } else {
-        ATOMIC_DRAIN_SWITCH.set(slog_term::streamer().full().stdout().build())
+        ATOMIC_DRAIN_SWITCH.set(slog_term::streamer().full().stdout().build().fused())
     }
 }
 
@@ -50,7 +52,7 @@ fn main() {
         signal::sigaction(signal::SIGUSR1, &sig_action).unwrap();
     }
 
-    let drain = slog::duplicate(slog_term::streamer().stderr().full().build(), ATOMIC_DRAIN_SWITCH.drain());
+    let drain = slog::duplicate(slog_term::streamer().stderr().full().build().fused(), ATOMIC_DRAIN_SWITCH.drain());
 
     atomic_drain_switch();
 

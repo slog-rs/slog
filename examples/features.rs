@@ -3,9 +3,11 @@ extern crate slog;
 extern crate slog_json;
 extern crate slog_term;
 extern crate slog_atomic;
+extern crate slog_stream;
 
 use slog::*;
 use slog_atomic::*;
+use slog_stream::*;
 use std::thread;
 
 use std::sync::atomic::Ordering::SeqCst;
@@ -36,7 +38,7 @@ fn main() {
     // Turn a drain into new group of loggers, sharing that drain.
     //
     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
-    let root = Logger::root(drain, o!("version" => VERSION, "build-id" => "8dfljdf"));
+    let root = Logger::root(drain.fused(), o!("version" => VERSION, "build-id" => "8dfljdf"));
 
     // Build logging context as data becomes available.
     //

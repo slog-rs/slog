@@ -4,13 +4,16 @@
 //! #[macro_use]
 //! extern crate slog;
 //! extern crate slog_json;
+//! extern crate slog_stream;
+//!
+//! use slog::Fuse;
 //!
 //! fn main() {
 //!     let root = slog::Logger::root(
-//!         slog::stream(
+//!         slog_stream::stream(
 //!             std::io::stderr(),
 //!             slog_json::new()
-//!         ),
+//!         ).fused(),
 //!         o!("build-id" => "8dfljdf")
 //!     );
 //! }
@@ -20,6 +23,7 @@
 #[macro_use]
 extern crate slog;
 extern crate slog_serde;
+extern crate slog_stream;
 extern crate serde_json;
 extern crate chrono;
 
@@ -29,7 +33,6 @@ use slog_serde::SerdeSerializer;
 use slog::Record;
 use slog::{Level, OwnedKeyValue, OwnedKeyValueList};
 use slog::Level::*;
-use slog::format;
 use slog::ser::{PushLazy, ValueSerializer};
 use std::borrow::Borrow;
 
@@ -173,7 +176,7 @@ impl<W: io::Write> io::Write for SkipFirstByte<W> {
     }
 }
 
-impl format::Format for Format {
+impl slog_stream::Format for Format {
     fn format(&self,
               io: &mut io::Write,
               rinfo: &Record,

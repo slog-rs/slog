@@ -8,13 +8,14 @@
 //! use slog::*;
 //!
 //! fn main() {
-//!     let root = Logger::root(slog_term::streamer().build(), o!("build-id" => "8dfljdf"));
+//!     let root = Logger::root(slog_term::streamer().build().fused(), o!("build-id" => "8dfljdf"));
 //! }
 //! ```
 #![warn(missing_docs)]
 
 #[macro_use]
 extern crate slog;
+extern crate slog_stream;
 extern crate isatty;
 extern crate ansi_term;
 extern crate chrono;
@@ -25,9 +26,10 @@ use ansi_term::Colour;
 use isatty::{stderr_isatty, stdout_isatty};
 
 use slog::Record;
+use slog::ser;
 use slog::{Level, OwnedKeyValueList};
-use slog::format::Format as SlogFormat;
-use slog::format::{Decorator, RecordDecorator};
+use slog_stream::Format as StreamFormat;
+use slog_stream::{Decorator, RecordDecorator, Streamer, AsyncStreamer};
 
 /// Formatting mode
 pub enum FormatMode {
@@ -281,81 +283,81 @@ macro_rules! s(
 
 
 impl<W: io::Write, D: RecordDecorator> slog::ser::Serializer for Serializer<W, D> {
-    fn emit_none(&mut self, key: &str) -> io::Result<()> {
+    fn emit_none(&mut self, key: &str) -> ser::Result {
         s!(self, key, "None");
         Ok(())
     }
-    fn emit_unit(&mut self, key: &str) -> io::Result<()> {
+    fn emit_unit(&mut self, key: &str) -> ser::Result {
         s!(self, key, "()");
         Ok(())
     }
 
-    fn emit_bool(&mut self, key: &str, val: bool) -> io::Result<()> {
+    fn emit_bool(&mut self, key: &str, val: bool) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
 
-    fn emit_char(&mut self, key: &str, val: char) -> io::Result<()> {
+    fn emit_char(&mut self, key: &str, val: char) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
 
-    fn emit_usize(&mut self, key: &str, val: usize) -> io::Result<()> {
+    fn emit_usize(&mut self, key: &str, val: usize) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_isize(&mut self, key: &str, val: isize) -> io::Result<()> {
+    fn emit_isize(&mut self, key: &str, val: isize) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
 
-    fn emit_u8(&mut self, key: &str, val: u8) -> io::Result<()> {
+    fn emit_u8(&mut self, key: &str, val: u8) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_i8(&mut self, key: &str, val: i8) -> io::Result<()> {
+    fn emit_i8(&mut self, key: &str, val: i8) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_u16(&mut self, key: &str, val: u16) -> io::Result<()> {
+    fn emit_u16(&mut self, key: &str, val: u16) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_i16(&mut self, key: &str, val: i16) -> io::Result<()> {
+    fn emit_i16(&mut self, key: &str, val: i16) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_u32(&mut self, key: &str, val: u32) -> io::Result<()> {
+    fn emit_u32(&mut self, key: &str, val: u32) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_i32(&mut self, key: &str, val: i32) -> io::Result<()> {
+    fn emit_i32(&mut self, key: &str, val: i32) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_f32(&mut self, key: &str, val: f32) -> io::Result<()> {
+    fn emit_f32(&mut self, key: &str, val: f32) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_u64(&mut self, key: &str, val: u64) -> io::Result<()> {
+    fn emit_u64(&mut self, key: &str, val: u64) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_i64(&mut self, key: &str, val: i64) -> io::Result<()> {
+    fn emit_i64(&mut self, key: &str, val: i64) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_f64(&mut self, key: &str, val: f64) -> io::Result<()> {
+    fn emit_f64(&mut self, key: &str, val: f64) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
-    fn emit_str(&mut self, key: &str, val: &str) -> io::Result<()> {
+    fn emit_str(&mut self, key: &str, val: &str) -> ser::Result {
         s!(self, key, val);
         Ok(())
     }
 }
 
-impl<D: Decorator + Send + Sync> SlogFormat for Format<D> {
+impl<D: Decorator + Send + Sync> StreamFormat for Format<D> {
     fn format(&self,
               io: &mut io::Write,
               info: &Record,
@@ -443,7 +445,7 @@ impl StreamerBuilder {
 
 
     /// Build the streamer
-    pub fn build(self) -> Box<slog::Drain> {
+    pub fn build(self) -> Box<slog::Drain<Error=io::Error>> {
         let color = self.color.unwrap_or(if self.stdout {
             stdout_isatty()
         } else {
@@ -458,9 +460,9 @@ impl StreamerBuilder {
         };
 
         if self.async {
-            Box::new(slog::AsyncStreamer::new(io, format))
+            Box::new(AsyncStreamer::new(io, format))
         } else {
-            Box::new(slog::Streamer::new(io, format))
+            Box::new(Streamer::new(io, format))
         }
     }
 }
