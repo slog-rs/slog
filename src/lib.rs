@@ -14,7 +14,10 @@ extern crate alloc;
 #[cfg(feature = "no_std")]
 extern crate collections;
 
+// TODO: Remove after streamers are gone
+#[cfg(not(feature = "no_std"))]
 use core::cell::RefCell;
+
 use core::str::FromStr;
 use core::fmt;
 use core::result;
