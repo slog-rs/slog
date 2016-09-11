@@ -29,6 +29,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 
 * easy to use
 * great performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
+* `#![no_std]` support
 * hierarchical loggers
 * lazily evaluated values
 * modular, lightweight and very extensible
@@ -116,7 +117,7 @@ fn main() {
     // Turn a drain into new group of loggers, sharing that drain.
     //
     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
-    let root = Logger::root(drain, o!("version" => VERSION, "build-id" => "8dfljdf"));
+    let root = Logger::root(drain.fuse(), o!("version" => VERSION, "build-id" => "8dfljdf"));
 
     // Build logging context as data becomes available.
     //
