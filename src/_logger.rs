@@ -145,6 +145,10 @@ pub struct Record<'a> {
     file: &'static str,
     /// Line
     line: u32,
+    /// Column (currently not implemented)
+    column: u32,
+    /// Function (currently not implemented)
+    function: &'static str,
     /// Module
     module: &'static str,
     /// Target - for backward compatibility with `log`
@@ -162,6 +166,8 @@ impl<'a> Record<'a> {
                msg: &'a Message,
                file: &'static str,
                line: u32,
+               column: u32,
+               function: &'static str,
                module: &'static str,
                target: &'a str,
                values: &'a [BorrowedKeyValue<'a>])
@@ -171,6 +177,8 @@ impl<'a> Record<'a> {
             msg: msg,
             file: file,
             line: line,
+            column: column,
+            function: function,
             module: module,
             target: target,
             values: values,
@@ -192,6 +200,11 @@ impl<'a> Record<'a> {
         self.line
     }
 
+    /// Get error column
+    pub fn column(&self) -> u32 {
+        self.column
+    }
+
     /// Get file path
     pub fn file(&self) -> &'static str {
         self.file
@@ -207,6 +220,11 @@ impl<'a> Record<'a> {
     /// Get module
     pub fn module(&self) -> &'static str {
         self.module
+    }
+
+    /// Get module
+    pub fn function(&self) -> &'static str {
+        self.function
     }
 
     /// Record value-key pairs

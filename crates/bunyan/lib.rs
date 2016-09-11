@@ -101,6 +101,8 @@ mod test {
                                msg,
                                "filepath",
                                11192,
+                               0,
+                               "",
                                "modulepath",
                                "target",
                                &[]);
