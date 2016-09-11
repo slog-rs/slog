@@ -48,10 +48,6 @@ use std::borrow::Cow;
 #[cfg(feature = "no_std")]
 use collections::borrow::Cow;
 
-#[cfg(not(feature = "no_std"))]
-use std::io::Write;
-
-
 
 #[cfg(not(feature = "no_std"))]
 use std::sync::{Mutex, mpsc};

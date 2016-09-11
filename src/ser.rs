@@ -40,8 +40,8 @@ pub enum Error {
 }
 
 #[cfg(not(feature = "no_std"))]
-impl From<io::Error> for Error {
-    fn from(err: io::Error) -> Error {
+impl From<std::io::Error> for Error {
+    fn from(err: std::io::Error) -> Error {
         Error::Io(err)
     }
 }

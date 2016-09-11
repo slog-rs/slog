@@ -13,6 +13,8 @@
 /// any logger will change it on all loggers in given hierarchy.
 #[derive(Clone)]
 pub struct Logger {
+    //TODO:
+    //drain: Arc<Drain<Error=!>>,
     drain: Arc<Drain<Error=()>>,
     values: Arc<OwnedKeyValueList>,
 }
@@ -22,14 +24,19 @@ pub trait Message {
     /// Take a string
     fn as_str(&self) -> Cow<str>;
 
-    /// Write it into `io` (which might be fast than `as_str()` it does not
-    /// need to allocate anything in certain cases.
+    /// Write it into `io` (which might be faster than `as_str()` it does
+    /// not need to allocate anything in certain cases.
 #[cfg(not(feature = "no_std"))]
-    fn write_to(&self, io : &mut Write) -> io::Result<()> {
-        try!(write!(io, "{}", self.as_str()));
-        Ok(())
+    fn write_to(&self, io : &mut std::io::Write) -> io::Result<()> {
+        write!(io, "{}", self.as_str())
     }
 
+#[cfg(feature = "no_std")]
+    /// Write it into `io` (which might be faster than `as_str()` it does
+    /// not need to allocate anything in certain cases.
+    fn write_to(&self, io : &mut core::fmt::Write) -> result::Result<(), fmt::Error> {
+        core::fmt::write(io, format_args!("{}", self.as_str()))
+    }
 }
 
 // TODO: why does this conflict with &'a str?
@@ -60,9 +67,12 @@ impl<'a> Message for fmt::Arguments<'a> {
     }
 
 #[cfg(not(feature = "no_std"))]
-    fn write_to(&self, io : &mut Write) -> io::Result<()> {
-        try!(write!(io, "{}", self));
-        Ok(())
+    fn write_to(&self, io : &mut std::io::Write) -> io::Result<()> {
+        write!(io, "{}", self)
+    }
+#[cfg(feature = "no_std")]
+    fn write_to(&self, io : &mut core::fmt::Write) -> result::Result<(), fmt::Error> {
+        core::fmt::write(io, *self)
     }
 }
 
