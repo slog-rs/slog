@@ -15,12 +15,12 @@ fn main() {
     info!(server_log, "starting");
     info!(server_log, "listening");
     debug!(peer2_log, "connected");
-    debug!(peer2_log, "message received", "length" => 2);
+    debug!(peer2_log, "message received"; "length" => 2);
     debug!(peer1_log, "connected");
-    debug!(peer2_log, "response sent", "length" => 8);
+    debug!(peer2_log, "response sent"; "length" => 8);
     debug!(peer2_log, "disconnected");
-    debug!(peer1_log, "message received", "length" => 2);
-    debug!(peer1_log, "response sent", "length" => 8);
+    debug!(peer1_log, "message received"; "length" => 2);
+    debug!(peer1_log, "response sent"; "length" => 8);
     debug!(peer1_log, "disconnected");
     info!(server_log, "exit");
 }

@@ -70,7 +70,7 @@ fn log_discard_nonempty(b: &mut Bencher) {
     let log = Logger::root(BlackBoxDrain, o!("build" => "123456", "id" => 123456));
 
     b.iter(|| {
-        info!(log, "", "what" => "write");
+        info!(log, ""; "what" => "write");
     });
 }
 
@@ -115,7 +115,7 @@ fn log_discard_i32val(b: &mut Bencher) {
     let log = Logger::root(BlackBoxDrain, o!());
 
     b.iter(|| {
-        info!(log, "", "i32" => 5);
+        info!(log, ""; "i32" => 5);
     });
 }
 
@@ -124,7 +124,7 @@ fn log_discard_i32closure(b: &mut Bencher) {
     let log = Logger::root(BlackBoxDrain, o!());
 
     b.iter(|| {
-        info!(log, "", "i32" => |_:&Record|{5});
+        info!(log, ""; "i32" => |_:&Record|{5});
     });
 }
 
@@ -133,7 +133,7 @@ fn log_stream_empty_json_blackbox_i32val(b: &mut Bencher) {
     let log = Logger::root(empty_json_blackbox(), o!());
 
     b.iter(|| {
-        info!(log, "",  "i32" => 5);
+        info!(log, "";  "i32" => 5);
     });
 }
 
@@ -143,7 +143,7 @@ fn log_stream_empty_json_blackbox_i32closure(b: &mut Bencher) {
     let log = Logger::root(empty_json_blackbox(), o!());
 
     b.iter(|| {
-        info!(log, "", "i32" => |_:&Record|{5});
+        info!(log, ""; "i32" => |_:&Record|{5});
     });
 }
 
@@ -152,7 +152,7 @@ fn log_stream_empty_json_blackbox_i32pushclosure(b: &mut Bencher) {
     let log = Logger::root(empty_json_blackbox(), o!());
 
     b.iter(|| {
-        info!(log, "", "i32" => PushLazy(|_:&Record, ser : ValueSerializer|{
+        info!(log, ""; "i32" => PushLazy(|_:&Record, ser : ValueSerializer|{
             ser.serialize(5)
         }));
     });
@@ -165,7 +165,7 @@ fn log_stream_empty_json_blackbox_strclosure(b: &mut Bencher) {
     let log = Logger::root(empty_json_blackbox(), o!());
 
     b.iter(|| {
-        info!(log, "", "str" => |_:&Record| {
+        info!(log, ""; "str" => |_:&Record| {
             String::from(LONG_STRING)
         });
     });
@@ -176,7 +176,7 @@ fn log_stream_empty_json_blackbox_strpushclosure(b: &mut Bencher) {
     let log = Logger::root(empty_json_blackbox(), o!());
 
     b.iter(|| {
-        info!(log, "", "str" => PushLazy(|_:&Record, ser : ValueSerializer|{
+        info!(log, ""; "str" => PushLazy(|_:&Record, ser : ValueSerializer|{
             ser.serialize(LONG_STRING)
         }));
     });
@@ -187,7 +187,7 @@ fn log_stream_json_blackbox_i32val(b: &mut Bencher) {
     let log = Logger::root(json_blackbox(), o!());
 
     b.iter(|| {
-        info!(log, "",  "i32" => 5);
+        info!(log, "";  "i32" => 5);
     });
 }
 
@@ -197,7 +197,7 @@ fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
     let log = Logger::root(json_blackbox(), o!());
 
     b.iter(|| {
-        info!(log, "", "i32" => |_:&Record|{5});
+        info!(log, ""; "i32" => |_:&Record|{5});
     });
 }
 
@@ -206,7 +206,7 @@ fn log_stream_json_blackbox_i32pushclosure(b: &mut Bencher) {
     let log = Logger::root(json_blackbox(), o!());
 
     b.iter(|| {
-        info!(log, "", "i32" => PushLazy(|_:&Record, ser : ValueSerializer|{
+        info!(log, ""; "i32" => PushLazy(|_:&Record, ser : ValueSerializer|{
             ser.serialize(5)
         }));
     });
@@ -217,7 +217,7 @@ fn log_stream_json_blackbox_strclosure(b: &mut Bencher) {
     let log = Logger::root(json_blackbox(), o!());
 
     b.iter(|| {
-        info!(log, "", "str" => |_:&Record| {
+        info!(log, ""; "str" => |_:&Record| {
             String::from(LONG_STRING)
         });
     });
@@ -228,7 +228,7 @@ fn log_stream_json_blackbox_strpushclosure(b: &mut Bencher) {
     let log = Logger::root(json_blackbox(), o!());
 
     b.iter(|| {
-        info!(log, "", "str" => PushLazy(|_:&Record, ser : ValueSerializer|{
+        info!(log, ""; "str" => PushLazy(|_:&Record, ser : ValueSerializer|{
             ser.serialize(LONG_STRING)
         }));
     });

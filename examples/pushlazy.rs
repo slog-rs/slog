@@ -19,14 +19,14 @@ fn main() {
         })
     }));
 
-    debug!(log, "debug", "fast-lazy" =>
+    debug!(log, "debug"; "fast-lazy" =>
            PushLazy(move |info : &Record, ser : ValueSerializer| {
                // no need for new allocations
-               ser.serialize(&*info.msg())
+               ser.serialize(info.msg())
            })
     );
 
-    trace!(log, "debug", "drop-fast-lazy" =>
+    trace!(log, "debug"; "drop-fast-lazy" =>
         PushLazy(move |_ : &Record, _ : ValueSerializer| {
             // drop of `ser` will emit unit (`()`/`void`) value
             Ok(())

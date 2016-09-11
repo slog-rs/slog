@@ -83,11 +83,11 @@ fn main() {
             // Closures can be used for lazy evaluation:
             // This `slow_fib` won't be evaluated, as the current drain discards
             // "trace" level logging records.
-            debug!(log, "debug", "lazy-closure" => |_ : &Record| slow_fib(40));
+            debug!(log, "debug"; "lazy-closure" => |_ : &Record| slow_fib(40));
 
-            info!(log, "subthread", "stage" => "start");
+            info!(log, "subthread"; "stage" => "start");
             thread::sleep(Duration::new(1, 0));
-            info!(log, "subthread", "stage" => "end");
+            info!(log, "subthread"; "stage" => "end");
         }
     });
 

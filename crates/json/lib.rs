@@ -34,7 +34,6 @@ use slog::Record;
 use slog::{Level, OwnedKeyValue, OwnedKeyValueList};
 use slog::Level::*;
 use slog::ser::{PushLazy, ValueSerializer};
-use std::borrow::Borrow;
 
 fn level_to_string(level: Level) -> &'static str {
     match level {
@@ -74,7 +73,7 @@ impl Format {
                     level_to_string(rinfo.level())
                 },
                 "msg" => PushLazy(move |record : &Record, ser : ValueSerializer| {
-                   ser.serialize::<&str>(record.msg().borrow())
+                   ser.serialize(record.msg())
                 })
                 ),
         }

@@ -2,7 +2,7 @@
 #[cfg(not(feature = "no_std"))]
 use std;
 use core;
-use core::result;
+use core::{result, fmt};
 
 #[cfg(not(feature = "no_std"))]
 use std::sync::Arc;
@@ -134,6 +134,8 @@ pub trait Serializer {
     fn emit_isize(&mut self, key: &str, val: isize) -> Result;
     /// Emit str
     fn emit_str(&mut self, key: &str, val: &str) -> Result;
+    /// Emit `fmt::Arguments`
+    fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> Result;
 }
 
 macro_rules! impl_serialize_for{
@@ -175,6 +177,14 @@ impl<'a> Serialize for &'a str {
         serializer.emit_str(key, self)
     }
 }
+
+impl<'a> Serialize for fmt::Arguments<'a>{
+    fn serialize(&self, _record: &Record, key: &str, serializer: &mut Serializer) -> result::Result<(), Error> {
+        serializer.emit_arguments(key, self)
+    }
+}
+
+impl SyncSerialize for fmt::Arguments<'static> {}
 
 impl SyncSerialize for &'static str {}
 

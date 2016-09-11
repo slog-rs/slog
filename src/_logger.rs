@@ -19,26 +19,6 @@ pub struct Logger {
     values: Arc<OwnedKeyValueList>,
 }
 
-/// Log Record message
-pub trait Message {
-    /// Take a string
-    fn as_str(&self) -> Cow<str>;
-
-    /// Write it into `io` (which might be faster than `as_str()` it does
-    /// not need to allocate anything in certain cases.
-#[cfg(not(feature = "no_std"))]
-    fn write_to(&self, io : &mut std::io::Write) -> io::Result<()> {
-        write!(io, "{}", self.as_str())
-    }
-
-#[cfg(feature = "no_std")]
-    /// Write it into `io` (which might be faster than `as_str()` it does
-    /// not need to allocate anything in certain cases.
-    fn write_to(&self, io : &mut core::fmt::Write) -> result::Result<(), fmt::Error> {
-        core::fmt::write(io, format_args!("{}", self.as_str()))
-    }
-}
-
 // TODO: why does this conflict with &'a str?
 // impl<T : AsRef<str>> Into<Cow<'a, str>> for T {
 // fn as_str(&self) -> Cow<str> {
@@ -47,34 +27,6 @@ pub trait Message {
 // }
 //
 
-impl<'a> Message for &'a str {
-    fn as_str(&self) -> Cow<str> {
-        Cow::Borrowed(self)
-    }
-}
-
-impl Message for String {
-    fn as_str(&self) -> Cow<str> {
-        Cow::Borrowed(self.as_str())
-    }
-}
-
-impl<'a> Message for fmt::Arguments<'a> {
-    fn as_str(&self) -> Cow<str> {
-        let mut s = String::new();
-        fmt::write(&mut s, *self).unwrap();
-        Cow::Owned(s)
-    }
-
-#[cfg(not(feature = "no_std"))]
-    fn write_to(&self, io : &mut std::io::Write) -> io::Result<()> {
-        write!(io, "{}", self)
-    }
-#[cfg(feature = "no_std")]
-    fn write_to(&self, io : &mut core::fmt::Write) -> result::Result<(), fmt::Error> {
-        core::fmt::write(io, *self)
-    }
-}
 
 impl Logger {
     /// Build a root logger
@@ -135,25 +87,28 @@ impl Logger {
     }
 }
 
+#[doc(hidden)]
+pub struct RecordStatic<'a> {
+    /// Logging level
+    pub level: Level,
+    /// File
+    pub file: &'static str,
+    /// Line
+    pub line: u32,
+    /// Column (currently not implemented)
+    pub column: u32,
+    /// Function (currently not implemented)
+    pub function: &'static str,
+    /// Module
+    pub module: &'static str,
+    /// Target - for backward compatibility with `log`
+    pub target: &'a str,
+}
+
 /// Logging record
 pub struct Record<'a> {
-    /// Logging level
-    level: Level,
-    /// Message
-    msg: &'a Message,
-    /// File
-    file: &'static str,
-    /// Line
-    line: u32,
-    /// Column (currently not implemented)
-    column: u32,
-    /// Function (currently not implemented)
-    function: &'static str,
-    /// Module
-    module: &'static str,
-    /// Target - for backward compatibility with `log`
-    target: &'a str,
-    /// Values
+    meta: &'a RecordStatic<'a>,
+    msg: fmt::Arguments<'a>,
     values: &'a [BorrowedKeyValue<'a>],
 }
 
@@ -161,70 +116,59 @@ pub struct Record<'a> {
 impl<'a> Record<'a> {
     /// Create a new `Record`
     #[inline]
+    #[doc(hidden)]
     pub fn new(
-               level: Level,
-               msg: &'a Message,
-               file: &'static str,
-               line: u32,
-               column: u32,
-               function: &'static str,
-               module: &'static str,
-               target: &'a str,
-               values: &'a [BorrowedKeyValue<'a>])
-               -> Self {
+        s : &'a RecordStatic<'a>,
+        msg: fmt::Arguments<'a>,
+        values: &'a [BorrowedKeyValue<'a>],
+        ) -> Self {
         Record {
-            level: level,
+            meta: s,
             msg: msg,
-            file: file,
-            line: line,
-            column: column,
-            function: function,
-            module: module,
-            target: target,
             values: values,
         }
     }
 
     /// Get a log record message
-    pub fn msg(&self) -> Cow<str> {
-        self.msg.as_str()
+    pub fn msg(&self) -> fmt::Arguments {
+        self.msg
     }
 
     /// Get record logging level
     pub fn level(&self) -> Level {
-        self.level
+        self.meta.level
     }
 
     /// Get line number
     pub fn line(&self) -> u32 {
-        self.line
+        self.meta.line
     }
 
     /// Get error column
     pub fn column(&self) -> u32 {
-        self.column
+        self.meta.column
     }
 
     /// Get file path
     pub fn file(&self) -> &'static str {
-        self.file
+        self.meta.file
     }
 
     /// Get target
     ///
     /// Mostly for backward compatibility with `log`
     pub fn target(&self) -> &str {
-        self.target
+        self.meta.target
     }
 
     /// Get module
     pub fn module(&self) -> &'static str {
-        self.module
+        self.meta.module
     }
 
     /// Get module
     pub fn function(&self) -> &'static str {
-        self.function
+        self.meta.function
     }
 
     /// Record value-key pairs

@@ -355,6 +355,11 @@ impl<W: io::Write, D: RecordDecorator> slog::ser::Serializer for Serializer<W, D
         s!(self, key, val);
         Ok(())
     }
+    fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> ser::Result {
+        s!(self, key, val);
+        Ok(())
+    }
+
 }
 
 impl<D: Decorator + Send + Sync> StreamFormat for Format<D> {

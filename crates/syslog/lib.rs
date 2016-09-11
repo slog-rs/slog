@@ -30,7 +30,7 @@ extern crate nix;
 use slog_stream::Format;
 use slog::{Drain, Level, Record, OwnedKeyValueList};
 use slog::ser::Serializer;
-use std::io;
+use std::{io, fmt};
 use std::sync::Mutex;
 use std::cell::RefCell;
 
@@ -221,6 +221,10 @@ impl<W: io::Write> Serializer for KSV<W> {
         Ok(())
     }
     fn emit_str(&mut self, key: &str, val: &str) -> ser::Result {
+        try!(write!(self.io, "{}{}{}", key, self.separator, val));
+        Ok(())
+    }
+    fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> ser::Result {
         try!(write!(self.io, "{}{}{}", key, self.separator, val));
         Ok(())
     }

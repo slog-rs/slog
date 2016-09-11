@@ -85,7 +85,7 @@ mod test {
     use super::get_hostname;
     use chrono::{TimeZone, UTC};
     use nix;
-    use slog::Record;
+    use slog::{Record, RecordStatic};
     use slog::Level;
     use slog_stream::Format;
     use slog::OwnedKeyValueList;
@@ -96,19 +96,18 @@ mod test {
             new_with_ts_fn(|_: &Record| UTC.ymd(2014, 7, 8).and_hms(9, 10, 11).to_rfc3339());
 
 
-        let msg = &"message";
-        let info = Record::new(Level::Info,
-                               msg,
-                               "filepath",
-                               11192,
-                               0,
-                               "",
-                               "modulepath",
-                               "target",
-                               &[]);
+        let rs = RecordStatic {
+            level: Level::Info,
+            file: "filepath",
+            line: 11192,
+            column: 0,
+            function: "",
+            module: "modulepath",
+            target: "target"
+        };
 
         let mut v = vec![];
-        formatter.format(&mut v, &info, &OwnedKeyValueList::root(vec![])).unwrap();
+        formatter.format(&mut v, &Record::new(&rs, format_args!("message"), &[]), &OwnedKeyValueList::root(vec![])).unwrap();
 
         assert_eq!(String::from_utf8_lossy(&v),
                    "{\"pid\":".to_string() + &nix::unistd::getpid().to_string() + ",\"host\":\"" +

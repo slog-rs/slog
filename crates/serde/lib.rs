@@ -6,8 +6,14 @@
 extern crate slog;
 extern crate serde;
 
-use std::io;
+use std::{io, fmt};
 use slog::ser;
+use std::cell::RefCell;
+use std::fmt::Write;
+
+thread_local! {
+    static TL_BUF: RefCell<String> = RefCell::new(String::with_capacity(128))
+}
 
 /// slog-rs's `Serializer` adapter for `serde::Serializer`
 ///
@@ -90,5 +96,23 @@ impl<'a, S> slog::ser::Serializer for SerdeSerializer<'a, S>
     fn emit_str(&mut self, key: &str, val: &str) -> ser::Result {
         serde::Serializer::serialize_map_elt(self.0, key, val)
             .map_err(|_| io::Error::new(io::ErrorKind::Other, "serde serialization error").into())
+    }
+    fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> ser::Result {
+
+        TL_BUF.with(|buf| {
+            let mut buf = buf.borrow_mut();
+
+            buf.write_fmt(*val).unwrap();
+
+            let res = {
+                || {
+                    serde::Serializer::serialize_map_elt(self.0, key, &*buf)
+                        .map_err(|_| io::Error::new(io::ErrorKind::Other, "serde serialization error").into())
+
+                }
+            }();
+            buf.clear();
+            res
+        })
     }
 }

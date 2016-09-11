@@ -60,7 +60,8 @@ fn main() {
 
     info!(log, "logging a message every 3s");
     info!(log, "send SIGUSR1 signal to switch output with");
-    info!(log, format_args!("kill -SIGUSR1 {}", nix::unistd::getpid()));
+    let pid = nix::unistd::getpid();
+    info!(log, "kill -SIGUSR1 {}", pid);
     loop {
         info!(log, "tick");
         thread::sleep_ms(3000);
