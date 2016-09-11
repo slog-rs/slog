@@ -114,7 +114,7 @@ fn main() {
     let ctrl = AtomicSwitchCtrl::new(drain);
     let drain = ctrl.drain();
 
-    // Turn a drain into new group of loggers, sharing that drain.
+    // Get a root logger that will log into a given drain.
     //
     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
     let root = Logger::root(drain.fuse(), o!("version" => VERSION, "build-id" => "8dfljdf"));
