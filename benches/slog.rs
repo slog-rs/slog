@@ -1,4 +1,5 @@
 #![feature(test)]
+#![feature(conservative_impl_trait)]
 
 #[macro_use]
 extern crate slog;
@@ -38,12 +39,12 @@ impl io::Write for BlackBoxWriter {
     }
 }
 
-fn empty_json_blackbox() -> IgnoreFuse<Streamer<BlackBoxWriter, slog_json::Format>> {
-    ignore_fuse(stream(BlackBoxWriter, slog_json::build().build()))
+fn empty_json_blackbox() -> impl Drain<Error=()> {
+    stream(BlackBoxWriter, slog_json::build().build()).ignore_err()
 }
 
-fn json_blackbox() -> IgnoreFuse<Streamer<BlackBoxWriter, slog_json::Format>> {
-    ignore_fuse(stream(BlackBoxWriter, slog_json::new()))
+fn json_blackbox() -> impl Drain<Error=()> {
+    stream(BlackBoxWriter, slog_json::new()).ignore_err()
 }
 
 #[bench]
