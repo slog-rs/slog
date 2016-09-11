@@ -8,7 +8,7 @@ use slog::*;
 fn main() {
     let drain = slog_term::streamer().full().build();
     let log = Logger::root(
-        drain.fused(),
+        drain.fuse(),
         o!("place" =>
            move |info : &Record| {
                format!("{}:{} {}",

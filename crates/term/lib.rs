@@ -8,7 +8,7 @@
 //! use slog::*;
 //!
 //! fn main() {
-//!     let root = Logger::root(slog_term::streamer().build().fused(), o!("build-id" => "8dfljdf"));
+//!     let root = Logger::root(slog_term::streamer().build().fuse(), o!("build-id" => "8dfljdf"));
 //! }
 //! ```
 #![warn(missing_docs)]

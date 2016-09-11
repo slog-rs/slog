@@ -6,14 +6,14 @@
 //! extern crate slog_json;
 //! extern crate slog_stream;
 //!
-//! use slog::Fuse;
+//! use slog::DrainExt;
 //!
 //! fn main() {
 //!     let root = slog::Logger::root(
 //!         slog_stream::stream(
 //!             std::io::stderr(),
 //!             slog_json::new()
-//!         ).fused(),
+//!         ).fuse(),
 //!         o!("build-id" => "8dfljdf")
 //!     );
 //! }

@@ -23,6 +23,8 @@ extern crate log;
 extern crate lazy_static;
 extern crate crossbeam;
 
+use slog::DrainExt;
+
 use log::LogMetadata;
 use std::sync::Arc;
 use std::cell::RefCell;
@@ -141,7 +143,7 @@ pub fn set_logger_level(logger: slog::Logger,
 /// ```
 pub fn init() -> Result<(), log::SetLoggerError> {
     let drain = slog::level_filter(Level::Info, slog_term::streamer().compact().build());
-    set_logger(slog::Logger::root(slog::panic_fuse(drain), o!()))
+    set_logger(slog::Logger::root(drain.fuse(), o!()))
 }
 
 struct ScopeGuard;

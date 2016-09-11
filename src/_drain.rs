@@ -29,24 +29,25 @@ impl<D: Drain+?Sized> Drain for Arc<D> {
     }
 }
 
-/// Fusing trait
-///
-/// This trait is implemented for all the `Drain`s,
-/// allowing convenient error handling.
-pub trait Fuse : Sized + Drain {
-    /// Make `Self` panic when returning any errors
-    fn fused(self) -> PanicFuse<Self> {
-        panic_fuse(self)
-
+/// Convenience methods
+pub trait DrainExt: Sized + Drain {
+    /// Map logging errors returned by this drain
+    fn map_err<F, E>(self, f : F) -> MapError<Self, E> where F : 'static + Sync + Send + Fn(<Self as Drain>::Error) -> E {
+        MapError::new(self, f)
     }
 
     /// Make `Self` ignore and not report any error
-    fn unfused(self) -> IgnoreFuse<Self> {
-        ignore_fuse(self)
+    fn ignore_err(self) -> IgnoreErr<Self> {
+        ignore_err(self)
+    }
+
+    /// Make `Self` panic when returning any errors
+    fn fuse(self) -> Fuse<Self> where <Self as Drain>::Error : fmt::Display {
+        fuse(self)
     }
 }
 
-impl<D : Drain> Fuse for D where D::Error : core::fmt::Display{}
+impl<D : Drain> DrainExt for D {}
 
 /// Drain discarding everything
 pub struct Discard;
@@ -92,6 +93,36 @@ impl<D: Drain> Drain for Filter<D> {
         }
     }
 }
+
+
+/// Map error of a `Drain`
+pub struct MapError<D: Drain, E> {
+    drain: D,
+    // eliminated dynamic dispatch, after rust learns `-> impl Trait`
+    map_fn: Box<(Fn(D::Error) -> E) + 'static+ Send+Sync>,
+}
+
+impl<D: Drain, E> MapError<D, E> {
+    /// Create Filter wrapping given `subdrain` and passing to it records
+    /// only the `cond` is true
+    pub fn new<F: 'static + Sync + Send + Fn(<D as Drain>::Error) -> E>(drain: D, map_fn: F) -> Self {
+        MapError {
+            drain: drain,
+            map_fn: Box::new(map_fn),
+        }
+    }
+}
+
+impl<D: Drain, E> Drain for MapError<D, E> {
+    type Error = E;
+    fn log(&self,
+           info: &Record,
+           logger_values: &OwnedKeyValueList)
+           -> result::Result<(), Self::Error> {
+            self.drain.log(info, logger_values).map_err(|e| (self.map_fn)(e))
+    }
+}
+
 
 /// Record log level filter
 ///
@@ -149,12 +180,28 @@ impl<D1: Drain, D2: Drain> Duplicate<D1, D2> {
     }
 }
 
-impl<D1, D2, E> Drain for Duplicate<D1, D2>
-where
-D1 : Drain<Error = E>,
-D2 : Drain<Error = E>
-{
-    type Error = D1::Error;
+/// Logging error from `Duplicate` drain
+pub enum DuplicateError<E1, E2> {
+    /// First `Drain` has returned error
+    First(E1),
+    /// Second `Drain` has returned error
+    Second(E2),
+    /// Both `Drain`s have returned error
+    Both((E1, E2))
+}
+
+impl<E1 : fmt::Display, E2 : fmt::Display> fmt::Display for DuplicateError<E1, E2> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            &DuplicateError::First(ref e) => write!(f, "{})", *e),
+            &DuplicateError::Second(ref e) => write!(f, "{})", *e),
+            &DuplicateError::Both((ref e1, ref e2)) => write!(f, "({}, {})", *e1, *e2),
+        }
+    }
+}
+
+impl<D1 : Drain, D2 : Drain> Drain for Duplicate<D1, D2> {
+    type Error = DuplicateError<D1::Error, D2::Error>;
     fn log(&self,
            info: &Record,
            logger_values: &OwnedKeyValueList)
@@ -162,12 +209,11 @@ D2 : Drain<Error = E>
         let res1 = self.drain1.log(info, logger_values);
         let res2 = self.drain2.log(info, logger_values);
 
-        // TODO: Don't discard e2 in case of two errors at once?
         match (res1, res2) {
             (Ok(_), Ok(_)) => Ok(()),
-            (Ok(_), Err(e)) => Err(e),
-            (Err(e), Ok(_)) => Err(e),
-            (Err(e1), Err(_)) => Err(e1),
+            (Err(e), Ok(_)) => Err(DuplicateError::First(e)),
+            (Ok(_), Err(e)) => Err(DuplicateError::Second(e)),
+            (Err(e1), Err(e2)) => Err(DuplicateError::Both((e1, e2))),
         }
     }
 }
@@ -211,24 +257,24 @@ D2 : Drain<Error = E2>
 /// Panicking fuse
 ///
 /// `Logger` requires a root drain to handle all errors (`Drain::Error == ()`),
-/// `PanicFuse` will wrap a `Drain` and panic if it returns any errors.
+/// `Fuse` will wrap a `Drain` and panic if it returns any errors.
 ///
 /// Note: `Drain::Error` must implement `Display`. It's easy to create own
 /// `Fuse` drain if this requirement can't be fulfilled.
-pub struct PanicFuse<D: Drain> {
+pub struct Fuse<D: Drain> {
     drain: D,
 }
 
-impl<D: Drain> PanicFuse<D> {
-    /// Create PanicFuse wrapping given `subdrain`
+impl<D: Drain> Fuse<D> {
+    /// Create Fuse wrapping given `subdrain`
     pub fn new(drain: D) -> Self {
-        PanicFuse {
+        Fuse {
             drain: drain,
         }
     }
 }
 
-impl<D: Drain> Drain for PanicFuse<D> where D::Error : core::fmt::Display {
+impl<D: Drain> Drain for Fuse<D> where D::Error : fmt::Display {
     type Error = ();
     fn log(&self,
            info: &Record,
@@ -236,7 +282,7 @@ impl<D: Drain> Drain for PanicFuse<D> where D::Error : core::fmt::Display {
         -> result::Result<(), ()> {
             Ok(
                 self.drain.log(info, logger_values).unwrap_or_else(
-                    |e| panic!("PanicFuse: {}", e)
+                    |e| panic!("Fuse: {}", e)
                     )
                 )
         }
@@ -246,21 +292,21 @@ impl<D: Drain> Drain for PanicFuse<D> where D::Error : core::fmt::Display {
 /// Error ignoring fuse
 ///
 /// `Logger` requires a root drain to handle all errors (`Drain::Error == ()`),
-/// `IgnoreFuse` will ignore all errors of the drain it wraps.
-pub struct IgnoreFuse<D: Drain> {
+/// `IgnoreErr` will ignore all errors of the drain it wraps.
+pub struct IgnoreErr<D: Drain> {
     drain: D,
 }
 
-impl<D: Drain> IgnoreFuse<D> {
-    /// Create `IgnoreFuse` wrapping given `subdrain`
+impl<D: Drain> IgnoreErr<D> {
+    /// Create `IgnoreErr` wrapping given `subdrain`
     pub fn new(drain: D) -> Self {
-        IgnoreFuse {
+        IgnoreErr {
             drain: drain,
         }
     }
 }
 
-impl<D: Drain> Drain for IgnoreFuse<D> {
+impl<D: Drain> Drain for IgnoreErr<D> {
     type Error = ();
     fn log(&self,
            info: &Record,
@@ -309,14 +355,14 @@ pub fn failover<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Failover<D1, D2> {
 
 /// Panic if the subdrain returns an error.
 ///
-/// Create `PanicFuse` drain
-pub fn panic_fuse<D: Drain>(d: D) -> PanicFuse<D> {
-    PanicFuse::new(d)
+/// Create `Fuse` drain
+pub fn fuse<D: Drain>(d: D) -> Fuse<D> {
+    Fuse::new(d)
 }
 
 /// Ignore any errors returned by the subdrain
 ///
-/// Create `IgnoreFuse` drain
-pub fn ignore_fuse<D: Drain>(d: D) -> IgnoreFuse<D> {
-    IgnoreFuse::new(d)
+/// Create `IgnoreErr` drain
+pub fn ignore_err<D: Drain>(d: D) -> IgnoreErr<D> {
+    IgnoreErr::new(d)
 }
