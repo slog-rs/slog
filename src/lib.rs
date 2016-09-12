@@ -211,7 +211,7 @@ macro_rules! log(
     ($lvl:expr, $l:expr, $($k:expr => $v:expr),*; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic = $crate::RecordStatic {
+            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
                 level: $lvl,
                 file: file!(),
                 line: line!(),
@@ -226,7 +226,7 @@ macro_rules! log(
     ($lvl:expr, $l:expr, $($args:tt),+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic = $crate::RecordStatic {
+            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
                 level: $lvl,
                 file: file!(),
                 line: line!(),
@@ -241,7 +241,7 @@ macro_rules! log(
     ($lvl:expr, $l:expr, $msg:expr) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic = $crate::RecordStatic {
+            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
                 level: $lvl,
                 file: file!(),
                 line: line!(),
@@ -256,7 +256,7 @@ macro_rules! log(
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),*) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic = $crate::RecordStatic {
+            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
                 level: $lvl,
                 file: file!(),
                 line: line!(),
@@ -281,7 +281,7 @@ macro_rules! slog_log(
     ($lvl:expr, $l:expr, $($k:expr => $v:expr),*; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic = $crate::RecordStatic {
+            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
                 level: $lvl,
                 file: file!(),
                 line: line!(),
@@ -296,7 +296,7 @@ macro_rules! slog_log(
     ($lvl:expr, $l:expr, $($args:tt),+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic = $crate::RecordStatic {
+            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
                 level: $lvl,
                 file: file!(),
                 line: line!(),
@@ -311,7 +311,7 @@ macro_rules! slog_log(
     ($lvl:expr, $l:expr, $msg:expr) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic = $crate::RecordStatic {
+            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
                 level: $lvl,
                 file: file!(),
                 line: line!(),
@@ -326,7 +326,7 @@ macro_rules! slog_log(
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),*) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic = $crate::RecordStatic {
+            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
                 level: $lvl,
                 file: file!(),
                 line: line!(),
