@@ -1,6 +1,6 @@
 [package]
 name = "slog-stream"
-version = "1.0.0-alpha3"
+version = "1.0.0-alpha6"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "`io::Write` streamer for slog-rs"
 keywords = ["log", "logging", "structured", "hierarchical", "stream"]
@@ -14,4 +14,4 @@ readme = "../../README.md"
 path = "lib.rs"
 
 [dependencies]
-slog = { version = "1.0.0-alpha3", path = "../.." }
+slog = { version = "1.0.0-alpha6", path = "../.." }

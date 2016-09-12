@@ -1,6 +1,6 @@
 [package]
 name = "slog-term"
-version = "1.0.0-alpha3"
+version = "1.0.0-alpha6"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Unix terminal drain and formatter for slog-rs"
 keywords = ["slog", "logging", "log", "term"]
@@ -14,8 +14,8 @@ readme = "../../README.md"
 path = "lib.rs"
 
 [dependencies]
-slog = { version = "1.0.0-alpha3", path = "../.." }
-slog-stream = { version = "1.0.0-alpha3", path = "../stream" }
+slog = { version = "1.0.0-alpha6", path = "../.." }
+slog-stream = { version = "1.0.0-alpha6", path = "../stream" }
 isatty = "0.1"
 ansi_term = "0.7"
 chrono = "0.2"
