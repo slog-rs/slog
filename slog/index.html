@@ -47,18 +47,101 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog/src/lib.rs.html#1-405' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog/src/lib.rs.html#1-587' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
-<h1 id='slog----structured-composable-logging-for-rust' class='section-header'><a href='#slog----structured-composable-logging-for-rust'>Slog -  Structured, composable logging for Rust</a></h1></div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<h1 id='slog----structured-composable-logging-for-rust' class='section-header'><a href='#slog----structured-composable-logging-for-rust'>Slog -  Structured, composable logging for Rust</a></h1>
+<h2 id='features' class='section-header'><a href='#features'>Features</a></h2>
+<ul>
+<li>easy to use</li>
+<li>great performance; see: <a href="https://github.com/dpc/slog-rs/wiki/Bench-log">slog bench log</a></li>
+<li><code>#![no_std]</code> support (with <code>no_std</code> cargo feature)</li>
+<li>hierarchical loggers</li>
+<li>lazily evaluated values</li>
+<li>modular, lightweight and very extensible
+
+<ul>
+<li>tiny core create that does not pull any other dependencies</li>
+<li>feature-crates for specific functionality</li>
+</ul></li>
+<li>backward compatibility for standard <code>log</code> crate (<code>slog-stdlog</code> crate)
+
+<ul>
+<li>supports logging-scopes</li>
+<li>using slog in library does not force users of the library to use slog
+(but gives benefits); see <code>crates/example-lib</code></li>
+</ul></li>
+<li>drains &amp; output formatting
+
+<ul>
+<li>filtering
+
+<ul>
+<li>compile-time log level filter using cargo features (same as in <code>log</code> crate)</li>
+<li>by level, msg, and any other meta-data</li>
+<li><a href="https://github.com/dpc/slog-envlogger"><code>slog-envlogger</code></a> - port of <code>env_logger</code></li>
+</ul></li>
+<li>multiple outputs</li>
+<li>asynchronous IO writing</li>
+<li>terminal output, with color support (<code>slog-term</code> crate)</li>
+<li>Json (<code>slog-json</code> crate)
+
+<ul>
+<li>Bunyan (<code>slog-bunyan</code> crate)</li>
+</ul></li>
+<li>syslog (<code>slog-syslog</code> crate)</li>
+<li>first class custom drains</li>
+</ul></li>
+</ul>
+
+<h2 id='advantages-over-log-crate' class='section-header'><a href='#advantages-over-log-crate'>Advantages over <code>log</code> crate</a></h2>
+<ul>
+<li><strong>extensible</strong> - <code>slog</code> provides core functionality, and some standard
+feature-set. But using traits, anyone can easily implement as
+powerful fully-custom features, publish separately and grow <code>slog</code> feature-set
+for everyone.</li>
+<li><strong>composable</strong> - Wouldn&#39;t it be nice if you could use
+<a href="https://crates.io/crates/env_logger"><code>env_logger</code></a>, but output authentication messages to syslog,
+while reporting errors over network in json format? With <code>slog</code> drains can
+reuse other drains! You can combine them together, chain, wrap - you name it.</li>
+<li><strong>context aware</strong> - It&#39;s not just one global logger. Hierarchical
+loggers carry information about context of logging. When logging an error
+condition, you want to know which resource was being handled, on which
+instance of your service, using which source code build, talking with what
+peer, etc. In standard <code>log</code> you would have to repeat this information in
+every log statement. In <code>slog</code> it will happen automatically. See
+<a href="https://github.com/dpc/slog-rs/wiki/Functional-overview">slog-rs functional overview page</a> to understand better
+logger and drain hierarchies and log record flow through them.</li>
+<li>both <strong>human and machine readable</strong> - By keeping the key-value data format,
+meaning of logging data is preserved. Dump your logging to a JSON file, and
+send it to your data-mining system for further analysis. Don&#39;t parse it from
+lines of text anymore!</li>
+<li><strong>lazy evaluation</strong> and <strong>asynchronous IO</strong> included. Waiting to
+finish writing logging information to disk, or spending time calculating
+data that will be thrown away at the current logging level, are sources of big
+performance waste. Use <a href="http://dpc.pw/slog-rs/slog/drain/struct.AsyncStreamer.html"><code>AsyncStreamer</code></a> drain, and closures
+to make your logging fast.</li>
+<li><strong>run-time configuration</strong> - <a href="http://dpc.pw/slog-rs/slog/drain/struct.AtomicSwitch.html"><code>AtomicSwitch</code></a> drain allows
+changing logging behavior in the running program. You could use eg. signal
+handlers to change logging level or logging destinations. See
+<a href="https://github.com/dpc/slog-rs/blob/master/examples/signal.rs"><code>signal</code> example</a>.</li>
+</ul>
+
+<h2 id='notable-details' class='section-header'><a href='#notable-details'>Notable details</a></h2>
+<ul>
+<li>Default cargo features will remove completely during compilation debug
+and trace level records from release build, and trace level record
+from debug builds.</li>
+<li>Due to the <code>macro_rules</code> limitation log macros syntax comes in several
+versions. See <code>log!</code> macro, and pay attention to <code>;</code> and <code>,</code>
+differences.</li>
+<li>Root drain (passed to <code>Logger::root</code>) must be one that does not ever
+return errors, which forces user to pick error handing strategy. You
+can use <code>.fuse()</code> or <code>.ignore_err()</code> methods from <code>DrainExt</code> to do
+it conveniently.</li>
+</ul>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
 <table><tr><td><code>pub use ser::{<a class='struct' href='../slog/ser/struct.PushLazy.html' title='slog::ser::PushLazy'>PushLazy</a>, <a class='struct' href='../slog/ser/struct.ValueSerializer.html' title='slog::ser::ValueSerializer'>ValueSerializer</a>, <a class='trait' href='../slog/ser/trait.Serializer.html' title='slog::ser::Serializer'>Serializer</a>, <a class='trait' href='../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a>};</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
-                       <tr class=' module-item'>
-                           <td><a class='mod' href='format/index.html'
-                                  title='slog::format'>format</a></td>
-                           <td class='docblock short'>
-                                <p>Output formating</p>
-                           </td>
-                       </tr>
                        <tr class=' module-item'>
                            <td><a class='mod' href='ser/index.html'
                                   title='slog::ser'>ser</a></td>
@@ -174,14 +257,6 @@
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.AsyncStreamer.html'
-                                  title='slog::AsyncStreamer'>AsyncStreamer</a></td>
-                           <td class='docblock short'>
-                                <p>Drain formating records and writing them to a byte-stream (io::Write)
-asynchronously.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
                            <td><a class='struct' href='struct.Discard.html'
                                   title='slog::Discard'>Discard</a></td>
                            <td class='docblock short'>
@@ -210,6 +285,20 @@ asynchronously.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Fuse.html'
+                                  title='slog::Fuse'>Fuse</a></td>
+                           <td class='docblock short'>
+                                <p>Panicking fuse</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.IgnoreErr.html'
+                                  title='slog::IgnoreErr'>IgnoreErr</a></td>
+                           <td class='docblock short'>
+                                <p>Error ignoring fuse</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class='struct' href='struct.LevelFilter.html'
                                   title='slog::LevelFilter'>LevelFilter</a></td>
                            <td class='docblock short'>
@@ -221,6 +310,13 @@ asynchronously.</p>
                                   title='slog::Logger'>Logger</a></td>
                            <td class='docblock short'>
                                 <p>Logger</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.MapError.html'
+                                  title='slog::MapError'>MapError</a></td>
+                           <td class='docblock short'>
+                                <p>Map error of a <code>Drain</code></p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -243,15 +339,15 @@ asynchronously.</p>
                            <td class='docblock short'>
                                 <p>Logging record</p>
                            </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Streamer.html'
-                                  title='slog::Streamer'>Streamer</a></td>
-                           <td class='docblock short'>
-                                <p>Drain formating records and writing them to a byte-stream (io::Write)</p>
-                           </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.DuplicateError.html'
+                                  title='slog::DuplicateError'>DuplicateError</a></td>
+                           <td class='docblock short'>
+                                <p>Logging error from <code>Duplicate</code> drain</p>
+                           </td>
+                       </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.FilterLevel.html'
                                   title='slog::FilterLevel'>FilterLevel</a></td>
@@ -290,20 +386,13 @@ asynchronously.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Message.html'
-                                  title='slog::Message'>Message</a></td>
+                           <td><a class='trait' href='trait.DrainExt.html'
+                                  title='slog::DrainExt'>DrainExt</a></td>
                            <td class='docblock short'>
-                                <p>Log Record message</p>
+                                <p>Convenience methods</p>
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.async_stream.html'
-                                  title='slog::async_stream'>async_stream</a></td>
-                           <td class='docblock short'>
-                                <p>Stream logging records to IO asynchronously</p>
-                           </td>
-                       </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.discard.html'
                                   title='slog::discard'>discard</a></td>
@@ -333,17 +422,24 @@ asynchronously.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class='fn' href='fn.fuse.html'
+                                  title='slog::fuse'>fuse</a></td>
+                           <td class='docblock short'>
+                                <p>Panic if the subdrain returns an error.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.ignore_err.html'
+                                  title='slog::ignore_err'>ignore_err</a></td>
+                           <td class='docblock short'>
+                                <p>Ignore any errors returned by the subdrain</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class='fn' href='fn.level_filter.html'
                                   title='slog::level_filter'>level_filter</a></td>
                            <td class='docblock short'>
                                 <p>Filter by log level</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.stream.html'
-                                  title='slog::stream'>stream</a></td>
-                           <td class='docblock short'>
-                                <p>Stream logging records to IO</p>
                            </td>
                        </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>

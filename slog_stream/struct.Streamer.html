@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `Streamer` struct in crate `slog`.">
+    <meta name="description" content="API documentation for the Rust `Streamer` struct in crate `slog_stream`.">
     <meta name="keywords" content="rust, rustlang, rust-lang, Streamer">
 
-    <title>slog::Streamer - Rust</title>
+    <title>slog_stream::Streamer - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>slog</a></p><script>window.sidebarCurrent = {name: 'Streamer', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>slog_stream</a></p><script>window.sidebarCurrent = {name: 'Streamer', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,22 +43,24 @@
     </nav>
 
     <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>slog</a>::<wbr><a class='struct' href=''>Streamer</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>slog_stream</a>::<wbr><a class='struct' href=''>Streamer</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-722' class='srclink' href='../src/slog/src/_drain.rs.html#48-51' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Streamer&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>,&nbsp;F:&nbsp;<a class='trait' href='../slog/format/trait.Format.html' title='slog::format::Format'>Format</a>&gt; {
+               </span><a id='src-51' class='srclink' href='../src/slog_stream/lib.rs.html#28-31' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Streamer&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>,&nbsp;F:&nbsp;<a class='trait' href='../slog_stream/trait.Format.html' title='slog_stream::Format'>Format</a>&gt; {
     // some fields omitted
-}</pre><div class='docblock'><p>Drain formating records and writing them to a byte-stream (io::Write)</p>
+}</pre><div class='docblock'><p>Drain formating records and writing them to a byte-stream (<code>io::Write</code>)</p>
 
 <p>Uses mutex to serialize writes.
 TODO: Add one that does not serialize?</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>,&nbsp;F:&nbsp;<a class='trait' href='../slog/format/trait.Format.html' title='slog::format::Format'>Format</a>&gt; <a class='struct' href='../slog/struct.Streamer.html' title='slog::Streamer'>Streamer</a>&lt;W,&nbsp;F&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-727' class='srclink' href='../src/slog/src/_drain.rs.html#53-61' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>,&nbsp;F:&nbsp;<a class='trait' href='../slog_stream/trait.Format.html' title='slog_stream::Format'>Format</a>&gt; <a class='struct' href='../slog_stream/struct.Streamer.html' title='slog_stream::Streamer'>Streamer</a>&lt;W,&nbsp;F&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-56' class='srclink' href='../src/slog_stream/lib.rs.html#34-42' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(io: W, format: F) -&gt; Self</code></span></h4>
 <div class='docblock'><p>Create new <code>Streamer</code> writing to <code>io</code> using <code>format</code></p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;W:&nbsp;'static + <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>,&nbsp;F:&nbsp;<a class='trait' href='../slog/format/trait.Format.html' title='slog::format::Format'>Format</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>&gt; <a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a> for <a class='struct' href='../slog/struct.Streamer.html' title='slog::Streamer'>Streamer</a>&lt;W,&nbsp;F&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-733' class='srclink' href='../src/slog/src/_drain.rs.html#63-85' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.log' class='method'><span id='log.v' class='invisible'><code>fn <a href='../slog/trait.Drain.html#tymethod.log' class='fnname'>log</a>(&amp;self, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, logger_values: &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h4>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;W:&nbsp;'static + <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>,&nbsp;F:&nbsp;<a class='trait' href='../slog_stream/trait.Format.html' title='slog_stream::Format'>Format</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>&gt; <a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a> for <a class='struct' href='../slog_stream/struct.Streamer.html' title='slog_stream::Streamer'>Streamer</a>&lt;W,&nbsp;F&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-62' class='srclink' href='../src/slog_stream/lib.rs.html#45-69' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Error' class='type'><span id='Error.t' class='invisible'><code>type <a href='../slog/trait.Drain.html#associatedtype.Error' class='type'>Error</a> = <a class='struct' href='https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html' title='std::io::error::Error'>Error</a></code></span></h4>
+<div class='docblock'><p>Type of potential error returned during logging</p>
+</div><h4 id='method.log' class='method'><span id='log.v' class='invisible'><code>fn <a href='../slog/trait.Drain.html#tymethod.log' class='fnname'>log</a>(&amp;self, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, logger_values: &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h4>
 <div class='docblock'><p>Write one logging record As an optimization (avoiding allocations), loggers are responsible for providing a byte buffer, that <code>Drain</code> can use for their own needs. <a href="../slog/trait.Drain.html#tymethod.log">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -115,7 +117,7 @@ TODO: Add one that does not serialize?</p>
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "slog";
+        window.currentCrate = "slog_stream";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>

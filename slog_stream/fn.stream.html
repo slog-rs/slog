@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `async_stream` fn in crate `slog`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, async_stream">
+    <meta name="description" content="API documentation for the Rust `stream` fn in crate `slog_stream`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, stream">
 
-    <title>slog::async_stream - Rust</title>
+    <title>slog_stream::stream - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>slog</a></p><script>window.sidebarCurrent = {name: 'async_stream', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>slog_stream</a></p><script>window.sidebarCurrent = {name: 'stream', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,14 +43,14 @@
     </nav>
 
     <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>slog</a>::<wbr><a class='fn' href=''>async_stream</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>slog_stream</a>::<wbr><a class='fn' href=''>stream</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-893' class='srclink' href='../src/slog/src/_drain.rs.html#362-364' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn async_stream&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + 'static,&nbsp;F:&nbsp;<a class='trait' href='../slog/format/trait.Format.html' title='slog::format::Format'>Format</a>&gt;(io: W, format: F) -&gt; <a class='struct' href='../slog/struct.AsyncStreamer.html' title='slog::AsyncStreamer'>AsyncStreamer</a>&lt;F&gt;</pre><div class='docblock'><p>Stream logging records to IO asynchronously</p>
+               </span><a id='src-147' class='srclink' href='../src/slog_stream/lib.rs.html#210-212' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn stream&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>,&nbsp;F:&nbsp;<a class='trait' href='../slog_stream/trait.Format.html' title='slog_stream::Format'>Format</a>&gt;(io: W, format: F) -&gt; <a class='struct' href='../slog_stream/struct.Streamer.html' title='slog_stream::Streamer'>Streamer</a>&lt;W,&nbsp;F&gt;</pre><div class='docblock'><p>Stream logging records to IO</p>
 
-<p>Create <code>AsyncStreamer</code> drain</p>
+<p>Create <code>Streamer</code> drain</p>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -106,7 +106,7 @@
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "slog";
+        window.currentCrate = "slog_stream";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>

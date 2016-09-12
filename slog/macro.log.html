@@ -47,11 +47,13 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-955' class='srclink' href='../src/slog/src/lib.rs.html#52-85' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-780' class='srclink' href='../src/slog/src/lib.rs.html#209-270' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>log</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> { ... };
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span> ) <span class='op'>=&gt;</span> { ... };
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>),<span class='op'>+</span>) <span class='op'>=&gt;</span> { ... };
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> { ... };
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
 }</pre>
 <div class='docblock'><p>Log message of a given level</p>
 
@@ -60,6 +62,13 @@
 <p>The <code>max_level_*</code> features can be used to statically disable logging at
 various levels.</p>
 
+<p>Use longer name version macros if you want to prevent clash with legacy <code>log</code>
+crate macro names (see <code>examples/alternative_names.rs</code>).</p>
+
+<p>The following invocations are supported.</p>
+
+<p>Simple:</p>
+
 <pre class='rust rust-example-rendered'>
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
@@ -67,7 +76,43 @@ various levels.</p>
 <span class='kw'>fn</span> <span class='ident'>main</span>() {
     <span class='kw'>let</span> <span class='ident'>drain</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>discard</span>();
     <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>drain</span>, <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>));
-    <span class='macro'>info</span><span class='macro'>!</span>(<span class='ident'>root</span>, <span class='string'>&quot;test info log&quot;</span>, <span class='string'>&quot;log-key&quot;</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>);
+    <span class='macro'>info</span><span class='macro'>!</span>(<span class='ident'>root</span>, <span class='string'>&quot;test info log&quot;</span>; <span class='string'>&quot;log-key&quot;</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>);
+}</pre>
+
+<p>Note that <code>&quot;key&quot; =&gt; value</code> part is optional.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>drain</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>discard</span>();
+    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>drain</span>, <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>));
+    <span class='macro'>info</span><span class='macro'>!</span>(<span class='ident'>root</span>, <span class='string'>&quot;test info log&quot;</span>);
+}</pre>
+
+<p>Formatting support:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>drain</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>discard</span>();
+    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>drain</span>, <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>));
+    <span class='macro'>info</span><span class='macro'>!</span>(<span class='ident'>root</span>, <span class='string'>&quot;log-key&quot;</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>; <span class='string'>&quot;formatted: {}&quot;</span>, <span class='number'>1</span>);
+}</pre>
+
+<p>Again, <code>&quot;key&quot; =&gt; value</code> is optional.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>drain</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>discard</span>();
+    <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>drain</span>, <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>));
+    <span class='macro'>info</span><span class='macro'>!</span>(<span class='ident'>root</span>, <span class='string'>&quot;formatted: {}&quot;</span>, <span class='number'>1</span>);
 }</pre>
 </div></section>
     <section id='search' class="content hidden"></section>

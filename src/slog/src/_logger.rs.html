@@ -220,41 +220,7 @@
 <span id="176">176</span>
 <span id="177">177</span>
 <span id="178">178</span>
-<span id="179">179</span>
-<span id="180">180</span>
-<span id="181">181</span>
-<span id="182">182</span>
-<span id="183">183</span>
-<span id="184">184</span>
-<span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
-<span id="197">197</span>
-<span id="198">198</span>
-<span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
-<span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
 </pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>RefCell</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Cow</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
-
 
 <span class='doccomment'>/// Logger</span>
 <span class='doccomment'>///</span>
@@ -270,22 +236,10 @@
 <span class='doccomment'>/// any logger will change it on all loggers in given hierarchy.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Logger</span> {
-    <span class='ident'>drain</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&gt;</span>,
+    <span class='comment'>//TODO:</span>
+    <span class='comment'>//drain: Arc&lt;Drain&lt;Error=!&gt;&gt;,</span>
+    <span class='ident'>drain</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span>()<span class='op'>&gt;&gt;</span>,
     <span class='ident'>values</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>OwnedKeyValueList</span><span class='op'>&gt;</span>,
-}
-
-<span class='doccomment'>/// Log Record message</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Message</span> {
-    <span class='doccomment'>/// Take a string</span>
-    <span class='kw'>fn</span> <span class='ident'>as_str</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Cow</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span>;
-
-    <span class='doccomment'>/// Write it into `io` (which might be fast than `as_str()` it does not</span>
-    <span class='doccomment'>/// need to allocate anything in certain cases.</span>
-    <span class='kw'>fn</span> <span class='ident'>write_to</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>io</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Write</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>io</span>, <span class='string'>&quot;{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>as_str</span>()));
-        <span class='prelude-val'>Ok</span>(())
-    }
-
 }
 
 <span class='comment'>// TODO: why does this conflict with &amp;&#39;a str?</span>
@@ -296,30 +250,6 @@
 <span class='comment'>// }</span>
 <span class='comment'>//</span>
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Message</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span> {
-    <span class='kw'>fn</span> <span class='ident'>as_str</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Cow</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span> {
-        <span class='ident'>Cow</span>::<span class='ident'>Borrowed</span>(<span class='self'>self</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>Message</span> <span class='kw'>for</span> <span class='ident'>String</span> {
-    <span class='kw'>fn</span> <span class='ident'>as_str</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Cow</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span> {
-        <span class='ident'>Cow</span>::<span class='ident'>Borrowed</span>(<span class='self'>self</span>.<span class='ident'>as_str</span>())
-    }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Message</span> <span class='kw'>for</span> <span class='ident'>fmt</span>::<span class='ident'>Arguments</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>as_str</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Cow</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
-        <span class='ident'>fmt</span>::<span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>s</span>, <span class='op'>*</span><span class='self'>self</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>Cow</span>::<span class='ident'>Owned</span>(<span class='ident'>s</span>)
-    }
-
-    <span class='kw'>fn</span> <span class='ident'>write_to</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>io</span> : <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Write</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>io</span>, <span class='string'>&quot;{}&quot;</span>, <span class='self'>self</span>));
-        <span class='prelude-val'>Ok</span>(())
-    }
-}
 
 <span class='kw'>impl</span> <span class='ident'>Logger</span> {
     <span class='doccomment'>/// Build a root logger</span>
@@ -339,7 +269,7 @@
     <span class='doccomment'>///         o!(&quot;key1&quot; =&gt; &quot;value1&quot;, &quot;key2&quot; =&gt; &quot;value2&quot;),</span>
     <span class='doccomment'>///     );</span>
     <span class='doccomment'>/// }</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>root</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Drain</span> <span class='op'>+</span> <span class='ident'>Sized</span><span class='op'>&gt;</span>(<span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>values</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>OwnedKeyValue</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Logger</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>root</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span>()<span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Sized</span><span class='op'>&gt;</span>(<span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>values</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>OwnedKeyValue</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Logger</span> {
         <span class='ident'>Logger</span> {
             <span class='ident'>drain</span>: <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>d</span>),
             <span class='ident'>values</span>: <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>OwnedKeyValueList</span>::<span class='ident'>root</span>(<span class='ident'>values</span>)),
@@ -380,21 +310,28 @@
     }
 }
 
+<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>RecordStatic</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
+    <span class='doccomment'>/// Logging level</span>
+    <span class='kw'>pub</span> <span class='ident'>level</span>: <span class='ident'>Level</span>,
+    <span class='doccomment'>/// File</span>
+    <span class='kw'>pub</span> <span class='ident'>file</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
+    <span class='doccomment'>/// Line</span>
+    <span class='kw'>pub</span> <span class='ident'>line</span>: <span class='ident'>u32</span>,
+    <span class='doccomment'>/// Column (currently not implemented)</span>
+    <span class='kw'>pub</span> <span class='ident'>column</span>: <span class='ident'>u32</span>,
+    <span class='doccomment'>/// Function (currently not implemented)</span>
+    <span class='kw'>pub</span> <span class='ident'>function</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
+    <span class='doccomment'>/// Module</span>
+    <span class='kw'>pub</span> <span class='ident'>module</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
+    <span class='doccomment'>/// Target - for backward compatibility with `log`</span>
+    <span class='kw'>pub</span> <span class='ident'>target</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>,
+}
+
 <span class='doccomment'>/// Logging record</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Record</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Logging level</span>
-    <span class='ident'>level</span>: <span class='ident'>Level</span>,
-    <span class='doccomment'>/// Message</span>
-    <span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Message</span>,
-    <span class='doccomment'>/// File</span>
-    <span class='ident'>file</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-    <span class='doccomment'>/// Line</span>
-    <span class='ident'>line</span>: <span class='ident'>u32</span>,
-    <span class='doccomment'>/// Module</span>
-    <span class='ident'>module</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-    <span class='doccomment'>/// Target - for backward compatibility with `log`</span>
-    <span class='ident'>target</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>,
-    <span class='doccomment'>/// Values</span>
+    <span class='ident'>meta</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>RecordStatic</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>,
+    <span class='ident'>msg</span>: <span class='ident'>fmt</span>::<span class='ident'>Arguments</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>,
     <span class='ident'>values</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>BorrowedKeyValue</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>],
 }
 
@@ -402,56 +339,59 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Record</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Create a new `Record`</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(
-               <span class='ident'>level</span>: <span class='ident'>Level</span>,
-               <span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Message</span>,
-               <span class='ident'>file</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-               <span class='ident'>line</span>: <span class='ident'>u32</span>,
-               <span class='ident'>module</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-               <span class='ident'>target</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>,
-               <span class='ident'>values</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>BorrowedKeyValue</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>])
-               <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+        <span class='ident'>s</span> : <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>RecordStatic</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>,
+        <span class='ident'>msg</span>: <span class='ident'>fmt</span>::<span class='ident'>Arguments</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>,
+        <span class='ident'>values</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>BorrowedKeyValue</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>],
+        ) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>Record</span> {
-            <span class='ident'>level</span>: <span class='ident'>level</span>,
+            <span class='ident'>meta</span>: <span class='ident'>s</span>,
             <span class='ident'>msg</span>: <span class='ident'>msg</span>,
-            <span class='ident'>file</span>: <span class='ident'>file</span>,
-            <span class='ident'>line</span>: <span class='ident'>line</span>,
-            <span class='ident'>module</span>: <span class='ident'>module</span>,
-            <span class='ident'>target</span>: <span class='ident'>target</span>,
             <span class='ident'>values</span>: <span class='ident'>values</span>,
         }
     }
 
     <span class='doccomment'>/// Get a log record message</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>msg</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Cow</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>msg</span>.<span class='ident'>as_str</span>()
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>msg</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Arguments</span> {
+        <span class='self'>self</span>.<span class='ident'>msg</span>
     }
 
     <span class='doccomment'>/// Get record logging level</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>level</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Level</span> {
-        <span class='self'>self</span>.<span class='ident'>level</span>
+        <span class='self'>self</span>.<span class='ident'>meta</span>.<span class='ident'>level</span>
     }
 
     <span class='doccomment'>/// Get line number</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>line</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='self'>self</span>.<span class='ident'>line</span>
+        <span class='self'>self</span>.<span class='ident'>meta</span>.<span class='ident'>line</span>
+    }
+
+    <span class='doccomment'>/// Get error column</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>column</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
+        <span class='self'>self</span>.<span class='ident'>meta</span>.<span class='ident'>column</span>
     }
 
     <span class='doccomment'>/// Get file path</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>file</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> {
-        <span class='self'>self</span>.<span class='ident'>file</span>
+        <span class='self'>self</span>.<span class='ident'>meta</span>.<span class='ident'>file</span>
     }
 
     <span class='doccomment'>/// Get target</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Mostly for backward compatibility with `log`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>target</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='self'>self</span>.<span class='ident'>target</span>
+        <span class='self'>self</span>.<span class='ident'>meta</span>.<span class='ident'>target</span>
     }
 
     <span class='doccomment'>/// Get module</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>module</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> {
-        <span class='self'>self</span>.<span class='ident'>module</span>
+        <span class='self'>self</span>.<span class='ident'>meta</span>.<span class='ident'>module</span>
+    }
+
+    <span class='doccomment'>/// Get module</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>function</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> {
+        <span class='self'>self</span>.<span class='ident'>meta</span>.<span class='ident'>function</span>
     }
 
     <span class='doccomment'>/// Record value-key pairs</span>

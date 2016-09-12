@@ -1,1 +1,0 @@
-initSidebarItems({"trait":[["Decorator","Formatted stream decorator"],["Format","Formats `Record`-s into IO"],["RecordDecorator","Per-record decorator"]]});

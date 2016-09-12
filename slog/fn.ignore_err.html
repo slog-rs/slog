@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `format` mod in crate `slog`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, format">
+    <meta name="description" content="API documentation for the Rust `ignore_err` fn in crate `slog`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, ignore_err">
 
-    <title>slog::format - Rust</title>
+    <title>slog::ignore_err - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
     
 
     
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>slog</a></p><script>window.sidebarCurrent = {name: 'format', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>slog</a></p><script>window.sidebarCurrent = {name: 'ignore_err', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,36 +42,16 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>slog</a>::<wbr><a class='mod' href=''>format</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content fn">
+<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>slog</a>::<wbr><a class='fn' href=''>ignore_err</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-445' class='srclink' href='../../src/slog/src/format.rs.html#1-56' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>Output formating</p>
-</div><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Decorator.html'
-                                  title='slog::format::Decorator'>Decorator</a></td>
-                           <td class='docblock short'>
-                                <p>Formatted stream decorator</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Format.html'
-                                  title='slog::format::Format'>Format</a></td>
-                           <td class='docblock short'>
-                                <p>Formats <code>Record</code>-s into IO</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='trait' href='trait.RecordDecorator.html'
-                                  title='slog::format::RecordDecorator'>RecordDecorator</a></td>
-                           <td class='docblock short'>
-                                <p>Per-record decorator</p>
-                           </td>
-                       </tr></table></section>
+               </span><a id='src-740' class='srclink' href='../src/slog/src/_drain.rs.html#366-368' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn ignore_err&lt;D:&nbsp;<a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a>&gt;(d: D) -&gt; <a class='struct' href='../slog/struct.IgnoreErr.html' title='slog::IgnoreErr'>IgnoreErr</a>&lt;D&gt;</pre><div class='docblock'><p>Ignore any errors returned by the subdrain</p>
+
+<p>Create <code>IgnoreErr</code> drain</p>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -125,13 +105,13 @@
     
 
     <script>
-        window.rootPath = "../../";
+        window.rootPath = "../";
         window.currentCrate = "slog";
         window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
     
-    <script defer src="../../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

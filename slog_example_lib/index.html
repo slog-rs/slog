@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `stream` fn in crate `slog`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, stream">
+    <meta name="description" content="API documentation for the Rust `slog_example_lib` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, slog_example_lib">
 
-    <title>slog::stream - Rust</title>
+    <title>slog_example_lib - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>slog</a></p><script>window.sidebarCurrent = {name: 'stream', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'slog_example_lib', ty: 'mod', relpath: '../'};</script>
     </nav>
 
     <nav class="sub">
@@ -42,16 +42,23 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>slog</a>::<wbr><a class='fn' href=''>stream</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>slog_example_lib</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-888' class='srclink' href='../src/slog/src/_drain.rs.html#355-357' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn stream&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a>,&nbsp;F:&nbsp;<a class='trait' href='../slog/format/trait.Format.html' title='slog::format::Format'>Format</a>&gt;(io: W, format: F) -&gt; <a class='struct' href='../slog/struct.Streamer.html' title='slog::Streamer'>Streamer</a>&lt;W,&nbsp;F&gt;</pre><div class='docblock'><p>Stream logging records to IO</p>
-
-<p>Create <code>Streamer</code> drain</p>
-</div></section>
+               </span><a id='src-0' class='srclink' href='../src/slog_example_lib/lib.rs.html#1-35' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Example of a library utilizing <code>slog</code></p>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<table><tr><td><code>pub extern crate <a class='mod' href='../slog/index.html' title='slog'>slog</a>;</code></td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.MyLib.html'
+                                  title='slog_example_lib::MyLib'>MyLib</a></td>
+                           <td class='docblock short'>
+                                <p>MyLib main struct</p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -106,7 +113,7 @@
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "slog";
+        window.currentCrate = "slog_example_lib";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>

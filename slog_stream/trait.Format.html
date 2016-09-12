@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `Format` trait in crate `slog`.">
+    <meta name="description" content="API documentation for the Rust `Format` trait in crate `slog_stream`.">
     <meta name="keywords" content="rust, rustlang, rust-lang, Format">
 
-    <title>slog::format::Format - Rust</title>
+    <title>slog_stream::Format - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
     
 
     
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>slog</a>::<wbr><a href='index.html'>format</a></p><script>window.sidebarCurrent = {name: 'Format', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>slog_stream</a></p><script>window.sidebarCurrent = {name: 'Format', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,23 +43,23 @@
     </nav>
 
     <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>slog</a>::<wbr><a href='index.html'>format</a>::<wbr><a class='trait' href=''>Format</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>slog_stream</a>::<wbr><a class='trait' href=''>Format</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-449' class='srclink' href='../../src/slog/src/format.rs.html#8-15' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-11' class='srclink' href='../src/slog_stream/format.rs.html#3-10' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Format: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> {
-    fn <a href='#tymethod.format' class='fnname'>format</a>(&amp;self, io: &amp;mut <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>, info: &amp;<a class='struct' href='../../slog/struct.Record.html' title='slog::Record'>Record</a>, logger_values: &amp;<a class='struct' href='../../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;;
+    fn <a href='#tymethod.format' class='fnname'>format</a>(&amp;self, io: &amp;mut <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, logger_values: &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;;
 }</pre><div class='docblock'><p>Formats <code>Record</code>-s into IO</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.format' class='method stab '><span id='format.v' class='invisible'><code>fn <a href='#tymethod.format' class='fnname'>format</a>(&amp;self, io: &amp;mut <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>, info: &amp;<a class='struct' href='../../slog/struct.Record.html' title='slog::Record'>Record</a>, logger_values: &amp;<a class='struct' href='../../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h3><div class='docblock'><p>Format one logging record and write into <code>io</code></p>
+        <h3 id='tymethod.format' class='method stab '><span id='format.v' class='invisible'><code>fn <a href='#tymethod.format' class='fnname'>format</a>(&amp;self, io: &amp;mut <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, logger_values: &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h3><div class='docblock'><p>Format one logging record and write into <code>io</code></p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
     </ul><script type="text/javascript" async
-                         src="../../implementors/slog/format/trait.Format.js">
+                         src="../implementors/slog_stream/trait.Format.js">
                  </script></section>
     <section id='search' class="content hidden"></section>
 
@@ -114,13 +114,13 @@
     
 
     <script>
-        window.rootPath = "../../";
-        window.currentCrate = "slog";
+        window.rootPath = "../";
+        window.currentCrate = "slog_stream";
         window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
     
-    <script defer src="../../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

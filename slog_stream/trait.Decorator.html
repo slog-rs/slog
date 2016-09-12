@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `Decorator` trait in crate `slog`.">
+    <meta name="description" content="API documentation for the Rust `Decorator` trait in crate `slog_stream`.">
     <meta name="keywords" content="rust, rustlang, rust-lang, Decorator">
 
-    <title>slog::format::Decorator - Rust</title>
+    <title>slog_stream::Decorator - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
     
 
     
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>slog</a>::<wbr><a href='index.html'>format</a></p><script>window.sidebarCurrent = {name: 'Decorator', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>slog_stream</a></p><script>window.sidebarCurrent = {name: 'Decorator', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,14 +43,14 @@
     </nav>
 
     <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>slog</a>::<wbr><a href='index.html'>format</a>::<wbr><a class='trait' href=''>Decorator</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>slog_stream</a>::<wbr><a class='trait' href=''>Decorator</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-455' class='srclink' href='../../src/slog/src/format.rs.html#22-28' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-17' class='srclink' href='../src/slog_stream/format.rs.html#17-23' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Decorator: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> {
-    type <a href='#associatedtype.RecordDecorator' class='type'>RecordDecorator</a>: <a class='trait' href='../../slog/format/trait.RecordDecorator.html' title='slog::format::RecordDecorator'>RecordDecorator</a>;
-    fn <a href='#tymethod.decorate' class='fnname'>decorate</a>(&amp;self, record: &amp;<a class='struct' href='../../slog/struct.Record.html' title='slog::Record'>Record</a>) -&gt; Self::RecordDecorator;
+    type <a href='#associatedtype.RecordDecorator' class='type'>RecordDecorator</a>: <a class='trait' href='../slog_stream/trait.RecordDecorator.html' title='slog_stream::RecordDecorator'>RecordDecorator</a>;
+    fn <a href='#tymethod.decorate' class='fnname'>decorate</a>(&amp;self, record: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>) -&gt; Self::RecordDecorator;
 }</pre><div class='docblock'><p>Formatted stream decorator</p>
 
 <p>Some <code>Format</code>s for which it make sense can use this to parametrize
@@ -59,16 +59,16 @@ can be used eg. to use color when displaying logger records on the terminal.</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
             <div class='methods'>
-        <h3 id='associatedtype.RecordDecorator' class='method stab '><span id='RecordDecorator.t' class='invisible'><code>type <a href='#associatedtype.RecordDecorator' class='type'>RecordDecorator</a>: <a class='trait' href='../../slog/format/trait.RecordDecorator.html' title='slog::format::RecordDecorator'>RecordDecorator</a></code></span></h3><div class='docblock'><p>Per-record decorator</p>
+        <h3 id='associatedtype.RecordDecorator' class='method stab '><span id='RecordDecorator.t' class='invisible'><code>type <a href='#associatedtype.RecordDecorator' class='type'>RecordDecorator</a>: <a class='trait' href='../slog_stream/trait.RecordDecorator.html' title='slog_stream::RecordDecorator'>RecordDecorator</a></code></span></h3><div class='docblock'><p>Per-record decorator</p>
 </div></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.decorate' class='method stab '><span id='decorate.v' class='invisible'><code>fn <a href='#tymethod.decorate' class='fnname'>decorate</a>(&amp;self, record: &amp;<a class='struct' href='../../slog/struct.Record.html' title='slog::Record'>Record</a>) -&gt; Self::RecordDecorator</code></span></h3><div class='docblock'><p>Get a <code>RecordDecorator</code> for a given <code>record</code></p>
+        <h3 id='tymethod.decorate' class='method stab '><span id='decorate.v' class='invisible'><code>fn <a href='#tymethod.decorate' class='fnname'>decorate</a>(&amp;self, record: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>) -&gt; Self::RecordDecorator</code></span></h3><div class='docblock'><p>Get a <code>RecordDecorator</code> for a given <code>record</code></p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
     </ul><script type="text/javascript" async
-                         src="../../implementors/slog/format/trait.Decorator.js">
+                         src="../implementors/slog_stream/trait.Decorator.js">
                  </script></section>
     <section id='search' class="content hidden"></section>
 
@@ -123,13 +123,13 @@ can be used eg. to use color when displaying logger records on the terminal.</p>
     
 
     <script>
-        window.rootPath = "../../";
-        window.currentCrate = "slog";
+        window.rootPath = "../";
+        window.currentCrate = "slog_stream";
         window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
     
-    <script defer src="../../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

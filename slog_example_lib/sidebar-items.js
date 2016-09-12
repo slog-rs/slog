@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["MyLib","MyLib main struct"]]});

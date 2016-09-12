@@ -47,19 +47,19 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-138' class='srclink' href='../src/slog_term/lib.rs.html#197-199' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-140' class='srclink' href='../src/slog_term/lib.rs.html#189-191' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct ColorDecorator {
     // some fields omitted
 }</pre><div class='docblock'><p>Decorator that can colors things</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../slog_term/struct.ColorDecorator.html' title='slog_term::ColorDecorator'>ColorDecorator</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-140' class='srclink' href='../src/slog_term/lib.rs.html#201-210' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../slog_term/struct.ColorDecorator.html' title='slog_term::ColorDecorator'>ColorDecorator</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-142' class='srclink' href='../src/slog_term/lib.rs.html#193-202' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new_colored' class='method'><span id='new_colored.v' class='invisible'><code>fn <a href='#method.new_colored' class='fnname'>new_colored</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>New decorator that does color records</p>
 </div><h4 id='method.new_plain' class='method'><span id='new_plain.v' class='invisible'><code>fn <a href='#method.new_plain' class='fnname'>new_plain</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>New decorator that does not color records</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../slog/format/trait.Decorator.html' title='slog::format::Decorator'>Decorator</a> for <a class='struct' href='../slog_term/struct.ColorDecorator.html' title='slog_term::ColorDecorator'>ColorDecorator</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-146' class='srclink' href='../src/slog_term/lib.rs.html#219-236' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='associatedtype.RecordDecorator' class='type'><span id='RecordDecorator.t' class='invisible'><code>type <a href='../slog/format/trait.Decorator.html#associatedtype.RecordDecorator' class='type'>RecordDecorator</a> = <a class='struct' href='../slog_term/struct.ColorRecordDecorator.html' title='slog_term::ColorRecordDecorator'>ColorRecordDecorator</a></code></span></h4>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../slog_stream/trait.Decorator.html' title='slog_stream::Decorator'>Decorator</a> for <a class='struct' href='../slog_term/struct.ColorDecorator.html' title='slog_term::ColorDecorator'>ColorDecorator</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-148' class='srclink' href='../src/slog_term/lib.rs.html#211-227' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.RecordDecorator' class='type'><span id='RecordDecorator.t' class='invisible'><code>type <a href='../slog_stream/trait.Decorator.html#associatedtype.RecordDecorator' class='type'>RecordDecorator</a> = <a class='struct' href='../slog_term/struct.ColorRecordDecorator.html' title='slog_term::ColorRecordDecorator'>ColorRecordDecorator</a></code></span></h4>
 <div class='docblock'><p>Per-record decorator</p>
-</div><h4 id='method.decorate' class='method'><span id='decorate.v' class='invisible'><code>fn <a href='../slog/format/trait.Decorator.html#tymethod.decorate' class='fnname'>decorate</a>(&amp;self, record: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>) -&gt; <a class='struct' href='../slog_term/struct.ColorRecordDecorator.html' title='slog_term::ColorRecordDecorator'>ColorRecordDecorator</a></code></span></h4>
+</div><h4 id='method.decorate' class='method'><span id='decorate.v' class='invisible'><code>fn <a href='../slog_stream/trait.Decorator.html#tymethod.decorate' class='fnname'>decorate</a>(&amp;self, record: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>) -&gt; <a class='struct' href='../slog_term/struct.ColorRecordDecorator.html' title='slog_term::ColorRecordDecorator'>ColorRecordDecorator</a></code></span></h4>
 <div class='docblock'><p>Get a <code>RecordDecorator</code> for a given <code>record</code></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
