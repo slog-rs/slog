@@ -1,0 +1,18 @@
+[package]
+name = "slog-example-lib"
+version = "0.1.0"
+authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
+description = "Example of a library utilizing slog-rs"
+keywords = ["log", "logging", "structured", "hierarchical", "example"]
+license = "MPL-2.0"
+documentation = "https://dpc.github.io/slog-rs/"
+homepage = "https://github.com/dpc/slog-rs"
+repository = "https://github.com/dpc/slog-rs"
+readme = "../../README.md"
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+slog = { version = "1.0.0-alpha3", path = "../.." }
+slog-stdlog = { version = "1.0.0-alpha3", path = "../stdlog" }
