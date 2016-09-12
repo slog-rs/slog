@@ -69,6 +69,13 @@ macro_rules! o(
 /// The `max_level_*` features can be used to statically disable logging at
 /// various levels.
 ///
+/// Use longer name version macros if you want to prevent clash with legacy `log`
+/// crate macro names (see `examples/alternative_names.rs`).
+///
+/// The following invocations are supported.
+///
+/// Simple:
+///
 /// ```
 /// #[macro_use]
 /// extern crate slog;
@@ -79,6 +86,47 @@ macro_rules! o(
 ///     info!(root, "test info log"; "log-key" => true);
 /// }
 /// ```
+///
+/// Note that `"key" => value` part is optional.
+///
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+///
+/// fn main() {
+///     let drain = slog::discard();
+///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     info!(root, "test info log");
+/// }
+/// ```
+///
+/// Formatting support:
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+///
+/// fn main() {
+///     let drain = slog::discard();
+///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     info!(root, "log-key" => true; "formatted: {}", 1);
+/// }
+/// ```
+///
+/// Again, `"key" => value` is optional.
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+///
+/// fn main() {
+///     let drain = slog::discard();
+///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     info!(root, "formatted: {}", 1);
+/// }
+/// ```
+
 #[macro_export]
 macro_rules! log(
     ($lvl:expr, $l:expr, $($k:expr => $v:expr),*; $($args:tt)+ ) => {
