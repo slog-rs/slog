@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog/src/lib.rs.html#1-587' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog/src/lib.rs.html#1-614' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='slog----structured-composable-logging-for-rust' class='section-header'><a href='#slog----structured-composable-logging-for-rust'>Slog -  Structured, composable logging for Rust</a></h1>
 <h2 id='features' class='section-header'><a href='#features'>Features</a></h2>
@@ -128,12 +128,13 @@ handlers to change logging level or logging destinations. See
 
 <h2 id='notable-details' class='section-header'><a href='#notable-details'>Notable details</a></h2>
 <ul>
-<li>Default cargo features will remove completely during compilation debug
-and trace level records from release build, and trace level record
-from debug builds.</li>
+<li>By defaut does not compile in trace and debug level records in release builds,
+and trace level records in debug builds. This makes <code>trace</code> and
+<code>debug</code> level logging records practically free, which should encourage
+using them freely.</li>
 <li>Due to the <code>macro_rules</code> limitation log macros syntax comes in several
 versions. See <code>log!</code> macro, and pay attention to <code>;</code> and <code>,</code>
-differences.</li>
+details.</li>
 <li>Root drain (passed to <code>Logger::root</code>) must be one that does not ever
 return errors, which forces user to pick error handing strategy. You
 can use <code>.fuse()</code> or <code>.ignore_err()</code> methods from <code>DrainExt</code> to do

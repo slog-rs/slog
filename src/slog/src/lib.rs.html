@@ -629,6 +629,33 @@
 <span id="585">585</span>
 <span id="586">586</span>
 <span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 <span class='doccomment'>//!</span>
@@ -693,12 +720,13 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ## Notable details</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! * Default cargo features will remove completely during compilation debug</span>
-<span class='doccomment'>//!   and trace level records from release build, and trace level record</span>
-<span class='doccomment'>//!   from debug builds.</span>
+<span class='doccomment'>//! * By defaut does not compile in trace and debug level records in release builds,</span>
+<span class='doccomment'>//!   and trace level records in debug builds. This makes `trace` and</span>
+<span class='doccomment'>//!   `debug` level logging records practically free, which should encourage</span>
+<span class='doccomment'>//!   using them freely.</span>
 <span class='doccomment'>//! * Due to the `macro_rules` limitation log macros syntax comes in several</span>
 <span class='doccomment'>//!   versions. See `log!` macro, and pay attention to `;` and `,`</span>
-<span class='doccomment'>//!   differences.</span>
+<span class='doccomment'>//!   details.</span>
 <span class='doccomment'>//! * Root drain (passed to `Logger::root`) must be one that does not ever</span>
 <span class='doccomment'>//!   return errors, which forces user to pick error handing strategy. You</span>
 <span class='doccomment'>//!   can use `.fuse()` or `.ignore_err()` methods from `DrainExt` to do</span>
@@ -905,6 +933,8 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Prefer shorter version, unless it clashes with</span>
 <span class='doccomment'>/// existing `log` crate macro.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slog_log</span>(
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span> ) <span class='op'>=&gt;</span> {
@@ -970,6 +1000,8 @@
 );
 
 <span class='doccomment'>/// Log critical level record</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>crit</span>(
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> {
@@ -981,6 +1013,8 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Prefer shorter version, unless it clashes with</span>
 <span class='doccomment'>/// existing `log` crate macro.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slog_crit</span>(
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> {
@@ -989,6 +1023,8 @@
 );
 
 <span class='doccomment'>/// Log error level record</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>error</span>(
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> {
@@ -1000,6 +1036,8 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Prefer shorter version, unless it clashes with</span>
 <span class='doccomment'>/// existing `log` crate macro.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slog_error</span>(
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> {
@@ -1009,6 +1047,8 @@
 
 
 <span class='doccomment'>/// Log warning level record</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>warn</span>(
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> {
@@ -1020,6 +1060,8 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Prefer shorter version, unless it clashes with</span>
 <span class='doccomment'>/// existing `log` crate macro.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slog_warn</span>(
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> {
@@ -1028,6 +1070,8 @@
 );
 
 <span class='doccomment'>/// Log info level record</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>info</span>(
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> {
@@ -1039,6 +1083,8 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Prefer shorter version, unless it clashes with</span>
 <span class='doccomment'>/// existing `log` crate macro.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slog_info</span>(
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> {
@@ -1047,6 +1093,8 @@
 );
 
 <span class='doccomment'>/// Log debug level record</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>debug</span>(
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> {
@@ -1058,6 +1106,8 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Prefer shorter version, unless it clashes with</span>
 <span class='doccomment'>/// existing `log` crate macro.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slog_debug</span>(
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> {
@@ -1067,6 +1117,8 @@
 
 
 <span class='doccomment'>/// Log trace level record</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>trace</span>(
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> {
@@ -1078,6 +1130,8 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Prefer shorter version, unless it clashes with</span>
 <span class='doccomment'>/// existing `log` crate macro.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `log` for documentation.</span>
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slog_trace</span>(
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> {
