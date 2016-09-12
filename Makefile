@@ -78,7 +78,7 @@ doc: FORCE
 	cd "crates/syslog"; cargo doc -p slog-syslog
 	cd "crates/stdlog"; cargo doc -p slog-stdlog
 	cd "crates/atomic"; cargo doc -p slog-atomic
-	cd "crates/example-lib"; cargo doc -p example-lib
+	cd "crates/example-lib"; cargo doc -p slog-example-lib
 
 .PHONY: publishdoc
 publishdoc:

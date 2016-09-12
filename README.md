@@ -29,7 +29,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 
 * easy to use
 * great performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
-* `#![no_std]` support
+* `#![no_std]` support (with `no_std` cargo feature)
 * hierarchical loggers
 * lazily evaluated values
 * modular, lightweight and very extensible
@@ -37,6 +37,8 @@ Long term goal is to make it a go-to logging crate for Rust.
 	* feature-crates for specific functionality
 * backward compatibility for standard `log` crate (`slog-stdlog` crate)
 	* supports logging-scopes
+	* using slog in library does not force users of the library to use slog
+	  (but gives benefits); see `crates/example-lib`
 * drains & output formatting
 	* filtering
 		* compile-time log level filter using cargo features (same as in `log` crate)
@@ -102,6 +104,8 @@ Compact mode:
 
 ### Code snippet
 
+Excerpt from `examples/features.rs`:
+
 ```rust
 fn main() {
     // Create a new drain hierarchy, for the need of your program.
@@ -162,11 +166,11 @@ fn main() {
             // Closures can be used for lazy evaluation:
             // This `slow_fib` won't be evaluated, as the current drain discards
             // "trace" level logging records.
-            debug!(log, "debug", "lazy-closure" => |_ : &Record| slow_fib(40));
+            debug!(log, "debug"; "lazy-closure" => |_ : &Record| slow_fib(40));
 
-            info!(log, "subthread", "stage" => "start");
+            info!(log, "subthread"; "stage" => "start");
             thread::sleep(Duration::new(1, 0));
-            info!(log, "subthread", "stage" => "end");
+            info!(log, "subthread"; "stage" => "end");
         }
     });
 

@@ -1,4 +1,84 @@
 //! # Slog -  Structured, composable logging for Rust
+//!
+//! ## Features
+//!
+//! * easy to use
+//! * great performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
+//! * `#![no_std]` support (with `no_std` cargo feature)
+//! * hierarchical loggers
+//! * lazily evaluated values
+//! * modular, lightweight and very extensible
+//! 	* tiny core create that does not pull any other dependencies
+//! 	* feature-crates for specific functionality
+//! * backward compatibility for standard `log` crate (`slog-stdlog` crate)
+//! 	* supports logging-scopes
+//! 	* using slog in library does not force users of the library to use slog
+//! 	  (but gives benefits); see `crates/example-lib`
+//! * drains & output formatting
+//! 	* filtering
+//! 		* compile-time log level filter using cargo features (same as in `log` crate)
+//! 		* by level, msg, and any other meta-data
+//! 		* [`slog-envlogger`](https://github.com/dpc/slog-envlogger) - port of `env_logger`
+//! 	* multiple outputs
+//! 	* asynchronous IO writing
+//! 	* terminal output, with color support (`slog-term` crate)
+//! 	* Json (`slog-json` crate)
+//! 		* Bunyan (`slog-bunyan` crate)
+//! 	* syslog (`slog-syslog` crate)
+//! 	* first class custom drains
+//!
+//! ## Advantages over `log` crate
+//!
+//! * **extensible** - `slog` provides core functionality, and some standard
+//!   feature-set. But using traits, anyone can easily implement as
+//!   powerful fully-custom features, publish separately and grow `slog` feature-set
+//!   for everyone.
+//! * **composable** - Wouldn't it be nice if you could use
+//!   [`env_logger`][env_logger], but output authentication messages to syslog,
+//!   while reporting errors over network in json format? With `slog` drains can
+//!   reuse other drains! You can combine them together, chain, wrap - you name it.
+//! * **context aware** - It's not just one global logger. Hierarchical
+//!   loggers carry information about context of logging. When logging an error
+//!   condition, you want to know which resource was being handled, on which
+//!   instance of your service, using which source code build, talking with what
+//!   peer, etc. In standard `log` you would have to repeat this information in
+//!   every log statement. In `slog` it will happen automatically. See
+//!   [slog-rs functional overview page][functional-overview] to understand better
+//!   logger and drain hierarchies and log record flow through them.
+//! * both **human and machine readable** - By keeping the key-value data format,
+//!   meaning of logging data is preserved. Dump your logging to a JSON file, and
+//!   send it to your data-mining system for further analysis. Don't parse it from
+//!   lines of text anymore!
+//! * **lazy evaluation** and **asynchronous IO** included. Waiting to
+//!   finish writing logging information to disk, or spending time calculating
+//!   data that will be thrown away at the current logging level, are sources of big
+//!   performance waste. Use [`AsyncStreamer`][async-streamer] drain, and closures
+//!   to make your logging fast.
+//! * **run-time configuration** - [`AtomicSwitch`][atomic-switch] drain allows
+//!   changing logging behavior in the running program. You could use eg. signal
+//!   handlers to change logging level or logging destinations. See
+//!   [`signal` example][signal].
+//!
+//! ## Notable details
+//!
+//! * By defaut does not compile in trace and debug level records in release builds,
+//!   and trace level records in debug builds. This makes `trace` and
+//!   `debug` level logging records practically free, which should encourage
+//!   using them freely.
+//! * Due to the `macro_rules` limitation log macros syntax comes in several
+//!   versions. See `log!` macro, and pay attention to `;` and `,`
+//!   details.
+//! * Root drain (passed to `Logger::root`) must be one that does not ever
+//!   return errors, which forces user to pick error handing strategy. You
+//!   can use `.fuse()` or `.ignore_err()` methods from `DrainExt` to do
+//!   it conveniently.
+//!
+//! [signal]: https://github.com/dpc/slog-rs/blob/master/examples/signal.rs
+//! [env_logger]: https://crates.io/crates/env_logger
+//! [functional-overview]: https://github.com/dpc/slog-rs/wiki/Functional-overview
+//! [async-streamer]: http://dpc.pw/slog-rs/slog/drain/struct.AsyncStreamer.html
+//! [atomic-switch]: http://dpc.pw/slog-rs/slog/drain/struct.AtomicSwitch.html
+
 
 #![cfg_attr(feature = "no_std", feature(alloc))]
 #![cfg_attr(feature = "no_std", feature(collections))]
@@ -88,7 +168,6 @@ macro_rules! o(
 /// ```
 ///
 /// Note that `"key" => value` part is optional.
-///
 ///
 /// ```
 /// #[macro_use]
@@ -195,6 +274,8 @@ macro_rules! log(
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! slog_log(
     ($lvl:expr, $l:expr, $($k:expr => $v:expr),*; $($args:tt)+ ) => {
@@ -260,6 +341,8 @@ macro_rules! slog_log(
 );
 
 /// Log critical level record
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! crit(
     ($($args:tt)+) => {
@@ -271,6 +354,8 @@ macro_rules! crit(
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! slog_crit(
     ($($args:tt)+) => {
@@ -279,6 +364,8 @@ macro_rules! slog_crit(
 );
 
 /// Log error level record
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! error(
     ($($args:tt)+) => {
@@ -290,6 +377,8 @@ macro_rules! error(
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! slog_error(
     ($($args:tt)+) => {
@@ -299,6 +388,8 @@ macro_rules! slog_error(
 
 
 /// Log warning level record
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! warn(
     ($($args:tt)+) => {
@@ -310,6 +401,8 @@ macro_rules! warn(
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! slog_warn(
     ($($args:tt)+) => {
@@ -318,6 +411,8 @@ macro_rules! slog_warn(
 );
 
 /// Log info level record
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! info(
     ($($args:tt)+) => {
@@ -329,6 +424,8 @@ macro_rules! info(
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! slog_info(
     ($($args:tt)+) => {
@@ -337,6 +434,8 @@ macro_rules! slog_info(
 );
 
 /// Log debug level record
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! debug(
     ($($args:tt)+) => {
@@ -348,6 +447,8 @@ macro_rules! debug(
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! slog_debug(
     ($($args:tt)+) => {
@@ -357,6 +458,8 @@ macro_rules! slog_debug(
 
 
 /// Log trace level record
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! trace(
     ($($args:tt)+) => {
@@ -368,6 +471,8 @@ macro_rules! trace(
 ///
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
+///
+/// See `log` for documentation.
 #[macro_export]
 macro_rules! slog_trace(
     ($($args:tt)+) => {
