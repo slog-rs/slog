@@ -24,13 +24,11 @@ thread_local! {
 ///
 /// Uses mutex to serialize writes.
 /// TODO: Add one that does not serialize?
-#[cfg(not(feature = "no_std"))]
 pub struct Streamer<W: io::Write, F: Format> {
     io: Mutex<W>,
     format: F,
 }
 
-#[cfg(not(feature = "no_std"))]
 impl<W: io::Write, F: Format> Streamer<W, F> {
     /// Create new `Streamer` writing to `io` using `format`
     pub fn new(io: W, format: F) -> Self {
@@ -41,7 +39,6 @@ impl<W: io::Write, F: Format> Streamer<W, F> {
     }
 }
 
-#[cfg(not(feature = "no_std"))]
 impl<W: 'static + io::Write + Send, F: Format + Send> Drain for Streamer<W, F> {
     type Error = io::Error;
 
@@ -73,13 +70,11 @@ impl<W: 'static + io::Write + Send, F: Format + Send> Drain for Streamer<W, F> {
 ///
 /// Internally, new thread will be spawned taking care of actually writing
 /// the data.
-#[cfg(not(feature = "no_std"))]
 pub struct AsyncStreamer<F: Format> {
     format: F,
     io: Mutex<AsyncIoWriter>,
 }
 
-#[cfg(not(feature = "no_std"))]
 impl<F: Format> AsyncStreamer<F> {
     /// Create new `AsyncStreamer` writing to `io` using `format`
     pub fn new<W: io::Write + Send + 'static>(io: W, format: F) -> Self {
@@ -90,7 +85,6 @@ impl<F: Format> AsyncStreamer<F> {
     }
 }
 
-#[cfg(not(feature = "no_std"))]
 impl<F: Format + Send> Drain for AsyncStreamer<F> {
     type Error = io::Error;
 
@@ -142,13 +136,11 @@ enum AsyncIoMsg {
 ///
 /// Note: Dropping `AsyncIoWriter` waits for it's io-thread to finish.
 /// If you can't tolerate the delay, make sure to use `Logger::
-#[cfg(not(feature = "no_std"))]
 struct AsyncIoWriter {
     sender: mpsc::Sender<AsyncIoMsg>,
     join: Option<thread::JoinHandle<()>>,
 }
 
-#[cfg(not(feature = "no_std"))]
 impl AsyncIoWriter {
     /// Create `AsyncIoWriter`
     pub fn new<W: io::Write + Send + 'static>(mut io: W) -> Self {
@@ -181,7 +173,6 @@ impl AsyncIoWriter {
     }
 }
 
-#[cfg(not(feature = "no_std"))]
 impl io::Write for AsyncIoWriter {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         let _ = self.sender.send(AsyncIoMsg::Bytes(buf.to_vec())).unwrap();
@@ -195,7 +186,6 @@ impl io::Write for AsyncIoWriter {
 }
 
 
-#[cfg(not(feature = "no_std"))]
 impl Drop for AsyncIoWriter {
     fn drop(&mut self) {
         let _ = self.sender.send(AsyncIoMsg::Eof);
@@ -206,7 +196,6 @@ impl Drop for AsyncIoWriter {
 /// Stream logging records to IO
 ///
 /// Create `Streamer` drain
-#[cfg(not(feature = "no_std"))]
 pub fn stream<W: io::Write + Send, F: Format>(io: W, format: F) -> Streamer<W, F> {
     Streamer::new(io, format)
 }
@@ -214,7 +203,6 @@ pub fn stream<W: io::Write + Send, F: Format>(io: W, format: F) -> Streamer<W, F
 /// Stream logging records to IO asynchronously
 ///
 /// Create `AsyncStreamer` drain
-#[cfg(not(feature = "no_std"))]
 pub fn async_stream<W: io::Write + Send + 'static, F: Format>(io: W, format: F) -> AsyncStreamer<F> {
     AsyncStreamer::new(io, format)
 }
