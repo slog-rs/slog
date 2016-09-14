@@ -15,8 +15,6 @@ use std::sync::atomic::AtomicUsize;
 use std::sync::Arc;
 use std::time::Duration;
 
-const VERSION: &'static str = "0.1.0";
-
 fn slow_fib(n: u64) -> u64 {
     match n {
         0 | 1 | 2 => 1,
@@ -38,7 +36,7 @@ fn main() {
     // Get a root logger that will log into a given drain.
     //
     // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
-    let root = Logger::root(drain.fuse(), o!("version" => VERSION, "build-id" => "8dfljdf"));
+    let root = Logger::root(drain.fuse(), o!("version" => env!("CARGO_PKG_VERSION"), "build-id" => "8dfljdf"));
 
     // Build logging context as data becomes available.
     //

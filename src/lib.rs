@@ -61,24 +61,31 @@
 //!
 //! ## Notable details
 //!
-//! * By defaut does not compile in trace and debug level records in release builds,
-//!   and trace level records in debug builds. This makes `trace` and
-//!   `debug` level logging records practically free, which should encourage
-//!   using them freely.
-//! * Due to the `macro_rules` limitation log macros syntax comes in several
-//!   versions. See `log!` macro, and pay attention to `;` and `,`
-//!   details.
-//! * Root drain (passed to `Logger::root`) must be one that does not ever
-//!   return errors, which forces user to pick error handing strategy. You
-//!   can use `.fuse()` or `.ignore_err()` methods from `DrainExt` to do
-//!   it conveniently.
+//! `slog` by default removed at compile time trace and debug level records
+//! for release builds, and trace level records for debug builds. This makes
+//! `trace` and `debug` level logging records practically free, which should
+//! encourage using them freely. If you want to enable trace/debug messages
+//! or raise the compile time logging level limit, use the following in your
+//! `Cargo.toml`:
+//!
+//! ```norust
+//! slog = { version = "1.0.0", features = ["max_level_trace", "release_max_level_warn"] }
+//! ```
+//!
+//! Due to the `macro_rules` limitation log macros syntax comes in several
+//! versions. See `log!` macro, and pay attention to `;` and `,`
+//! details.
+//!
+//! Root drain (passed to `Logger::root`) must be one that does not ever
+//! return errors, which forces user to pick error handing strategy. You
+//! can use `.fuse()` or `.ignore_err()` methods from `DrainExt` to do
+//! it conveniently.
 //!
 //! [signal]: https://github.com/dpc/slog-rs/blob/master/examples/signal.rs
 //! [env_logger]: https://crates.io/crates/env_logger
 //! [functional-overview]: https://github.com/dpc/slog-rs/wiki/Functional-overview
 //! [async-streamer]: http://dpc.pw/slog-rs/slog/drain/struct.AsyncStreamer.html
 //! [atomic-switch]: http://dpc.pw/slog-rs/slog/drain/struct.AtomicSwitch.html
-
 
 #![cfg_attr(feature = "no_std", feature(alloc))]
 #![cfg_attr(feature = "no_std", feature(collections))]
@@ -136,7 +143,6 @@ macro_rules! o(
     };
     ($($k:expr => $v:expr),*) => {
         {
-        use std;
         vec![$(($k, std::boxed::Box::new($v))),*]
         }
     };

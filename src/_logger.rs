@@ -1,16 +1,17 @@
 
 /// Logger
 ///
-/// Loggers are thread-safe and reference counted, so can be freely
-/// passed around the code.
+/// Loggers can be freely passed around the code.
 ///
-/// Each logger is built with a set of key-values.
+/// Cloning existing loggers and creating new ones is cheap,
 ///
-/// Child loggers are build from existing loggers, and copy
-/// all the key-values from their parents
+/// Root logger starts a new hierarchy and needs drain to be created.
+/// Root logger drain, must taken care of error handling. See
+/// `DrainExt::ignore_err()` and `DrainExt::fuse()`.
 ///
-/// Loggers form hierarchies sharing a drain. Setting a drain on
-/// any logger will change it on all loggers in given hierarchy.
+/// Child loggers are build from existing loggers, and inherit existing
+/// key-value pairs from their parents, which can be supplemented with
+/// new ones.
 #[derive(Clone)]
 pub struct Logger {
     //TODO:
@@ -19,22 +20,13 @@ pub struct Logger {
     values: Arc<OwnedKeyValueList>,
 }
 
-// TODO: why does this conflict with &'a str?
-// impl<T : AsRef<str>> Into<Cow<'a, str>> for T {
-// fn as_str(&self) -> Cow<str> {
-// Cow::Borrowed(self.as_ref())
-// }
-// }
-//
-
-
 impl Logger {
     /// Build a root logger
     ///
     /// All children and their children and so on form one hierarchy
     /// sharing a common drain.
     ///
-    /// Use `o!` macro to help build `values`
+    /// Use `o!` macro to help build key-value pairs with a nicer syntax.
     ///
     /// ```
     /// #[macro_use]
@@ -55,12 +47,12 @@ impl Logger {
 
     /// Build a child logger
     ///
-    /// Child logger copies all existing values from the parent.
+    /// Child logger inherits all existing key-value pairs from it's parent.
     ///
     /// All children, their children and so on, form one hierarchy sharing
     /// a common drain.
     ///
-    /// Use `o!` macro to help build `values`
+    /// Use `o!` macro to help build key value pairs using nicer syntax.
     ///
     /// ```
     /// #[macro_use]
@@ -80,7 +72,8 @@ impl Logger {
 
     /// Log one logging record
     ///
-    /// Use specific logging functions instead.
+    /// Use specific logging functions instead. See `log!` macro
+    /// documentation.
     #[inline]
     pub fn log(&self, record: &Record) {
         let _ = self.drain.log(&record, &*self.values);
@@ -166,12 +159,12 @@ impl<'a> Record<'a> {
         self.meta.module
     }
 
-    /// Get module
+    /// Get function
     pub fn function(&self) -> &'static str {
         self.meta.function
     }
 
-    /// Record value-key pairs
+    /// Get Record's key-value pairs
     pub fn values(&self) -> &'a [BorrowedKeyValue<'a>] {
         self.values
     }

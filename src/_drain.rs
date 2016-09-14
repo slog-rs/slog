@@ -1,17 +1,24 @@
 /// Logging drain
 ///
 /// Drains generally mean destination for logs, but slog generalize the
-/// term. `Drain`-s are responsible for filtering, formatting and writing the
-/// log records into given destination.
+/// term. `Drain`-s are responsible for filtering, modifying, formatting
+/// and writing the log records into given destination.
 ///
 /// Implementing this trait allows writing own Drains, that can be combined
 /// with other drains.
 pub trait Drain: Send + Sync {
-    /// Type of potential error returned during logging
+    /// Type of potential errors returned during logging
     type Error;
-    /// Write one logging record
-    /// As an optimization (avoiding allocations), loggers are responsible for
-    /// providing a byte buffer, that `Drain` can use for their own needs.
+    /// Log one logging record
+    ///
+    /// Every logging record and key-value lists will be passed to the root
+    /// drain registered in the root logger through this function.
+    ///
+    /// Typically `Drain`s:
+    ///
+    /// * pass this information (or not) to the sub-logger(s) (filters)
+    /// * format and write the information the a destination (writers)
+    /// * deal with the errors returned from the sub-logger(s)
     fn log(&self, info: &Record, &OwnedKeyValueList) -> result::Result<(), Self::Error>;
 }
 
@@ -32,6 +39,9 @@ impl<D: Drain+?Sized> Drain for Arc<D> {
 /// Convenience methods
 pub trait DrainExt: Sized + Drain {
     /// Map logging errors returned by this drain
+    ///
+    /// `f` is a closure that takes `Drain::Error` returned by a given
+    /// drain, and returns new error of potentially different type
     fn map_err<F, E>(self, f : F) -> MapError<Self, E> where F : 'static + Sync + Send + Fn(<Self as Drain>::Error) -> E {
         MapError::new(self, f)
     }
@@ -50,6 +60,8 @@ pub trait DrainExt: Sized + Drain {
 impl<D : Drain> DrainExt for D {}
 
 /// Drain discarding everything
+///
+/// `/dev/null` of `Drain`s
 pub struct Discard;
 
 impl Drain for Discard {
@@ -70,8 +82,7 @@ pub struct Filter<D: Drain> {
 }
 
 impl<D: Drain> Filter<D> {
-    /// Create Filter wrapping given `subdrain` and passing to it records
-    /// only the `cond` is true
+    /// Create `Filter` wrapping given `drain`
     pub fn new<F: 'static + Sync + Send + Fn(&Record) -> bool>(drain: D, cond: F) -> Self {
         Filter {
             drain: drain,
@@ -95,7 +106,9 @@ impl<D: Drain> Drain for Filter<D> {
 }
 
 
-/// Map error of a `Drain`
+/// `Drain` mapping error returned by another `Drain`
+///
+/// See `DrainExt::map_err` for convenience function.
 pub struct MapError<D: Drain, E> {
     drain: D,
     // eliminated dynamic dispatch, after rust learns `-> impl Trait`
@@ -103,8 +116,7 @@ pub struct MapError<D: Drain, E> {
 }
 
 impl<D: Drain, E> MapError<D, E> {
-    /// Create Filter wrapping given `subdrain` and passing to it records
-    /// only the `cond` is true
+    /// Create `Filter` wrapping given `drain`
     pub fn new<F: 'static + Sync + Send + Fn(<D as Drain>::Error) -> E>(drain: D, map_fn: F) -> Self {
         MapError {
             drain: drain,
@@ -161,7 +173,7 @@ impl<D: Drain> Drain for LevelFilter<D> {
     }
 }
 
-/// Drain duplicating records to two sub-drains
+/// `Drain` duplicating records into two other `Drain`s
 ///
 /// Can be nested for more than two outputs.
 pub struct Duplicate<D1: Drain, D2: Drain> {
@@ -266,7 +278,7 @@ pub struct Fuse<D: Drain> {
 }
 
 impl<D: Drain> Fuse<D> {
-    /// Create Fuse wrapping given `subdrain`
+    /// Create `Fuse` wrapping given `drain`
     pub fn new(drain: D) -> Self {
         Fuse {
             drain: drain,
@@ -298,7 +310,7 @@ pub struct IgnoreErr<D: Drain> {
 }
 
 impl<D: Drain> IgnoreErr<D> {
-    /// Create `IgnoreErr` wrapping given `subdrain`
+    /// Create `IgnoreErr` wrapping `drain`
     pub fn new(drain: D) -> Self {
         IgnoreErr {
             drain: drain,

@@ -5,7 +5,7 @@ extern crate slog_term;
 use slog::DrainExt;
 
 fn main() {
-    let log = slog::Logger::root(slog_term::streamer().full().build().fuse(), o!("version" => "0.5"));
+    let log = slog::Logger::root(slog_term::streamer().full().build().fuse(), o!("version" => env!("CARGO_PKG_VERSION")));
 
     trace!(log, "logging a trace message");
     debug!(log, "debug values"; "x" => 1, "y" => -1);
