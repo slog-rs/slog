@@ -656,6 +656,18 @@
 <span id="612">612</span>
 <span id="613">613</span>
 <span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 <span class='doccomment'>//!</span>
@@ -720,24 +732,31 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ## Notable details</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! * By defaut does not compile in trace and debug level records in release builds,</span>
-<span class='doccomment'>//!   and trace level records in debug builds. This makes `trace` and</span>
-<span class='doccomment'>//!   `debug` level logging records practically free, which should encourage</span>
-<span class='doccomment'>//!   using them freely.</span>
-<span class='doccomment'>//! * Due to the `macro_rules` limitation log macros syntax comes in several</span>
-<span class='doccomment'>//!   versions. See `log!` macro, and pay attention to `;` and `,`</span>
-<span class='doccomment'>//!   details.</span>
-<span class='doccomment'>//! * Root drain (passed to `Logger::root`) must be one that does not ever</span>
-<span class='doccomment'>//!   return errors, which forces user to pick error handing strategy. You</span>
-<span class='doccomment'>//!   can use `.fuse()` or `.ignore_err()` methods from `DrainExt` to do</span>
-<span class='doccomment'>//!   it conveniently.</span>
+<span class='doccomment'>//! `slog` by default removed at compile time trace and debug level records</span>
+<span class='doccomment'>//! for release builds, and trace level records for debug builds. This makes</span>
+<span class='doccomment'>//! `trace` and `debug` level logging records practically free, which should</span>
+<span class='doccomment'>//! encourage using them freely. If you want to enable trace/debug messages</span>
+<span class='doccomment'>//! or raise the compile time logging level limit, use the following in your</span>
+<span class='doccomment'>//! `Cargo.toml`:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```norust</span>
+<span class='doccomment'>//! slog = { version = &quot;1.0.0&quot;, features = [&quot;max_level_trace&quot;, &quot;release_max_level_warn&quot;] }</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Due to the `macro_rules` limitation log macros syntax comes in several</span>
+<span class='doccomment'>//! versions. See `log!` macro, and pay attention to `;` and `,`</span>
+<span class='doccomment'>//! details.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Root drain (passed to `Logger::root`) must be one that does not ever</span>
+<span class='doccomment'>//! return errors, which forces user to pick error handing strategy. You</span>
+<span class='doccomment'>//! can use `.fuse()` or `.ignore_err()` methods from `DrainExt` to do</span>
+<span class='doccomment'>//! it conveniently.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! [signal]: https://github.com/dpc/slog-rs/blob/master/examples/signal.rs</span>
 <span class='doccomment'>//! [env_logger]: https://crates.io/crates/env_logger</span>
 <span class='doccomment'>//! [functional-overview]: https://github.com/dpc/slog-rs/wiki/Functional-overview</span>
 <span class='doccomment'>//! [async-streamer]: http://dpc.pw/slog-rs/slog/drain/struct.AsyncStreamer.html</span>
 <span class='doccomment'>//! [atomic-switch]: http://dpc.pw/slog-rs/slog/drain/struct.AtomicSwitch.html</span>
-
 
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;no_std&quot;</span>, <span class='ident'>feature</span>(<span class='ident'>alloc</span>))]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;no_std&quot;</span>, <span class='ident'>feature</span>(<span class='ident'>collections</span>))]</span>
@@ -795,7 +814,6 @@
     };
     ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> {
         {
-        <span class='kw'>use</span> <span class='ident'>std</span>;
         <span class='macro'>vec</span><span class='macro'>!</span>[$((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>, <span class='ident'>std</span>::<span class='ident'>boxed</span>::<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>))),<span class='op'>*</span>]
         }
     };
@@ -870,7 +888,7 @@
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span> ) <span class='op'>=&gt;</span> {
         <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>__slog_static_max_level</span>().<span class='ident'>as_usize</span>() {
             <span class='comment'>// prevent generating big `Record` over and over</span>
-            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
+            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
                 <span class='ident'>level</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>,
                 <span class='ident'>file</span>: <span class='macro'>file</span><span class='macro'>!</span>(),
                 <span class='ident'>line</span>: <span class='macro'>line</span><span class='macro'>!</span>(),
@@ -885,7 +903,7 @@
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>),<span class='op'>+</span>) <span class='op'>=&gt;</span> {
         <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>__slog_static_max_level</span>().<span class='ident'>as_usize</span>() {
             <span class='comment'>// prevent generating big `Record` over and over</span>
-            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
+            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
                 <span class='ident'>level</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>,
                 <span class='ident'>file</span>: <span class='macro'>file</span><span class='macro'>!</span>(),
                 <span class='ident'>line</span>: <span class='macro'>line</span><span class='macro'>!</span>(),
@@ -900,7 +918,7 @@
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> {
         <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>__slog_static_max_level</span>().<span class='ident'>as_usize</span>() {
             <span class='comment'>// prevent generating big `Record` over and over</span>
-            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
+            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
                 <span class='ident'>level</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>,
                 <span class='ident'>file</span>: <span class='macro'>file</span><span class='macro'>!</span>(),
                 <span class='ident'>line</span>: <span class='macro'>line</span><span class='macro'>!</span>(),
@@ -915,7 +933,7 @@
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> {
         <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>__slog_static_max_level</span>().<span class='ident'>as_usize</span>() {
             <span class='comment'>// prevent generating big `Record` over and over</span>
-            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
+            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
                 <span class='ident'>level</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>,
                 <span class='ident'>file</span>: <span class='macro'>file</span><span class='macro'>!</span>(),
                 <span class='ident'>line</span>: <span class='macro'>line</span><span class='macro'>!</span>(),
@@ -940,7 +958,7 @@
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span> ) <span class='op'>=&gt;</span> {
         <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>__slog_static_max_level</span>().<span class='ident'>as_usize</span>() {
             <span class='comment'>// prevent generating big `Record` over and over</span>
-            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
+            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
                 <span class='ident'>level</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>,
                 <span class='ident'>file</span>: <span class='macro'>file</span><span class='macro'>!</span>(),
                 <span class='ident'>line</span>: <span class='macro'>line</span><span class='macro'>!</span>(),
@@ -955,7 +973,7 @@
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>),<span class='op'>+</span>) <span class='op'>=&gt;</span> {
         <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>__slog_static_max_level</span>().<span class='ident'>as_usize</span>() {
             <span class='comment'>// prevent generating big `Record` over and over</span>
-            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
+            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
                 <span class='ident'>level</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>,
                 <span class='ident'>file</span>: <span class='macro'>file</span><span class='macro'>!</span>(),
                 <span class='ident'>line</span>: <span class='macro'>line</span><span class='macro'>!</span>(),
@@ -970,7 +988,7 @@
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> {
         <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>__slog_static_max_level</span>().<span class='ident'>as_usize</span>() {
             <span class='comment'>// prevent generating big `Record` over and over</span>
-            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
+            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
                 <span class='ident'>level</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>,
                 <span class='ident'>file</span>: <span class='macro'>file</span><span class='macro'>!</span>(),
                 <span class='ident'>line</span>: <span class='macro'>line</span><span class='macro'>!</span>(),
@@ -985,7 +1003,7 @@
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> {
         <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>__slog_static_max_level</span>().<span class='ident'>as_usize</span>() {
             <span class='comment'>// prevent generating big `Record` over and over</span>
-            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
+            <span class='kw'>static</span> <span class='ident'>RS</span> : <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>RecordStatic</span> {
                 <span class='ident'>level</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>,
                 <span class='ident'>file</span>: <span class='macro'>file</span><span class='macro'>!</span>(),
                 <span class='ident'>line</span>: <span class='macro'>line</span><span class='macro'>!</span>(),
@@ -1264,8 +1282,14 @@
         <span class='ident'>FilterLevel</span>::<span class='ident'>Info</span>
     } <span class='kw'>else</span> <span class='kw'>if</span> <span class='macro'>cfg</span><span class='macro'>!</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;max_level_debug&quot;</span>) {
         <span class='ident'>FilterLevel</span>::<span class='ident'>Debug</span>
-    } <span class='kw'>else</span> {
+    } <span class='kw'>else</span> <span class='kw'>if</span> <span class='macro'>cfg</span><span class='macro'>!</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;max_level_trace&quot;</span>) {
         <span class='ident'>FilterLevel</span>::<span class='ident'>Trace</span>
+    } <span class='kw'>else</span> {
+        <span class='kw'>if</span> <span class='op'>!</span><span class='macro'>cfg</span><span class='macro'>!</span>(<span class='ident'>debug_assertions</span>) {
+            <span class='ident'>FilterLevel</span>::<span class='ident'>Info</span>
+        } <span class='kw'>else</span> {
+            <span class='ident'>FilterLevel</span>::<span class='ident'>Debug</span>
+        }
     }
 }
 

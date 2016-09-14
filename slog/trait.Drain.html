@@ -47,28 +47,37 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-519' class='srclink' href='../src/slog/src/_drain.rs.html#9-16' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-519' class='srclink' href='../src/slog/src/_drain.rs.html#9-23' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Drain: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> {
     type <a href='#associatedtype.Error' class='type'>Error</a>;
     fn <a href='#tymethod.log' class='fnname'>log</a>(&amp;self, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>,&nbsp;Self::Error&gt;;
 }</pre><div class='docblock'><p>Logging drain</p>
 
 <p>Drains generally mean destination for logs, but slog generalize the
-term. <code>Drain</code>-s are responsible for filtering, formatting and writing the
-log records into given destination.</p>
+term. <code>Drain</code>-s are responsible for filtering, modifying, formatting
+and writing the log records into given destination.</p>
 
 <p>Implementing this trait allows writing own Drains, that can be combined
 with other drains.</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
             <div class='methods'>
-        <h3 id='associatedtype.Error' class='method stab '><span id='Error.t' class='invisible'><code>type <a href='#associatedtype.Error' class='type'>Error</a></code></span></h3><div class='docblock'><p>Type of potential error returned during logging</p>
+        <h3 id='associatedtype.Error' class='method stab '><span id='Error.t' class='invisible'><code>type <a href='#associatedtype.Error' class='type'>Error</a></code></span></h3><div class='docblock'><p>Type of potential errors returned during logging</p>
 </div></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.log' class='method stab '><span id='log.v' class='invisible'><code>fn <a href='#tymethod.log' class='fnname'>log</a>(&amp;self, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>,&nbsp;Self::Error&gt;</code></span></h3><div class='docblock'><p>Write one logging record
-As an optimization (avoiding allocations), loggers are responsible for
-providing a byte buffer, that <code>Drain</code> can use for their own needs.</p>
+        <h3 id='tymethod.log' class='method stab '><span id='log.v' class='invisible'><code>fn <a href='#tymethod.log' class='fnname'>log</a>(&amp;self, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>,&nbsp;Self::Error&gt;</code></span></h3><div class='docblock'><p>Log one logging record</p>
+
+<p>Every logging record and key-value lists will be passed to the root
+drain registered in the root logger through this function.</p>
+
+<p>Typically <code>Drain</code>s:</p>
+
+<ul>
+<li>pass this information (or not) to the sub-logger(s) (filters)</li>
+<li>format and write the information the a destination (writers)</li>
+<li>deal with the errors returned from the sub-logger(s)</li>
+</ul>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>

@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog/src/lib.rs.html#1-614' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog/src/lib.rs.html#1-626' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'>
 <h1 id='slog----structured-composable-logging-for-rust' class='section-header'><a href='#slog----structured-composable-logging-for-rust'>Slog -  Structured, composable logging for Rust</a></h1>
 <h2 id='features' class='section-header'><a href='#features'>Features</a></h2>
@@ -127,19 +127,24 @@ handlers to change logging level or logging destinations. See
 </ul>
 
 <h2 id='notable-details' class='section-header'><a href='#notable-details'>Notable details</a></h2>
-<ul>
-<li>By defaut does not compile in trace and debug level records in release builds,
-and trace level records in debug builds. This makes <code>trace</code> and
-<code>debug</code> level logging records practically free, which should encourage
-using them freely.</li>
-<li>Due to the <code>macro_rules</code> limitation log macros syntax comes in several
+<p><code>slog</code> by default removed at compile time trace and debug level records
+for release builds, and trace level records for debug builds. This makes
+<code>trace</code> and <code>debug</code> level logging records practically free, which should
+encourage using them freely. If you want to enable trace/debug messages
+or raise the compile time logging level limit, use the following in your
+<code>Cargo.toml</code>:</p>
+
+<pre><code class="language-norust">slog = { version = &quot;1.0.0&quot;, features = [&quot;max_level_trace&quot;, &quot;release_max_level_warn&quot;] }
+</code></pre>
+
+<p>Due to the <code>macro_rules</code> limitation log macros syntax comes in several
 versions. See <code>log!</code> macro, and pay attention to <code>;</code> and <code>,</code>
-details.</li>
-<li>Root drain (passed to <code>Logger::root</code>) must be one that does not ever
+details.</p>
+
+<p>Root drain (passed to <code>Logger::root</code>) must be one that does not ever
 return errors, which forces user to pick error handing strategy. You
 can use <code>.fuse()</code> or <code>.ignore_err()</code> methods from <code>DrainExt</code> to do
-it conveniently.</li>
-</ul>
+it conveniently.</p>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
 <table><tr><td><code>pub use ser::{<a class='struct' href='../slog/ser/struct.PushLazy.html' title='slog::ser::PushLazy'>PushLazy</a>, <a class='struct' href='../slog/ser/struct.ValueSerializer.html' title='slog::ser::ValueSerializer'>ValueSerializer</a>, <a class='trait' href='../slog/ser/trait.Serializer.html' title='slog::ser::Serializer'>Serializer</a>, <a class='trait' href='../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a>};</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
@@ -268,7 +273,7 @@ it conveniently.</li>
                            <td><a class='struct' href='struct.Duplicate.html'
                                   title='slog::Duplicate'>Duplicate</a></td>
                            <td class='docblock short'>
-                                <p>Drain duplicating records to two sub-drains</p>
+                                <p><code>Drain</code> duplicating records into two other <code>Drain</code>s</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -317,7 +322,7 @@ it conveniently.</li>
                            <td><a class='struct' href='struct.MapError.html'
                                   title='slog::MapError'>MapError</a></td>
                            <td class='docblock short'>
-                                <p>Map error of a <code>Drain</code></p>
+                                <p><code>Drain</code> mapping error returned by another <code>Drain</code></p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

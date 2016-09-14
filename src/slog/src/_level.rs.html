@@ -479,8 +479,8 @@
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>filterlevel_sanity</span>() {
     <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>Level</span>::<span class='ident'>Critical</span>.<span class='ident'>as_usize</span>() <span class='op'>&gt;</span> <span class='ident'>FilterLevel</span>::<span class='ident'>Off</span>.<span class='ident'>as_usize</span>());
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>Level</span>::<span class='ident'>Critical</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='ident'>FilterLevel</span>::<span class='ident'>Critical</span>.<span class='ident'>as_usize</span>());
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>Level</span>::<span class='ident'>Trace</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='ident'>FilterLevel</span>::<span class='ident'>Trace</span>.<span class='ident'>as_usize</span>());
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>Level</span>::<span class='ident'>Critical</span>.<span class='ident'>as_usize</span>() <span class='op'>==</span> <span class='ident'>FilterLevel</span>::<span class='ident'>Critical</span>.<span class='ident'>as_usize</span>());
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>Level</span>::<span class='ident'>Trace</span>.<span class='ident'>as_usize</span>() <span class='op'>==</span> <span class='ident'>FilterLevel</span>::<span class='ident'>Trace</span>.<span class='ident'>as_usize</span>());
 }
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>

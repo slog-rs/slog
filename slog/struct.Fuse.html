@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-684' class='srclink' href='../src/slog/src/_drain.rs.html#264-266' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-684' class='srclink' href='../src/slog/src/_drain.rs.html#276-278' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Fuse&lt;D:&nbsp;<a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a>&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>Panicking fuse</p>
@@ -57,14 +57,14 @@
 
 <p>Note: <code>Drain::Error</code> must implement <code>Display</code>. It&#39;s easy to create own
 <code>Fuse</code> drain if this requirement can&#39;t be fulfilled.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;D:&nbsp;<a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a>&gt; <a class='struct' href='../slog/struct.Fuse.html' title='slog::Fuse'>Fuse</a>&lt;D&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-687' class='srclink' href='../src/slog/src/_drain.rs.html#268-275' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;D:&nbsp;<a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a>&gt; <a class='struct' href='../slog/struct.Fuse.html' title='slog::Fuse'>Fuse</a>&lt;D&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-687' class='srclink' href='../src/slog/src/_drain.rs.html#280-287' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(drain: D) -&gt; Self</code></span></h4>
-<div class='docblock'><p>Create Fuse wrapping given <code>subdrain</code></p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;D:&nbsp;<a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a>&gt; <a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a> for <a class='struct' href='../slog/struct.Fuse.html' title='slog::Fuse'>Fuse</a>&lt;D&gt; <span class='where'>where D::Error: <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-691' class='srclink' href='../src/slog/src/_drain.rs.html#277-289' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>Create <code>Fuse</code> wrapping given <code>drain</code></p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;D:&nbsp;<a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a>&gt; <a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a> for <a class='struct' href='../slog/struct.Fuse.html' title='slog::Fuse'>Fuse</a>&lt;D&gt; <span class='where'>where D::Error: <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-691' class='srclink' href='../src/slog/src/_drain.rs.html#289-301' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='associatedtype.Error' class='type'><span id='Error.t' class='invisible'><code>type <a href='../slog/trait.Drain.html#associatedtype.Error' class='type'>Error</a> = <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a></code></span></h4>
-<div class='docblock'><p>Type of potential error returned during logging</p>
+<div class='docblock'><p>Type of potential errors returned during logging</p>
 </div><h4 id='method.log' class='method'><span id='log.v' class='invisible'><code>fn <a href='../slog/trait.Drain.html#tymethod.log' class='fnname'>log</a>(&amp;self, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, logger_values: &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>,&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h4>
-<div class='docblock'><p>Write one logging record As an optimization (avoiding allocations), loggers are responsible for providing a byte buffer, that <code>Drain</code> can use for their own needs. <a href="../slog/trait.Drain.html#tymethod.log">Read more</a></p>
+<div class='docblock'><p>Log one logging record <a href="../slog/trait.Drain.html#tymethod.log">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 

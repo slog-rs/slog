@@ -213,27 +213,21 @@
 <span id="169">169</span>
 <span id="170">170</span>
 <span id="171">171</span>
-<span id="172">172</span>
-<span id="173">173</span>
-<span id="174">174</span>
-<span id="175">175</span>
-<span id="176">176</span>
-<span id="177">177</span>
-<span id="178">178</span>
 </pre><pre class='rust '>
 
 <span class='doccomment'>/// Logger</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// Loggers are thread-safe and reference counted, so can be freely</span>
-<span class='doccomment'>/// passed around the code.</span>
+<span class='doccomment'>/// Loggers can be freely passed around the code.</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// Each logger is built with a set of key-values.</span>
+<span class='doccomment'>/// Cloning existing loggers and creating new ones is cheap,</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// Child loggers are build from existing loggers, and copy</span>
-<span class='doccomment'>/// all the key-values from their parents</span>
+<span class='doccomment'>/// Root logger starts a new hierarchy and needs drain to be created.</span>
+<span class='doccomment'>/// Root logger drain, must taken care of error handling. See</span>
+<span class='doccomment'>/// `DrainExt::ignore_err()` and `DrainExt::fuse()`.</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// Loggers form hierarchies sharing a drain. Setting a drain on</span>
-<span class='doccomment'>/// any logger will change it on all loggers in given hierarchy.</span>
+<span class='doccomment'>/// Child loggers are build from existing loggers, and inherit existing</span>
+<span class='doccomment'>/// key-value pairs from their parents, which can be supplemented with</span>
+<span class='doccomment'>/// new ones.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Logger</span> {
     <span class='comment'>//TODO:</span>
@@ -242,22 +236,13 @@
     <span class='ident'>values</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>OwnedKeyValueList</span><span class='op'>&gt;</span>,
 }
 
-<span class='comment'>// TODO: why does this conflict with &amp;&#39;a str?</span>
-<span class='comment'>// impl&lt;T : AsRef&lt;str&gt;&gt; Into&lt;Cow&lt;&#39;a, str&gt;&gt; for T {</span>
-<span class='comment'>// fn as_str(&amp;self) -&gt; Cow&lt;str&gt; {</span>
-<span class='comment'>// Cow::Borrowed(self.as_ref())</span>
-<span class='comment'>// }</span>
-<span class='comment'>// }</span>
-<span class='comment'>//</span>
-
-
 <span class='kw'>impl</span> <span class='ident'>Logger</span> {
     <span class='doccomment'>/// Build a root logger</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// All children and their children and so on form one hierarchy</span>
     <span class='doccomment'>/// sharing a common drain.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use `o!` macro to help build `values`</span>
+    <span class='doccomment'>/// Use `o!` macro to help build key-value pairs with a nicer syntax.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```</span>
     <span class='doccomment'>/// #[macro_use]</span>
@@ -278,12 +263,12 @@
 
     <span class='doccomment'>/// Build a child logger</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Child logger copies all existing values from the parent.</span>
+    <span class='doccomment'>/// Child logger inherits all existing key-value pairs from it&#39;s parent.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// All children, their children and so on, form one hierarchy sharing</span>
     <span class='doccomment'>/// a common drain.</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use `o!` macro to help build `values`</span>
+    <span class='doccomment'>/// Use `o!` macro to help build key value pairs using nicer syntax.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```</span>
     <span class='doccomment'>/// #[macro_use]</span>
@@ -303,7 +288,8 @@
 
     <span class='doccomment'>/// Log one logging record</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use specific logging functions instead.</span>
+    <span class='doccomment'>/// Use specific logging functions instead. See `log!` macro</span>
+    <span class='doccomment'>/// documentation.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>record</span>: <span class='kw-2'>&amp;</span><span class='ident'>Record</span>) {
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>drain</span>.<span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='ident'>record</span>, <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='self'>self</span>.<span class='ident'>values</span>);
@@ -389,12 +375,12 @@
         <span class='self'>self</span>.<span class='ident'>meta</span>.<span class='ident'>module</span>
     }
 
-    <span class='doccomment'>/// Get module</span>
+    <span class='doccomment'>/// Get function</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>function</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> {
         <span class='self'>self</span>.<span class='ident'>meta</span>.<span class='ident'>function</span>
     }
 
-    <span class='doccomment'>/// Record value-key pairs</span>
+    <span class='doccomment'>/// Get Record&#39;s key-value pairs</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>values</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>BorrowedKeyValue</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>] {
         <span class='self'>self</span>.<span class='ident'>values</span>
     }
