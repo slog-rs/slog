@@ -605,8 +605,14 @@ pub fn __slog_static_max_level() -> FilterLevel {
         FilterLevel::Info
     } else if cfg!(feature = "max_level_debug") {
         FilterLevel::Debug
-    } else {
+    } else if cfg!(feature = "max_level_trace") {
         FilterLevel::Trace
+    } else {
+        if !cfg!(debug_assertions) {
+            FilterLevel::Info
+        } else {
+            FilterLevel::Debug
+        }
     }
 }
 

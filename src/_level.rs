@@ -212,8 +212,8 @@ fn level_at_least() {
 #[test]
 fn filterlevel_sanity() {
     assert!(Level::Critical.as_usize() > FilterLevel::Off.as_usize());
-    assert!(Level::Critical.as_usize() <= FilterLevel::Critical.as_usize());
-    assert!(Level::Trace.as_usize() <= FilterLevel::Trace.as_usize());
+    assert!(Level::Critical.as_usize() == FilterLevel::Critical.as_usize());
+    assert!(Level::Trace.as_usize() == FilterLevel::Trace.as_usize());
 }
 
 #[test]

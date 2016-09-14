@@ -24,8 +24,6 @@ debug-assertions = false
 
 [features]
 
-default = ["release_max_level_info", "max_level_debug"]
-
 no_std = []
 
 max_level_off   = []
