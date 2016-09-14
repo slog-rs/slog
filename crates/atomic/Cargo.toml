@@ -14,5 +14,5 @@ readme = "../../README.md"
 path = "lib.rs"
 
 [dependencies]
-slog = { version = "1.0.0-alpha6", path = "../.." }
+slog = { version = "1.0.0-alpha7", path = "../.." }
 crossbeam = "0.2.9"

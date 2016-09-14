@@ -1,6 +1,6 @@
 [package]
 name = "slog"
-version = "1.0.0-alpha6"
+version = "1.0.0-alpha7"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Structured, composable logging for Rust"
 keywords = ["log", "logging", "structured", "hierarchical"]
@@ -46,13 +46,13 @@ members = ["crates/json", "crates/term", "crates/stdlog", "crates/syslog",
 	"crates/example-lib"]
 
 [dev-dependencies]
-slog-json = { path = "crates/json", version = "1.0.0-alpha6" }
-slog-term = { path = "crates/term", version = "1.0.0-alpha6" }
-slog-stdlog = { path = "crates/stdlog", version = "1.0.0-alpha6" }
-slog-syslog = { path = "crates/syslog", version = "1.0.0-alpha6" }
-slog-bunyan = { path = "crates/bunyan", version = "1.0.0-alpha6" }
+slog-json = { path = "crates/json", version = "1.0.0-alpha7" }
+slog-term = { path = "crates/term", version = "1.0.0-alpha7" }
+slog-stdlog = { path = "crates/stdlog", version = "1.0.0-alpha7" }
+slog-syslog = { path = "crates/syslog", version = "1.0.0-alpha7" }
+slog-bunyan = { path = "crates/bunyan", version = "1.0.0-alpha7" }
 slog-atomic = { path = "crates/atomic", version = "0.3" }
-slog-stream = { path = "crates/stream", version = "1.0.0-alpha6" }
+slog-stream = { path = "crates/stream", version = "1.0.0-alpha7" }
 log = "0.3.6"
 nix = "0.6.0"
 lazy_static = "0.1.16"

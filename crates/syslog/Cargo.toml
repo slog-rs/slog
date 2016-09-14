@@ -1,6 +1,6 @@
 [package]
 name = "slog-syslog"
-version = "1.0.0-alpha6"
+version = "1.0.0-alpha7"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Syslog drain for slog-rs"
 keywords = ["slog", "logging", "json", "log", "syslog"]
@@ -14,7 +14,7 @@ readme = "../../README.md"
 path = "lib.rs"
 
 [dependencies]
-slog = { version = "1.0.0-alpha6", path = "../.." }
-slog-stream = { version = "1.0.0-alpha6", path = "../stream" }
+slog = { version = "1.0.0-alpha7", path = "../.." }
+slog-stream = { version = "1.0.0-alpha7", path = "../stream" }
 syslog = "3.1.0"
 nix = "0.6.0"
