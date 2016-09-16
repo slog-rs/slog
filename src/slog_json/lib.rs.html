@@ -259,6 +259,10 @@
 <span id="215">215</span>
 <span id="216">216</span>
 <span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Json formatter for `slog-rs`</span>
 <span class='doccomment'>//!</span>
@@ -468,12 +472,16 @@
     }
 }
 
-<span class='doccomment'>/// Short for `Format::new()`</span>
+<span class='doccomment'>/// Build a default Json formatter</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `Format::new()` for details</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>Format</span> {
     <span class='ident'>Format</span>::<span class='ident'>new</span>()
 }
 
-<span class='doccomment'>/// Short for `FormatBuilder::build()`</span>
+<span class='doccomment'>/// Use builder to create a custom Json formatter</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// See `FormatBuilder::build()` for details</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>() <span class='op'>-&gt;</span> <span class='ident'>FormatBuilder</span> {
     <span class='ident'>Format</span>::<span class='ident'>build</span>()
 }
