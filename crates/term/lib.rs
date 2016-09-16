@@ -32,7 +32,7 @@ use slog_stream::Format as StreamFormat;
 use slog_stream::{Decorator, RecordDecorator, Streamer, AsyncStreamer};
 
 /// Formatting mode
-pub enum FormatMode {
+enum FormatMode {
     /// Compact logging format
     Compact,
     /// Full logging format
@@ -48,7 +48,7 @@ pub struct Format<D: Decorator> {
 
 impl<D: Decorator> Format<D> {
     /// New Format format that prints using color
-    pub fn new(mode: FormatMode, d: D) -> Self {
+    fn new(mode: FormatMode, d: D) -> Self {
         Format {
             decorator: d,
             mode: mode,
