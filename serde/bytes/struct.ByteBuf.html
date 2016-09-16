@@ -48,9 +48,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a id='src-122' class='srclink' href='../../src/serde/bytes.rs.html#86-88' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct ByteBuf {
-    // some fields omitted
-}</pre><div class='docblock'><p><code>ByteBuf</code> wraps a <code>Vec&lt;u8&gt;</code> and serializes as a byte array.</p>
+<pre class='rust struct'>pub struct ByteBuf { /* fields omitted */ }</pre><div class='docblock'><p><code>ByteBuf</code> wraps a <code>Vec&lt;u8&gt;</code> and serializes as a byte array.</p>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../serde/bytes/struct.ByteBuf.html' title='serde::bytes::ByteBuf'>ByteBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-185' class='srclink' href='../../src/serde/bytes.rs.html#90-104' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Construct a new, empty <code>ByteBuf</code>.</p>
@@ -62,14 +60,14 @@
 <h1 id='example' class='section-header'><a href='#example'>Example</a></h1>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> [<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>len</span>(), <span class='number'>3</span>);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>a</span>.<span class='ident'>len</span>(), <span class='number'>3</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.is_empty' class='method'><span id='is_empty.v' class='invisible'><code>fn <a href='#method.is_empty' class='fnname'>is_empty</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns true if the slice has a length of 0</p>
 
 <h1 id='example-1' class='section-header'><a href='#example-1'>Example</a></h1>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> [<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>a</span>.<span class='ident'>is_empty</span>());</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>a</span>.<span class='ident'>is_empty</span>());<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.first' class='method'><span id='first.v' class='invisible'><code>fn <a href='#method.first' class='fnname'>first</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;T&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns the first element of a slice, or <code>None</code> if it is empty.</p>
 
@@ -79,7 +77,7 @@
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>10</span>), <span class='ident'>v</span>.<span class='ident'>first</span>());
 
 <span class='kw'>let</span> <span class='ident'>w</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>i32</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[];
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>w</span>.<span class='ident'>first</span>());</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>w</span>.<span class='ident'>first</span>());<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.first_mut' class='method'><span id='first_mut.v' class='invisible'><code>fn <a href='#method.first_mut' class='fnname'>first_mut</a>(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut T&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns a mutable pointer to the first element of a slice, or <code>None</code> if it is empty.</p>
 
@@ -90,7 +88,7 @@
 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>first</span>) <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>first_mut</span>() {
     <span class='op'>*</span><span class='ident'>first</span> <span class='op'>=</span> <span class='number'>5</span>;
 }
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>5</span>, <span class='number'>1</span>, <span class='number'>2</span>]);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>5</span>, <span class='number'>1</span>, <span class='number'>2</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.split_first' class='method'><span id='split_first.v' class='invisible'><code>fn <a href='#method.split_first' class='fnname'>split_first</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>&amp;T, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[T]</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</code><div class='since' title='Stable since Rust version 1.5.0'>1.5.0</div></span></h4>
 <div class='docblock'><p>Returns the first and all the rest of the elements of a slice.</p>
 
@@ -101,7 +99,7 @@
 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>((<span class='ident'>first</span>, <span class='ident'>elements</span>)) <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>split_first</span>() {
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>first</span>, <span class='kw-2'>&amp;</span><span class='number'>0</span>);
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>elements</span>, <span class='kw-2'>&amp;</span>[<span class='number'>1</span>, <span class='number'>2</span>]);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.split_first_mut' class='method'><span id='split_first_mut.v' class='invisible'><code>fn <a href='#method.split_first_mut' class='fnname'>split_first_mut</a>(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>&amp;mut T, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;mut [T]</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</code><div class='since' title='Stable since Rust version 1.5.0'>1.5.0</div></span></h4>
 <div class='docblock'><p>Returns the first and all the rest of the elements of a slice.</p>
 
@@ -114,7 +112,7 @@
     <span class='ident'>elements</span>[<span class='number'>0</span>] <span class='op'>=</span> <span class='number'>4</span>;
     <span class='ident'>elements</span>[<span class='number'>1</span>] <span class='op'>=</span> <span class='number'>5</span>;
 }
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>5</span>]);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>5</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.split_last' class='method'><span id='split_last.v' class='invisible'><code>fn <a href='#method.split_last' class='fnname'>split_last</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>&amp;T, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[T]</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</code><div class='since' title='Stable since Rust version 1.5.0'>1.5.0</div></span></h4>
 <div class='docblock'><p>Returns the last and all the rest of the elements of a slice.</p>
 
@@ -125,7 +123,7 @@
 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>((<span class='ident'>last</span>, <span class='ident'>elements</span>)) <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>split_last</span>() {
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>last</span>, <span class='kw-2'>&amp;</span><span class='number'>2</span>);
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>elements</span>, <span class='kw-2'>&amp;</span>[<span class='number'>0</span>, <span class='number'>1</span>]);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.split_last_mut' class='method'><span id='split_last_mut.v' class='invisible'><code>fn <a href='#method.split_last_mut' class='fnname'>split_last_mut</a>(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>&amp;mut T, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;mut [T]</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</code><div class='since' title='Stable since Rust version 1.5.0'>1.5.0</div></span></h4>
 <div class='docblock'><p>Returns the last and all the rest of the elements of a slice.</p>
 
@@ -138,7 +136,7 @@
     <span class='ident'>elements</span>[<span class='number'>0</span>] <span class='op'>=</span> <span class='number'>4</span>;
     <span class='ident'>elements</span>[<span class='number'>1</span>] <span class='op'>=</span> <span class='number'>5</span>;
 }
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>4</span>, <span class='number'>5</span>, <span class='number'>3</span>]);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>4</span>, <span class='number'>5</span>, <span class='number'>3</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.last' class='method'><span id='last.v' class='invisible'><code>fn <a href='#method.last' class='fnname'>last</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;T&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns the last element of a slice, or <code>None</code> if it is empty.</p>
 
@@ -148,7 +146,7 @@
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>30</span>), <span class='ident'>v</span>.<span class='ident'>last</span>());
 
 <span class='kw'>let</span> <span class='ident'>w</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>i32</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[];
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>w</span>.<span class='ident'>last</span>());</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>w</span>.<span class='ident'>last</span>());<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.last_mut' class='method'><span id='last_mut.v' class='invisible'><code>fn <a href='#method.last_mut' class='fnname'>last_mut</a>(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut T&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns a mutable pointer to the last item in the slice.</p>
 
@@ -159,7 +157,7 @@
 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>last</span>) <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>last_mut</span>() {
     <span class='op'>*</span><span class='ident'>last</span> <span class='op'>=</span> <span class='number'>10</span>;
 }
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>10</span>]);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>10</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.get' class='method'><span id='get.v' class='invisible'><code>fn <a href='#method.get' class='fnname'>get</a>(&amp;self, index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;T&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns the element of a slice at the given index, or <code>None</code> if the
 index is out of bounds.</p>
@@ -168,7 +166,7 @@ index is out of bounds.</p>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> [<span class='number'>10</span>, <span class='number'>40</span>, <span class='number'>30</span>];
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>40</span>), <span class='ident'>v</span>.<span class='ident'>get</span>(<span class='number'>1</span>));
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>v</span>.<span class='ident'>get</span>(<span class='number'>3</span>));</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='prelude-val'>None</span>, <span class='ident'>v</span>.<span class='ident'>get</span>(<span class='number'>3</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.get_mut' class='method'><span id='get_mut.v' class='invisible'><code>fn <a href='#method.get_mut' class='fnname'>get_mut</a>(&amp;mut self, index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut T&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns a mutable reference to the element at the given index.</p>
 
@@ -179,7 +177,7 @@ index is out of bounds.</p>
 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>elem</span>) <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>get_mut</span>(<span class='number'>1</span>) {
     <span class='op'>*</span><span class='ident'>elem</span> <span class='op'>=</span> <span class='number'>42</span>;
 }
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>0</span>, <span class='number'>42</span>, <span class='number'>2</span>]);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>0</span>, <span class='number'>42</span>, <span class='number'>2</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>or <code>None</code> if the index is out of bounds</p>
 </div><h4 id='method.get_unchecked' class='method'><span id='get_unchecked.v' class='invisible'><code>unsafe fn <a href='#method.get_unchecked' class='fnname'>get_unchecked</a>(&amp;self, index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; &amp;T</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
@@ -192,7 +190,7 @@ bounds checking. So use it very carefully!</p>
 
 <span class='kw'>unsafe</span> {
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>.<span class='ident'>get_unchecked</span>(<span class='number'>1</span>), <span class='kw-2'>&amp;</span><span class='number'>2</span>);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.get_unchecked_mut' class='method'><span id='get_unchecked_mut.v' class='invisible'><code>unsafe fn <a href='#method.get_unchecked_mut' class='fnname'>get_unchecked_mut</a>(&amp;mut self, index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; &amp;mut T</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an unsafe mutable pointer to the element in index. So use it
 very carefully!</p>
@@ -205,7 +203,7 @@ very carefully!</p>
     <span class='kw'>let</span> <span class='ident'>elem</span> <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>get_unchecked_mut</span>(<span class='number'>1</span>);
     <span class='op'>*</span><span class='ident'>elem</span> <span class='op'>=</span> <span class='number'>13</span>;
 }
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>1</span>, <span class='number'>13</span>, <span class='number'>4</span>]);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>1</span>, <span class='number'>13</span>, <span class='number'>4</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.as_ptr' class='method'><span id='as_ptr.v' class='invisible'><code>fn <a href='#method.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const T</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an raw pointer to the slice&#39;s buffer</p>
 
@@ -224,7 +222,7 @@ would also make any pointers to it invalid.</p>
     <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='number'>0</span>..<span class='ident'>x</span>.<span class='ident'>len</span>() {
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>.<span class='ident'>get_unchecked</span>(<span class='ident'>i</span>), <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>x_ptr</span>.<span class='ident'>offset</span>(<span class='ident'>i</span> <span class='kw'>as</span> <span class='ident'>isize</span>));
     }
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.as_mut_ptr' class='method'><span id='as_mut_ptr.v' class='invisible'><code>fn <a href='#method.as_mut_ptr' class='fnname'>as_mut_ptr</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut T</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an unsafe mutable pointer to the slice&#39;s buffer.</p>
 
@@ -244,7 +242,7 @@ would also make any pointers to it invalid.</p>
         <span class='op'>*</span><span class='ident'>x_ptr</span>.<span class='ident'>offset</span>(<span class='ident'>i</span> <span class='kw'>as</span> <span class='ident'>isize</span>) <span class='op'>+=</span> <span class='number'>2</span>;
     }
 }
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>6</span>]);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>6</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.swap' class='method'><span id='swap.v' class='invisible'><code>fn <a href='#method.swap' class='fnname'>swap</a>(&amp;mut self, a: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, b: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Swaps two elements in a slice.</p>
 
@@ -261,7 +259,7 @@ would also make any pointers to it invalid.</p>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>v</span> <span class='op'>=</span> [<span class='string'>&quot;a&quot;</span>, <span class='string'>&quot;b&quot;</span>, <span class='string'>&quot;c&quot;</span>, <span class='string'>&quot;d&quot;</span>];
 <span class='ident'>v</span>.<span class='ident'>swap</span>(<span class='number'>1</span>, <span class='number'>3</span>);
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span> <span class='op'>==</span> [<span class='string'>&quot;a&quot;</span>, <span class='string'>&quot;d&quot;</span>, <span class='string'>&quot;c&quot;</span>, <span class='string'>&quot;b&quot;</span>]);</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span> <span class='op'>==</span> [<span class='string'>&quot;a&quot;</span>, <span class='string'>&quot;d&quot;</span>, <span class='string'>&quot;c&quot;</span>, <span class='string'>&quot;b&quot;</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.reverse' class='method'><span id='reverse.v' class='invisible'><code>fn <a href='#method.reverse' class='fnname'>reverse</a>(&amp;mut self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Reverse the order of elements in a slice, in place.</p>
 
@@ -269,7 +267,7 @@ would also make any pointers to it invalid.</p>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>v</span> <span class='op'>=</span> [<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
 <span class='ident'>v</span>.<span class='ident'>reverse</span>();
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span> <span class='op'>==</span> [<span class='number'>3</span>, <span class='number'>2</span>, <span class='number'>1</span>]);</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span> <span class='op'>==</span> [<span class='number'>3</span>, <span class='number'>2</span>, <span class='number'>1</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.iter' class='method'><span id='iter.v' class='invisible'><code>fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.Iter.html' title='core::slice::Iter'>Iter</a>&lt;T&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an iterator over the slice.</p>
 
@@ -281,7 +279,7 @@ would also make any pointers to it invalid.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iterator</span>.<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iterator</span>.<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>2</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iterator</span>.<span class='ident'>next</span>(), <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>));
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iterator</span>.<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iterator</span>.<span class='ident'>next</span>(), <span class='prelude-val'>None</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.iter_mut' class='method'><span id='iter_mut.v' class='invisible'><code>fn <a href='#method.iter_mut' class='fnname'>iter_mut</a>(&amp;mut self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.IterMut.html' title='core::slice::IterMut'>IterMut</a>&lt;T&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an iterator that allows modifying each value.</p>
 
@@ -295,7 +293,7 @@ would also make any pointers to it invalid.</p>
         <span class='op'>*</span><span class='ident'>elem</span> <span class='op'>+=</span> <span class='number'>2</span>;
     }
 }
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>6</span>]);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='kw-2'>&amp;</span>[<span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>6</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.windows' class='method'><span id='windows.v' class='invisible'><code>fn <a href='#method.windows' class='fnname'>windows</a>(&amp;self, size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.Windows.html' title='core::slice::Windows'>Windows</a>&lt;T&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an iterator over all contiguous windows of length
 <code>size</code>. The windows overlap. If the slice is shorter than
@@ -311,14 +309,14 @@ would also make any pointers to it invalid.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[<span class='string'>&#39;r&#39;</span>, <span class='string'>&#39;u&#39;</span>]);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[<span class='string'>&#39;u&#39;</span>, <span class='string'>&#39;s&#39;</span>]);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[<span class='string'>&#39;s&#39;</span>, <span class='string'>&#39;t&#39;</span>]);
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>is_none</span>());</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>is_none</span>());<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>If the slice is shorter than <code>size</code>:</p>
 
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>slice</span> <span class='op'>=</span> [<span class='string'>&#39;f&#39;</span>, <span class='string'>&#39;o&#39;</span>, <span class='string'>&#39;o&#39;</span>];
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>slice</span>.<span class='ident'>windows</span>(<span class='number'>4</span>);
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>is_none</span>());</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>is_none</span>());<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.chunks' class='method'><span id='chunks.v' class='invisible'><code>fn <a href='#method.chunks' class='fnname'>chunks</a>(&amp;self, size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.Chunks.html' title='core::slice::Chunks'>Chunks</a>&lt;T&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an iterator over <code>size</code> elements of the slice at a
 time. The chunks are slices and do not overlap. If <code>size</code> does not divide the
@@ -335,7 +333,7 @@ length of the slice, then the last chunk will not have length
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[<span class='string'>&#39;l&#39;</span>, <span class='string'>&#39;o&#39;</span>]);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[<span class='string'>&#39;r&#39;</span>, <span class='string'>&#39;e&#39;</span>]);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[<span class='string'>&#39;m&#39;</span>]);
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>is_none</span>());</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>is_none</span>());<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.chunks_mut' class='method'><span id='chunks_mut.v' class='invisible'><code>fn <a href='#method.chunks_mut' class='fnname'>chunks_mut</a>(&amp;mut self, chunk_size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.ChunksMut.html' title='core::slice::ChunksMut'>ChunksMut</a>&lt;T&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an iterator over <code>chunk_size</code> elements of the slice at a time.
 The chunks are mutable slices, and do not overlap. If <code>chunk_size</code> does
@@ -356,7 +354,7 @@ have length <code>chunk_size</code>.</p>
     }
     <span class='ident'>count</span> <span class='op'>+=</span> <span class='number'>1</span>;
 }
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span>[<span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>2</span>, <span class='number'>3</span>]);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span>[<span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>2</span>, <span class='number'>3</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.split_at' class='method'><span id='split_at.v' class='invisible'><code>fn <a href='#method.split_at' class='fnname'>split_at</a>(&amp;self, mid: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[T]</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[T]</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Divides one slice into two at an index.</p>
 
@@ -372,7 +370,7 @@ indices from <code>[mid, len)</code> (excluding the index <code>len</code> itsel
 <span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> [<span class='number'>10</span>, <span class='number'>40</span>, <span class='number'>30</span>, <span class='number'>20</span>, <span class='number'>50</span>];
 <span class='kw'>let</span> (<span class='ident'>v1</span>, <span class='ident'>v2</span>) <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>split_at</span>(<span class='number'>2</span>);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>([<span class='number'>10</span>, <span class='number'>40</span>], <span class='ident'>v1</span>);
-<span class='macro'>assert_eq</span><span class='macro'>!</span>([<span class='number'>30</span>, <span class='number'>20</span>, <span class='number'>50</span>], <span class='ident'>v2</span>);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>([<span class='number'>30</span>, <span class='number'>20</span>, <span class='number'>50</span>], <span class='ident'>v2</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.split_at_mut' class='method'><span id='split_at_mut.v' class='invisible'><code>fn <a href='#method.split_at_mut' class='fnname'>split_at_mut</a>(&amp;mut self, mid: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;mut [T]</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;mut [T]</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Divides one <code>&amp;mut</code> into two at an index.</p>
 
@@ -404,7 +402,7 @@ indices from <code>[mid, len)</code> (excluding the index <code>len</code> itsel
     <span class='kw'>let</span> (<span class='ident'>left</span>, <span class='ident'>right</span>) <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>split_at_mut</span>(<span class='number'>6</span>);
     <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>left</span> <span class='op'>==</span> [<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>, <span class='number'>4</span>, <span class='number'>5</span>, <span class='number'>6</span>]);
     <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>right</span> <span class='op'>==</span> []);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.split' class='method'><span id='split.v' class='invisible'><code>fn <a href='#method.split' class='fnname'>split</a>&lt;F&gt;(&amp;self, pred: F) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.Split.html' title='core::slice::Split'>Split</a>&lt;T,&nbsp;F&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an iterator over subslices separated by elements that match
 <code>pred</code>. The matched element is not contained in the subslices.</p>
@@ -416,7 +414,7 @@ indices from <code>[mid, len)</code> (excluding the index <code>len</code> itsel
 
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[<span class='number'>10</span>, <span class='number'>40</span>]);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[<span class='number'>20</span>]);
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>is_none</span>());</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>is_none</span>());<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>If the first element is matched, an empty slice will be the first item
 returned by the iterator. Similarly, if the last element in the slice
@@ -429,7 +427,7 @@ iterator:</p>
 
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[<span class='number'>10</span>, <span class='number'>40</span>]);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[]);
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>is_none</span>());</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>is_none</span>());<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>If two matched elements are directly adjacent, an empty slice will be
 present between them:</p>
@@ -441,7 +439,7 @@ present between them:</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[<span class='number'>10</span>]);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[]);
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span>[<span class='number'>20</span>]);
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>is_none</span>());</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>iter</span>.<span class='ident'>next</span>().<span class='ident'>is_none</span>());<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.split_mut' class='method'><span id='split_mut.v' class='invisible'><code>fn <a href='#method.split_mut' class='fnname'>split_mut</a>&lt;F&gt;(&amp;mut self, pred: F) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.SplitMut.html' title='core::slice::SplitMut'>SplitMut</a>&lt;T,&nbsp;F&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an iterator over mutable subslices separated by elements that
 match <code>pred</code>. The matched element is not contained in the subslices.</p>
@@ -453,7 +451,7 @@ match <code>pred</code>. The matched element is not contained in the subslices.<
 <span class='kw'>for</span> <span class='ident'>group</span> <span class='kw'>in</span> <span class='ident'>v</span>.<span class='ident'>split_mut</span>(<span class='op'>|</span><span class='ident'>num</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>num</span> <span class='op'>%</span> <span class='number'>3</span> <span class='op'>==</span> <span class='number'>0</span>) {
     <span class='ident'>group</span>[<span class='number'>0</span>] <span class='op'>=</span> <span class='number'>1</span>;
 }
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, [<span class='number'>1</span>, <span class='number'>40</span>, <span class='number'>30</span>, <span class='number'>1</span>, <span class='number'>60</span>, <span class='number'>1</span>]);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, [<span class='number'>1</span>, <span class='number'>40</span>, <span class='number'>30</span>, <span class='number'>1</span>, <span class='number'>60</span>, <span class='number'>1</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.splitn' class='method'><span id='splitn.v' class='invisible'><code>fn <a href='#method.splitn' class='fnname'>splitn</a>&lt;F&gt;(&amp;self, n: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, pred: F) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.SplitN.html' title='core::slice::SplitN'>SplitN</a>&lt;T,&nbsp;F&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an iterator over subslices separated by elements that match
 <code>pred</code>, limited to returning at most <code>n</code> items.  The matched element is
@@ -471,7 +469,7 @@ slice.</p>
 
 <span class='kw'>for</span> <span class='ident'>group</span> <span class='kw'>in</span> <span class='ident'>v</span>.<span class='ident'>splitn</span>(<span class='number'>2</span>, <span class='op'>|</span><span class='ident'>num</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>num</span> <span class='op'>%</span> <span class='number'>3</span> <span class='op'>==</span> <span class='number'>0</span>) {
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>group</span>);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.splitn_mut' class='method'><span id='splitn_mut.v' class='invisible'><code>fn <a href='#method.splitn_mut' class='fnname'>splitn_mut</a>&lt;F&gt;(&amp;mut self, n: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, pred: F) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.SplitNMut.html' title='core::slice::SplitNMut'>SplitNMut</a>&lt;T,&nbsp;F&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an iterator over subslices separated by elements that match
 <code>pred</code>, limited to returning at most <code>n</code> items.  The matched element is
@@ -487,7 +485,7 @@ slice.</p>
 <span class='kw'>for</span> <span class='ident'>group</span> <span class='kw'>in</span> <span class='ident'>v</span>.<span class='ident'>splitn_mut</span>(<span class='number'>2</span>, <span class='op'>|</span><span class='ident'>num</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>num</span> <span class='op'>%</span> <span class='number'>3</span> <span class='op'>==</span> <span class='number'>0</span>) {
     <span class='ident'>group</span>[<span class='number'>0</span>] <span class='op'>=</span> <span class='number'>1</span>;
 }
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, [<span class='number'>1</span>, <span class='number'>40</span>, <span class='number'>30</span>, <span class='number'>1</span>, <span class='number'>60</span>, <span class='number'>50</span>]);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>v</span>, [<span class='number'>1</span>, <span class='number'>40</span>, <span class='number'>30</span>, <span class='number'>1</span>, <span class='number'>60</span>, <span class='number'>50</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.rsplitn' class='method'><span id='rsplitn.v' class='invisible'><code>fn <a href='#method.rsplitn' class='fnname'>rsplitn</a>&lt;F&gt;(&amp;self, n: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, pred: F) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.RSplitN.html' title='core::slice::RSplitN'>RSplitN</a>&lt;T,&nbsp;F&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an iterator over subslices separated by elements that match
 <code>pred</code> limited to returning at most <code>n</code> items. This starts at the end of
@@ -506,7 +504,7 @@ by 3 (i.e. <code>[50]</code>, <code>[10, 40, 30, 20]</code>):</p>
 
 <span class='kw'>for</span> <span class='ident'>group</span> <span class='kw'>in</span> <span class='ident'>v</span>.<span class='ident'>rsplitn</span>(<span class='number'>2</span>, <span class='op'>|</span><span class='ident'>num</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>num</span> <span class='op'>%</span> <span class='number'>3</span> <span class='op'>==</span> <span class='number'>0</span>) {
     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>group</span>);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.rsplitn_mut' class='method'><span id='rsplitn_mut.v' class='invisible'><code>fn <a href='#method.rsplitn_mut' class='fnname'>rsplitn_mut</a>&lt;F&gt;(&amp;mut self, n: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, pred: F) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/slice/struct.RSplitNMut.html' title='core::slice::RSplitNMut'>RSplitNMut</a>&lt;T,&nbsp;F&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns an iterator over subslices separated by elements that match
 <code>pred</code> limited to returning at most <code>n</code> items. This starts at the end of
@@ -523,7 +521,7 @@ slice.</p>
 <span class='kw'>for</span> <span class='ident'>group</span> <span class='kw'>in</span> <span class='ident'>s</span>.<span class='ident'>rsplitn_mut</span>(<span class='number'>2</span>, <span class='op'>|</span><span class='ident'>num</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>num</span> <span class='op'>%</span> <span class='number'>3</span> <span class='op'>==</span> <span class='number'>0</span>) {
     <span class='ident'>group</span>[<span class='number'>0</span>] <span class='op'>=</span> <span class='number'>1</span>;
 }
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s</span>, [<span class='number'>1</span>, <span class='number'>40</span>, <span class='number'>30</span>, <span class='number'>20</span>, <span class='number'>60</span>, <span class='number'>1</span>]);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s</span>, [<span class='number'>1</span>, <span class='number'>40</span>, <span class='number'>30</span>, <span class='number'>20</span>, <span class='number'>60</span>, <span class='number'>1</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.contains' class='method'><span id='contains.v' class='invisible'><code>fn <a href='#method.contains' class='fnname'>contains</a>(&amp;self, x: &amp;T) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt;</span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns true if the slice contains an element with the given value.</p>
 
@@ -531,7 +529,7 @@ slice.</p>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>v</span> <span class='op'>=</span> [<span class='number'>10</span>, <span class='number'>40</span>, <span class='number'>30</span>];
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span>.<span class='ident'>contains</span>(<span class='kw-2'>&amp;</span><span class='number'>30</span>));
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>v</span>.<span class='ident'>contains</span>(<span class='kw-2'>&amp;</span><span class='number'>50</span>));</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>v</span>.<span class='ident'>contains</span>(<span class='kw-2'>&amp;</span><span class='number'>50</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.starts_with' class='method'><span id='starts_with.v' class='invisible'><code>fn <a href='#method.starts_with' class='fnname'>starts_with</a>(&amp;self, needle: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[T]</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt;</span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns true if <code>needle</code> is a prefix of the slice.</p>
 
@@ -541,7 +539,7 @@ slice.</p>
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span>.<span class='ident'>starts_with</span>(<span class='kw-2'>&amp;</span>[<span class='number'>10</span>]));
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span>.<span class='ident'>starts_with</span>(<span class='kw-2'>&amp;</span>[<span class='number'>10</span>, <span class='number'>40</span>]));
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>v</span>.<span class='ident'>starts_with</span>(<span class='kw-2'>&amp;</span>[<span class='number'>50</span>]));
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>v</span>.<span class='ident'>starts_with</span>(<span class='kw-2'>&amp;</span>[<span class='number'>10</span>, <span class='number'>50</span>]));</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>v</span>.<span class='ident'>starts_with</span>(<span class='kw-2'>&amp;</span>[<span class='number'>10</span>, <span class='number'>50</span>]));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.ends_with' class='method'><span id='ends_with.v' class='invisible'><code>fn <a href='#method.ends_with' class='fnname'>ends_with</a>(&amp;self, needle: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[T]</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&lt;T&gt;</span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Returns true if <code>needle</code> is a suffix of the slice.</p>
 
@@ -551,7 +549,7 @@ slice.</p>
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span>.<span class='ident'>ends_with</span>(<span class='kw-2'>&amp;</span>[<span class='number'>30</span>]));
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span>.<span class='ident'>ends_with</span>(<span class='kw-2'>&amp;</span>[<span class='number'>40</span>, <span class='number'>30</span>]));
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>v</span>.<span class='ident'>ends_with</span>(<span class='kw-2'>&amp;</span>[<span class='number'>50</span>]));
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>v</span>.<span class='ident'>ends_with</span>(<span class='kw-2'>&amp;</span>[<span class='number'>50</span>, <span class='number'>30</span>]));</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>v</span>.<span class='ident'>ends_with</span>(<span class='kw-2'>&amp;</span>[<span class='number'>50</span>, <span class='number'>30</span>]));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.binary_search' class='method'><span id='binary_search.v' class='invisible'><code>fn <a href='#method.binary_search' class='fnname'>binary_search</a>(&amp;self, x: &amp;T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt; <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a></span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Binary search a sorted slice for a given element.</p>
 
@@ -572,7 +570,7 @@ found; the fourth could match any position in <code>[1,4]</code>.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s</span>.<span class='ident'>binary_search</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>),   <span class='prelude-val'>Err</span>(<span class='number'>7</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s</span>.<span class='ident'>binary_search</span>(<span class='kw-2'>&amp;</span><span class='number'>100</span>), <span class='prelude-val'>Err</span>(<span class='number'>13</span>));
 <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>binary_search</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>);
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>match</span> <span class='ident'>r</span> { <span class='prelude-val'>Ok</span>(<span class='number'>1</span>...<span class='number'>4</span>) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>, _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>, });</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>match</span> <span class='ident'>r</span> { <span class='prelude-val'>Ok</span>(<span class='number'>1</span>...<span class='number'>4</span>) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>, _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>, });<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.binary_search_by' class='method'><span id='binary_search_by.v' class='invisible'><code>fn <a href='#method.binary_search_by' class='fnname'>binary_search_by</a>&lt;'a,&nbsp;F&gt;(&amp;'a self, f: F) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;'a T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Binary search a sorted slice with a comparator function.</p>
 
@@ -602,7 +600,7 @@ found; the fourth could match any position in <code>[1,4]</code>.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s</span>.<span class='ident'>binary_search_by</span>(<span class='op'>|</span><span class='ident'>probe</span><span class='op'>|</span> <span class='ident'>probe</span>.<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>seek</span>)), <span class='prelude-val'>Err</span>(<span class='number'>13</span>));
 <span class='kw'>let</span> <span class='ident'>seek</span> <span class='op'>=</span> <span class='number'>1</span>;
 <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>binary_search_by</span>(<span class='op'>|</span><span class='ident'>probe</span><span class='op'>|</span> <span class='ident'>probe</span>.<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>seek</span>));
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>match</span> <span class='ident'>r</span> { <span class='prelude-val'>Ok</span>(<span class='number'>1</span>...<span class='number'>4</span>) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>, _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>, });</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>match</span> <span class='ident'>r</span> { <span class='prelude-val'>Ok</span>(<span class='number'>1</span>...<span class='number'>4</span>) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>, _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>, });<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.binary_search_by_key' class='method'><span id='binary_search_by_key.v' class='invisible'><code>fn <a href='#method.binary_search_by_key' class='fnname'>binary_search_by_key</a>&lt;'a,&nbsp;B,&nbsp;F&gt;(&amp;'a self, b: &amp;B, f: F) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt; <span class='where'>where B: <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>, F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;'a T) -&gt; B</span></code><div class='since' title='Stable since Rust version 1.10.0'>1.10.0</div></span></h4>
 <div class='docblock'><p>Binary search a sorted slice with a key extraction function.</p>
 
@@ -629,7 +627,7 @@ fourth could match any position in <code>[1,4]</code>.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s</span>.<span class='ident'>binary_search_by_key</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>, <span class='op'>|</span><span class='kw-2'>&amp;</span>(<span class='ident'>a</span>,<span class='ident'>b</span>)<span class='op'>|</span> <span class='ident'>b</span>),   <span class='prelude-val'>Err</span>(<span class='number'>7</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s</span>.<span class='ident'>binary_search_by_key</span>(<span class='kw-2'>&amp;</span><span class='number'>100</span>, <span class='op'>|</span><span class='kw-2'>&amp;</span>(<span class='ident'>a</span>,<span class='ident'>b</span>)<span class='op'>|</span> <span class='ident'>b</span>), <span class='prelude-val'>Err</span>(<span class='number'>13</span>));
 <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>binary_search_by_key</span>(<span class='kw-2'>&amp;</span><span class='number'>1</span>, <span class='op'>|</span><span class='kw-2'>&amp;</span>(<span class='ident'>a</span>,<span class='ident'>b</span>)<span class='op'>|</span> <span class='ident'>b</span>);
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>match</span> <span class='ident'>r</span> { <span class='prelude-val'>Ok</span>(<span class='number'>1</span>...<span class='number'>4</span>) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>, _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>, });</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>match</span> <span class='ident'>r</span> { <span class='prelude-val'>Ok</span>(<span class='number'>1</span>...<span class='number'>4</span>) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>, _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>, });<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.sort' class='method'><span id='sort.v' class='invisible'><code>fn <a href='#method.sort' class='fnname'>sort</a>(&amp;mut self) <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a></span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>This is equivalent to <code>self.sort_by(|a, b| a.cmp(b))</code>.</p>
 
@@ -641,7 +639,7 @@ approximately <code>2 * n</code> where <code>n</code> is the length of <code>sel
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>v</span> <span class='op'>=</span> [<span class='op'>-</span><span class='number'>5</span>, <span class='number'>4</span>, <span class='number'>1</span>, <span class='op'>-</span><span class='number'>3</span>, <span class='number'>2</span>];
 
 <span class='ident'>v</span>.<span class='ident'>sort</span>();
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span> <span class='op'>==</span> [<span class='op'>-</span><span class='number'>5</span>, <span class='op'>-</span><span class='number'>3</span>, <span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>4</span>]);</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span> <span class='op'>==</span> [<span class='op'>-</span><span class='number'>5</span>, <span class='op'>-</span><span class='number'>3</span>, <span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>4</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.sort_by_key' class='method'><span id='sort_by_key.v' class='invisible'><code>fn <a href='#method.sort_by_key' class='fnname'>sort_by_key</a>&lt;B,&nbsp;F&gt;(&amp;mut self, f: F) <span class='where'>where B: <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html' title='core::cmp::Ord'>Ord</a>, F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;T) -&gt; B</span></code><div class='since' title='Stable since Rust version 1.7.0'>1.7.0</div></span></h4>
 <div class='docblock'><p>Sorts the slice, in place, using <code>key</code> to extract a key by which to
 order the sort by.</p>
@@ -654,7 +652,7 @@ approximately <code>2 * n</code>, where <code>n</code> is the length of <code>se
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>v</span> <span class='op'>=</span> [<span class='op'>-</span><span class='number'>5i32</span>, <span class='number'>4</span>, <span class='number'>1</span>, <span class='op'>-</span><span class='number'>3</span>, <span class='number'>2</span>];
 
 <span class='ident'>v</span>.<span class='ident'>sort_by_key</span>(<span class='op'>|</span><span class='ident'>k</span><span class='op'>|</span> <span class='ident'>k</span>.<span class='ident'>abs</span>());
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span> <span class='op'>==</span> [<span class='number'>1</span>, <span class='number'>2</span>, <span class='op'>-</span><span class='number'>3</span>, <span class='number'>4</span>, <span class='op'>-</span><span class='number'>5</span>]);</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span> <span class='op'>==</span> [<span class='number'>1</span>, <span class='number'>2</span>, <span class='op'>-</span><span class='number'>3</span>, <span class='number'>4</span>, <span class='op'>-</span><span class='number'>5</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.sort_by' class='method'><span id='sort_by.v' class='invisible'><code>fn <a href='#method.sort_by' class='fnname'>sort_by</a>&lt;F&gt;(&amp;mut self, compare: F) <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(&amp;T, &amp;T) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html' title='core::cmp::Ordering'>Ordering</a></span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Sorts the slice, in place, using <code>compare</code> to compare
 elements.</p>
@@ -670,7 +668,7 @@ approximately <code>2 * n</code>, where <code>n</code> is the length of <code>se
 
 <span class='comment'>// reverse sorting</span>
 <span class='ident'>v</span>.<span class='ident'>sort_by</span>(<span class='op'>|</span><span class='ident'>a</span>, <span class='ident'>b</span><span class='op'>|</span> <span class='ident'>b</span>.<span class='ident'>cmp</span>(<span class='ident'>a</span>));
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span> <span class='op'>==</span> [<span class='number'>5</span>, <span class='number'>4</span>, <span class='number'>3</span>, <span class='number'>2</span>, <span class='number'>1</span>]);</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>v</span> <span class='op'>==</span> [<span class='number'>5</span>, <span class='number'>4</span>, <span class='number'>3</span>, <span class='number'>2</span>, <span class='number'>1</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.clone_from_slice' class='method'><span id='clone_from_slice.v' class='invisible'><code>fn <a href='#method.clone_from_slice' class='fnname'>clone_from_slice</a>(&amp;mut self, src: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[T]</a>) <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a></span></code><div class='since' title='Stable since Rust version 1.7.0'>1.7.0</div></span></h4>
 <div class='docblock'><p>Copies the elements from <code>src</code> into <code>self</code>.</p>
 
@@ -685,7 +683,7 @@ approximately <code>2 * n</code>, where <code>n</code> is the length of <code>se
 <span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span> [<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
 
 <span class='ident'>dst</span>.<span class='ident'>clone_from_slice</span>(<span class='kw-2'>&amp;</span><span class='ident'>src</span>);
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>dst</span> <span class='op'>==</span> [<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>]);</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>dst</span> <span class='op'>==</span> [<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>]);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.copy_from_slice' class='method'><span id='copy_from_slice.v' class='invisible'><code>fn <a href='#method.copy_from_slice' class='fnname'>copy_from_slice</a>(&amp;mut self, src: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[T]</a>) <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a></span></code><div class='since' title='Stable since Rust version 1.9.0'>1.9.0</div></span></h4>
 <div class='docblock'><p>Copies all elements from <code>src</code> into <code>self</code>, using a memcpy.</p>
 
@@ -700,7 +698,7 @@ approximately <code>2 * n</code>, where <code>n</code> is the length of <code>se
 <span class='kw'>let</span> <span class='ident'>src</span> <span class='op'>=</span> [<span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>];
 
 <span class='ident'>dst</span>.<span class='ident'>copy_from_slice</span>(<span class='kw-2'>&amp;</span><span class='ident'>src</span>);
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>src</span>, <span class='ident'>dst</span>);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>src</span>, <span class='ident'>dst</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.to_vec' class='method'><span id='to_vec.v' class='invisible'><code>fn <a href='#method.to_vec' class='fnname'>to_vec</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a></span></code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Copies <code>self</code> into a new <code>Vec</code>.</p>
 
@@ -708,7 +706,7 @@ approximately <code>2 * n</code>, where <code>n</code> is the length of <code>se
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> [<span class='number'>10</span>, <span class='number'>40</span>, <span class='number'>30</span>];
 <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>to_vec</span>();
-<span class='comment'>// Here, `s` and `x` can be modified independently.</span></pre>
+<span class='comment'>// Here, `s` and `x` can be modified independently.</span><a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.into_vec' class='method'><span id='into_vec.v' class='invisible'><code>fn <a href='#method.into_vec' class='fnname'>into_vec</a>(self: <a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>[</a>T<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>&gt;) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;T&gt;</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
 <div class='docblock'><p>Converts <code>self</code> into a vector without clones or allocation.</p>
 
@@ -718,7 +716,7 @@ approximately <code>2 * n</code>, where <code>n</code> is the length of <code>se
 <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>into_vec</span>();
 <span class='comment'>// `s` cannot be used anymore because it has been converted into `x`.</span>
 
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='macro'>vec</span><span class='macro'>!</span>(<span class='number'>10</span>, <span class='number'>40</span>, <span class='number'>30</span>));</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='macro'>vec</span><span class='macro'>!</span>(<span class='number'>10</span>, <span class='number'>40</span>, <span class='number'>30</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../serde/bytes/struct.ByteBuf.html' title='serde::bytes::ByteBuf'>ByteBuf</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-124' class='srclink' href='../../src/serde/bytes.rs.html#85' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../serde/bytes/struct.ByteBuf.html' title='serde::bytes::ByteBuf'>ByteBuf</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>

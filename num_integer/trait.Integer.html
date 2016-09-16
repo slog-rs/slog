@@ -75,11 +75,11 @@
 <span class='macro'>assert</span><span class='macro'>!</span>(( <span class='number'>1</span>).<span class='ident'>div_floor</span>(<span class='kw-2'>&amp;</span> <span class='number'>2</span>) <span class='op'>==</span>  <span class='number'>0</span>);
 <span class='macro'>assert</span><span class='macro'>!</span>(( <span class='number'>1</span>).<span class='ident'>div_floor</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>) <span class='op'>==</span> <span class='op'>-</span><span class='number'>1</span>);
 <span class='macro'>assert</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span>).<span class='ident'>div_floor</span>(<span class='kw-2'>&amp;</span> <span class='number'>2</span>) <span class='op'>==</span> <span class='op'>-</span><span class='number'>1</span>);
-<span class='macro'>assert</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span>).<span class='ident'>div_floor</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>) <span class='op'>==</span>  <span class='number'>0</span>);</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span>).<span class='ident'>div_floor</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>) <span class='op'>==</span>  <span class='number'>0</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h3 id='tymethod.mod_floor' class='method stab '><span id='mod_floor.v' class='invisible'><code>fn <a href='#tymethod.mod_floor' class='fnname'>mod_floor</a>(&amp;self, other: &amp;Self) -&gt; Self</code></span></h3><div class='docblock'><p>Floored integer modulo, satisfying:</p>
 
 <pre class='rust rust-example-rendered'>
-<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>n</span>.<span class='ident'>div_floor</span>(<span class='kw-2'>&amp;</span><span class='ident'>d</span>) <span class='op'>*</span> <span class='ident'>d</span> <span class='op'>+</span> <span class='ident'>n</span>.<span class='ident'>mod_floor</span>(<span class='kw-2'>&amp;</span><span class='ident'>d</span>) <span class='op'>==</span> <span class='ident'>n</span>)</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>n</span>.<span class='ident'>div_floor</span>(<span class='kw-2'>&amp;</span><span class='ident'>d</span>) <span class='op'>*</span> <span class='ident'>d</span> <span class='op'>+</span> <span class='ident'>n</span>.<span class='ident'>mod_floor</span>(<span class='kw-2'>&amp;</span><span class='ident'>d</span>) <span class='op'>==</span> <span class='ident'>n</span>)<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <h1 id='examples-1' class='section-header'><a href='#examples-1'>Examples</a></h1>
 <pre class='rust rust-example-rendered'>
@@ -91,38 +91,38 @@
 <span class='macro'>assert</span><span class='macro'>!</span>(( <span class='number'>1</span>).<span class='ident'>mod_floor</span>(<span class='kw-2'>&amp;</span> <span class='number'>2</span>) <span class='op'>==</span>  <span class='number'>1</span>);
 <span class='macro'>assert</span><span class='macro'>!</span>(( <span class='number'>1</span>).<span class='ident'>mod_floor</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>) <span class='op'>==</span> <span class='op'>-</span><span class='number'>1</span>);
 <span class='macro'>assert</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span>).<span class='ident'>mod_floor</span>(<span class='kw-2'>&amp;</span> <span class='number'>2</span>) <span class='op'>==</span>  <span class='number'>1</span>);
-<span class='macro'>assert</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span>).<span class='ident'>mod_floor</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>) <span class='op'>==</span> <span class='op'>-</span><span class='number'>1</span>);</pre>
+<span class='macro'>assert</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span>).<span class='ident'>mod_floor</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>) <span class='op'>==</span> <span class='op'>-</span><span class='number'>1</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h3 id='tymethod.gcd' class='method stab '><span id='gcd.v' class='invisible'><code>fn <a href='#tymethod.gcd' class='fnname'>gcd</a>(&amp;self, other: &amp;Self) -&gt; Self</code></span></h3><div class='docblock'><p>Greatest Common Divisor (GCD).</p>
 
 <h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1>
 <pre class='rust rust-example-rendered'>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>6</span>.<span class='ident'>gcd</span>(<span class='kw-2'>&amp;</span><span class='number'>8</span>), <span class='number'>2</span>);
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>7</span>.<span class='ident'>gcd</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>), <span class='number'>1</span>);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>7</span>.<span class='ident'>gcd</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>), <span class='number'>1</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h3 id='tymethod.lcm' class='method stab '><span id='lcm.v' class='invisible'><code>fn <a href='#tymethod.lcm' class='fnname'>lcm</a>(&amp;self, other: &amp;Self) -&gt; Self</code></span></h3><div class='docblock'><p>Lowest Common Multiple (LCM).</p>
 
 <h1 id='examples-3' class='section-header'><a href='#examples-3'>Examples</a></h1>
 <pre class='rust rust-example-rendered'>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>7</span>.<span class='ident'>lcm</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>), <span class='number'>21</span>);
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>2</span>.<span class='ident'>lcm</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>), <span class='number'>4</span>);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>2</span>.<span class='ident'>lcm</span>(<span class='kw-2'>&amp;</span><span class='number'>4</span>), <span class='number'>4</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h3 id='tymethod.divides' class='method stab '><span id='divides.v' class='invisible'><code>fn <a href='#tymethod.divides' class='fnname'>divides</a>(&amp;self, other: &amp;Self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h3><div class='docblock'><p>Deprecated, use <code>is_multiple_of</code> instead.</p>
 </div><h3 id='tymethod.is_multiple_of' class='method stab '><span id='is_multiple_of.v' class='invisible'><code>fn <a href='#tymethod.is_multiple_of' class='fnname'>is_multiple_of</a>(&amp;self, other: &amp;Self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h3><div class='docblock'><p>Returns <code>true</code> if <code>other</code> is a multiple of <code>self</code>.</p>
 
 <h1 id='examples-4' class='section-header'><a href='#examples-4'>Examples</a></h1>
 <pre class='rust rust-example-rendered'>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>9</span>.<span class='ident'>is_multiple_of</span>(<span class='kw-2'>&amp;</span><span class='number'>3</span>), <span class='bool-val'>true</span>);
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>3</span>.<span class='ident'>is_multiple_of</span>(<span class='kw-2'>&amp;</span><span class='number'>9</span>), <span class='bool-val'>false</span>);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>3</span>.<span class='ident'>is_multiple_of</span>(<span class='kw-2'>&amp;</span><span class='number'>9</span>), <span class='bool-val'>false</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h3 id='tymethod.is_even' class='method stab '><span id='is_even.v' class='invisible'><code>fn <a href='#tymethod.is_even' class='fnname'>is_even</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h3><div class='docblock'><p>Returns <code>true</code> if the number is even.</p>
 
 <h1 id='examples-5' class='section-header'><a href='#examples-5'>Examples</a></h1>
 <pre class='rust rust-example-rendered'>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>3</span>.<span class='ident'>is_even</span>(), <span class='bool-val'>false</span>);
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>4</span>.<span class='ident'>is_even</span>(), <span class='bool-val'>true</span>);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>4</span>.<span class='ident'>is_even</span>(), <span class='bool-val'>true</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h3 id='tymethod.is_odd' class='method stab '><span id='is_odd.v' class='invisible'><code>fn <a href='#tymethod.is_odd' class='fnname'>is_odd</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h3><div class='docblock'><p>Returns <code>true</code> if the number is odd.</p>
 
 <h1 id='examples-6' class='section-header'><a href='#examples-6'>Examples</a></h1>
 <pre class='rust rust-example-rendered'>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>3</span>.<span class='ident'>is_odd</span>(), <span class='bool-val'>true</span>);
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>4</span>.<span class='ident'>is_odd</span>(), <span class='bool-val'>false</span>);</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>4</span>.<span class='ident'>is_odd</span>(), <span class='bool-val'>false</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h3 id='tymethod.div_rem' class='method stab '><span id='div_rem.v' class='invisible'><code>fn <a href='#tymethod.div_rem' class='fnname'>div_rem</a>(&amp;self, other: &amp;Self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>Self, Self<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></span></h3><div class='docblock'><p>Simultaneous truncated integer division and modulus.
 Returns <code>(quotient, remainder)</code>.</p>
 
@@ -136,7 +136,7 @@ Returns <code>(quotient, remainder)</code>.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(( <span class='number'>1</span>).<span class='ident'>div_rem</span>( <span class='kw-2'>&amp;</span><span class='number'>2</span>), ( <span class='number'>0</span>,  <span class='number'>1</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(( <span class='number'>1</span>).<span class='ident'>div_rem</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>), ( <span class='number'>0</span>,  <span class='number'>1</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span>).<span class='ident'>div_rem</span>( <span class='kw-2'>&amp;</span><span class='number'>2</span>), ( <span class='number'>0</span>, <span class='op'>-</span><span class='number'>1</span>));
-<span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span>).<span class='ident'>div_rem</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>), ( <span class='number'>0</span>, <span class='op'>-</span><span class='number'>1</span>));</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span>).<span class='ident'>div_rem</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>), ( <span class='number'>0</span>, <span class='op'>-</span><span class='number'>1</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div></div>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
@@ -153,7 +153,7 @@ Returns <code>(quotient, remainder)</code>.</p>
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(( <span class='number'>1</span>).<span class='ident'>div_mod_floor</span>( <span class='kw-2'>&amp;</span><span class='number'>2</span>), ( <span class='number'>0</span>,  <span class='number'>1</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(( <span class='number'>1</span>).<span class='ident'>div_mod_floor</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>), (<span class='op'>-</span><span class='number'>1</span>, <span class='op'>-</span><span class='number'>1</span>));
 <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span>).<span class='ident'>div_mod_floor</span>( <span class='kw-2'>&amp;</span><span class='number'>2</span>), (<span class='op'>-</span><span class='number'>1</span>,  <span class='number'>1</span>));
-<span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span>).<span class='ident'>div_mod_floor</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>), ( <span class='number'>0</span>, <span class='op'>-</span><span class='number'>1</span>));</pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span>).<span class='ident'>div_mod_floor</span>(<span class='kw-2'>&amp;</span><span class='op'>-</span><span class='number'>2</span>), ( <span class='number'>0</span>, <span class='op'>-</span><span class='number'>1</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>

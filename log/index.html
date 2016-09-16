@@ -90,7 +90,7 @@ macros to log whatever information will be useful to downstream consumers.</p>
             }
         }
     }
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <h2 id='in-executables' class='section-header'><a href='#in-executables'>In executables</a></h2>
 <p>Executables should choose a logging framework and initialize it early in the
@@ -115,7 +115,7 @@ initialized will be ignored.</p>
     <span class='macro'>info</span><span class='macro'>!</span>(<span class='string'>&quot;starting up&quot;</span>);
 
     <span class='comment'>// ...</span>
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <h1 id='logger-implementations' class='section-header'><a href='#logger-implementations'>Logger implementations</a></h1>
 <p>Loggers implement the <code>Log</code> trait. Here&#39;s a very basic example that simply
@@ -139,7 +139,7 @@ logs all messages at the <code>Error</code>, <code>Warn</code> or <code>Info</co
         }
     }
 }
-</pre>
+<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>Loggers are installed by calling the <code>set_logger</code> function. It takes a
 closure which is provided a <code>MaxLogLevel</code> token and returns a <code>Log</code> trait
@@ -157,7 +157,7 @@ logger:</p>
         <span class='ident'>max_log_level</span>.<span class='ident'>set</span>(<span class='ident'>LogLevelFilter</span>::<span class='ident'>Info</span>);
         <span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>SimpleLogger</span>)
     })
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <h1 id='use-with-no_std' class='section-header'><a href='#use-with-no_std'>Use with <code>no_std</code></a></h1>
 <p>To use the <code>log</code> crate without depending on <code>libstd</code>, you need to specify
@@ -182,41 +182,41 @@ shut down the global logger before exiting:</p>
         <span class='kw'>let</span> <span class='ident'>logger</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='kw-2'>&amp;</span><span class='op'>*</span>(<span class='ident'>logger</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>SimpleLogger</span>) };
         <span class='ident'>logger</span>.<span class='ident'>flush</span>();
     })
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.debug.html'
                                   title='log::debug'>debug</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Logs a message at the debug level.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.error.html'
                                   title='log::error'>error</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Logs a message at the error level.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.info.html'
                                   title='log::info'>info</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Logs a message at the info level.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.log.html'
                                   title='log::log'>log</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>The standard logging macro.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.log_enabled.html'
                                   title='log::log_enabled'>log_enabled</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Determines if a message logged at the specified level in that module will
 be logged.</p>
                            </td>
@@ -224,14 +224,14 @@ be logged.</p>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.trace.html'
                                   title='log::trace'>trace</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Logs a message at the trace level.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.warn.html'
                                   title='log::warn'>warn</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Logs a message at the warn level.</p>
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
@@ -239,28 +239,28 @@ be logged.</p>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.LogLocation.html'
                                   title='log::LogLocation'>LogLocation</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>The location of a log message.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.LogMetadata.html'
                                   title='log::LogMetadata'>LogMetadata</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Metadata about a log message.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.LogRecord.html'
                                   title='log::LogRecord'>LogRecord</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>The &quot;payload&quot; of a log message.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.MaxLogLevelFilter.html'
                                   title='log::MaxLogLevelFilter'>MaxLogLevelFilter</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>A token providing read and write access to the global maximum log level
 filter.</p>
                            </td>
@@ -268,14 +268,14 @@ filter.</p>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.SetLoggerError.html'
                                   title='log::SetLoggerError'>SetLoggerError</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>The type returned by <code>set_logger</code> if <code>set_logger</code> has already been called.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.ShutdownLoggerError.html'
                                   title='log::ShutdownLoggerError'>ShutdownLoggerError</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>The type returned by <code>shutdown_logger_raw</code> if <code>shutdown_logger_raw</code> has
 already been called or if <code>set_logger_raw</code> has not been called yet.</p>
                            </td>
@@ -284,14 +284,14 @@ already been called or if <code>set_logger_raw</code> has not been called yet.</
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.LogLevel.html'
                                   title='log::LogLevel'>LogLevel</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>An enum representing the available verbosity levels of the logging framework</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.LogLevelFilter.html'
                                   title='log::LogLevelFilter'>LogLevelFilter</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>An enum representing the available verbosity level filters of the logging
 framework.</p>
                            </td>
@@ -300,7 +300,7 @@ framework.</p>
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.Log.html'
                                   title='log::Log'>Log</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>A trait encapsulating the operations required of a logger</p>
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
@@ -308,35 +308,35 @@ framework.</p>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.max_log_level.html'
                                   title='log::max_log_level'>max_log_level</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Returns the current maximum log level.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.set_logger.html'
                                   title='log::set_logger'>set_logger</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Sets the global logger.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.set_logger_raw.html'
                                   title='log::set_logger_raw'>set_logger_raw</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Sets the global logger from a raw pointer.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.shutdown_logger.html'
                                   title='log::shutdown_logger'>shutdown_logger</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Shuts down the global logger.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.shutdown_logger_raw.html'
                                   title='log::shutdown_logger_raw'>shutdown_logger_raw</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Shuts down the global logger.</p>
                            </td>
                        </tr></table></section>

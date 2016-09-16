@@ -47,16 +47,14 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-301' class='srclink' href='../../src/slog/src/ser.rs.html#269-274' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct ValueSerializer&lt;'a&gt; {
-    // some fields omitted
-}</pre><div class='docblock'><p>A handle to <code>Serializer</code> for <code>PushLazy</code> closure</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../../slog/ser/struct.ValueSerializer.html' title='slog::ser::ValueSerializer'>ValueSerializer</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-307' class='srclink' href='../../src/slog/src/ser.rs.html#276-284' title='goto source code'>[src]</a></span></h3>
+               </span><a id='src-301' class='srclink' href='../../src/slog/src/ser.rs.html#270-275' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct ValueSerializer&lt;'a&gt; { /* fields omitted */ }</pre><div class='docblock'><p>A handle to <code>Serializer</code> for <code>PushLazy</code> closure</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../../slog/ser/struct.ValueSerializer.html' title='slog::ser::ValueSerializer'>ValueSerializer</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-307' class='srclink' href='../../src/slog/src/ser.rs.html#277-285' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.serialize' class='method'><span id='serialize.v' class='invisible'><code>fn <a href='#method.serialize' class='fnname'>serialize</a>&lt;'b,&nbsp;S:&nbsp;'b + <a class='trait' href='../../slog/ser/trait.Serialize.html' title='slog::ser::Serialize'>Serialize</a>&gt;(self, s: S) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>,&nbsp;<a class='enum' href='../../slog/ser/enum.Error.html' title='slog::ser::Error'>Error</a>&gt;</code></span></h4>
 <div class='docblock'><p>Serialize a value</p>
 
 <p>This consumes <code>self</code> to prevent serializing one value multiple times</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../../slog/ser/struct.ValueSerializer.html' title='slog::ser::ValueSerializer'>ValueSerializer</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-314' class='srclink' href='../../src/slog/src/ser.rs.html#286-293' title='goto source code'>[src]</a></span></h3>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../../slog/ser/struct.ValueSerializer.html' title='slog::ser::ValueSerializer'>ValueSerializer</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-314' class='srclink' href='../../src/slog/src/ser.rs.html#287-294' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.drop' class='method'><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span></h4>
 <div class='docblock'><p>A method called when the value goes out of scope. <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop">Read more</a></p>
 </div></div></section>

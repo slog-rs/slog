@@ -48,9 +48,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a id='src-514' class='srclink' href='../../src/crossbeam/mem/cache_padded.rs.html#28-31' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct CachePadded&lt;T&gt; {
-    // some fields omitted
-}</pre><div class='docblock'><p>Pad <code>T</code> to the length of a cacheline.</p>
+<pre class='rust struct'>pub struct CachePadded&lt;T&gt; { /* fields omitted */ }</pre><div class='docblock'><p>Pad <code>T</code> to the length of a cacheline.</p>
 
 <p>Sometimes concurrent programming requires a piece of data to be padded out
 to the size of a cacheline to avoid &quot;false sharing&quot;: cachelines being

@@ -48,9 +48,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a id='src-462' class='srclink' href='../src/slog/src/_logger.rs.html#16-21' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Logger {
-    // some fields omitted
-}</pre><div class='docblock'><p>Logger</p>
+<pre class='rust struct'>pub struct Logger { /* fields omitted */ }</pre><div class='docblock'><p>Logger</p>
 
 <p>Loggers can be freely passed around the code.</p>
 
@@ -81,7 +79,7 @@ sharing a common drain.</p>
         <span class='ident'>slog</span>::<span class='ident'>discard</span>(),
         <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>),
     );
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(&amp;self, values: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='type' href='../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>&gt;) -&gt; <a class='struct' href='../slog/struct.Logger.html' title='slog::Logger'>Logger</a></code></span></h4>
 <div class='docblock'><p>Build a child logger</p>
 
@@ -100,7 +98,7 @@ a common drain.</p>
     <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>slog</span>::<span class='ident'>discard</span>(),
         <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>));
     <span class='kw'>let</span> <span class='ident'>log</span> <span class='op'>=</span> <span class='ident'>root</span>.<span class='ident'>new</span>(<span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value&quot;</span>));
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.log' class='method'><span id='log.v' class='invisible'><code>fn <a href='#method.log' class='fnname'>log</a>(&amp;self, record: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>)</code></span></h4>
 <div class='docblock'><p>Log one logging record</p>
 

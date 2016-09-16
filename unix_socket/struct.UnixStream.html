@@ -48,9 +48,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a id='src-159' class='srclink' href='../src/unix_socket/lib.rs.html#336-338' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct UnixStream {
-    // some fields omitted
-}</pre><div class='docblock'><p>A Unix stream socket.</p>
+<pre class='rust struct'>pub struct UnixStream { /* fields omitted */ }</pre><div class='docblock'><p>A Unix stream socket.</p>
 
 <h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
 <pre class='rust rust-example-rendered'>
@@ -61,7 +59,7 @@
 <span class='ident'>stream</span>.<span class='ident'>write_all</span>(<span class='string'>b&quot;hello world&quot;</span>).<span class='ident'>unwrap</span>();
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>response</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
 <span class='ident'>stream</span>.<span class='ident'>read_to_string</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>response</span>).<span class='ident'>unwrap</span>();
-<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>response</span>);</pre>
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>response</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../unix_socket/struct.UnixStream.html' title='unix_socket::UnixStream'>UnixStream</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-168' class='srclink' href='../src/unix_socket/lib.rs.html#354-450' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.connect' class='method'><span id='connect.v' class='invisible'><code>fn <a href='#method.connect' class='fnname'>connect</a>&lt;P:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;&gt;(path: P) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='struct' href='../unix_socket/struct.UnixStream.html' title='unix_socket::UnixStream'>UnixStream</a>&gt;</code></span></h4>
 <div class='docblock'><p>Connects to the socket named by <code>path</code>.</p>

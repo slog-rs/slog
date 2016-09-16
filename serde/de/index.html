@@ -54,14 +54,14 @@
                        <tr class=' module-item'>
                            <td><a class='mod' href='impls/index.html'
                                   title='serde::de::impls'>impls</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>This module contains <code>Deserialize</code> and <code>Visitor</code> implementations.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='mod' href='value/index.html'
                                   title='serde::de::value'>value</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>This module supports deserializing from primitives with the <code>ValueDeserializer</code> trait.</p>
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
@@ -69,7 +69,7 @@
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.Type.html'
                                   title='serde::de::Type'>Type</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p><code>Type</code> represents all the primitive types that can be deserialized. This is used by
 <code>Error::invalid_type</code>.</p>
                            </td>
@@ -78,14 +78,14 @@
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.Deserialize.html'
                                   title='serde::de::Deserialize'>Deserialize</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p><code>Deserialize</code> represents a type that can be deserialized.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.Deserializer.html'
                                   title='serde::de::Deserializer'>Deserializer</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p><code>Deserializer</code> is a trait that can deserialize values by threading a <code>Visitor</code> trait through a
 value. It supports two entry point styles which enables different kinds of deserialization.</p>
                            </td>
@@ -93,7 +93,7 @@ value. It supports two entry point styles which enables different kinds of deser
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.EnumVisitor.html'
                                   title='serde::de::EnumVisitor'>EnumVisitor</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p><code>EnumVisitor</code> is a visitor that is created by the <code>Deserialize</code> and passed to the
 <code>Deserializer</code> in order to deserialize enums.</p>
                            </td>
@@ -101,7 +101,7 @@ value. It supports two entry point styles which enables different kinds of deser
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.Error.html'
                                   title='serde::de::Error'>Error</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p><code>Error</code> is a trait that allows a <code>Deserialize</code> to generically create a
 <code>Deserializer</code> error.</p>
                            </td>
@@ -109,21 +109,21 @@ value. It supports two entry point styles which enables different kinds of deser
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.MapVisitor.html'
                                   title='serde::de::MapVisitor'>MapVisitor</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p><code>MapVisitor</code> visits each item in a sequence.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.SeqVisitor.html'
                                   title='serde::de::SeqVisitor'>SeqVisitor</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p><code>SeqVisitor</code> visits each item in a sequence.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.VariantVisitor.html'
                                   title='serde::de::VariantVisitor'>VariantVisitor</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p><code>VariantVisitor</code> is a visitor that is created by the <code>Deserializer</code> and passed to the
 <code>Deserialize</code> in order to deserialize a specific enum variant.</p>
                            </td>
@@ -131,7 +131,7 @@ value. It supports two entry point styles which enables different kinds of deser
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.Visitor.html'
                                   title='serde::de::Visitor'>Visitor</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>This trait represents a visitor that walks through a deserializer.</p>
                            </td>
                        </tr></table></section>

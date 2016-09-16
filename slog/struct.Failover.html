@@ -48,9 +48,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a id='src-663' class='srclink' href='../src/slog/src/_drain.rs.html#237-240' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Failover&lt;D1:&nbsp;<a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a>,&nbsp;D2:&nbsp;<a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a>&gt; {
-    // some fields omitted
-}</pre><div class='docblock'><p>Failover drain</p>
+<pre class='rust struct'>pub struct Failover&lt;D1:&nbsp;<a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a>,&nbsp;D2:&nbsp;<a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a>&gt; { /* fields omitted */ }</pre><div class='docblock'><p>Failover drain</p>
 
 <p>Log everything to logger <code>D1</code>, but in case of it reporting error,
 try logging to <code>D2</code>. If it also returned an error, forward it up.</p>

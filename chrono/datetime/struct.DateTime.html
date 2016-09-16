@@ -48,9 +48,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a id='src-1919' class='srclink' href='../../src/chrono/datetime.rs.html#27-30' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct DateTime&lt;Tz:&nbsp;<a class='trait' href='../../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>TimeZone</a>&gt; {
-    // some fields omitted
-}</pre><div class='docblock'><p>ISO 8601 combined date and time with time zone.</p>
+<pre class='rust struct'>pub struct DateTime&lt;Tz:&nbsp;<a class='trait' href='../../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>TimeZone</a>&gt; { /* fields omitted */ }</pre><div class='docblock'><p>ISO 8601 combined date and time with time zone.</p>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;Tz:&nbsp;<a class='trait' href='../../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>TimeZone</a>&gt; <a class='struct' href='../../chrono/datetime/struct.DateTime.html' title='chrono::datetime::DateTime'>DateTime</a>&lt;Tz&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1929' class='srclink' href='../../src/chrono/datetime.rs.html#32-146' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.from_utc' class='method'><span id='from_utc.v' class='invisible'><code>fn <a href='#method.from_utc' class='fnname'>from_utc</a>(datetime: <a class='struct' href='../../chrono/naive/datetime/struct.NaiveDateTime.html' title='chrono::naive::datetime::NaiveDateTime'>NaiveDateTime</a>, offset: Tz::Offset) -&gt; <a class='struct' href='../../chrono/datetime/struct.DateTime.html' title='chrono::datetime::DateTime'>DateTime</a>&lt;Tz&gt;</code></span></h4>
 <div class='docblock'><p>Makes a new <code>DateTime</code> with given <em>UTC</em> datetime and offset.

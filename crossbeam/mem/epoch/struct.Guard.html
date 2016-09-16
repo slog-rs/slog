@@ -49,9 +49,7 @@
                    </a>
                </span><a id='src-227' class='srclink' href='../../../src/crossbeam/mem/epoch/guard.rs.html#11-13' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>#[must_use]
-pub struct Guard {
-    // some fields omitted
-}</pre><div class='docblock'><p>An RAII-style guard for pinning the current epoch.</p>
+pub struct Guard { /* fields omitted */ }</pre><div class='docblock'><p>An RAII-style guard for pinning the current epoch.</p>
 
 <p>A guard must be acquired before most operations on an <code>Atomic</code> pointer. On
 destruction, it unpins the epoch.</p>

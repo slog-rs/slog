@@ -48,9 +48,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a id='src-9584' class='srclink' href='../../../src/serde/ser/impls.rs.html#663-666' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct MapIteratorVisitor&lt;Iter&gt; {
-    // some fields omitted
-}</pre><div class='docblock'><p>A <code>serde::Visitor</code> for (key, value) map iterators.</p>
+<pre class='rust struct'>pub struct MapIteratorVisitor&lt;Iter&gt; { /* fields omitted */ }</pre><div class='docblock'><p>A <code>serde::Visitor</code> for (key, value) map iterators.</p>
 
 <h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
 <pre class='rust rust-example-rendered'>
@@ -69,7 +67,7 @@
             <span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>len</span>()),
         ))
     }
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;K,&nbsp;V,&nbsp;Iter&gt; <a class='struct' href='../../../serde/ser/impls/struct.MapIteratorVisitor.html' title='serde::ser::impls::MapIteratorVisitor'>MapIteratorVisitor</a>&lt;Iter&gt; <span class='where'>where Iter: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a>&lt;Item=<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>K, V<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-9588' class='srclink' href='../../../src/serde/ser/impls.rs.html#668-679' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(iter: Iter, len: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;) -&gt; <a class='struct' href='../../../serde/ser/impls/struct.MapIteratorVisitor.html' title='serde::ser::impls::MapIteratorVisitor'>MapIteratorVisitor</a>&lt;Iter&gt;</code></span></h4>
 <div class='docblock'><p>Construct a new <code>MapIteratorVisitor&lt;Iter&gt;</code>.</p>

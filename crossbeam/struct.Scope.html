@@ -48,9 +48,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a id='src-1112' class='srclink' href='../src/crossbeam/scoped.rs.html#12-14' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Scope&lt;'a&gt; {
-    // some fields omitted
-}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../crossbeam/struct.Scope.html' title='crossbeam::Scope'>Scope</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1153' class='srclink' href='../src/crossbeam/scoped.rs.html#79-256' title='goto source code'>[src]</a></span></h3>
+<pre class='rust struct'>pub struct Scope&lt;'a&gt; { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../crossbeam/struct.Scope.html' title='crossbeam::Scope'>Scope</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1153' class='srclink' href='../src/crossbeam/scoped.rs.html#79-256' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.defer' class='method'><span id='defer.v' class='invisible'><code>fn <a href='#method.defer' class='fnname'>defer</a>&lt;F&gt;(&amp;self, f: F) <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>() + 'a</span></code></span></h4>
 <div class='docblock'><p>Schedule code to be executed when exiting the scope.</p>
 
@@ -73,7 +71,7 @@ scope exits.</p>
     <span class='ident'>scope</span>.<span class='ident'>spawn</span>(<span class='op'>||</span> {
         <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Hello from a scoped thread!&quot;</span>);
     });
-});</pre>
+});<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>When writing concurrent Rust programs, you&#39;ll sometimes see a pattern like this, using
 <a href="http://doc.rust-lang.org/std/thread/fn.spawn.html"><code>std::thread::spawn</code></a>:</p>
@@ -92,7 +90,7 @@ scope exits.</p>
 
 <span class='kw'>for</span> <span class='ident'>guard</span> <span class='kw'>in</span> <span class='ident'>guards</span> {
     <span class='ident'>guard</span>.<span class='ident'>join</span>().<span class='ident'>unwrap</span>();
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>The basic pattern is:</p>
 
@@ -142,7 +140,7 @@ error: aborting due to previous error
 
 <span class='kw'>for</span> <span class='ident'>guard</span> <span class='kw'>in</span> <span class='ident'>guards</span> {
     <span class='ident'>guard</span>.<span class='ident'>join</span>().<span class='ident'>unwrap</span>();
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>But this introduces unnecessary allocation, as <code>Arc&lt;T&gt;</code> puts its data on the heap, and we
 also end up dealing with reference counts. We know that we&#39;re joining the threads before
@@ -161,7 +159,7 @@ than from <code>std::thread</code>:</p>
             <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;element: {}&quot;</span>, <span class='ident'>i</span>);
         });
     }
-});</pre>
+});<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>Much more straightforward.</p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../crossbeam/struct.Scope.html' title='crossbeam::Scope'>Scope</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1141' class='srclink' href='../src/crossbeam/scoped.rs.html#67-71' title='goto source code'>[src]</a></span></h3>

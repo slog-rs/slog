@@ -43,7 +43,7 @@
     </nav>
 
     <section id='main' class="content macro">
-<h1 class='fqn'><span class='in-band'><a href='index.html'>slog</a>::<wbr><a class='macro' href=''>log</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Macro <a href='index.html'>slog</a>::<wbr><a class='macro' href=''>log</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
@@ -77,7 +77,7 @@ crate macro names (see <code>examples/alternative_names.rs</code>).</p>
     <span class='kw'>let</span> <span class='ident'>drain</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>discard</span>();
     <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>drain</span>, <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>));
     <span class='macro'>info</span><span class='macro'>!</span>(<span class='ident'>root</span>, <span class='string'>&quot;test info log&quot;</span>; <span class='string'>&quot;log-key&quot;</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>Note that <code>&quot;key&quot; =&gt; value</code> part is optional.</p>
 
@@ -89,7 +89,7 @@ crate macro names (see <code>examples/alternative_names.rs</code>).</p>
     <span class='kw'>let</span> <span class='ident'>drain</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>discard</span>();
     <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>drain</span>, <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>));
     <span class='macro'>info</span><span class='macro'>!</span>(<span class='ident'>root</span>, <span class='string'>&quot;test info log&quot;</span>);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>Formatting support:</p>
 
@@ -101,7 +101,7 @@ crate macro names (see <code>examples/alternative_names.rs</code>).</p>
     <span class='kw'>let</span> <span class='ident'>drain</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>discard</span>();
     <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>drain</span>, <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>));
     <span class='macro'>info</span><span class='macro'>!</span>(<span class='ident'>root</span>, <span class='string'>&quot;log-key&quot;</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>; <span class='string'>&quot;formatted: {}&quot;</span>, <span class='number'>1</span>);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>Again, <code>&quot;key&quot; =&gt; value</code> is optional.</p>
 
@@ -113,7 +113,7 @@ crate macro names (see <code>examples/alternative_names.rs</code>).</p>
     <span class='kw'>let</span> <span class='ident'>drain</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>discard</span>();
     <span class='kw'>let</span> <span class='ident'>root</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>drain</span>, <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;key1&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value1&quot;</span>, <span class='string'>&quot;key2&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;value2&quot;</span>));
     <span class='macro'>info</span><span class='macro'>!</span>(<span class='ident'>root</span>, <span class='string'>&quot;formatted: {}&quot;</span>, <span class='number'>1</span>);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div></section>
     <section id='search' class="content hidden"></section>
 

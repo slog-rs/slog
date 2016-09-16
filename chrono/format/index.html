@@ -57,7 +57,7 @@
                        <tr class=' module-item'>
                            <td><a class='mod' href='parsed/index.html'
                                   title='chrono::format::parsed'>parsed</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>A collection of parsed date and time items.
 They can be constructed incrementally while being checked for consistency.</p>
                            </td>
@@ -65,7 +65,7 @@ They can be constructed incrementally while being checked for consistency.</p>
                        <tr class=' module-item'>
                            <td><a class='mod' href='strftime/index.html'
                                   title='chrono::format::strftime'>strftime</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p><code>strftime</code>/<code>strptime</code>-inspired date and time formatting syntax.</p>
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
@@ -73,7 +73,7 @@ They can be constructed incrementally while being checked for consistency.</p>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.DelayedFormat.html'
                                   title='chrono::format::DelayedFormat'>DelayedFormat</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>A <em>temporary</em> object which can be used as an argument to <code>format!</code> or others.
 This is normally constructed via <code>format</code> methods of each date and time type.</p>
                            </td>
@@ -81,7 +81,7 @@ This is normally constructed via <code>format</code> methods of each date and ti
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.ParseError.html'
                                   title='chrono::format::ParseError'>ParseError</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>An error from the <code>parse</code> function.</p>
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
@@ -89,21 +89,21 @@ This is normally constructed via <code>format</code> methods of each date and ti
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.Fixed.html'
                                   title='chrono::format::Fixed'>Fixed</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Fixed-format item types.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.Item.html'
                                   title='chrono::format::Item'>Item</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>A single formatting item. This is used for both formatting and parsing.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.Numeric.html'
                                   title='chrono::format::Numeric'>Numeric</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Numeric item types.
 They have associated formatting width (FW) and parsing width (PW).</p>
                            </td>
@@ -111,7 +111,7 @@ They have associated formatting width (FW) and parsing width (PW).</p>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.Pad.html'
                                   title='chrono::format::Pad'>Pad</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Padding characters for numeric items.</p>
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
@@ -119,7 +119,7 @@ They have associated formatting width (FW) and parsing width (PW).</p>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.format.html'
                                   title='chrono::format::format'>format</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Tries to format given arguments with given formatting items.
 Internally used by <code>DelayedFormat</code>.</p>
                            </td>
@@ -127,7 +127,7 @@ Internally used by <code>DelayedFormat</code>.</p>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.parse.html'
                                   title='chrono::format::parse'>parse</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Tries to parse given string into <code>parsed</code> with given formatting items.
 Returns <code>Ok</code> when the entire string has been parsed (otherwise <code>parsed</code> should not be used).
 There should be no trailing string after parsing;
@@ -138,7 +138,7 @@ use a stray <a href="./enum.Item.html#variant.Space"><code>Item::Space</code></a
                        <tr class=' module-item'>
                            <td><a class='type' href='type.ParseResult.html'
                                   title='chrono::format::ParseResult'>ParseResult</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Same to <code>Result&lt;T, ParseError&gt;</code>.</p>
                            </td>
                        </tr></table></section>

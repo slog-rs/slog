@@ -43,7 +43,7 @@
     </nav>
 
     <section id='main' class="content macro">
-<h1 class='fqn'><span class='in-band'><a href='index.html'>bitflags</a>::<wbr><a class='macro' href=''>bitflags</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Macro <a href='index.html'>bitflags</a>::<wbr><a class='macro' href=''>bitflags</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
@@ -86,7 +86,7 @@ type errors may occur at compile time.</p>
     <span class='macro'>assert</span><span class='macro'>!</span>((<span class='ident'>e1</span> <span class='kw-2'>&amp;</span> <span class='ident'>e2</span>) <span class='op'>==</span> <span class='ident'>FLAG_C</span>);     <span class='comment'>// intersection</span>
     <span class='macro'>assert</span><span class='macro'>!</span>((<span class='ident'>e1</span> <span class='op'>-</span> <span class='ident'>e2</span>) <span class='op'>==</span> <span class='ident'>FLAG_A</span>);     <span class='comment'>// set difference</span>
     <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>e2</span> <span class='op'>==</span> <span class='ident'>FLAG_A</span>);           <span class='comment'>// set complement</span>
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>The generated <code>struct</code>s can also be extended with type and trait
 implementations:</p>
@@ -124,7 +124,7 @@ implementations:</p>
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>flags</span>), <span class='string'>&quot;hi!&quot;</span>);
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>FLAG_A</span> <span class='op'>|</span> <span class='ident'>FLAG_B</span>), <span class='string'>&quot;FLAG_A | FLAG_B&quot;</span>);
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>FLAG_B</span>), <span class='string'>&quot;FLAG_B&quot;</span>);
-}</pre>
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <h1 id='attributes' class='section-header'><a href='#attributes'>Attributes</a></h1>
 <p>Attributes can be attached to the generated <code>struct</code> by placing them

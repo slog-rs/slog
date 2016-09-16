@@ -67,7 +67,7 @@ here’s how to get some red text:</p>
 
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::<span class='ident'>Red</span>;
-<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;This is in red: {}&quot;</span>, <span class='ident'>Red</span>.<span class='ident'>paint</span>(<span class='string'>&quot;a red string&quot;</span>));</pre>
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;This is in red: {}&quot;</span>, <span class='ident'>Red</span>.<span class='ident'>paint</span>(<span class='string'>&quot;a red string&quot;</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>It’s important to note that the <code>paint</code> method does <em>not</em> actually return a
 string with the ANSI control characters surrounding it. Instead, it returns
@@ -81,7 +81,7 @@ minimum of <code>String</code> allocations being performed behind the scenes.</p
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::<span class='ident'>Red</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>string</span>::<span class='ident'>ToString</span>;
-<span class='kw'>let</span> <span class='ident'>red_string</span> <span class='op'>=</span> <span class='ident'>Red</span>.<span class='ident'>paint</span>(<span class='string'>&quot;a red string&quot;</span>).<span class='ident'>to_string</span>();</pre>
+<span class='kw'>let</span> <span class='ident'>red_string</span> <span class='op'>=</span> <span class='ident'>Red</span>.<span class='ident'>paint</span>(<span class='string'>&quot;a red string&quot;</span>).<span class='ident'>to_string</span>();<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <h2 id='bold-underline-background-and-other-styles' class='section-header'><a href='#bold-underline-background-and-other-styles'>Bold, underline, background, and other styles</a></h2>
 <p>For anything more complex than plain foreground colour changes, you need to
@@ -94,7 +94,7 @@ property set. For example:</p>
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Style</span>;
 <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;How about some {} and {}?&quot;</span>,
          <span class='ident'>Style</span>::<span class='ident'>new</span>().<span class='ident'>bold</span>().<span class='ident'>paint</span>(<span class='string'>&quot;bold&quot;</span>),
-         <span class='ident'>Style</span>::<span class='ident'>new</span>().<span class='ident'>underline</span>().<span class='ident'>paint</span>(<span class='string'>&quot;underline&quot;</span>));</pre>
+         <span class='ident'>Style</span>::<span class='ident'>new</span>().<span class='ident'>underline</span>().<span class='ident'>paint</span>(<span class='string'>&quot;underline&quot;</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>For brevity, these methods have also been implemented for <code>Colour</code> values,
 so you can give your styles a foreground colour without having to begin with
@@ -105,7 +105,7 @@ an empty <code>Style</code> value:</p>
 <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Demonstrating {} and {}!&quot;</span>,
          <span class='ident'>Blue</span>.<span class='ident'>bold</span>().<span class='ident'>paint</span>(<span class='string'>&quot;blue bold&quot;</span>),
          <span class='ident'>Yellow</span>.<span class='ident'>underline</span>().<span class='ident'>paint</span>(<span class='string'>&quot;yellow underline&quot;</span>));
-<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Yellow on blue: {}&quot;</span>, <span class='ident'>Yellow</span>.<span class='ident'>on</span>(<span class='ident'>Blue</span>).<span class='ident'>paint</span>(<span class='string'>&quot;wow!&quot;</span>));</pre>
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Yellow on blue: {}&quot;</span>, <span class='ident'>Yellow</span>.<span class='ident'>on</span>(<span class='ident'>Blue</span>).<span class='ident'>paint</span>(<span class='string'>&quot;wow!&quot;</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>The complete list of styles you can use are: <code>bold</code>, <code>dimmed</code>, <code>italic</code>,
 <code>underline</code>, <code>blink</code>, <code>reverse</code>, <code>hidden</code>, <code>strikethrough</code>, and <code>on</code> for
@@ -119,7 +119,7 @@ You can do this using the <code>fg</code> method:</p>
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Style</span>;
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::{<span class='ident'>Blue</span>, <span class='ident'>Cyan</span>, <span class='ident'>Yellow</span>};
 <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Yellow on blue: {}&quot;</span>, <span class='ident'>Style</span>::<span class='ident'>new</span>().<span class='ident'>on</span>(<span class='ident'>Blue</span>).<span class='ident'>fg</span>(<span class='ident'>Yellow</span>).<span class='ident'>paint</span>(<span class='string'>&quot;yow!&quot;</span>));
-<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Also yellow on blue: {}&quot;</span>, <span class='ident'>Cyan</span>.<span class='ident'>on</span>(<span class='ident'>Blue</span>).<span class='ident'>fg</span>(<span class='ident'>Yellow</span>).<span class='ident'>paint</span>(<span class='string'>&quot;zow!&quot;</span>));</pre>
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Also yellow on blue: {}&quot;</span>, <span class='ident'>Cyan</span>.<span class='ident'>on</span>(<span class='ident'>Blue</span>).<span class='ident'>fg</span>(<span class='ident'>Yellow</span>).<span class='ident'>paint</span>(<span class='string'>&quot;zow!&quot;</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>Finally, you can turn a <code>Colour</code> into a <code>Style</code> with the <code>normal</code> method.
 This will produce the exact same <code>ANSIString</code> as if you just used the
@@ -133,7 +133,7 @@ want to have a style with <em>nothing</em> set.</p>
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Style</span>;
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::<span class='ident'>Red</span>;
 <span class='ident'>Red</span>.<span class='ident'>normal</span>().<span class='ident'>paint</span>(<span class='string'>&quot;yet another red string&quot;</span>);
-<span class='ident'>Style</span>::<span class='ident'>default</span>().<span class='ident'>paint</span>(<span class='string'>&quot;a completely regular string&quot;</span>);</pre>
+<span class='ident'>Style</span>::<span class='ident'>default</span>().<span class='ident'>paint</span>(<span class='string'>&quot;a completely regular string&quot;</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <h2 id='extended-colours' class='section-header'><a href='#extended-colours'>Extended colours</a></h2>
 <p>You can access the extended range of 256 colours by using the <code>Fixed</code> colour
@@ -143,7 +143,7 @@ included wherever you would use a <code>Colour</code>:</p>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::<span class='ident'>Fixed</span>;
 <span class='ident'>Fixed</span>(<span class='number'>134</span>).<span class='ident'>paint</span>(<span class='string'>&quot;A sort of light purple&quot;</span>);
-<span class='ident'>Fixed</span>(<span class='number'>221</span>).<span class='ident'>on</span>(<span class='ident'>Fixed</span>(<span class='number'>124</span>)).<span class='ident'>paint</span>(<span class='string'>&quot;Mustard in the ketchup&quot;</span>);</pre>
+<span class='ident'>Fixed</span>(<span class='number'>221</span>).<span class='ident'>on</span>(<span class='ident'>Fixed</span>(<span class='number'>124</span>)).<span class='ident'>paint</span>(<span class='string'>&quot;Mustard in the ketchup&quot;</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>The first sixteen of these values are the same as the normal and bold
 standard colour variants. There’s nothing stopping you from using these as
@@ -155,7 +155,7 @@ which takes separate <code>u8</code> arguments for red, green, and blue:</p>
 
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>ansi_term</span>::<span class='ident'>Colour</span>::<span class='ident'>RGB</span>;
-<span class='ident'>RGB</span>(<span class='number'>70</span>, <span class='number'>130</span>, <span class='number'>180</span>).<span class='ident'>paint</span>(<span class='string'>&quot;Steel blue&quot;</span>);</pre>
+<span class='ident'>RGB</span>(<span class='number'>70</span>, <span class='number'>130</span>, <span class='number'>180</span>).<span class='ident'>paint</span>(<span class='string'>&quot;Steel blue&quot;</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <h2 id='combining-successive-coloured-strings' class='section-header'><a href='#combining-successive-coloured-strings'>Combining successive coloured strings</a></h2>
 <p>The benefit of writing ANSI escape codes to the terminal is that they
@@ -184,7 +184,7 @@ red bold text inside some red, but not bold, brackets:</p>
     <span class='ident'>Red</span>.<span class='ident'>bold</span>().<span class='ident'>paint</span>(<span class='ident'>some_value</span>),
     <span class='ident'>Red</span>.<span class='ident'>paint</span>(<span class='string'>&quot;]&quot;</span>),
 ];
-<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Value: {}&quot;</span>, <span class='ident'>ANSIStrings</span>(<span class='ident'>strings</span>));</pre>
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Value: {}&quot;</span>, <span class='ident'>ANSIStrings</span>(<span class='ident'>strings</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 
 <p>There are several things to note here. Firstly, the <code>paint</code> method can take
 <em>either</em> an owned <code>String</code> or a borrowed <code>&amp;str</code>. Internally, an <code>ANSIString</code>
@@ -200,7 +200,7 @@ implementation that only performs the formatting when required.</p>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.ANSIString.html'
                                   title='ansi_term::ANSIString'>ANSIString</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>An ANSI String is a string coupled with the Style to display it
 in a terminal.</p>
                            </td>
@@ -208,7 +208,7 @@ in a terminal.</p>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.ANSIStrings.html'
                                   title='ansi_term::ANSIStrings'>ANSIStrings</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>A set of <code>ANSIString</code>s collected together, in order to be written with a
 minimum of control characters.</p>
                            </td>
@@ -216,7 +216,7 @@ minimum of control characters.</p>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Style.html'
                                   title='ansi_term::Style'>Style</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>A style is a collection of properties that can format a string
 using ANSI escape codes.</p>
                            </td>
@@ -225,7 +225,7 @@ using ANSI escape codes.</p>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.Colour.html'
                                   title='ansi_term::Colour'>Colour</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>A colour is one specific type of ANSI escape code, and can refer
 to either the foreground or background colour.</p>
                            </td>

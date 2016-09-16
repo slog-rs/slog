@@ -54,7 +54,7 @@
 <ul>
 <li>easy to use</li>
 <li>great performance; see: <a href="https://github.com/dpc/slog-rs/wiki/Bench-log">slog bench log</a></li>
-<li><code>#![no_std]</code> support (with <code>no_std</code> cargo feature)</li>
+<li><code>#![no_std]</code> support (with opt-out <code>std</code> cargo feature flag)</li>
 <li>hierarchical loggers</li>
 <li>lazily evaluated values</li>
 <li>modular, lightweight and very extensible
@@ -151,7 +151,7 @@ it conveniently.</p>
                        <tr class=' module-item'>
                            <td><a class='mod' href='ser/index.html'
                                   title='slog::ser'>ser</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Serialization</p>
                            </td>
                        </tr></table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
@@ -159,105 +159,105 @@ it conveniently.</p>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.crit.html'
                                   title='slog::crit'>crit</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log critical level record</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.debug.html'
                                   title='slog::debug'>debug</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log debug level record</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.error.html'
                                   title='slog::error'>error</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log error level record</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.info.html'
                                   title='slog::info'>info</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log info level record</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.log.html'
                                   title='slog::log'>log</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log message of a given level</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.o.html'
                                   title='slog::o'>o</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Convenience function for building <code>&amp;[OwnedKeyValue]</code></p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.slog_crit.html'
                                   title='slog::slog_crit'>slog_crit</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log critical level record (alias)</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.slog_debug.html'
                                   title='slog::slog_debug'>slog_debug</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log debug level record (alias)</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.slog_error.html'
                                   title='slog::slog_error'>slog_error</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log error level record</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.slog_info.html'
                                   title='slog::slog_info'>slog_info</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log info level record (alias)</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.slog_log.html'
                                   title='slog::slog_log'>slog_log</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log message of a given level (alias)</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.slog_trace.html'
                                   title='slog::slog_trace'>slog_trace</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log trace level record (alias)</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.slog_warn.html'
                                   title='slog::slog_warn'>slog_warn</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log warning level record (alias)</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.trace.html'
                                   title='slog::trace'>trace</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log trace level record</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='macro' href='macro.warn.html'
                                   title='slog::warn'>warn</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log warning level record</p>
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
@@ -265,84 +265,84 @@ it conveniently.</p>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Discard.html'
                                   title='slog::Discard'>Discard</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Drain discarding everything</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Duplicate.html'
                                   title='slog::Duplicate'>Duplicate</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p><code>Drain</code> duplicating records into two other <code>Drain</code>s</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Failover.html'
                                   title='slog::Failover'>Failover</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Failover drain</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Filter.html'
                                   title='slog::Filter'>Filter</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Drain filtering records</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Fuse.html'
                                   title='slog::Fuse'>Fuse</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Panicking fuse</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.IgnoreErr.html'
                                   title='slog::IgnoreErr'>IgnoreErr</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Error ignoring fuse</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.LevelFilter.html'
                                   title='slog::LevelFilter'>LevelFilter</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Record log level filter</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Logger.html'
                                   title='slog::Logger'>Logger</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Logger</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.MapError.html'
                                   title='slog::MapError'>MapError</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p><code>Drain</code> mapping error returned by another <code>Drain</code></p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.OwnedKeyValueList.html'
                                   title='slog::OwnedKeyValueList'>OwnedKeyValueList</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Chain of <code>OwnedKeyValue</code>-s of a <code>Logger</code> and its ancestors</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.OwnedKeyValueListIterator.html'
                                   title='slog::OwnedKeyValueListIterator'>OwnedKeyValueListIterator</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Iterator over <code>OwnedKeyValue</code>-s</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Record.html'
                                   title='slog::Record'>Record</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Logging record</p>
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
@@ -350,21 +350,21 @@ it conveniently.</p>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.DuplicateError.html'
                                   title='slog::DuplicateError'>DuplicateError</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Logging error from <code>Duplicate</code> drain</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.FilterLevel.html'
                                   title='slog::FilterLevel'>FilterLevel</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Logging filtering level</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.Level.html'
                                   title='slog::Level'>Level</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Log record level</p>
                            </td>
                        </tr></table><h2 id='statics' class='section-header'><a href="#statics">Statics</a></h2>
@@ -372,14 +372,14 @@ it conveniently.</p>
                        <tr class=' module-item'>
                            <td><a class='static' href='static.LOG_LEVEL_NAMES.html'
                                   title='slog::LOG_LEVEL_NAMES'>LOG_LEVEL_NAMES</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Official capitalized logging (and logging filtering) level names</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='static' href='static.LOG_LEVEL_SHORT_NAMES.html'
                                   title='slog::LOG_LEVEL_SHORT_NAMES'>LOG_LEVEL_SHORT_NAMES</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Official capitalized logging (and logging filtering) short level names</p>
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
@@ -387,14 +387,14 @@ it conveniently.</p>
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.Drain.html'
                                   title='slog::Drain'>Drain</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Logging drain</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='trait' href='trait.DrainExt.html'
                                   title='slog::DrainExt'>DrainExt</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Convenience methods</p>
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
@@ -402,49 +402,49 @@ it conveniently.</p>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.discard.html'
                                   title='slog::discard'>discard</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Discard all logging records</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.duplicate.html'
                                   title='slog::duplicate'>duplicate</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Duplicate records to two drains</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.failover.html'
                                   title='slog::failover'>failover</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Failover logging to secondary drain on primary&#39;s failure</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.filter.html'
                                   title='slog::filter'>filter</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Filter by <code>cond</code> closure</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.fuse.html'
                                   title='slog::fuse'>fuse</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Panic if the subdrain returns an error.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.ignore_err.html'
                                   title='slog::ignore_err'>ignore_err</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Ignore any errors returned by the subdrain</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.level_filter.html'
                                   title='slog::level_filter'>level_filter</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Filter by log level</p>
                            </td>
                        </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
@@ -452,14 +452,14 @@ it conveniently.</p>
                        <tr class=' module-item'>
                            <td><a class='type' href='type.BorrowedKeyValue.html'
                                   title='slog::BorrowedKeyValue'>BorrowedKeyValue</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Key value pair that can be part of a logging record</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='type' href='type.OwnedKeyValue.html'
                                   title='slog::OwnedKeyValue'>OwnedKeyValue</a></td>
-                           <td class='docblock short'>
+                           <td class='docblock-short'>
                                 <p>Key value pair that can be owned by <code>Logger</code></p>
                            </td>
                        </tr></table></section>
