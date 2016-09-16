@@ -708,7 +708,7 @@
     }
 }
 
-<span class='doccomment'>/// Terminal record decorator</span>
+<span class='doccomment'>/// Record decorator (color) for terminal output</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ColorDecorator</span> {
     <span class='ident'>use_color</span>: <span class='ident'>bool</span>,
 }
@@ -724,7 +724,7 @@
     }
 }
 
-<span class='doccomment'>/// Terminal record decorator for particular record</span>
+<span class='doccomment'>/// Particular record decorator (color) for terminal output</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ColorRecordDecorator</span> {
     <span class='ident'>level_color</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Colour</span><span class='op'>&gt;</span>,
     <span class='ident'>key_style</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>ansi_term</span>::<span class='ident'>Style</span><span class='op'>&gt;</span>,
