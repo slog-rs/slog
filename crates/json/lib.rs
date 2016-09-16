@@ -206,12 +206,16 @@ impl slog_stream::Format for Format {
     }
 }
 
-/// Short for `Format::new()`
+/// Build a default Json formatter
+///
+/// See `Format::new()` for details
 pub fn new() -> Format {
     Format::new()
 }
 
-/// Short for `FormatBuilder::build()`
+/// Use builder to create a custom Json formatter
+///
+/// See `FormatBuilder` for details
 pub fn build() -> FormatBuilder {
     Format::build()
 }
