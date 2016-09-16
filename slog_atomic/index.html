@@ -47,12 +47,11 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog_atomic/lib.rs.html#1-59' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog_atomic/lib.rs.html#1-68' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Slog atomic switching drain</p>
 
-<p>Using <code>AtomicSwitch</code> it&#39;s possible to change drain
-hierarchy behavior atomically, race-free, in runtime,
-which can be useful eg. for turning debugging logging
+<p><code>AtomicSwitch</code> allows swapping drain that it wraps atomically, race-free, in
+runtime. This can be useful eg. for turning on debug logging
 in production.</p>
 
 <p>See <a href="https://github.com/dpc/slog-rs/blob/master/examples/signal.rs"><code>slog</code> <code>signal.rs</code>
@@ -63,14 +62,14 @@ example</a></p>
                            <td><a class='struct' href='struct.AtomicSwitch.html'
                                   title='slog_atomic::AtomicSwitch'>AtomicSwitch</a></td>
                            <td class='docblock-short'>
-                                <p>Drain allowing atomically switching a sub-drain in runtime</p>
+                                <p>Drain wrapping another drain, allowing atomic substitution in runtime</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.AtomicSwitchCtrl.html'
                                   title='slog_atomic::AtomicSwitchCtrl'>AtomicSwitchCtrl</a></td>
                            <td class='docblock-short'>
-                                <p>Handle to <code>AtomicSwitch</code> allowing switching it&#39;s sub-drain</p>
+                                <p>Handle to <code>AtomicSwitch</code> that controls it.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

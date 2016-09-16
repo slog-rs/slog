@@ -101,12 +101,20 @@
 <span id="57">57</span>
 <span id="58">58</span>
 <span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Slog atomic switching drain</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! Using `AtomicSwitch` it&#39;s possible to change drain</span>
-<span class='doccomment'>//! hierarchy behavior atomically, race-free, in runtime,</span>
-<span class='doccomment'>//! which can be useful eg. for turning debugging logging</span>
+<span class='doccomment'>//! `AtomicSwitch` allows swapping drain that it wraps atomically, race-free, in</span>
+<span class='doccomment'>//! runtime. This can be useful eg. for turning on debug logging</span>
 <span class='doccomment'>//! in production.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! See [`slog` `signal.rs`</span>
@@ -121,27 +129,37 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
 <span class='kw'>use</span> <span class='ident'>crossbeam</span>::<span class='ident'>sync</span>::<span class='ident'>ArcCell</span>;
 
-<span class='doccomment'>/// Handle to `AtomicSwitch` allowing switching it&#39;s sub-drain</span>
+<span class='doccomment'>/// Handle to `AtomicSwitch` that controls it.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>AtomicSwitchCtrl</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>ArcCell</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;&gt;</span>);
 
-<span class='doccomment'>/// Drain allowing atomically switching a sub-drain in runtime</span>
+<span class='doccomment'>/// Drain wrapping another drain, allowing atomic substitution in runtime</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>AtomicSwitch</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>ArcCell</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;&gt;</span>);
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>AtomicSwitchCtrl</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Create new `AtomicSwitchCtrl`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span><span class='op'>&gt;</span>(<span class='ident'>d</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='kw'>let</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>ArcCell</span>::<span class='ident'>new</span>(<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>d</span>) <span class='kw'>as</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span>)));
-        <span class='ident'>AtomicSwitchCtrl</span>(<span class='ident'>a</span>)
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>AtomicSwitch</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+    <span class='doccomment'>/// Wrap `drain` in `AtomicSwitch` to allow swapping it later</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// Use `AtomicSwitch::ctrl()` to get a handle to it</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='lifetime'>&#39;static</span><span class='op'>&gt;</span>(<span class='ident'>drain</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+        <span class='ident'>AtomicSwitch</span>::<span class='ident'>new_from_arc</span>(<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>ArcCell</span>::<span class='ident'>new</span>(<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='ident'>drain</span>) <span class='kw'>as</span> <span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span>))))
     }
 
-    <span class='doccomment'>/// Create new `AtomicSwitchCtrl` from an existing `Arc&lt;...&gt;`</span>
+    <span class='doccomment'>/// Create new `AtomicSwitch` from an existing `Arc&lt;...&gt;`</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// See `AtomicSwitch::new()`</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_from_arc</span>(<span class='ident'>d</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>ArcCell</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;&gt;</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>AtomicSwitchCtrl</span>(<span class='ident'>d</span>)
+        <span class='ident'>AtomicSwitch</span>(<span class='ident'>d</span>)
     }
 
-    <span class='doccomment'>/// Get a `AtomicSwitch` drain controlled by this `AtomicSwitchCtrl`</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>drain</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>AtomicSwitch</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
-        <span class='ident'>AtomicSwitch</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>())
+    <span class='doccomment'>/// Get a `AtomicSwitchCtrl` handle to control this `AtomicSwitch` drain</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ctrl</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>AtomicSwitchCtrl</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+        <span class='ident'>AtomicSwitchCtrl</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>())
+    }
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>AtomicSwitchCtrl</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+    <span class='doccomment'>/// Get the current drain reference</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span> {
+        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>get</span>()
     }
 
     <span class='doccomment'>/// Set the drain</span>

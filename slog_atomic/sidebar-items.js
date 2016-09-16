@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["AtomicSwitch","Drain allowing atomically switching a sub-drain in runtime"],["AtomicSwitchCtrl","Handle to `AtomicSwitch` allowing switching it's sub-drain"]]});
+initSidebarItems({"struct":[["AtomicSwitch","Drain wrapping another drain, allowing atomic substitution in runtime"],["AtomicSwitchCtrl","Handle to `AtomicSwitch` that controls it."]]});
