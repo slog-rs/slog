@@ -185,7 +185,7 @@ fn severity_to_color(lvl: Level) -> u8 {
     }
 }
 
-/// Decorator that can colors things
+/// Record decorator (color) for terminal output
 pub struct ColorDecorator {
     use_color: bool,
 }
@@ -201,7 +201,7 @@ impl ColorDecorator {
     }
 }
 
-/// Decorator that colors things
+/// Particular record decorator (color) for terminal output
 pub struct ColorRecordDecorator {
     level_color: Option<Colour>,
     key_style: Option<ansi_term::Style>,
