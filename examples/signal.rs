@@ -20,9 +20,9 @@ use slog_stream::*;
 
 lazy_static! {
     // global atomic switch drain control
-    static ref ATOMIC_DRAIN_SWITCH : AtomicSwitchCtrl<io::Error> = AtomicSwitchCtrl::new(
+    static ref ATOMIC_DRAIN_SWITCH : AtomicSwitchCtrl<io::Error> = AtomicSwitch::new(
         discard().map_err(|_| io::Error::new(io::ErrorKind::Other, "should no happen"))
-    );
+    ).ctrl();
 
     // track current state of the atomic switch drain
     static ref ATOMIC_DRAIN_SWITCH_STATE : AtomicBool = AtomicBool::new(false);
@@ -52,7 +52,7 @@ fn main() {
         signal::sigaction(signal::SIGUSR1, &sig_action).unwrap();
     }
 
-    let drain = slog::duplicate(slog_term::streamer().stderr().full().build(), ATOMIC_DRAIN_SWITCH.drain()).fuse();
+    let drain = slog::duplicate(slog_term::streamer().stderr().full().build(), ATOMIC_DRAIN_SWITCH.get()).fuse();
 
     atomic_drain_switch();
 

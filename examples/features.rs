@@ -30,8 +30,8 @@ fn main() {
 
     // `AtomicSwitch` is a drain that wraps other drain and allows to change
     // it atomically in runtime.
-    let ctrl = AtomicSwitchCtrl::new(drain);
-    let drain = ctrl.drain();
+    let drain = AtomicSwitch::new(drain);
+    let ctrl = drain.ctrl();
 
     // Get a root logger that will log into a given drain.
     //

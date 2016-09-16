@@ -1,8 +1,7 @@
 //! Slog atomic switching drain
 //!
-//! Using `AtomicSwitch` it's possible to change drain
-//! hierarchy behavior atomically, race-free, in runtime,
-//! which can be useful eg. for turning debugging logging
+//! `AtomicSwitch` allows swapping drain that it wraps atomically, race-free, in
+//! runtime. This can be useful eg. for turning on debug logging
 //! in production.
 //!
 //! See [`slog` `signal.rs`
@@ -17,27 +16,37 @@ use slog::*;
 use std::sync::Arc;
 use crossbeam::sync::ArcCell;
 
-/// Handle to `AtomicSwitch` allowing switching it's sub-drain
+/// Handle to `AtomicSwitch` that controls it.
 pub struct AtomicSwitchCtrl<E>(Arc<ArcCell<Box<Drain<Error=E>>>>);
 
-/// Drain allowing atomically switching a sub-drain in runtime
+/// Drain wrapping another drain, allowing atomic substitution in runtime
 pub struct AtomicSwitch<E>(Arc<ArcCell<Box<Drain<Error=E>>>>);
 
-impl<E> AtomicSwitchCtrl<E> {
-    /// Create new `AtomicSwitchCtrl`
-    pub fn new<D: Drain<Error=E> + 'static>(d: D) -> Self {
-        let a = Arc::new(ArcCell::new(Arc::new(Box::new(d) as Box<Drain<Error=E>>)));
-        AtomicSwitchCtrl(a)
+impl<E> AtomicSwitch<E> {
+    /// Wrap `drain` in `AtomicSwitch` to allow swapping it later
+    ///
+    /// Use `AtomicSwitch::ctrl()` to get a handle to it
+    pub fn new<D: Drain<Error=E> + 'static>(drain: D) -> Self {
+        AtomicSwitch::new_from_arc(Arc::new(ArcCell::new(Arc::new(Box::new(drain) as Box<Drain<Error=E>>))))
     }
 
-    /// Create new `AtomicSwitchCtrl` from an existing `Arc<...>`
+    /// Create new `AtomicSwitch` from an existing `Arc<...>`
+    ///
+    /// See `AtomicSwitch::new()`
     pub fn new_from_arc(d: Arc<ArcCell<Box<Drain<Error=E>>>>) -> Self {
-        AtomicSwitchCtrl(d)
+        AtomicSwitch(d)
     }
 
-    /// Get a `AtomicSwitch` drain controlled by this `AtomicSwitchCtrl`
-    pub fn drain(&self) -> AtomicSwitch<E> {
-        AtomicSwitch(self.0.clone())
+    /// Get a `AtomicSwitchCtrl` handle to control this `AtomicSwitch` drain
+    pub fn ctrl(&self) -> AtomicSwitchCtrl<E> {
+        AtomicSwitchCtrl(self.0.clone())
+    }
+}
+
+impl<E> AtomicSwitchCtrl<E> {
+    /// Get the current drain reference
+    pub fn get(&self) -> Arc<Box<Drain<Error=E>>> {
+        self.0.get()
     }
 
     /// Set the drain
