@@ -1,4 +1,8 @@
 //! `io::Write` streamer for slog-rs
+//!
+//! One of the main drains not included in the core `slog-rs` create.
+//! `Streamer` drain serializes logging records into stream of bytes
+//! using given `Format` and writes it to a given `io::Write`.
 #![warn(missing_docs)]
 
 #[macro_use]
@@ -22,8 +26,8 @@ thread_local! {
 
 /// Drain formating records and writing them to a byte-stream (`io::Write`)
 ///
-/// Uses mutex to serialize writes.
-/// TODO: Add one that does not serialize?
+/// Uses mutex to serialize writes to `io`. Use `AsyncStreamer` for better
+/// performance, but without guarantee of immediate output.
 pub struct Streamer<W: io::Write, F: Format> {
     io: Mutex<W>,
     format: F,
