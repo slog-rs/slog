@@ -1,4 +1,7 @@
 //! Serde serialization adapter for slog-rs
+//!
+//! Utility crate useful when building own `slog-rs` `Drain` trait
+//! implementation utilizing `serde` serialization.
 
 #![warn(missing_docs)]
 
