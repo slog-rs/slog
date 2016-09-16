@@ -555,7 +555,7 @@
 <span class='kw'>use</span> <span class='ident'>slog_stream</span>::{<span class='ident'>Decorator</span>, <span class='ident'>RecordDecorator</span>, <span class='ident'>Streamer</span>, <span class='ident'>AsyncStreamer</span>};
 
 <span class='doccomment'>/// Formatting mode</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>FormatMode</span> {
+<span class='kw'>enum</span> <span class='ident'>FormatMode</span> {
     <span class='doccomment'>/// Compact logging format</span>
     <span class='ident'>Compact</span>,
     <span class='doccomment'>/// Full logging format</span>
@@ -571,7 +571,7 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Decorator</span><span class='op'>&gt;</span> <span class='ident'>Format</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// New Format format that prints using color</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>mode</span>: <span class='ident'>FormatMode</span>, <span class='ident'>d</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>mode</span>: <span class='ident'>FormatMode</span>, <span class='ident'>d</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>Format</span> {
             <span class='ident'>decorator</span>: <span class='ident'>d</span>,
             <span class='ident'>mode</span>: <span class='ident'>mode</span>,
