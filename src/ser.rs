@@ -1,28 +1,28 @@
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 use std;
 use core;
 use core::{result, fmt};
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 use std::sync::Arc;
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 use alloc::arc::Arc;
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 use std::rc::Rc;
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 use alloc::rc::Rc;
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 use std::string::String;
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 use collections::string::String;
 
 use super::Record;
 
 #[derive(Debug)]
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 /// Serialization Error
 pub enum Error {
     /// `io::Error`
@@ -32,7 +32,7 @@ pub enum Error {
 }
 
 #[derive(Debug)]
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 /// Serialization Error
 pub enum Error {
     /// Other error
@@ -42,7 +42,7 @@ pub enum Error {
 /// Serialization `Result`
 pub type Result = result::Result<(), Error>;
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 impl From<std::io::Error> for Error {
     fn from(err: std::io::Error) -> Error {
         Error::Io(err)
@@ -55,7 +55,7 @@ impl From<core::fmt::Error> for Error {
     }
 }
 /*
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 impl Into<std::io::Error> for Error {
     fn into(self) -> std::io::Error {
         match self {
@@ -65,7 +65,7 @@ impl Into<std::io::Error> for Error {
     }
 }*/
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 impl From<Error> for std::io::Error {
     fn from(e : Error) -> std::io::Error {
         match e {
@@ -74,6 +74,7 @@ impl From<Error> for std::io::Error {
         }
     }
 }
+
 /// Value that can be serialized
 ///
 /// Loggers require values in key-value pairs to

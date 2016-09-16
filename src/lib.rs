@@ -4,7 +4,7 @@
 //!
 //! * easy to use
 //! * great performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
-//! * `#![no_std]` support (with `no_std` cargo feature)
+//! * `#![no_std]` support (with opt-out `std` cargo feature flag)
 //! * hierarchical loggers
 //! * lazily evaluated values
 //! * modular, lightweight and very extensible
@@ -87,42 +87,42 @@
 //! [async-streamer]: http://dpc.pw/slog-rs/slog/drain/struct.AsyncStreamer.html
 //! [atomic-switch]: http://dpc.pw/slog-rs/slog/drain/struct.AtomicSwitch.html
 
-#![cfg_attr(feature = "no_std", feature(alloc))]
-#![cfg_attr(feature = "no_std", feature(collections))]
+#![cfg_attr(not(feature = "std"), feature(alloc))]
+#![cfg_attr(not(feature = "std"), feature(collections))]
 #![warn(missing_docs)]
 
 #![no_std]
 
 #[macro_use]
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 extern crate std;
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 extern crate alloc;
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 extern crate collections;
 
 use core::str::FromStr;
 use core::fmt;
 use core::result;
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 use std::sync::Arc;
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 use alloc::arc::Arc;
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 use std::slice;
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 use core::slice;
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 use std::vec::Vec;
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 use collections::vec::Vec;
 
-#[cfg(not(feature = "no_std"))]
+#[cfg(feature = "std")]
 use std::boxed::Box;
-#[cfg(feature = "no_std")]
+#[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
 
 /// Convenience function for building `&[OwnedKeyValue]`

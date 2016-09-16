@@ -24,7 +24,8 @@ debug-assertions = false
 
 [features]
 
-no_std = []
+std = []
+default = ["std"]
 
 max_level_off   = []
 max_level_error = []

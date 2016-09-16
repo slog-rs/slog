@@ -29,7 +29,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 
 * easy to use
 * great performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
-* `#![no_std]` support (with `no_std` cargo feature)
+* `#![no_std]` support (with opt-out `std` cargo feature flag)
 * hierarchical loggers
 * lazily evaluated values
 * modular, lightweight and very extensible
