@@ -472,7 +472,8 @@ impl StreamerBuilder {
     }
 }
 
-/// Build `Streamer`/`AsyncStreamer`
+/// Build `slog_stream::Streamer`/`slog_stream::AsyncStreamer` that
+/// will output logging records to stderr/stderr.
 pub fn streamer() -> StreamerBuilder {
     StreamerBuilder::new()
 }
