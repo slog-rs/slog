@@ -7,12 +7,13 @@
 
 #[macro_use]
 extern crate slog;
+extern crate thread_local;
 
 use slog::Drain;
 
 use std::cell::RefCell;
 
-use std::sync::{Mutex, mpsc};
+use std::sync::{mpsc, Mutex};
 use std::{mem, io, thread, fmt};
 use slog::Record;
 
@@ -76,14 +77,14 @@ impl<W: 'static + io::Write + Send, F: Format + Send> Drain for Streamer<W, F> {
 /// the data.
 pub struct AsyncStreamer<F: Format> {
     format: F,
-    io: Mutex<AsyncIoWriter>,
+    io: AsyncIoWriter,
 }
 
 impl<F: Format> AsyncStreamer<F> {
     /// Create new `AsyncStreamer` writing to `io` using `format`
     pub fn new<W: io::Write + Send + 'static>(io: W, format: F) -> Self {
         AsyncStreamer {
-            io: Mutex::new(AsyncIoWriter::new(io)),
+            io: AsyncIoWriter::new(io),
             format: format,
         }
     }
@@ -104,10 +105,9 @@ impl<F: Format + Send> Drain for AsyncStreamer<F> {
                        || {
                            try!(self.format.format(&mut *buf, info, logger_values));
                            {
-                               let mut io = try!(self.io.lock().map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
                                let mut new_buf = Vec::with_capacity(128);
                                mem::swap(&mut *buf, &mut new_buf);
-                               try!(io.write_nocopy(new_buf));
+                               try!(self.io.write_nocopy(new_buf));
                            }
                            Ok(())
 
@@ -125,7 +125,6 @@ impl<F: Format + Send> Drain for AsyncStreamer<F> {
 
 enum AsyncIoMsg {
     Bytes(Vec<u8>),
-    Flush,
     Eof,
 }
 
@@ -138,11 +137,12 @@ enum AsyncIoMsg {
 ///
 /// This makes logging not block on potentially-slow IO operations.
 ///
-/// Note: Dropping `AsyncIoWriter` waits for it's io-thread to finish.
-/// If you can't tolerate the delay, make sure to use `Logger::
+/// Note: Dropping `AsyncIoWriter` waits for it's io-thread to finish. If you
+/// can't tolerate the delay, make sure you `drop` it eg. in another thread.
 struct AsyncIoWriter {
-    sender: mpsc::Sender<AsyncIoMsg>,
-    join: Option<thread::JoinHandle<()>>,
+    ref_sender: Mutex<mpsc::Sender<AsyncIoMsg>>,
+    tl_sender: thread_local::ThreadLocal<mpsc::Sender<AsyncIoMsg>>,
+    join: Mutex<Option<thread::JoinHandle<()>>>,
 }
 
 impl AsyncIoWriter {
@@ -153,47 +153,42 @@ impl AsyncIoWriter {
             loop {
                 match rx.recv().unwrap() {
                     AsyncIoMsg::Bytes(buf) => io.write_all(&buf).unwrap(),
-                    AsyncIoMsg::Flush => io.flush().unwrap(),
                     AsyncIoMsg::Eof => return,
                 }
             }
         });
 
         AsyncIoWriter {
-            sender: tx,
-            join: Some(join),
+            ref_sender: Mutex::new(tx),
+            tl_sender: thread_local::ThreadLocal::new(),
+            join: Mutex::new(Some(join)),
         }
     }
 
+    fn get_sender(&self) -> &mpsc::Sender<AsyncIoMsg> {
+        self.tl_sender.get_or(|| {
+            // TODO: Change to `get_or_try` https://github.com/Amanieu/thread_local-rs/issues/2
+            Box::new(self.ref_sender.lock().unwrap().clone())
+        })
+    }
     /// Write data to IO, without copying
     ///
     /// As an optimization, when `buf` is already an owned
     /// `Vec`, it can be sent over channel without copying.
-    pub fn write_nocopy(&mut self, buf: Vec<u8>) -> io::Result<()> {
-        try!(self.sender
-            .send(AsyncIoMsg::Bytes(buf))
-            .map_err(|e| io::Error::new(io::ErrorKind::BrokenPipe, e)));
-        Ok(())
+    pub fn write_nocopy(&self, buf: Vec<u8>) -> io::Result<()> {
+        let sender = self.get_sender();
+
+        sender.send(AsyncIoMsg::Bytes(buf))
+            .map_err(|e| io::Error::new(io::ErrorKind::BrokenPipe, e))
     }
 }
-
-impl io::Write for AsyncIoWriter {
-    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        let _ = self.sender.send(AsyncIoMsg::Bytes(buf.to_vec())).unwrap();
-        Ok(buf.len())
-    }
-
-    fn flush(&mut self) -> io::Result<()> {
-        let _ = self.sender.send(AsyncIoMsg::Flush);
-        Ok(())
-    }
-}
-
 
 impl Drop for AsyncIoWriter {
     fn drop(&mut self) {
-        let _ = self.sender.send(AsyncIoMsg::Eof);
-        let _ = self.join.take().unwrap().join();
+        let sender = self.get_sender();
+
+        let _ = sender.send(AsyncIoMsg::Eof);
+        let _ = self.join.lock().unwrap().take().unwrap().join();
     }
 }
 

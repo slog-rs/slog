@@ -15,3 +15,4 @@ path = "lib.rs"
 
 [dependencies]
 slog = { version = "1.0.0-alpha7", path = "../.." }
+thread_local = { version = "0.2.6" }
