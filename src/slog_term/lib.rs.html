@@ -520,6 +520,7 @@
 <span id="476">476</span>
 <span id="477">477</span>
 <span id="478">478</span>
+<span id="479">479</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Unix terminal formatter and drain for slog-rs</span>
 <span class='doccomment'>//!</span>
@@ -995,7 +996,8 @@
     }
 }
 
-<span class='doccomment'>/// Build `Streamer`/`AsyncStreamer`</span>
+<span class='doccomment'>/// Build `slog_stream::Streamer`/`slog_stream::AsyncStreamer` that</span>
+<span class='doccomment'>/// will output logging records to stderr/stderr.</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>streamer</span>() <span class='op'>-&gt;</span> <span class='ident'>StreamerBuilder</span> {
     <span class='ident'>StreamerBuilder</span>::<span class='ident'>new</span>()
 }
