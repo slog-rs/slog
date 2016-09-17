@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `async_stream` fn in crate `slog_stream`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, async_stream">
+    <meta name="description" content="API documentation for the Rust `get` fn in crate `thread_id`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, get">
 
-    <title>slog_stream::async_stream - Rust</title>
+    <title>thread_id::get - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>slog_stream</a></p><script>window.sidebarCurrent = {name: 'async_stream', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='index.html'>thread_id</a></p><script>window.sidebarCurrent = {name: 'get', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,14 +43,16 @@
     </nav>
 
     <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>slog_stream</a>::<wbr><a class='fn' href=''>async_stream</a></span><span class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>thread_id</a>::<wbr><a class='fn' href=''>get</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-146' class='srclink' href='../src/slog_stream/lib.rs.html#205-207' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn async_stream&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + 'static,&nbsp;F:&nbsp;<a class='trait' href='../slog_stream/trait.Format.html' title='slog_stream::Format'>Format</a>&gt;(io: W, format: F) -&gt; <a class='struct' href='../slog_stream/struct.AsyncStreamer.html' title='slog_stream::AsyncStreamer'>AsyncStreamer</a>&lt;F&gt;</pre><div class='docblock'><p>Stream logging records to IO asynchronously</p>
+               </span><a id='src-5' class='srclink' href='../src/thread_id/lib.rs.html#40-42' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn get() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></pre><div class='docblock'><p>Returns a number that is unique to the calling thread.</p>
 
-<p>Create <code>AsyncStreamer</code> drain</p>
+<p>Calling this function twice from the same thread will return the same
+number. Calling this function from a different thread will return a
+different number.</p>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -106,7 +108,7 @@
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "slog_stream";
+        window.currentCrate = "thread_id";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
