@@ -15,4 +15,4 @@ path = "lib.rs"
 
 [dependencies]
 slog = { version = "1.0.0-alpha7", path = "../.." }
-serde = "0.7.10"
+serde = "0.8"
