@@ -1,7 +1,7 @@
 /// Logging drain
 ///
 /// Drains generally mean destination for logs, but slog generalize the
-/// term. `Drain`-s are responsible for filtering, modifying, formatting
+/// term. `Drain`s are responsible for filtering, modifying, formatting
 /// and writing the log records into given destination.
 ///
 /// Implementing this trait allows writing own Drains, that can be combined
@@ -11,8 +11,9 @@ pub trait Drain: Send + Sync {
     type Error;
     /// Log one logging record
     ///
-    /// Every logging record and key-value lists will be passed to the root
-    /// drain registered in the root logger through this function.
+    /// Every logging `Record` built from a logging statement (eg.
+    /// `info!(...)`), and key-value lists of a `Logger` it was executed on
+    /// will be passed to the root drain registered during `Logger::root`.
     ///
     /// Typically `Drain`s:
     ///
@@ -36,7 +37,10 @@ impl<D: Drain+?Sized> Drain for Arc<D> {
     }
 }
 
-/// Convenience methods
+/// Convenience methods for building drains
+///
+/// `DrainExt` is implemented for every `Drain` and contains
+/// convenience methods.
 pub trait DrainExt: Sized + Drain {
     /// Map logging errors returned by this drain
     ///
@@ -48,18 +52,18 @@ pub trait DrainExt: Sized + Drain {
 
     /// Make `Self` ignore and not report any error
     fn ignore_err(self) -> IgnoreErr<Self> {
-        ignore_err(self)
+        IgnoreErr::new(self)
     }
 
     /// Make `Self` panic when returning any errors
     fn fuse(self) -> Fuse<Self> where <Self as Drain>::Error : fmt::Display {
-        fuse(self)
+       Fuse::new(self)
     }
 }
 
 impl<D : Drain> DrainExt for D {}
 
-/// Drain discarding everything
+/// `Drain` discarding everything
 ///
 /// `/dev/null` of `Drain`s
 pub struct Discard;
@@ -71,10 +75,10 @@ impl Drain for Discard {
     }
 }
 
-/// Drain filtering records
+/// `Drain` filtering records
 ///
-/// Wraps a `Drain` and passes `Record`-s to it, only if they satisifies a
-/// condition `cond`.
+/// Wraps another `Drain` and passes `Record`s to it, only if they satisfy a
+/// given condition.
 pub struct Filter<D: Drain> {
     drain: D,
     // eliminated dynamic dispatch, after rust learns `-> impl Trait`
@@ -136,7 +140,7 @@ impl<D: Drain, E> Drain for MapError<D, E> {
 }
 
 
-/// Record log level filter
+/// `Drain` filtering records by `Record` logging level
 ///
 /// Wraps a drain and passes records to it, only
 /// if their level is at least given level.
@@ -192,7 +196,7 @@ impl<D1: Drain, D2: Drain> Duplicate<D1, D2> {
     }
 }
 
-/// Logging error from `Duplicate` drain
+/// Logging error returned by `Duplicate` drain
 pub enum DuplicateError<E1, E2> {
     /// First `Drain` has returned error
     First(E1),
@@ -230,43 +234,8 @@ impl<D1 : Drain, D2 : Drain> Drain for Duplicate<D1, D2> {
     }
 }
 
-/// Failover drain
-///
-/// Log everything to logger `D1`, but in case of it reporting error,
-/// try logging to `D2`. If it also returned an error, forward it up.
-pub struct Failover<D1: Drain, D2: Drain> {
-    drain1: D1,
-    drain2: D2,
-}
 
-impl<D1: Drain, D2: Drain> Failover<D1, D2> {
-    /// Create `Failover`
-    pub fn new(drain1: D1, drain2: D2) -> Self {
-        Failover {
-            drain1: drain1,
-            drain2: drain2,
-        }
-    }
-}
-
-impl<D1, D2, E1, E2> Drain for Failover<D1, D2>
-where
-D1 : Drain<Error = E1>,
-D2 : Drain<Error = E2>
-{
-    type Error = D2::Error;
-    fn log(&self,
-           info: &Record,
-           logger_values: &OwnedKeyValueList)
-           -> result::Result<(), Self::Error> {
-        match self.drain1.log(info, logger_values) {
-            Ok(_) => Ok(()),
-            Err(_) => self.drain2.log(info, logger_values),
-        }
-    }
-}
-
-/// Panicking fuse
+/// `Drain` panicking on error
 ///
 /// `Logger` requires a root drain to handle all errors (`Drain::Error == ()`),
 /// `Fuse` will wrap a `Drain` and panic if it returns any errors.
@@ -301,7 +270,7 @@ impl<D: Drain> Drain for Fuse<D> where D::Error : fmt::Display {
 }
 
 
-/// Error ignoring fuse
+/// Drain ignoring errors
 ///
 /// `Logger` requires a root drain to handle all errors (`Drain::Error == ()`),
 /// `IgnoreErr` will ignore all errors of the drain it wraps.
@@ -329,13 +298,6 @@ impl<D: Drain> Drain for IgnoreErr<D> {
         }
 }
 
-/// Discard all logging records
-///
-/// Create a Discard drain
-pub fn discard() -> Discard {
-    Discard
-}
-
 /// Filter by `cond` closure
 pub fn filter<D: Drain, F: 'static + Send + Sync + Fn(&Record) -> bool>(
     cond: F,
@@ -356,25 +318,4 @@ pub fn level_filter<D: Drain>(level: Level, d: D) -> LevelFilter<D> {
 /// Can be nested for multiple outputs.
 pub fn duplicate<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Duplicate<D1, D2> {
     Duplicate::new(d1, d2)
-}
-
-/// Failover logging to secondary drain on primary's failure
-///
-/// Create `Failover` drain
-pub fn failover<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Failover<D1, D2> {
-    Failover::new(d1, d2)
-}
-
-/// Panic if the subdrain returns an error.
-///
-/// Create `Fuse` drain
-pub fn fuse<D: Drain>(d: D) -> Fuse<D> {
-    Fuse::new(d)
-}
-
-/// Ignore any errors returned by the subdrain
-///
-/// Create `IgnoreErr` drain
-pub fn ignore_err<D: Drain>(d: D) -> IgnoreErr<D> {
-    IgnoreErr::new(d)
 }

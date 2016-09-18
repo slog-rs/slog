@@ -1,17 +1,14 @@
-
-/// Logger
+/// Logging handle used to execute logging statements
 ///
-/// Loggers can be freely passed around the code.
-///
-/// Cloning existing loggers and creating new ones is cheap,
-///
-/// Root logger starts a new hierarchy and needs drain to be created.
-/// Root logger drain, must taken care of error handling. See
-/// `DrainExt::ignore_err()` and `DrainExt::fuse()`.
+/// Logger handles logging context (key-value list) and handles logging
+/// statements.
 ///
 /// Child loggers are build from existing loggers, and inherit existing
 /// key-value pairs from their parents, which can be supplemented with
 /// new ones.
+///
+/// Cloning existing loggers and creating new ones is cheap. Loggers can be
+/// freely passed around the code.
 #[derive(Clone)]
 pub struct Logger {
     //TODO:
@@ -21,11 +18,15 @@ pub struct Logger {
 }
 
 impl Logger {
-    /// Build a root logger
+    /// Build a root `Logger`
     ///
     /// All children and their children and so on form one hierarchy
     /// sharing a common drain.
     ///
+    /// Root logger starts a new hierarchy associated with a given `Drain`. Root
+    /// logger drain must return no errors. See `DrainExt::ignore_err()` and
+    ///
+    /// `DrainExt::fuse()`.
     /// Use `o!` macro to help build key-value pairs with a nicer syntax.
     ///
     /// ```
@@ -34,7 +35,7 @@ impl Logger {
     ///
     /// fn main() {
     ///     let root = slog::Logger::root(
-    ///         slog::discard(),
+    ///         slog::Discard,
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
@@ -59,7 +60,7 @@ impl Logger {
     /// extern crate slog;
     ///
     /// fn main() {
-    ///     let root = slog::Logger::root(slog::discard(),
+    ///     let root = slog::Logger::root(slog::Discard,
     ///         o!("key1" => "value1", "key2" => "value2"));
     ///     let log = root.new(o!("key" => "value"));
     /// }
@@ -98,7 +99,12 @@ pub struct RecordStatic<'a> {
     pub target: &'a str,
 }
 
-/// Logging record
+/// One logging record
+///
+/// Corresponds to one logging statement like `info!(...)` and carries all it's
+/// data: eg. message, key-values, key-values of `Logger` used to execute it.
+///
+/// Record is passed to `Drain` associated with a given logger hierarchy.
 pub struct Record<'a> {
     meta: &'a RecordStatic<'a>,
     msg: fmt::Arguments<'a>,

@@ -16,7 +16,7 @@ fn foo(log: Logger) {
 
 fn main() {
     let root = slog::Logger::root(
-        slog::discard(),
+        slog::Discard,
         o!("thread-id" => |_:&Record| {
             TL_THREAD_ID.with(|id| { id.borrow().clone() })
         }

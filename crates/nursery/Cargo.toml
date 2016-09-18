@@ -1,9 +1,9 @@
 [package]
-name = "slog-json"
-version = "1.0.0-alpha7"
+name = "slog-nursery"
+version = "0.1.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
-description = "Json formatter for slog-rs"
-keywords = ["slog", "logging", "json"]
+description = "Staging area for slog-rs"
+keywords = ["log", "logging", "structured", "hierarchical"]
 license = "MPL-2.0"
 documentation = "https://dpc.github.io/slog-rs/"
 homepage = "https://github.com/dpc/slog-rs"
@@ -15,7 +15,3 @@ path = "lib.rs"
 
 [dependencies]
 slog = { version = "1.0.0-alpha7", path = "../.." }
-slog-serde = { version = "1.0.0-alpha7", path = "../serde"}
-slog-stream = { version = "1.0.0-alpha7", path = "../stream" }
-serde_json = "0.8.2"
-chrono = "0.2"

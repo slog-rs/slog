@@ -58,6 +58,11 @@ impl<E> AtomicSwitchCtrl<E> {
     pub fn swap(&self, drain: Arc<Box<Drain<Error=E>>>) -> Arc<Box<Drain<Error=E>>> {
         self.0.set(drain)
     }
+
+    /// Get a drain controlled by this `AtomicSwitchCtrl`
+    pub fn drain(&self) -> AtomicSwitch<E> {
+        AtomicSwitch(self.0.clone())
+    }
 }
 
 impl<E> Drain for AtomicSwitch<E> {

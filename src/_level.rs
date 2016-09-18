@@ -9,7 +9,7 @@ pub static LOG_LEVEL_NAMES: [&'static str; 7] = ["OFF", "CRITICAL", "ERROR", "WA
 pub static LOG_LEVEL_SHORT_NAMES: [&'static str; 7] = ["OFF", "CRIT", "ERRO", "WARN", "INFO", "DEBG", "TRCE"];
 
 
-/// Log record level
+/// Logging level associated with a logging `Record`
 #[repr(usize)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Level {

@@ -40,7 +40,7 @@ thread_local! {
 lazy_static! {
     static ref GLOBAL_LOGGER : ArcCell<slog::Logger> = ArcCell::new(
         Arc::new(
-            slog::Logger::root(slog::discard(), o!())
+            slog::Logger::root(slog::Discard, o!())
         )
     );
 }
@@ -104,7 +104,7 @@ impl log::Log for Logger {
 ///
 /// fn main() {
 ///     let root = slog::Logger::root(
-///         slog::discard(),
+///         slog::Discard,
 ///         o!("build-id" => "8dfljdf"),
 ///     );
 ///     slog_stdlog::set_logger(root).unwrap();

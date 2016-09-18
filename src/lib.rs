@@ -61,8 +61,8 @@
 //!
 //! ## Notable details
 //!
-//! `slog` by default removed at compile time trace and debug level records
-//! for release builds, and trace level records for debug builds. This makes
+//! `slog` by default removes at compile time trace and debug level statements
+//! in release builds, and trace level records in debug builds. This makes
 //! `trace` and `debug` level logging records practically free, which should
 //! encourage using them freely. If you want to enable trace/debug messages
 //! or raise the compile time logging level limit, use the following in your
@@ -132,7 +132,7 @@ use alloc::boxed::Box;
 /// extern crate slog;
 ///
 /// fn main() {
-///     let drain = slog::discard();
+///     let drain = slog::Discard;
 ///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
 /// }
 /// ```
@@ -167,7 +167,7 @@ macro_rules! o(
 /// extern crate slog;
 ///
 /// fn main() {
-///     let drain = slog::discard();
+///     let drain = slog::Discard;
 ///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
 ///     info!(root, "test info log"; "log-key" => true);
 /// }
@@ -180,7 +180,7 @@ macro_rules! o(
 /// extern crate slog;
 ///
 /// fn main() {
-///     let drain = slog::discard();
+///     let drain = slog::Discard;
 ///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
 ///     info!(root, "test info log");
 /// }
@@ -193,7 +193,7 @@ macro_rules! o(
 /// extern crate slog;
 ///
 /// fn main() {
-///     let drain = slog::discard();
+///     let drain = slog::Discard;
 ///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
 ///     info!(root, "log-key" => true; "formatted: {}", 1);
 /// }
@@ -206,7 +206,7 @@ macro_rules! o(
 /// extern crate slog;
 ///
 /// fn main() {
-///     let drain = slog::discard();
+///     let drain = slog::Discard;
 ///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
 ///     info!(root, "formatted: {}", 1);
 /// }

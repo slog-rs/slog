@@ -20,7 +20,7 @@ use std::thread;
 use slog::Logger;
 
 thread_local!(static TL_LOG: RefCell<Logger> = RefCell::new(
-    Logger::root(slog::discard(), o!("logger" => "unititalized"))
+    Logger::root(slog::Discard, o!("logger" => "unititalized"))
 ));
 
 fn foo() {
@@ -31,7 +31,7 @@ fn foo() {
 
 fn main() {
     let root = slog::Logger::root(
-        slog::discard(),
+        slog::Discard,
         o!("version" => "0.0.1", "build-id" => "8dfljdf"),
         );
 
