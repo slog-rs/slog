@@ -217,8 +217,6 @@
 <span id="173">173</span>
 <span id="174">174</span>
 <span id="175">175</span>
-<span id="176">176</span>
-<span id="177">177</span>
 </pre><pre class='rust '>
 <span class='doccomment'>/// Logging handle used to execute logging statements</span>
 <span class='doccomment'>///</span>
@@ -233,9 +231,7 @@
 <span class='doccomment'>/// freely passed around the code.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Logger</span> {
-    <span class='comment'>//TODO:</span>
-    <span class='comment'>//drain: Arc&lt;Drain&lt;Error=!&gt;&gt;,</span>
-    <span class='ident'>drain</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span>()<span class='op'>&gt;&gt;</span>,
+    <span class='ident'>drain</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>Never</span><span class='op'>&gt;&gt;</span>,
     <span class='ident'>values</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>OwnedKeyValueList</span><span class='op'>&gt;</span>,
 }
 
@@ -261,7 +257,7 @@
     <span class='doccomment'>///         o!(&quot;key1&quot; =&gt; &quot;value1&quot;, &quot;key2&quot; =&gt; &quot;value2&quot;),</span>
     <span class='doccomment'>///     );</span>
     <span class='doccomment'>/// }</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>root</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span>()<span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Sized</span><span class='op'>&gt;</span>(<span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>values</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>OwnedKeyValue</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Logger</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>root</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='lifetime'>&#39;static</span> <span class='op'>+</span> <span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>Never</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>Sized</span><span class='op'>&gt;</span>(<span class='ident'>d</span>: <span class='ident'>D</span>, <span class='ident'>values</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>OwnedKeyValue</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Logger</span> {
         <span class='ident'>Logger</span> {
             <span class='ident'>drain</span>: <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>d</span>),
             <span class='ident'>values</span>: <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>OwnedKeyValueList</span>::<span class='ident'>root</span>(<span class='ident'>values</span>)),
