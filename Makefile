@@ -35,7 +35,7 @@ test-all:
 	cd "crates/stdlog"; cargo test $(CARGO_FLAGS)
 	cd "crates/atomic"; cargo test $(CARGO_FLAGS)
 	cd "crates/example-lib"; cargo test $(CARGO_FLAGS)
-	cd "crates/nursery; cargo test $(CARGO_FLAGS)
+	cd "crates/nursery"; cargo test $(CARGO_FLAGS)
 
 check:
 	$(info Running check; use `make build` to actually build)
