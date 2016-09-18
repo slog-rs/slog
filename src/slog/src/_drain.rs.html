@@ -380,11 +380,15 @@
 <span id="336">336</span>
 <span id="337">337</span>
 <span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
 </pre><pre class='rust '>
 <span class='doccomment'>/// Logging drain</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Drains generally mean destination for logs, but slog generalize the</span>
-<span class='doccomment'>/// term. `Drain`-s are responsible for filtering, modifying, formatting</span>
+<span class='doccomment'>/// term. `Drain`s are responsible for filtering, modifying, formatting</span>
 <span class='doccomment'>/// and writing the log records into given destination.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Implementing this trait allows writing own Drains, that can be combined</span>
@@ -394,8 +398,9 @@
     <span class='kw'>type</span> <span class='ident'>Error</span>;
     <span class='doccomment'>/// Log one logging record</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Every logging record and key-value lists will be passed to the root</span>
-    <span class='doccomment'>/// drain registered in the root logger through this function.</span>
+    <span class='doccomment'>/// Every logging `Record` built from a logging statement (eg.</span>
+    <span class='doccomment'>/// `info!(...)`), and key-value lists of a `Logger` it was executed on</span>
+    <span class='doccomment'>/// will be passed to the root drain registered during `Logger::root`.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Typically `Drain`s:</span>
     <span class='doccomment'>///</span>
@@ -419,7 +424,10 @@
     }
 }
 
-<span class='doccomment'>/// Convenience methods</span>
+<span class='doccomment'>/// Convenience methods for building drains</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// `DrainExt` is implemented for every `Drain` and contains</span>
+<span class='doccomment'>/// convenience methods.</span>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>DrainExt</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Drain</span> {
     <span class='doccomment'>/// Map logging errors returned by this drain</span>
     <span class='doccomment'>///</span>

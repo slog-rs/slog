@@ -47,14 +47,14 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-519' class='srclink' href='../src/slog/src/_drain.rs.html#9-23' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-519' class='srclink' href='../src/slog/src/_drain.rs.html#9-24' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Drain: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> {
     type <a href='#associatedtype.Error' class='type'>Error</a>;
     fn <a href='#tymethod.log' class='fnname'>log</a>(&amp;self, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>,&nbsp;Self::Error&gt;;
 }</pre><div class='docblock'><p>Logging drain</p>
 
 <p>Drains generally mean destination for logs, but slog generalize the
-term. <code>Drain</code>-s are responsible for filtering, modifying, formatting
+term. <code>Drain</code>s are responsible for filtering, modifying, formatting
 and writing the log records into given destination.</p>
 
 <p>Implementing this trait allows writing own Drains, that can be combined
@@ -68,8 +68,9 @@ with other drains.</p>
             <div class='methods'>
         <h3 id='tymethod.log' class='method stab '><span id='log.v' class='invisible'><code>fn <a href='#tymethod.log' class='fnname'>log</a>(&amp;self, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>,&nbsp;Self::Error&gt;</code></span></h3><div class='docblock'><p>Log one logging record</p>
 
-<p>Every logging record and key-value lists will be passed to the root
-drain registered in the root logger through this function.</p>
+<p>Every logging <code>Record</code> built from a logging statement (eg.
+<code>info!(...)</code>), and key-value lists of a <code>Logger</code> it was executed on
+will be passed to the root drain registered during <code>Logger::root</code>.</p>
 
 <p>Typically <code>Drain</code>s:</p>
 
