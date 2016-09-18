@@ -276,7 +276,7 @@
 <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>LOG_LEVEL_SHORT_NAMES</span>: [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>; <span class='number'>7</span>] <span class='op'>=</span> [<span class='string'>&quot;OFF&quot;</span>, <span class='string'>&quot;CRIT&quot;</span>, <span class='string'>&quot;ERRO&quot;</span>, <span class='string'>&quot;WARN&quot;</span>, <span class='string'>&quot;INFO&quot;</span>, <span class='string'>&quot;DEBG&quot;</span>, <span class='string'>&quot;TRCE&quot;</span>];
 
 
-<span class='doccomment'>/// Log record level</span>
+<span class='doccomment'>/// Logging level associated with a logging `Record`</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>usize</span>)]</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Ord</span>, <span class='ident'>PartialOrd</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Level</span> {

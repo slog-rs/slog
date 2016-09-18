@@ -213,21 +213,24 @@
 <span id="169">169</span>
 <span id="170">170</span>
 <span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
 </pre><pre class='rust '>
-
-<span class='doccomment'>/// Logger</span>
+<span class='doccomment'>/// Logging handle used to execute logging statements</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// Loggers can be freely passed around the code.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Cloning existing loggers and creating new ones is cheap,</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Root logger starts a new hierarchy and needs drain to be created.</span>
-<span class='doccomment'>/// Root logger drain, must taken care of error handling. See</span>
-<span class='doccomment'>/// `DrainExt::ignore_err()` and `DrainExt::fuse()`.</span>
+<span class='doccomment'>/// Logger handles logging context (key-value list) and handles logging</span>
+<span class='doccomment'>/// statements.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Child loggers are build from existing loggers, and inherit existing</span>
 <span class='doccomment'>/// key-value pairs from their parents, which can be supplemented with</span>
 <span class='doccomment'>/// new ones.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Cloning existing loggers and creating new ones is cheap. Loggers can be</span>
+<span class='doccomment'>/// freely passed around the code.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Logger</span> {
     <span class='comment'>//TODO:</span>
@@ -237,11 +240,15 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>Logger</span> {
-    <span class='doccomment'>/// Build a root logger</span>
+    <span class='doccomment'>/// Build a root `Logger`</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// All children and their children and so on form one hierarchy</span>
     <span class='doccomment'>/// sharing a common drain.</span>
     <span class='doccomment'>///</span>
+    <span class='doccomment'>/// Root logger starts a new hierarchy associated with a given `Drain`. Root</span>
+    <span class='doccomment'>/// logger drain must return no errors. See `DrainExt::ignore_err()` and</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// `DrainExt::fuse()`.</span>
     <span class='doccomment'>/// Use `o!` macro to help build key-value pairs with a nicer syntax.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// ```</span>
@@ -314,7 +321,12 @@
     <span class='kw'>pub</span> <span class='ident'>target</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>,
 }
 
-<span class='doccomment'>/// Logging record</span>
+<span class='doccomment'>/// One logging record</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Corresponds to one logging statement like `info!(...)` and carries all it&#39;s</span>
+<span class='doccomment'>/// data: eg. message, key-values, key-values of `Logger` used to execute it.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Record is passed to `Drain` associated with a given logger hierarchy.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Record</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>meta</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>RecordStatic</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>,
     <span class='ident'>msg</span>: <span class='ident'>fmt</span>::<span class='ident'>Arguments</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>,
