@@ -75,6 +75,28 @@ fn log_discard_nonempty(b: &mut Bencher) {
 }
 
 #[bench]
+fn log_discard_nonempty_10(b: &mut Bencher) {
+    let log = Logger::root(BlackBoxDrain, o!("build" => "123456", "id" => 123456));
+
+    b.iter(|| {
+        info!(log,
+              "";
+              "u8" => 0u8,
+              "u16" => 0u16,
+              "u32" => 0u32,
+              "u64" => 0u64,
+              "bool" => false,
+              "str" => "",
+              "f32" => 0f32, 
+              "f64" => 0f64, 
+              "option" => Some(0), 
+              "unit" => ()
+             );
+    });
+}
+
+
+#[bench]
 fn logger_clone_empty(b: &mut Bencher) {
     let log = Logger::root(BlackBoxDrain, o!());
 
@@ -109,6 +131,27 @@ fn logger_new_nonempty(b: &mut Bencher) {
         log.new(o!("what" => "write"));
     });
 }
+
+#[bench]
+fn logger_new_nonempty_10(b: &mut Bencher) {
+    let log = Logger::root(BlackBoxDrain, o!("build" => "123456", "id" => 123456));
+
+    b.iter(|| {
+        log.new(o!(
+                "u8" => 0u8,
+                "u16" => 0u16,
+                "u32" => 0u32,
+                "u64" => 0u64,
+                "bool" => false,
+                "str" => "",
+                "f32" => 0f32, 
+                "f64" => 0f64, 
+                "option" => Some(0), 
+                "unit" => ()
+                ));
+    });
+}
+
 
 #[bench]
 fn log_discard_i32val(b: &mut Bencher) {
