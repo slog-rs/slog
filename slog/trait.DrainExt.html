@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-539' class='srclink' href='../src/slog/src/_drain.rs.html#44-62' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-539' class='srclink' href='../src/slog/_drain.rs.html#44-62' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait DrainExt: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a> {
     fn <a href='#method.map_err' class='fnname'>map_err</a>&lt;F,&nbsp;E&gt;(self, f: F) -&gt; <a class='struct' href='../slog/struct.MapError.html' title='slog::MapError'>MapError</a>&lt;Self,&nbsp;E&gt; <span class='where'>where F: 'static + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(Self::Error) -&gt; E</span> { ... }
     fn <a href='#method.ignore_err' class='fnname'>ignore_err</a>(self) -&gt; <a class='struct' href='../slog/struct.IgnoreErr.html' title='slog::IgnoreErr'>IgnoreErr</a>&lt;Self&gt; { ... }

@@ -346,7 +346,7 @@
 <span class='macro'>lazy_static</span><span class='macro'>!</span> {
     <span class='kw'>static</span> <span class='kw-2'>ref</span> <span class='ident'>GLOBAL_LOGGER</span> : <span class='ident'>ArcCell</span><span class='op'>&lt;</span><span class='ident'>slog</span>::<span class='ident'>Logger</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>ArcCell</span>::<span class='ident'>new</span>(
         <span class='ident'>Arc</span>::<span class='ident'>new</span>(
-            <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>slog</span>::<span class='ident'>discard</span>(), <span class='macro'>o</span><span class='macro'>!</span>())
+            <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>slog</span>::<span class='ident'>Discard</span>, <span class='macro'>o</span><span class='macro'>!</span>())
         )
     );
 }
