@@ -167,6 +167,14 @@ impl_serialize_for!(u64, emit_u64);
 impl_serialize_for!(i64, emit_i64);
 impl_serialize_for!(f64, emit_f64);
 
+impl Serialize for () {
+    fn serialize(&self, _record: &Record, key: &str, serializer: &mut Serializer) -> result::Result<(), Error> {
+        serializer.emit_unit(key)
+    }
+}
+
+impl SyncSerialize for () {}
+
 impl Serialize for str {
     fn serialize(&self, _record: &Record, key: &str, serializer: &mut Serializer) -> result::Result<(), Error> {
         serializer.emit_str(key, self)
