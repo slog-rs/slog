@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-5751' class='srclink' href='../../../src/nix/sys/socket/mod.rs.html#107-110' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-5703' class='srclink' href='../../../src/nix/sys/socket/mod.rs.html#107-110' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct CmsgSpace&lt;T&gt; { /* fields omitted */ }</pre><div class='docblock'><p>A structure used to make room in a cmsghdr passed to recvmsg. The
 size and alignment match that of a cmsghdr followed by a T, but the
 fields are not accessible, as the actual types will change on a call
@@ -56,7 +56,7 @@ to recvmsg.</p>
 <p>To make room for multiple messages, nest the type parameter with
 tuples, e.g.
 <code>let cmsg: CmsgSpace&lt;([RawFd; 3], CmsgSpace&lt;[RawFd; 2]&gt;)&gt; = CmsgSpace::new();</code></p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='struct' href='../../../nix/sys/socket/struct.CmsgSpace.html' title='nix::sys::socket::CmsgSpace'>CmsgSpace</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-5755' class='srclink' href='../../../src/nix/sys/socket/mod.rs.html#112-119' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='struct' href='../../../nix/sys/socket/struct.CmsgSpace.html' title='nix::sys::socket::CmsgSpace'>CmsgSpace</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-5707' class='srclink' href='../../../src/nix/sys/socket/mod.rs.html#112-119' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; Self</code></span></h4>
 <div class='docblock'><p>Create a CmsgSpace<T>. The structure is used only for space, so
 the fields are uninitialized.</p>

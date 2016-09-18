@@ -47,15 +47,30 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-7979' class='srclink' href='../../src/serde/ser/mod.rs.html#1-383' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-11190' class='srclink' href='../../src/serde/ser/mod.rs.html#1-412' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Generic serialization framework.</p>
+
+<h1 id='for-developers-who-want-to-serialize-objects' class='section-header'><a href='#for-developers-who-want-to-serialize-objects'>For Developers who want to serialize objects</a></h1>
+<p>Implement the <code>Serialize</code> trait for the type of objects you want to serialize. Call methods of
+the <code>serializer</code> object. For which methods to call and how to do so, look at the documentation
+of the <code>Serializer</code> trait.</p>
+
+<h1 id='for-serialization-format-developers' class='section-header'><a href='#for-serialization-format-developers'>For Serialization Format Developers</a></h1>
+<p>Implement the <code>Serializer</code> trait for a structure that contains fields that enable it to write
+the serialization result to your target. When a method&#39;s argument is an object of type
+<code>Serialize</code>, you can either forward the serializer object (<code>self</code>) or create a new one,
+depending on the quirks of your format.</p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='mod' href='impls/index.html'
                                   title='serde::ser::impls'>impls</a></td>
                            <td class='docblock-short'>
-                                <p>Implementations for all of Rust&#39;s builtin types.</p>
+                                <p>Implementations for all of Rust&#39;s builtin types. Tuples implement the <code>Serialize</code> trait if they
+have at most 16 fields. Arrays implement the <code>Serialize</code> trait if their length is 32 or less.
+You can always forward array serialization to slice serialization, which works for any length.
+Long tuples are best replaced by tuple structs, for which you can use <code>derive(Serialize)</code>. In
+that case the number of fields is irrelevant.</p>
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
@@ -65,20 +80,6 @@
                            <td class='docblock-short'>
                                 <p><code>Error</code> is a trait that allows a <code>Serialize</code> to generically create a
 <code>Serializer</code> error.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='trait' href='trait.MapVisitor.html'
-                                  title='serde::ser::MapVisitor'>MapVisitor</a></td>
-                           <td class='docblock-short'>
-                                <p>A trait that is used by a <code>Serialize</code> to iterate through a map.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='trait' href='trait.SeqVisitor.html'
-                                  title='serde::ser::SeqVisitor'>SeqVisitor</a></td>
-                           <td class='docblock-short'>
-                                <p>A trait that is used by a <code>Serialize</code> to iterate through a sequence.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

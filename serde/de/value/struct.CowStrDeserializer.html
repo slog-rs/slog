@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `CowStrDeserializer` struct in crate `serde`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, CowStrDeserializer">
+
+    <title>serde::de::value::CowStrDeserializer - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>serde</a>::<wbr><a href='../index.html'>de</a>::<wbr><a href='index.html'>value</a></p><script>window.sidebarCurrent = {name: 'CowStrDeserializer', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>serde</a>::<wbr><a href='../index.html'>de</a>::<wbr><a href='index.html'>value</a>::<wbr><a class='struct' href=''>CowStrDeserializer</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-8528' class='srclink' href='../../../src/serde/de/value.rs.html#432' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct CowStrDeserializer&lt;'a,&nbsp;E&gt;(_, _);</pre><div class='docblock'><p>A helper deserializer that deserializes a <code>String</code>.</p>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a,&nbsp;E&gt; <a class='trait' href='../../../serde/de/trait.Deserializer.html' title='serde::de::Deserializer'>Deserializer</a> for <a class='struct' href='../../../serde/de/value/struct.CowStrDeserializer.html' title='serde::de::value::CowStrDeserializer'>CowStrDeserializer</a>&lt;'a,&nbsp;E&gt; <span class='where'>where E: <a class='trait' href='../../../serde/de/trait.Error.html' title='serde::de::Error'>Error</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-8540' class='srclink' href='../../../src/serde/de/value.rs.html#446-475' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Error' class='type'><span id='Error.t' class='invisible'><code>type <a href='../../../serde/de/trait.Deserializer.html#associatedtype.Error' class='type'>Error</a> = E</code></span></h4>
+<div class='docblock'><p>The error type that can be returned if some error occurs during deserialization.</p>
+</div><h4 id='method.deserialize' class='method'><span id='deserialize.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize' class='fnname'>deserialize</a>&lt;V&gt;(&amp;mut self, visitor: V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;V::Value,&nbsp;Self::Error&gt; <span class='where'>where V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method walks a visitor through a value as it is being deserialized.</p>
+</div><h4 id='method.deserialize_enum' class='method'><span id='deserialize_enum.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_enum' class='fnname'>deserialize_enum</a>&lt;V&gt;(&amp;mut self, _name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, _variants: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'static [</a>&amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, visitor: V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;V::Value,&nbsp;Self::Error&gt; <span class='where'>where V: <a class='trait' href='../../../serde/de/trait.EnumVisitor.html' title='serde::de::EnumVisitor'>EnumVisitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an enum value. This allows deserializers that provide a custom enumeration serialization to properly deserialize the type. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_enum">Read more</a></p>
+</div><h4 id='method.deserialize_bool' class='method'><span id='deserialize_bool.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_bool' class='fnname'>deserialize_bool</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a <code>bool</code> value.</p>
+</div><h4 id='method.deserialize_usize' class='method'><span id='deserialize_usize.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_usize' class='fnname'>deserialize_usize</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an <code>usize</code> value. A reasonable default is to forward to <code>deserialize_u64</code>. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_usize">Read more</a></p>
+</div><h4 id='method.deserialize_u8' class='method'><span id='deserialize_u8.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_u8' class='fnname'>deserialize_u8</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an <code>u8</code> value. A reasonable default is to forward to <code>deserialize_u64</code>. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_u8">Read more</a></p>
+</div><h4 id='method.deserialize_u16' class='method'><span id='deserialize_u16.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_u16' class='fnname'>deserialize_u16</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an <code>u16</code> value. A reasonable default is to forward to <code>deserialize_u64</code>. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_u16">Read more</a></p>
+</div><h4 id='method.deserialize_u32' class='method'><span id='deserialize_u32.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_u32' class='fnname'>deserialize_u32</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an <code>u32</code> value. A reasonable default is to forward to <code>deserialize_u64</code>. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_u32">Read more</a></p>
+</div><h4 id='method.deserialize_u64' class='method'><span id='deserialize_u64.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_u64' class='fnname'>deserialize_u64</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an <code>u64</code> value.</p>
+</div><h4 id='method.deserialize_isize' class='method'><span id='deserialize_isize.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_isize' class='fnname'>deserialize_isize</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an <code>isize</code> value. A reasonable default is to forward to <code>deserialize_i64</code>. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_isize">Read more</a></p>
+</div><h4 id='method.deserialize_i8' class='method'><span id='deserialize_i8.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_i8' class='fnname'>deserialize_i8</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an <code>i8</code> value. A reasonable default is to forward to <code>deserialize_i64</code>. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_i8">Read more</a></p>
+</div><h4 id='method.deserialize_i16' class='method'><span id='deserialize_i16.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_i16' class='fnname'>deserialize_i16</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an <code>i16</code> value. A reasonable default is to forward to <code>deserialize_i64</code>. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_i16">Read more</a></p>
+</div><h4 id='method.deserialize_i32' class='method'><span id='deserialize_i32.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_i32' class='fnname'>deserialize_i32</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an <code>i32</code> value. A reasonable default is to forward to <code>deserialize_i64</code>. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_i32">Read more</a></p>
+</div><h4 id='method.deserialize_i64' class='method'><span id='deserialize_i64.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_i64' class='fnname'>deserialize_i64</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an <code>i64</code> value.</p>
+</div><h4 id='method.deserialize_f32' class='method'><span id='deserialize_f32.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_f32' class='fnname'>deserialize_f32</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a <code>f32</code> value. A reasonable default is to forward to <code>deserialize_f64</code>. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_f32">Read more</a></p>
+</div><h4 id='method.deserialize_f64' class='method'><span id='deserialize_f64.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_f64' class='fnname'>deserialize_f64</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a <code>f64</code> value.</p>
+</div><h4 id='method.deserialize_char' class='method'><span id='deserialize_char.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_char' class='fnname'>deserialize_char</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a <code>char</code> value.</p>
+</div><h4 id='method.deserialize_str' class='method'><span id='deserialize_str.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_str' class='fnname'>deserialize_str</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a <code>&amp;str</code> value.</p>
+</div><h4 id='method.deserialize_string' class='method'><span id='deserialize_string.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_string' class='fnname'>deserialize_string</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a <code>String</code> value.</p>
+</div><h4 id='method.deserialize_unit' class='method'><span id='deserialize_unit.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_unit' class='fnname'>deserialize_unit</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an <code>unit</code> value.</p>
+</div><h4 id='method.deserialize_option' class='method'><span id='deserialize_option.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_option' class='fnname'>deserialize_option</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting an <code>Option</code> value. This allows deserializers that encode an optional value as a nullable value to convert the null value into a <code>None</code>, and a regular value as <code>Some(value)</code>. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_option">Read more</a></p>
+</div><h4 id='method.deserialize_seq' class='method'><span id='deserialize_seq.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_seq' class='fnname'>deserialize_seq</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a sequence value. This allows deserializers to parse sequences that aren&#39;t tagged as sequences. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_seq">Read more</a></p>
+</div><h4 id='method.deserialize_seq_fixed_size' class='method'><span id='deserialize_seq_fixed_size.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_seq_fixed_size' class='fnname'>deserialize_seq_fixed_size</a>&lt;__V&gt;(&amp;mut self, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a fixed size array. This allows deserializers to parse arrays that aren&#39;t tagged as arrays. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_seq_fixed_size">Read more</a></p>
+</div><h4 id='method.deserialize_bytes' class='method'><span id='deserialize_bytes.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_bytes' class='fnname'>deserialize_bytes</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a <code>Vec&lt;u8&gt;</code>. This allows deserializers that provide a custom byte vector serialization to properly deserialize the type. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_bytes">Read more</a></p>
+</div><h4 id='method.deserialize_map' class='method'><span id='deserialize_map.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_map' class='fnname'>deserialize_map</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a map of values. This allows deserializers to parse sequences that aren&#39;t tagged as maps. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_map">Read more</a></p>
+</div><h4 id='method.deserialize_unit_struct' class='method'><span id='deserialize_unit_struct.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_unit_struct' class='fnname'>deserialize_unit_struct</a>&lt;__V&gt;(&amp;mut self, _: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a unit struct. This allows deserializers to a unit struct that aren&#39;t tagged as a unit struct. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_unit_struct">Read more</a></p>
+</div><h4 id='method.deserialize_newtype_struct' class='method'><span id='deserialize_newtype_struct.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_newtype_struct' class='fnname'>deserialize_newtype_struct</a>&lt;__V&gt;(&amp;mut self, _: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a newtype struct. This allows deserializers to a newtype struct that aren&#39;t tagged as a newtype struct. A reasonable default is to simply deserialize the expected value directly. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_newtype_struct">Read more</a></p>
+</div><h4 id='method.deserialize_tuple_struct' class='method'><span id='deserialize_tuple_struct.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_tuple_struct' class='fnname'>deserialize_tuple_struct</a>&lt;__V&gt;(&amp;mut self, _: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a tuple struct. This allows deserializers to parse sequences that aren&#39;t tagged as sequences. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_tuple_struct">Read more</a></p>
+</div><h4 id='method.deserialize_struct' class='method'><span id='deserialize_struct.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_struct' class='fnname'>deserialize_struct</a>&lt;__V&gt;(&amp;mut self, _: &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'static [</a>&amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a struct. This allows deserializers to parse sequences that aren&#39;t tagged as maps. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_struct">Read more</a></p>
+</div><h4 id='method.deserialize_struct_field' class='method'><span id='deserialize_struct_field.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_struct_field' class='fnname'>deserialize_struct_field</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting some sort of struct field name.  This allows deserializers to choose between &amp;str, usize, or &amp;[u8] to properly deserialize a struct field. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_struct_field">Read more</a></p>
+</div><h4 id='method.deserialize_tuple' class='method'><span id='deserialize_tuple.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_tuple' class='fnname'>deserialize_tuple</a>&lt;__V&gt;(&amp;mut self, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type is expecting a tuple value. This allows deserializers that provide a custom tuple serialization to properly deserialize the type. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_tuple">Read more</a></p>
+</div><h4 id='method.deserialize_ignored_any' class='method'><span id='deserialize_ignored_any.v' class='invisible'><code>fn <a href='../../../serde/de/trait.Deserializer.html#tymethod.deserialize_ignored_any' class='fnname'>deserialize_ignored_any</a>&lt;__V&gt;(&amp;mut self, visitor: __V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;__V::Value,&nbsp;Self::Error&gt; <span class='where'>where __V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p>This method hints that the <code>Deserialize</code> type needs to deserialize a value whose type doesn&#39;t matter because it is ignored. <a href="../../../serde/de/trait.Deserializer.html#tymethod.deserialize_ignored_any">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a,&nbsp;E&gt; <a class='trait' href='../../../serde/de/trait.VariantVisitor.html' title='serde::de::VariantVisitor'>VariantVisitor</a> for <a class='struct' href='../../../serde/de/value/struct.CowStrDeserializer.html' title='serde::de::value::CowStrDeserializer'>CowStrDeserializer</a>&lt;'a,&nbsp;E&gt; <span class='where'>where E: <a class='trait' href='../../../serde/de/trait.Error.html' title='serde::de::Error'>Error</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-8673' class='srclink' href='../../../src/serde/de/value.rs.html#478-515' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Error-1' class='type'><span id='Error.t-1' class='invisible'><code>type <a href='../../../serde/de/trait.VariantVisitor.html#associatedtype.Error' class='type'>Error</a> = E</code></span></h4>
+<div class='docblock'><p>The error type that can be returned if some error occurs during deserialization.</p>
+</div><h4 id='method.visit_variant' class='method'><span id='visit_variant.v' class='invisible'><code>fn <a href='../../../serde/de/trait.VariantVisitor.html#tymethod.visit_variant' class='fnname'>visit_variant</a>&lt;T&gt;(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;T,&nbsp;Self::Error&gt; <span class='where'>where T: <a class='trait' href='../../../serde/de/trait.Deserialize.html' title='serde::de::Deserialize'>Deserialize</a></span></code></span></h4>
+<div class='docblock'><p><code>visit_variant</code> is called to identify which variant to deserialize.</p>
+</div><h4 id='method.visit_unit' class='method'><span id='visit_unit.v' class='invisible'><code>fn <a href='../../../serde/de/trait.VariantVisitor.html#method.visit_unit' class='fnname'>visit_unit</a>(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>,&nbsp;Self::Error&gt;</code></span></h4>
+<div class='docblock'><p><code>visit_unit</code> is called when deserializing a variant with no values.</p>
+</div><h4 id='method.visit_newtype' class='method'><span id='visit_newtype.v' class='invisible'><code>fn <a href='../../../serde/de/trait.VariantVisitor.html#tymethod.visit_newtype' class='fnname'>visit_newtype</a>&lt;T&gt;(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;T,&nbsp;Self::Error&gt; <span class='where'>where T: <a class='trait' href='../../../serde/de/trait.Deserialize.html' title='serde::de::Deserialize'>Deserialize</a></span></code></span></h4>
+<div class='docblock'><p><code>visit_newtype</code> is called when deserializing a variant with a single value. A good default is often to use the <code>visit_tuple</code> method to deserialize a <code>(value,)</code>. <a href="../../../serde/de/trait.VariantVisitor.html#tymethod.visit_newtype">Read more</a></p>
+</div><h4 id='method.visit_tuple' class='method'><span id='visit_tuple.v' class='invisible'><code>fn <a href='../../../serde/de/trait.VariantVisitor.html#tymethod.visit_tuple' class='fnname'>visit_tuple</a>&lt;V&gt;(&amp;mut self, _len: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, _visitor: V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;V::Value,&nbsp;Self::Error&gt; <span class='where'>where V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p><code>visit_tuple</code> is called when deserializing a tuple-like variant. If no tuple variants are expected, yield a <code>Err(serde::de::Error::invalid_type(serde::de::Type::TupleVariant))</code> <a href="../../../serde/de/trait.VariantVisitor.html#tymethod.visit_tuple">Read more</a></p>
+</div><h4 id='method.visit_struct' class='method'><span id='visit_struct.v' class='invisible'><code>fn <a href='../../../serde/de/trait.VariantVisitor.html#tymethod.visit_struct' class='fnname'>visit_struct</a>&lt;V&gt;(&amp;mut self, _fields: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'static [</a>&amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, _visitor: V) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;V::Value,&nbsp;Self::Error&gt; <span class='where'>where V: <a class='trait' href='../../../serde/de/trait.Visitor.html' title='serde::de::Visitor'>Visitor</a></span></code></span></h4>
+<div class='docblock'><p><code>visit_struct</code> is called when deserializing a struct-like variant. If no struct variants are expected, yield a <code>Err(serde::de::Error::invalid_type(serde::de::Type::StructVariant))</code> <a href="../../../serde/de/trait.VariantVisitor.html#tymethod.visit_struct">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "serde";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

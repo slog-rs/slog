@@ -47,13 +47,13 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1731' class='srclink' href='../../src/serde_json/value.rs.html#1071-1077' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn to_value&lt;T:&nbsp;?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt;(value: &amp;T) -&gt; <a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a> <span class='where'>where T: <a class='trait' href='../../serde/ser/trait.Serialize.html' title='serde::ser::Serialize'>Serialize</a></span></pre><div class='docblock'><p>Shortcut function to encode a <code>T</code> into a JSON <code>Value</code></p>
+               </span><a id='src-2868' class='srclink' href='../../src/serde_json/value.rs.html#1307-1313' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn to_value&lt;T&gt;(value: T) -&gt; <a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a> <span class='where'>where T: <a class='trait' href='../../serde/ser/trait.Serialize.html' title='serde::ser::Serialize'>Serialize</a></span></pre><div class='docblock'><p>Shortcut function to encode a <code>T</code> into a JSON <code>Value</code></p>
 
 <pre class='rust rust-example-rendered'>
 <span class='kw'>use</span> <span class='ident'>serde_json</span>::<span class='ident'>to_value</span>;
 <span class='kw'>let</span> <span class='ident'>val</span> <span class='op'>=</span> <span class='ident'>to_value</span>(<span class='string'>&quot;foo&quot;</span>);
-<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>val</span>.<span class='ident'>as_string</span>(), <span class='prelude-val'>Some</span>(<span class='string'>&quot;foo&quot;</span>))<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>val</span>.<span class='ident'>as_str</span>(), <span class='prelude-val'>Some</span>(<span class='string'>&quot;foo&quot;</span>))<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div></section>
     <section id='search' class="content hidden"></section>
 

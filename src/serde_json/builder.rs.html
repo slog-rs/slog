@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.7.4/src/builder.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.8.2/src/builder.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>builder.rs.html -- source</title>
@@ -172,6 +172,7 @@
 <span id="128">128</span>
 <span id="129">129</span>
 <span id="130">130</span>
+<span id="131">131</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -205,14 +206,15 @@
 <span class='doccomment'>//!                 builder.insert(&quot;x&quot;, 3).insert(&quot;y&quot;, 4)</span>
 <span class='doccomment'>//!             })</span>
 <span class='doccomment'>//!     })</span>
-<span class='doccomment'>//!     .unwrap();</span>
+<span class='doccomment'>//!     .build();</span>
 <span class='doccomment'>//! ```</span>
 
 <span class='kw'>use</span> <span class='ident'>serde</span>::<span class='ident'>ser</span>;
 
-<span class='kw'>use</span> <span class='ident'>value</span>::{<span class='self'>self</span>, <span class='ident'>Value</span>, <span class='ident'>Map</span>};
+<span class='kw'>use</span> <span class='ident'>value</span>::{<span class='self'>self</span>, <span class='ident'>Map</span>, <span class='ident'>Value</span>};
 
 <span class='doccomment'>/// This structure provides a simple interface for constructing a JSON array.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Default</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ArrayBuilder</span> {
     <span class='ident'>array</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Value</span><span class='op'>&gt;</span>,
 }
@@ -220,11 +222,11 @@
 <span class='kw'>impl</span> <span class='ident'>ArrayBuilder</span> {
     <span class='doccomment'>/// Construct an `ObjectBuilder`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>ArrayBuilder</span> {
-        <span class='ident'>ArrayBuilder</span> { <span class='ident'>array</span>: <span class='ident'>Vec</span>::<span class='ident'>new</span>() }
+        <span class='ident'>ArrayBuilder</span>::<span class='ident'>default</span>()
     }
 
     <span class='doccomment'>/// Return the constructed `Value`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>unwrap</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Value</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Value</span> {
         <span class='ident'>Value</span>::<span class='ident'>Array</span>(<span class='self'>self</span>.<span class='ident'>array</span>)
     }
 
@@ -236,39 +238,39 @@
 
     <span class='doccomment'>/// Creates and passes an `ArrayBuilder` into a closure, then inserts the resulting array into</span>
     <span class='doccomment'>/// this array.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>push_array</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>ArrayBuilder</span> <span class='kw'>where</span>
-        <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='ident'>ArrayBuilder</span>) <span class='op'>-&gt;</span> <span class='ident'>ArrayBuilder</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>push_array</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>ArrayBuilder</span>
+        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='ident'>ArrayBuilder</span>) <span class='op'>-&gt;</span> <span class='ident'>ArrayBuilder</span>,
     {
         <span class='kw'>let</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>ArrayBuilder</span>::<span class='ident'>new</span>();
-        <span class='self'>self</span>.<span class='ident'>array</span>.<span class='ident'>push</span>(<span class='ident'>f</span>(<span class='ident'>builder</span>).<span class='ident'>unwrap</span>());
+        <span class='self'>self</span>.<span class='ident'>array</span>.<span class='ident'>push</span>(<span class='ident'>f</span>(<span class='ident'>builder</span>).<span class='ident'>build</span>());
         <span class='self'>self</span>
     }
 
     <span class='doccomment'>/// Creates and passes an `ArrayBuilder` into a closure, then inserts the resulting object into</span>
     <span class='doccomment'>/// this array.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>push_object</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>ArrayBuilder</span> <span class='kw'>where</span>
-        <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='ident'>ObjectBuilder</span>) <span class='op'>-&gt;</span> <span class='ident'>ObjectBuilder</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>push_object</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>ArrayBuilder</span>
+        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='ident'>ObjectBuilder</span>) <span class='op'>-&gt;</span> <span class='ident'>ObjectBuilder</span>,
     {
         <span class='kw'>let</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>ObjectBuilder</span>::<span class='ident'>new</span>();
-        <span class='self'>self</span>.<span class='ident'>array</span>.<span class='ident'>push</span>(<span class='ident'>f</span>(<span class='ident'>builder</span>).<span class='ident'>unwrap</span>());
+        <span class='self'>self</span>.<span class='ident'>array</span>.<span class='ident'>push</span>(<span class='ident'>f</span>(<span class='ident'>builder</span>).<span class='ident'>build</span>());
         <span class='self'>self</span>
     }
 }
 
 <span class='doccomment'>/// This structure provides a simple interface for constructing a JSON object.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Default</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ObjectBuilder</span> {
     <span class='ident'>object</span>: <span class='ident'>Map</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>Value</span><span class='op'>&gt;</span>,
 }
 
 <span class='kw'>impl</span> <span class='ident'>ObjectBuilder</span> {
-
     <span class='doccomment'>/// Construct an `ObjectBuilder`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>ObjectBuilder</span> {
-        <span class='ident'>ObjectBuilder</span> { <span class='ident'>object</span>: <span class='ident'>Map</span>::<span class='ident'>new</span>() }
+        <span class='ident'>ObjectBuilder</span>::<span class='ident'>default</span>()
     }
 
     <span class='doccomment'>/// Return the constructed `Value`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>unwrap</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Value</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Value</span> {
         <span class='ident'>Value</span>::<span class='ident'>Object</span>(<span class='self'>self</span>.<span class='ident'>object</span>)
     }
 
@@ -285,10 +287,10 @@
     <span class='doccomment'>/// this object.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert_array</span><span class='op'>&lt;</span><span class='ident'>S</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>S</span>, <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>ObjectBuilder</span>
         <span class='kw'>where</span> <span class='ident'>S</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
-              <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='ident'>ArrayBuilder</span>) <span class='op'>-&gt;</span> <span class='ident'>ArrayBuilder</span>
+              <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='ident'>ArrayBuilder</span>) <span class='op'>-&gt;</span> <span class='ident'>ArrayBuilder</span>,
     {
         <span class='kw'>let</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>ArrayBuilder</span>::<span class='ident'>new</span>();
-        <span class='self'>self</span>.<span class='ident'>object</span>.<span class='ident'>insert</span>(<span class='ident'>key</span>.<span class='ident'>into</span>(), <span class='ident'>f</span>(<span class='ident'>builder</span>).<span class='ident'>unwrap</span>());
+        <span class='self'>self</span>.<span class='ident'>object</span>.<span class='ident'>insert</span>(<span class='ident'>key</span>.<span class='ident'>into</span>(), <span class='ident'>f</span>(<span class='ident'>builder</span>).<span class='ident'>build</span>());
         <span class='self'>self</span>
     }
 
@@ -296,10 +298,10 @@
     <span class='doccomment'>/// this object.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert_object</span><span class='op'>&lt;</span><span class='ident'>S</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='ident'>S</span>, <span class='ident'>f</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='ident'>ObjectBuilder</span>
         <span class='kw'>where</span> <span class='ident'>S</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
-              <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='ident'>ObjectBuilder</span>) <span class='op'>-&gt;</span> <span class='ident'>ObjectBuilder</span>
+              <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='ident'>ObjectBuilder</span>) <span class='op'>-&gt;</span> <span class='ident'>ObjectBuilder</span>,
     {
         <span class='kw'>let</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='ident'>ObjectBuilder</span>::<span class='ident'>new</span>();
-        <span class='self'>self</span>.<span class='ident'>object</span>.<span class='ident'>insert</span>(<span class='ident'>key</span>.<span class='ident'>into</span>(), <span class='ident'>f</span>(<span class='ident'>builder</span>).<span class='ident'>unwrap</span>());
+        <span class='self'>self</span>.<span class='ident'>object</span>.<span class='ident'>insert</span>(<span class='ident'>key</span>.<span class='ident'>into</span>(), <span class='ident'>f</span>(<span class='ident'>builder</span>).<span class='ident'>build</span>());
         <span class='self'>self</span>
     }
 }

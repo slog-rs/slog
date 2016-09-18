@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `forward_to_deserialize` macro in crate `serde`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, forward_to_deserialize">
+
+    <title>serde::forward_to_deserialize - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>serde</a></p><script>window.sidebarCurrent = {name: 'forward_to_deserialize', ty: 'macro', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content macro">
+<h1 class='fqn'><span class='in-band'>Macro <a href='index.html'>serde</a>::<wbr><a class='macro' href=''>forward_to_deserialize</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-12711' class='srclink' href='../src/serde/macros.rs.html#175-179' title='goto source code'>[src]</a></span></h1>
+<pre class='rust macro'>
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>forward_to_deserialize</span> {
+    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>func</span>:<span class='ident'>ident</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
+}</pre>
+<div class='docblock'><p>Helper to forward <code>Deserializer</code> methods to <code>Deserializer::deserialize</code>.
+Every given method ignores all arguments and forwards to <code>deserialize</code>.
+Note that <code>deserialize_enum</code> simply returns an <code>Error::invalid_type</code>; a
+better approach is tracked in <a href="https://github.com/serde-rs/serde/issues/521">serde-rs/serde#521</a>.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>impl</span> <span class='ident'>Deserializer</span> <span class='kw'>for</span> <span class='ident'>MyDeserializer</span> {
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>
+    {
+        <span class='comment'>/* ... */</span>
+    }
+
+    <span class='macro'>forward_to_deserialize</span><span class='macro'>!</span> {
+        <span class='ident'>bool</span> <span class='ident'>usize</span> <span class='ident'>u8</span> <span class='ident'>u16</span> <span class='ident'>u32</span> <span class='ident'>u64</span> <span class='ident'>isize</span> <span class='ident'>i8</span> <span class='ident'>i16</span> <span class='ident'>i32</span> <span class='ident'>i64</span> <span class='ident'>f32</span> <span class='ident'>f64</span> <span class='ident'>char</span> <span class='ident'>str</span> <span class='ident'>string</span>
+        <span class='ident'>unit</span> <span class='ident'>option</span> <span class='ident'>seq</span> <span class='ident'>seq_fixed_size</span> <span class='ident'>bytes</span> <span class='ident'>map</span> <span class='ident'>unit_struct</span> <span class='ident'>newtype_struct</span>
+        <span class='ident'>tuple_struct</span> <span class='kw'>struct</span> <span class='ident'>struct_field</span> <span class='ident'>tuple</span> <span class='kw'>enum</span> <span class='ident'>ignored_any</span>
+    }
+}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "serde";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

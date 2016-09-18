@@ -110,6 +110,11 @@
 <span id="66">66</span>
 <span id="67">67</span>
 <span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Slog atomic switching drain</span>
 <span class='doccomment'>//!</span>
@@ -170,6 +175,11 @@
     <span class='doccomment'>/// Swap the existing drain with a new one</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>swap</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>drain</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>Drain</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>set</span>(<span class='ident'>drain</span>)
+    }
+
+    <span class='doccomment'>/// Get a drain controlled by this `AtomicSwitchCtrl`</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>drain</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>AtomicSwitch</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span> {
+        <span class='ident'>AtomicSwitch</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>())
     }
 }
 

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.7.4/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.8.2/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -194,6 +194,19 @@
 <span id="150">150</span>
 <span id="151">151</span>
 <span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! JSON and serialization</span>
 <span class='doccomment'>//!</span>
@@ -238,7 +251,7 @@
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! If we assume that FirstName is optional and all other fields are mandatory, the above JSON could</span>
+<span class='doccomment'>//! If we assume that `FirstName` is optional and all other fields are mandatory, the above JSON could</span>
 <span class='doccomment'>//! correspond to the following Rust structs:</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```ignore</span>
@@ -312,41 +325,54 @@
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//! ```</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;nightly-testing&quot;</span>, <span class='ident'>plugin</span>(<span class='ident'>clippy</span>))]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;clippy&quot;</span>, <span class='ident'>feature</span>(<span class='ident'>plugin</span>))]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;clippy&quot;</span>, <span class='ident'>plugin</span>(<span class='ident'>clippy</span>))]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;clippy&quot;</span>, <span class='ident'>deny</span>(<span class='ident'>clippy</span>, <span class='ident'>clippy_pedantic</span>))]</span>
+<span class='comment'>// Because of &quot;JavaScript&quot;... fixed in Manishearth/rust-clippy#1071</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;clippy&quot;</span>, <span class='ident'>allow</span>(<span class='ident'>doc_markdown</span>))]</span>
+<span class='comment'>// Whitelisted clippy_pedantic lints</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;clippy&quot;</span>, <span class='ident'>allow</span>(
+<span class='comment'>// integer and float ser/de requires these sorts of casts</span>
+    <span class='ident'>cast_possible_truncation</span>,
+    <span class='ident'>cast_possible_wrap</span>,
+    <span class='ident'>cast_precision_loss</span>,
+    <span class='ident'>cast_sign_loss</span>,
+<span class='comment'>// string ser/de uses indexing and slicing</span>
+    <span class='ident'>indexing_slicing</span>,
+<span class='comment'>// things are often more readable this way</span>
+    <span class='ident'>shadow_reuse</span>,
+    <span class='ident'>shadow_unrelated</span>,
+    <span class='ident'>single_match_else</span>,
+    <span class='ident'>stutter</span>,
+<span class='comment'>// not practical</span>
+    <span class='ident'>missing_docs_in_private_items</span>,
+))]</span>
+
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>deny</span>(<span class='ident'>missing_docs</span>)]</span>
+
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>num_traits</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>core</span>;
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>itoa</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>dtoa</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;preserve_order&quot;</span>)]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>linked_hash_map</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>de</span>::{
-    <span class='ident'>Deserializer</span>,
-    <span class='ident'>StreamDeserializer</span>,
-    <span class='ident'>from_iter</span>,
-    <span class='ident'>from_reader</span>,
-    <span class='ident'>from_slice</span>,
-    <span class='ident'>from_str</span>,
-};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>de</span>::{<span class='ident'>Deserializer</span>, <span class='ident'>StreamDeserializer</span>, <span class='ident'>from_iter</span>, <span class='ident'>from_reader</span>,
+                   <span class='ident'>from_slice</span>, <span class='ident'>from_str</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>error</span>::{<span class='ident'>Error</span>, <span class='ident'>ErrorCode</span>, <span class='prelude-ty'>Result</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ser</span>::{
-    <span class='ident'>Serializer</span>,
-    <span class='ident'>to_writer</span>,
-    <span class='ident'>to_writer_pretty</span>,
-    <span class='ident'>to_vec</span>,
-    <span class='ident'>to_vec_pretty</span>,
-    <span class='ident'>to_string</span>,
-    <span class='ident'>to_string_pretty</span>,
-    <span class='ident'>escape_str</span>,
-};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>value</span>::{<span class='ident'>Value</span>, <span class='ident'>Map</span>, <span class='ident'>to_value</span>, <span class='ident'>from_value</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ser</span>::{<span class='ident'>Serializer</span>, <span class='ident'>escape_str</span>, <span class='ident'>to_string</span>, <span class='ident'>to_string_pretty</span>,
+                    <span class='ident'>to_vec</span>, <span class='ident'>to_vec_pretty</span>, <span class='ident'>to_writer</span>, <span class='ident'>to_writer_pretty</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>value</span>::{<span class='ident'>Map</span>, <span class='ident'>Value</span>, <span class='ident'>from_value</span>, <span class='ident'>to_value</span>};
 
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>builder</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>de</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>error</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>ser</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>value</span>;
+
+<span class='kw'>mod</span> <span class='ident'>read</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

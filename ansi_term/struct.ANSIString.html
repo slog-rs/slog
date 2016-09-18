@@ -1042,13 +1042,35 @@ replaces them with the replacement string slice.</p>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;this is old&quot;</span>;
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s</span>, <span class='ident'>s</span>.<span class='ident'>replace</span>(<span class='string'>&quot;cookie monster&quot;</span>, <span class='string'>&quot;little lamb&quot;</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h4 id='method.replacen' class='method'><span id='replacen.v' class='invisible'><code>fn <a href='#method.replacen' class='fnname'>replacen</a>&lt;'a,&nbsp;P&gt;(&amp;'a self, pat: P, to: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, count: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a> <span class='where'>where P: <a class='trait' href='https://doc.rust-lang.org/nightly/core/str/pattern/trait.Pattern.html' title='core::str::pattern::Pattern'>Pattern</a>&lt;'a&gt;</span></code></span></h4>
+<div class='stability'><em class='stab unstable'>Unstable (<code>str_replacen</code>)<p>: only need to replace first N matches</p>
+</em></div><div class='docblock'><p>Replaces first N matches of a pattern with another string.</p>
+
+<p><code>replacen</code> creates a new <a href="string/struct.String.html"><code>String</code></a>, and copies the data from this string slice into it.
+While doing so, it attempts to find matches of a pattern. If it finds any, it
+replaces them with the replacement string slice at most <code>N</code> times.</p>
+
+<h1 id='examples-35' class='section-header'><a href='#examples-35'>Examples</a></h1>
+<p>Basic usage:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;foo foo 123 foo&quot;</span>;
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;new new 123 foo&quot;</span>, <span class='ident'>s</span>.<span class='ident'>replacen</span>(<span class='string'>&quot;foo&quot;</span>, <span class='string'>&quot;new&quot;</span>, <span class='number'>2</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;faa fao 123 foo&quot;</span>, <span class='ident'>s</span>.<span class='ident'>replacen</span>(<span class='string'>&#39;o&#39;</span>, <span class='string'>&quot;a&quot;</span>, <span class='number'>3</span>));
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='string'>&quot;foo foo new23 foo&quot;</span>, <span class='ident'>s</span>.<span class='ident'>replacen</span>(<span class='ident'>char</span>::<span class='ident'>is_numeric</span>, <span class='string'>&quot;new&quot;</span>, <span class='number'>1</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+
+<p>When the pattern doesn&#39;t match:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;this is old&quot;</span>;
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>s</span>, <span class='ident'>s</span>.<span class='ident'>replacen</span>(<span class='string'>&quot;cookie monster&quot;</span>, <span class='string'>&quot;little lamb&quot;</span>, <span class='number'>10</span>));<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div><h4 id='method.to_lowercase' class='method'><span id='to_lowercase.v' class='invisible'><code>fn <a href='#method.to_lowercase' class='fnname'>to_lowercase</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code><div class='since' title='Stable since Rust version 1.2.0'>1.2.0</div></span></h4>
 <div class='docblock'><p>Returns the lowercase equivalent of this string slice, as a new <a href="string/struct.String.html"><code>String</code></a>.</p>
 
 <p>&#39;Lowercase&#39; is defined according to the terms of the Unicode Derived Core Property
 <code>Lowercase</code>.</p>
 
-<h1 id='examples-35' class='section-header'><a href='#examples-35'>Examples</a></h1>
+<h1 id='examples-36' class='section-header'><a href='#examples-36'>Examples</a></h1>
 <p>Basic usage:</p>
 
 <pre class='rust rust-example-rendered'>
@@ -1080,7 +1102,7 @@ replaces them with the replacement string slice.</p>
 <p>&#39;Uppercase&#39; is defined according to the terms of the Unicode Derived Core Property
 <code>Uppercase</code>.</p>
 
-<h1 id='examples-36' class='section-header'><a href='#examples-36'>Examples</a></h1>
+<h1 id='examples-37' class='section-header'><a href='#examples-37'>Examples</a></h1>
 <p>Basic usage:</p>
 
 <pre class='rust rust-example-rendered'>
@@ -1106,7 +1128,7 @@ replaces them with the replacement string slice.</p>
 </div><h4 id='method.into_string' class='method'><span id='into_string.v' class='invisible'><code>fn <a href='#method.into_string' class='fnname'>into_string</a>(self: <a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code><div class='since' title='Stable since Rust version 1.4.0'>1.4.0</div></span></h4>
 <div class='docblock'><p>Converts a <code>Box&lt;str&gt;</code> into a <a href="string/struct.String.html"><code>String</code></a> without copying or allocating.</p>
 
-<h1 id='examples-37' class='section-header'><a href='#examples-37'>Examples</a></h1>
+<h1 id='examples-38' class='section-header'><a href='#examples-38'>Examples</a></h1>
 <p>Basic usage:</p>
 
 <pre class='rust rust-example-rendered'>

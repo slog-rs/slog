@@ -127,8 +127,8 @@ handlers to change logging level or logging destinations. See
 </ul>
 
 <h2 id='notable-details' class='section-header'><a href='#notable-details'>Notable details</a></h2>
-<p><code>slog</code> by default removed at compile time trace and debug level records
-for release builds, and trace level records for debug builds. This makes
+<p><code>slog</code> by default removes at compile time trace and debug level statements
+in release builds, and trace level records in debug builds. This makes
 <code>trace</code> and <code>debug</code> level logging records practically free, which should
 encourage using them freely. If you want to enable trace/debug messages
 or raise the compile time logging level limit, use the following in your

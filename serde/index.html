@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/serde/lib.rs.html#1-55' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/serde/lib.rs.html#1-58' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Serde Serialization Framework</p>
 
 <p>Serde is a powerful framework that enables serialization libraries to generically serialize
@@ -87,6 +87,17 @@ type.</p>
                                   title='serde::ser'>ser</a></td>
                            <td class='docblock-short'>
                                 <p>Generic serialization framework.</p>
+                           </td>
+                       </tr></table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.forward_to_deserialize.html'
+                                  title='serde::forward_to_deserialize'>forward_to_deserialize</a></td>
+                           <td class='docblock-short'>
+                                <p>Helper to forward <code>Deserializer</code> methods to <code>Deserializer::deserialize</code>.
+Every given method ignores all arguments and forwards to <code>deserialize</code>.
+Note that <code>deserialize_enum</code> simply returns an <code>Error::invalid_type</code>; a
+better approach is tracked in <a href="https://github.com/serde-rs/serde/issues/521">serde-rs/serde#521</a>.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
