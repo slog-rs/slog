@@ -52,8 +52,7 @@
 //! * **lazy evaluation** and **asynchronous IO** included. Waiting to
 //!   finish writing logging information to disk, or spending time calculating
 //!   data that will be thrown away at the current logging level, are sources of big
-//!   performance waste. Use [`AsyncStreamer`][async-streamer] drain, and closures
-//!   to make your logging fast.
+//!   performance waste. Use `AsyncStreamer` drain, and closures to make your logging fast.
 //! * **run-time configuration** - [`AtomicSwitch`][atomic-switch] drain allows
 //!   changing logging behavior in the running program. You could use eg. signal
 //!   handlers to change logging level or logging destinations. See

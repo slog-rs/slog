@@ -270,7 +270,7 @@ impl<D: Drain> Drain for Fuse<D> where D::Error : fmt::Display {
 }
 
 
-/// Drain ignoring errors
+/// `Drain` ignoring errors
 ///
 /// `Logger` requires a root drain to handle all errors (`Drain::Error == ()`),
 /// `IgnoreErr` will ignore all errors of the drain it wraps.
