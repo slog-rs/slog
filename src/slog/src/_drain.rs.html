@@ -454,10 +454,10 @@
     }
 }
 
-<span class='doccomment'>/// Drain filtering records</span>
+<span class='doccomment'>/// `Drain` filtering records</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// Wraps a `Drain` and passes `Record`-s to it, only if they satisifies a</span>
-<span class='doccomment'>/// condition `cond`.</span>
+<span class='doccomment'>/// Wraps another `Drain` and passes `Record`s to it, only if they satisfy a</span>
+<span class='doccomment'>/// given condition.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Filter</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Drain</span><span class='op'>&gt;</span> {
     <span class='ident'>drain</span>: <span class='ident'>D</span>,
     <span class='comment'>// eliminated dynamic dispatch, after rust learns `-&gt; impl Trait`</span>
@@ -519,7 +519,7 @@
 }
 
 
-<span class='doccomment'>/// Record log level filter</span>
+<span class='doccomment'>/// `Drain` filtering records by `Record` logging level</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Wraps a drain and passes records to it, only</span>
 <span class='doccomment'>/// if their level is at least given level.</span>
