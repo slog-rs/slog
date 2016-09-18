@@ -11,9 +11,7 @@
 /// freely passed around the code.
 #[derive(Clone)]
 pub struct Logger {
-    //TODO:
-    //drain: Arc<Drain<Error=!>>,
-    drain: Arc<Drain<Error=()>>,
+    drain: Arc<Drain<Error=Never>>,
     values: Arc<OwnedKeyValueList>,
 }
 
@@ -39,7 +37,7 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
-    pub fn root<D: 'static + Drain<Error=()> + Sized>(d: D, values: Vec<OwnedKeyValue>) -> Logger {
+    pub fn root<D: 'static + Drain<Error=Never> + Sized>(d: D, values: Vec<OwnedKeyValue>) -> Logger {
         Logger {
             drain: Arc::new(d),
             values: Arc::new(OwnedKeyValueList::root(values)),

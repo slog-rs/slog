@@ -69,8 +69,8 @@ impl<D : Drain> DrainExt for D {}
 pub struct Discard;
 
 impl Drain for Discard {
-    type Error = ();
-    fn log(&self, _: &Record, _: &OwnedKeyValueList) -> result::Result<(), ()> {
+    type Error = Never;
+    fn log(&self, _: &Record, _: &OwnedKeyValueList) -> result::Result<(), Never> {
         Ok(())
     }
 }
@@ -256,11 +256,11 @@ impl<D: Drain> Fuse<D> {
 }
 
 impl<D: Drain> Drain for Fuse<D> where D::Error : fmt::Display {
-    type Error = ();
+    type Error = Never;
     fn log(&self,
            info: &Record,
            logger_values: &OwnedKeyValueList)
-        -> result::Result<(), ()> {
+        -> result::Result<(), Never> {
             Ok(
                 self.drain.log(info, logger_values).unwrap_or_else(
                     |e| panic!("Fuse: {}", e)
@@ -288,11 +288,11 @@ impl<D: Drain> IgnoreErr<D> {
 }
 
 impl<D: Drain> Drain for IgnoreErr<D> {
-    type Error = ();
+    type Error = Never;
     fn log(&self,
            info: &Record,
            logger_values: &OwnedKeyValueList)
-        -> result::Result<(), ()> {
+        -> result::Result<(), Never> {
             let _ = self.drain.log(info, logger_values);
             Ok(())
         }
