@@ -48,7 +48,9 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a id='src-663' class='srclink' href='../src/slog/src/_drain.rs.html#241-243' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Fuse&lt;D:&nbsp;<a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a>&gt; { /* fields omitted */ }</pre><div class='docblock'><p><code>Logger</code> requires a root drain to handle all errors (<code>Drain::Error == ()</code>),
+<pre class='rust struct'>pub struct Fuse&lt;D:&nbsp;<a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a>&gt; { /* fields omitted */ }</pre><div class='docblock'><p><code>Drain</code> panicking on error</p>
+
+<p><code>Logger</code> requires a root drain to handle all errors (<code>Drain::Error == ()</code>),
 <code>Fuse</code> will wrap a <code>Drain</code> and panic if it returns any errors.</p>
 
 <p>Note: <code>Drain::Error</code> must implement <code>Display</code>. It&#39;s easy to create own

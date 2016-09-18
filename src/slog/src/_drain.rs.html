@@ -614,7 +614,7 @@
 }
 
 
-<span class='comment'>// `Drain` panicking on error</span>
+<span class='doccomment'>/// `Drain` panicking on error</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// `Logger` requires a root drain to handle all errors (`Drain::Error == ()`),</span>
 <span class='doccomment'>/// `Fuse` will wrap a `Drain` and panic if it returns any errors.</span>
@@ -649,7 +649,7 @@
 }
 
 
-<span class='doccomment'>/// Error ignoring fuse</span>
+<span class='doccomment'>/// Drain ignoring errors</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// `Logger` requires a root drain to handle all errors (`Drain::Error == ()`),</span>
 <span class='doccomment'>/// `IgnoreErr` will ignore all errors of the drain it wraps.</span>
