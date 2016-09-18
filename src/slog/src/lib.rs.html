@@ -803,7 +803,7 @@
 <span class='doccomment'>/// extern crate slog;</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// fn main() {</span>
-<span class='doccomment'>///     let drain = slog::discard();</span>
+<span class='doccomment'>///     let drain = slog::Discard;</span>
 <span class='doccomment'>///     let root = slog::Logger::root(drain, o!(&quot;key1&quot; =&gt; &quot;value1&quot;, &quot;key2&quot; =&gt; &quot;value2&quot;));</span>
 <span class='doccomment'>/// }</span>
 <span class='doccomment'>/// ```</span>
@@ -838,7 +838,7 @@
 <span class='doccomment'>/// extern crate slog;</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// fn main() {</span>
-<span class='doccomment'>///     let drain = slog::discard();</span>
+<span class='doccomment'>///     let drain = slog::Discard;</span>
 <span class='doccomment'>///     let root = slog::Logger::root(drain, o!(&quot;key1&quot; =&gt; &quot;value1&quot;, &quot;key2&quot; =&gt; &quot;value2&quot;));</span>
 <span class='doccomment'>///     info!(root, &quot;test info log&quot;; &quot;log-key&quot; =&gt; true);</span>
 <span class='doccomment'>/// }</span>
@@ -851,7 +851,7 @@
 <span class='doccomment'>/// extern crate slog;</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// fn main() {</span>
-<span class='doccomment'>///     let drain = slog::discard();</span>
+<span class='doccomment'>///     let drain = slog::Discard;</span>
 <span class='doccomment'>///     let root = slog::Logger::root(drain, o!(&quot;key1&quot; =&gt; &quot;value1&quot;, &quot;key2&quot; =&gt; &quot;value2&quot;));</span>
 <span class='doccomment'>///     info!(root, &quot;test info log&quot;);</span>
 <span class='doccomment'>/// }</span>
@@ -864,7 +864,7 @@
 <span class='doccomment'>/// extern crate slog;</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// fn main() {</span>
-<span class='doccomment'>///     let drain = slog::discard();</span>
+<span class='doccomment'>///     let drain = slog::Discard;</span>
 <span class='doccomment'>///     let root = slog::Logger::root(drain, o!(&quot;key1&quot; =&gt; &quot;value1&quot;, &quot;key2&quot; =&gt; &quot;value2&quot;));</span>
 <span class='doccomment'>///     info!(root, &quot;log-key&quot; =&gt; true; &quot;formatted: {}&quot;, 1);</span>
 <span class='doccomment'>/// }</span>
@@ -877,7 +877,7 @@
 <span class='doccomment'>/// extern crate slog;</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// fn main() {</span>
-<span class='doccomment'>///     let drain = slog::discard();</span>
+<span class='doccomment'>///     let drain = slog::Discard;</span>
 <span class='doccomment'>///     let root = slog::Logger::root(drain, o!(&quot;key1&quot; =&gt; &quot;value1&quot;, &quot;key2&quot; =&gt; &quot;value2&quot;));</span>
 <span class='doccomment'>///     info!(root, &quot;formatted: {}&quot;, 1);</span>
 <span class='doccomment'>/// }</span>
