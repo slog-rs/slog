@@ -266,7 +266,7 @@ it conveniently.</p>
                            <td><a class='struct' href='struct.Discard.html'
                                   title='slog::Discard'>Discard</a></td>
                            <td class='docblock-short'>
-                                <p>Drain discarding everything</p>
+                                <p><code>Drain</code> discarding everything</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -274,13 +274,6 @@ it conveniently.</p>
                                   title='slog::Duplicate'>Duplicate</a></td>
                            <td class='docblock-short'>
                                 <p><code>Drain</code> duplicating records into two other <code>Drain</code>s</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Failover.html'
-                                  title='slog::Failover'>Failover</a></td>
-                           <td class='docblock-short'>
-                                <p>Failover drain</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -294,7 +287,8 @@ it conveniently.</p>
                            <td><a class='struct' href='struct.Fuse.html'
                                   title='slog::Fuse'>Fuse</a></td>
                            <td class='docblock-short'>
-                                <p>Panicking fuse</p>
+                                <p><code>Logger</code> requires a root drain to handle all errors (<code>Drain::Error == ()</code>),
+<code>Fuse</code> will wrap a <code>Drain</code> and panic if it returns any errors.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -411,13 +405,6 @@ it conveniently.</p>
                                   title='slog::duplicate'>duplicate</a></td>
                            <td class='docblock-short'>
                                 <p>Duplicate records to two drains</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.failover.html'
-                                  title='slog::failover'>failover</a></td>
-                           <td class='docblock-short'>
-                                <p>Failover logging to secondary drain on primary&#39;s failure</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

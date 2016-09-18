@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `slog_info` macro in crate `slog`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, slog_info">
+    <meta name="description" content="API documentation for the Rust `slog_nursery` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, slog_nursery">
 
-    <title>slog::slog_info - Rust</title>
+    <title>slog_nursery - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>slog</a></p><script>window.sidebarCurrent = {name: 'slog_info', ty: 'macro', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'slog_nursery', ty: 'mod', relpath: '../'};</script>
     </nav>
 
     <nav class="sub">
@@ -42,23 +42,33 @@
         </form>
     </nav>
 
-    <section id='main' class="content macro">
-<h1 class='fqn'><span class='in-band'>Macro <a href='index.html'>slog</a>::<wbr><a class='macro' href=''>slog_info</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>slog_nursery</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-763' class='srclink' href='../src/slog/src/lib.rs.html#436-440' title='goto source code'>[src]</a></span></h1>
-<pre class='rust macro'>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>slog_info</span> {
-    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> { ... };
-}</pre>
-<div class='docblock'><p>Log info level record (alias)</p>
+               </span><a id='src-0' class='srclink' href='../src/slog_nursery/lib.rs.html#1-55' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Nursery for slog-rs</p>
 
-<p>Prefer shorter version, unless it clashes with
-existing <code>log</code> crate macro.</p>
-
-<p>See <code>log</code> for documentation.</p>
-</div></section>
+<p>This crate is forever unstable, and contains things that
+at a given moment are useful but not final.</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Failover.html'
+                                  title='slog_nursery::Failover'>Failover</a></td>
+                           <td class='docblock-short'>
+                                <p><code>Drain</code> that switches destination of error</p>
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.failover.html'
+                                  title='slog_nursery::failover'>failover</a></td>
+                           <td class='docblock-short'>
+                                <p>Failover logging to secondary drain on primary&#39;s failure</p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -113,7 +123,7 @@ existing <code>log</code> crate macro.</p>
 
     <script>
         window.rootPath = "../";
-        window.currentCrate = "slog";
+        window.currentCrate = "slog_nursery";
         window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
