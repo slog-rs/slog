@@ -54,16 +54,6 @@ impl From<core::fmt::Error> for Error {
         Error::Other
     }
 }
-/*
-#[cfg(feature = "std")]
-impl Into<std::io::Error> for Error {
-    fn into(self) -> std::io::Error {
-        match self {
-            Error::Io(e) => e,
-            Error::Other => std::io::Error::new(std::io::ErrorKind::Other, "other error"),
-        }
-    }
-}*/
 
 #[cfg(feature = "std")]
 impl From<Error> for std::io::Error {
