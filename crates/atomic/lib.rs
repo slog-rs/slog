@@ -44,12 +44,12 @@ impl<E> AtomicSwitch<E> {
 }
 
 impl<E> AtomicSwitchCtrl<E> {
-    /// Get the current drain reference
+    /// Get Arc to the currently wrapped drain 
     pub fn get(&self) -> Arc<Box<Drain<Error=E>>> {
         self.0.get()
     }
 
-    /// Set the drain
+    /// Set the current wrapped drain
     pub fn set<D: Drain<Error=E>>(&self, drain: D) {
         let _ = self.0.set(Arc::new(Box::new(drain)));
     }
@@ -59,7 +59,7 @@ impl<E> AtomicSwitchCtrl<E> {
         self.0.set(drain)
     }
 
-    /// Get a drain controlled by this `AtomicSwitchCtrl`
+    /// Get a `AtomicSwitch` drain controlled by this `AtomicSwitchCtrl`
     pub fn drain(&self) -> AtomicSwitch<E> {
         AtomicSwitch(self.0.clone())
     }
