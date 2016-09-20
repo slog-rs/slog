@@ -17,9 +17,6 @@
 
 ### Status & news
 
-`slog-rs` is near final 1.0.0 release (see
-[milestone 1.0](https://github.com/dpc/slog-rs/milestone/1)).
-
 Testing, feedback, PRs, etc. are very welcome. I'd be also very happy to share
 the ownership of the project with other people to make it more community-driven.
 
@@ -27,7 +24,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 
 ### Features
 
-* easy to use
+* flexible & easy to use
 * great performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
 * `#![no_std]` support (with opt-out `std` cargo feature flag)
 * hierarchical loggers
