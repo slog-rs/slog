@@ -52,7 +52,7 @@ fn main() {
         signal::sigaction(signal::SIGUSR1, &sig_action).unwrap();
     }
 
-    let drain = slog::duplicate(slog_term::streamer().stderr().full().build(), ATOMIC_DRAIN_SWITCH.get()).fuse();
+    let drain = slog::duplicate(slog_term::streamer().stderr().full().build(), ATOMIC_DRAIN_SWITCH.drain()).fuse();
 
     atomic_drain_switch();
 
