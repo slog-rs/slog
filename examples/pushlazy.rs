@@ -5,8 +5,6 @@ extern crate slog_term;
 
 use slog::*;
 
-const VERSION: &'static str = "0.1.0";
-
 fn main() {
 
     let drain = slog_term::streamer().build().fuse();
