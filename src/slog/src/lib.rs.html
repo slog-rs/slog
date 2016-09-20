@@ -673,7 +673,6 @@
 <span id="629">629</span>
 <span id="630">630</span>
 <span id="631">631</span>
-<span id="632">632</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 <span class='doccomment'>//!</span>
@@ -729,8 +728,7 @@
 <span class='doccomment'>//! * **lazy evaluation** and **asynchronous IO** included. Waiting to</span>
 <span class='doccomment'>//!   finish writing logging information to disk, or spending time calculating</span>
 <span class='doccomment'>//!   data that will be thrown away at the current logging level, are sources of big</span>
-<span class='doccomment'>//!   performance waste. Use [`AsyncStreamer`][async-streamer] drain, and closures</span>
-<span class='doccomment'>//!   to make your logging fast.</span>
+<span class='doccomment'>//!   performance waste. Use `AsyncStreamer` drain, and closures to make your logging fast.</span>
 <span class='doccomment'>//! * **run-time configuration** - [`AtomicSwitch`][atomic-switch] drain allows</span>
 <span class='doccomment'>//!   changing logging behavior in the running program. You could use eg. signal</span>
 <span class='doccomment'>//!   handlers to change logging level or logging destinations. See</span>

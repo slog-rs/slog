@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-42' class='srclink' href='../../src/slog/src/ser.rs.html#83-89' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-42' class='srclink' href='../../src/slog/src/ser.rs.html#73-79' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Serialize {
     fn <a href='#tymethod.serialize' class='fnname'>serialize</a>(&amp;self, record: &amp;<a class='struct' href='../../slog/struct.Record.html' title='slog::Record'>Record</a>, key: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, serializer: &amp;mut <a class='trait' href='../../slog/ser/trait.Serializer.html' title='slog::ser::Serializer'>Serializer</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>,&nbsp;<a class='enum' href='../../slog/ser/enum.Error.html' title='slog::ser::Error'>Error</a>&gt;;
 }</pre><div class='docblock'><p>Value that can be serialized</p>
@@ -78,6 +78,7 @@ only call respective methods of <code>serializer</code>.</p>
 <li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></li>
 <li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a></code></li>
 <li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a></code></li>
+<li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a></code></li>
 <li><code>impl Serialize for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></li>
 <li><code>impl&lt;'a&gt; Serialize for &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></li>
 <li><code>impl&lt;'a&gt; Serialize for <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Arguments.html' title='core::fmt::Arguments'>Arguments</a>&lt;'a&gt;</code></li>
