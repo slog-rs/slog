@@ -15,4 +15,4 @@ path = "lib.rs"
 
 [dependencies]
 slog = { version = "1", path = "../.." }
-slog-stdlog = { version = "1.0.0-alpha7", path = "../stdlog" }
+slog-stdlog = { version = "1.0.0-alpha8", path = "../stdlog" }
