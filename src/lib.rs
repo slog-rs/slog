@@ -151,6 +151,11 @@ macro_rules! o(
         vec![$(($k, std::boxed::Box::new($v))),*]
         }
     };
+    ($($k:expr => $v:expr),*,) => {
+        {
+            o!($($k => $v),*)
+        }
+    };
 );
 
 /// Log message of a given level
@@ -249,6 +254,9 @@ macro_rules! log(
             $l.log(&$crate::Record::new(&RS, format_args!($($args),+), &[]))
         }
     };
+    ($lvl:expr, $l:expr, $($args:tt),+,) => {
+        log!($lvl, $l, $($args),+)
+    };
     ($lvl:expr, $l:expr, $msg:expr) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
@@ -278,6 +286,9 @@ macro_rules! log(
             };
             $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &[$(($k, &$v)),*]))
         }
+    };
+    ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),*,) => {
+        log!($lvl, $l, $msg; $($k => $v),*)
     };
 );
 
@@ -319,6 +330,9 @@ macro_rules! slog_log(
             $l.log(&$crate::Record::new(&RS, format_args!($($args),+), &[]))
         }
     };
+    ($lvl:expr, $l:expr, $($args:tt),+,) => {
+        slog_log!($lvl, $l, $($args),+)
+    };
     ($lvl:expr, $l:expr, $msg:expr) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
@@ -348,6 +362,9 @@ macro_rules! slog_log(
             };
             $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &[$(($k, &$v)),*]))
         }
+    };
+    ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),*,) => {
+        slog_log!($lvl, $l, $msg; $($k => $v),*)
     };
 );
 

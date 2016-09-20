@@ -90,7 +90,7 @@ fn log_discard_nonempty_10(b: &mut Bencher) {
               "f32" => 0f32, 
               "f64" => 0f64, 
               "option" => Some(0), 
-              "unit" => ()
+              "unit" => (),
              );
     });
 }
@@ -147,7 +147,7 @@ fn logger_new_nonempty_10(b: &mut Bencher) {
                 "f32" => 0f32, 
                 "f64" => 0f64, 
                 "option" => Some(0), 
-                "unit" => ()
+                "unit" => (),
                 ));
     });
 }
