@@ -14,7 +14,7 @@ readme = "../../README.md"
 path = "lib.rs"
 
 [dependencies]
-slog = { version = "1.0.0-alpha7", path = "../.." }
+slog = { version = "1", path = "../.." }
 slog-stream = { version = "1.0.0-alpha7", path = "../stream" }
 syslog = "3.1.0"
 nix = "0.6.0"

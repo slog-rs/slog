@@ -14,7 +14,7 @@ readme = "../../README.md"
 path = "lib.rs"
 
 [dependencies]
-slog = { version = "1.0.0-alpha7", path = "../.." }
+slog = { version = "1", path = "../.." }
 slog-json = { version = "1.0.0-alpha7", path = "../json" }
 nix = "0.6.0"
 chrono = "0.2.22"

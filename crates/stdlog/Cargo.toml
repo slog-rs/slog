@@ -14,7 +14,7 @@ readme = "../../README.md"
 path = "lib.rs"
 
 [dependencies]
-slog = { version = "1.0.0-alpha7", path = "../.." }
+slog = { version = "1", path = "../.." }
 slog-term = { version = "1.0.0-alpha7", path = "../term" }
 log = "0.3.6"
 lazy_static = "0.2.1"
