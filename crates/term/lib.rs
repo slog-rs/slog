@@ -81,7 +81,7 @@ impl<D: Decorator> Format<D> {
         try!(self.print_msg_header(io, &r_decorator, info));
         let mut serializer = Serializer::new(io, r_decorator);
 
-        for &(ref k, ref v) in logger_values.iter() {
+        for &(k, ref v) in logger_values.iter() {
             try!(serializer.print_comma());
             try!(v.serialize(info, k, &mut serializer));
         }
@@ -92,7 +92,7 @@ impl<D: Decorator> Format<D> {
         }
         let (mut io, _decorator_r) = serializer.finish();
 
-        let _ = try!(write!(io, "\n"));
+        try!(write!(io, "\n"));
 
         Ok(())
     }
@@ -159,7 +159,7 @@ impl<D: Decorator> Format<D> {
             if self.should_print(logger_values.values() as *const _ as usize, indent) {
                 try!(self.print_indent(&mut ser.io, indent));
                 let mut clean = true;
-                for &(ref k, ref v) in logger_values.values() {
+                for &(k, ref v) in logger_values.values() {
                     if !clean {
                         try!(ser.print_comma());
                     }
@@ -504,6 +504,12 @@ impl StreamerBuilder {
         } else {
             Box::new(Streamer::new(io, format))
         }
+    }
+}
+
+impl Default for StreamerBuilder {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
