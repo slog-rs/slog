@@ -156,7 +156,7 @@ fn main() {
                     async_stream(
                         std::io::stderr(),
                         // multiple outputs formats are supported
-                        slog_json::new(),
+                        slog_json::default(),
                     ),
                 ),
             );
@@ -176,7 +176,7 @@ fn main() {
 }
 ```
 
-See `examples/features.rs` for full code.
+See `examples/features.rs` for full/current code.
 
 
 Read [Documentation](//dpc.github.io/slog-rs/) for details and features.
