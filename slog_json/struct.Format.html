@@ -51,21 +51,10 @@
 <pre class='rust struct'>pub struct Format { /* fields omitted */ }</pre><div class='docblock'><p>Json formatter</p>
 
 <p>Each record will be printed as a Json map.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../slog_json/struct.Format.html' title='slog_json::Format'>Format</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-26' class='srclink' href='../src/slog_json/lib.rs.html#57-94' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; Self</code></span></h4>
-<div class='docblock'><p>Create new Json formatter</p>
-
-<p>It comes with some default fields (<code>ts</code>, <code>level</code>, <code>msg</code>)
-and uses newlines.</p>
-
-<p>Use <code>Format::build()</code> to build a custom Json formatter from
-scratch.</p>
-</div><h4 id='method.build' class='method'><span id='build.v' class='invisible'><code>fn <a href='#method.build' class='fnname'>build</a>() -&gt; <a class='struct' href='../slog_json/struct.FormatBuilder.html' title='slog_json::FormatBuilder'>FormatBuilder</a></code></span></h4>
-<div class='docblock'><p>Build a Json formatter with custom settings</p>
-</div><h4 id='method.new_nonewline' class='method'><span id='new_nonewline.v' class='invisible'><code>fn <a href='#method.new_nonewline' class='fnname'>new_nonewline</a>() -&gt; Self</code></span></h4>
-<div class='docblock'><p>Create new <code>Json</code> format that does not add
-newlines after each record.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../slog_stream/trait.Format.html' title='slog_stream::Format'>Format</a> for <a class='struct' href='../slog_json/struct.Format.html' title='slog_json::Format'>Format</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-54' class='srclink' href='../src/slog_json/lib.rs.html#141-172' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../slog_json/struct.Format.html' title='slog_json::Format'>Format</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-26' class='srclink' href='../src/slog_json/lib.rs.html#57-62' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../slog_json/struct.FormatBuilder.html' title='slog_json::FormatBuilder'>FormatBuilder</a></code></span></h4>
+<div class='docblock'><p>Build a Json formatter</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../slog_stream/trait.Format.html' title='slog_stream::Format'>Format</a> for <a class='struct' href='../slog_json/struct.Format.html' title='slog_json::Format'>Format</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-53' class='srclink' href='../src/slog_json/lib.rs.html#129-160' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.format' class='method'><span id='format.v' class='invisible'><code>fn <a href='../slog_stream/trait.Format.html#tymethod.format' class='fnname'>format</a>(&amp;self, io: &amp;mut <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>, rinfo: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, logger_values: &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h4>
 <div class='docblock'><p>Format one logging record and write into <code>io</code></p>
 </div></div></section>

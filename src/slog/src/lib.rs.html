@@ -673,6 +673,23 @@
 <span id="629">629</span>
 <span id="630">630</span>
 <span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! # Slog -  Structured, composable logging for Rust</span>
 <span class='doccomment'>//!</span>
@@ -827,6 +844,11 @@
         <span class='macro'>vec</span><span class='macro'>!</span>[$((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>, <span class='ident'>std</span>::<span class='ident'>boxed</span>::<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>))),<span class='op'>*</span>]
         }
     };
+    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>,) <span class='op'>=&gt;</span> {
+        {
+            <span class='macro'>o</span><span class='macro'>!</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>),<span class='op'>*</span>)
+        }
+    };
 );
 
 <span class='doccomment'>/// Log message of a given level</span>
@@ -925,6 +947,9 @@
             <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>.<span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>Record</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>RS</span>, <span class='macro'>format_args</span><span class='macro'>!</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>),<span class='op'>+</span>), <span class='kw-2'>&amp;</span>[]))
         }
     };
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>),<span class='op'>+</span>,) <span class='op'>=&gt;</span> {
+        <span class='macro'>log</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>),<span class='op'>+</span>)
+    };
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> {
         <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>__slog_static_max_level</span>().<span class='ident'>as_usize</span>() {
             <span class='comment'>// prevent generating big `Record` over and over</span>
@@ -954,6 +979,9 @@
             };
             <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>.<span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>Record</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>RS</span>, <span class='macro'>format_args</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>), <span class='kw-2'>&amp;</span>[$((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>, <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>)),<span class='op'>*</span>]))
         }
+    };
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>,) <span class='op'>=&gt;</span> {
+        <span class='macro'>log</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>),<span class='op'>*</span>)
     };
 );
 
@@ -995,6 +1023,9 @@
             <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>.<span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>Record</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>RS</span>, <span class='macro'>format_args</span><span class='macro'>!</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>),<span class='op'>+</span>), <span class='kw-2'>&amp;</span>[]))
         }
     };
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>),<span class='op'>+</span>,) <span class='op'>=&gt;</span> {
+        <span class='macro'>slog_log</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>),<span class='op'>+</span>)
+    };
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> {
         <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>.<span class='ident'>as_usize</span>() <span class='op'>&lt;=</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>__slog_static_max_level</span>().<span class='ident'>as_usize</span>() {
             <span class='comment'>// prevent generating big `Record` over and over</span>
@@ -1024,6 +1055,9 @@
             };
             <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>.<span class='ident'>log</span>(<span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>Record</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>RS</span>, <span class='macro'>format_args</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>), <span class='kw-2'>&amp;</span>[$((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>, <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>)),<span class='op'>*</span>]))
         }
+    };
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>,) <span class='op'>=&gt;</span> {
+        <span class='macro'>slog_log</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>lvl</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>l</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>),<span class='op'>*</span>)
     };
 );
 

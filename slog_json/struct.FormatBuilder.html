@@ -47,21 +47,26 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-38' class='srclink' href='../src/slog_json/lib.rs.html#99-102' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-28' class='srclink' href='../src/slog_json/lib.rs.html#67-70' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct FormatBuilder { /* fields omitted */ }</pre><div class='docblock'><p>Json formatter builder</p>
 
 <p>Create with <code>Format::build</code>.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../slog_json/struct.FormatBuilder.html' title='slog_json::FormatBuilder'>FormatBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-41' class='srclink' href='../src/slog_json/lib.rs.html#104-139' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../slog_json/struct.FormatBuilder.html' title='slog_json::FormatBuilder'>FormatBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-31' class='srclink' href='../src/slog_json/lib.rs.html#72-127' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.build' class='method'><span id='build.v' class='invisible'><code>fn <a href='#method.build' class='fnname'>build</a>(self) -&gt; <a class='struct' href='../slog_json/struct.Format.html' title='slog_json::Format'>Format</a></code></span></h4>
 <div class='docblock'><p>Build <code>Json</code> format</p>
 
 <p>This consumes the builder.</p>
-</div><h4 id='method.set_newlines' class='method'><span id='set_newlines.v' class='invisible'><code>fn <a href='#method.set_newlines' class='fnname'>set_newlines</a>(&amp;mut self, enabled: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; &amp;mut Self</code></span></h4>
+</div><h4 id='method.set_newlines' class='method'><span id='set_newlines.v' class='invisible'><code>fn <a href='#method.set_newlines' class='fnname'>set_newlines</a>(self, enabled: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; Self</code></span></h4>
 <div class='docblock'><p>Set writing a newline after ever log record</p>
-</div><h4 id='method.add_key_values' class='method'><span id='add_key_values.v' class='invisible'><code>fn <a href='#method.add_key_values' class='fnname'>add_key_values</a>(&amp;mut self, values: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='type' href='../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>&gt;) -&gt; &amp;mut Self</code></span></h4>
+</div><h4 id='method.add_key_values' class='method'><span id='add_key_values.v' class='invisible'><code>fn <a href='#method.add_key_values' class='fnname'>add_key_values</a>(self, values: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='type' href='../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>&gt;) -&gt; Self</code></span></h4>
 <div class='docblock'><p>Add custom values to be printed with this formatter</p>
-</div><h4 id='method.add_key_value' class='method'><span id='add_key_value.v' class='invisible'><code>fn <a href='#method.add_key_value' class='fnname'>add_key_value</a>(&amp;mut self, value: <a class='type' href='../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>) -&gt; &amp;mut Self</code></span></h4>
+</div><h4 id='method.add_key_value' class='method'><span id='add_key_value.v' class='invisible'><code>fn <a href='#method.add_key_value' class='fnname'>add_key_value</a>(self, value: <a class='type' href='../slog/type.OwnedKeyValue.html' title='slog::OwnedKeyValue'>OwnedKeyValue</a>) -&gt; Self</code></span></h4>
 <div class='docblock'><p>Add custom values to be printed with this formatter</p>
+</div><h4 id='method.add_defaults' class='method'><span id='add_defaults.v' class='invisible'><code>fn <a href='#method.add_defaults' class='fnname'>add_defaults</a>(self) -&gt; Self</code></span></h4>
+<div class='docblock'><p>Add default key-values:
+* <code>ts</code> - timestamp
+* <code>level</code> - record logging level name
+* <code>msg</code> - msg - formatted logging message</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 

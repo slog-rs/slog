@@ -213,21 +213,6 @@
 <span id="169">169</span>
 <span id="170">170</span>
 <span id="171">171</span>
-<span id="172">172</span>
-<span id="173">173</span>
-<span id="174">174</span>
-<span id="175">175</span>
-<span id="176">176</span>
-<span id="177">177</span>
-<span id="178">178</span>
-<span id="179">179</span>
-<span id="180">180</span>
-<span id="181">181</span>
-<span id="182">182</span>
-<span id="183">183</span>
-<span id="184">184</span>
-<span id="185">185</span>
-<span id="186">186</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Json formatter for `slog-rs`</span>
 <span class='doccomment'>//!</span>
@@ -243,7 +228,7 @@
 <span class='doccomment'>//!     let root = slog::Logger::root(</span>
 <span class='doccomment'>//!         slog_stream::stream(</span>
 <span class='doccomment'>//!             std::io::stderr(),</span>
-<span class='doccomment'>//!             slog_json::new()</span>
+<span class='doccomment'>//!             slog_json::default()</span>
 <span class='doccomment'>//!         ).fuse(),</span>
 <span class='doccomment'>//!         o!(&quot;build-id&quot; =&gt; &quot;8dfljdf&quot;)</span>
 <span class='doccomment'>//!     );</span>
@@ -286,41 +271,9 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>Format</span> {
-    <span class='doccomment'>/// Create new Json formatter</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// It comes with some default fields (`ts`, `level`, `msg`)</span>
-    <span class='doccomment'>/// and uses newlines.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Use `Format::build()` to build a custom Json formatter from</span>
-    <span class='doccomment'>/// scratch.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>Format</span> {
-            <span class='ident'>newlines</span>: <span class='bool-val'>true</span>,
-            <span class='ident'>values</span>: <span class='macro'>o</span><span class='macro'>!</span>(
-                <span class='string'>&quot;ts&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>PushLazy</span>(<span class='kw'>move</span> <span class='op'>|</span>_ : <span class='kw-2'>&amp;</span><span class='ident'>Record</span>, <span class='ident'>ser</span> : <span class='ident'>ValueSerializer</span><span class='op'>|</span> {
-                   <span class='ident'>ser</span>.<span class='ident'>serialize</span>(<span class='ident'>chrono</span>::<span class='ident'>Local</span>::<span class='ident'>now</span>().<span class='ident'>to_rfc3339</span>())
-                }),
-                <span class='string'>&quot;level&quot;</span> <span class='op'>=&gt;</span> <span class='kw'>move</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span><span class='op'>|</span> {
-                    <span class='ident'>level_to_string</span>(<span class='ident'>rinfo</span>.<span class='ident'>level</span>())
-                },
-                <span class='string'>&quot;msg&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>PushLazy</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='ident'>record</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span>, <span class='ident'>ser</span> : <span class='ident'>ValueSerializer</span><span class='op'>|</span> {
-                   <span class='ident'>ser</span>.<span class='ident'>serialize</span>(<span class='ident'>record</span>.<span class='ident'>msg</span>())
-                })
-                ),
-        }
-    }
-
-    <span class='doccomment'>/// Build a Json formatter with custom settings</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>() <span class='op'>-&gt;</span> <span class='ident'>FormatBuilder</span> {
+    <span class='doccomment'>/// Build a Json formatter</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>FormatBuilder</span> {
         <span class='ident'>FormatBuilder</span>::<span class='ident'>new</span>()
-    }
-
-    <span class='doccomment'>/// Create new `Json` format that does not add</span>
-    <span class='doccomment'>/// newlines after each record.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_nonewline</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>json</span> <span class='op'>=</span> <span class='ident'>Format</span>::<span class='ident'>new</span>();
-        <span class='ident'>json</span>.<span class='ident'>newlines</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
-        <span class='ident'>json</span>
     }
 }
 
@@ -351,21 +304,41 @@
     }
 
     <span class='doccomment'>/// Set writing a newline after ever log record</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_newlines</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>enabled</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_newlines</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>enabled</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>newlines</span> <span class='op'>=</span> <span class='ident'>enabled</span>;
         <span class='self'>self</span>
     }
 
     <span class='doccomment'>/// Add custom values to be printed with this formatter</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_key_values</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>values</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>OwnedKeyValue</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_key_values</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='kw-2'>mut</span> <span class='ident'>values</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>OwnedKeyValue</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>values</span>.<span class='ident'>extend</span>(<span class='ident'>values</span>.<span class='ident'>drain</span>(..));
         <span class='self'>self</span>
     }
 
     <span class='doccomment'>/// Add custom values to be printed with this formatter</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_key_value</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>OwnedKeyValue</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_key_value</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='ident'>OwnedKeyValue</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>values</span>.<span class='ident'>push</span>(<span class='ident'>value</span>);
         <span class='self'>self</span>
+    }
+
+    <span class='doccomment'>/// Add default key-values:</span>
+    <span class='doccomment'>/// * `ts` - timestamp</span>
+    <span class='doccomment'>/// * `level` - record logging level name</span>
+    <span class='doccomment'>/// * `msg` - msg - formatted logging message</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_defaults</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+        <span class='self'>self</span>.<span class='ident'>add_key_values</span>(
+            <span class='macro'>o</span><span class='macro'>!</span>(
+                <span class='string'>&quot;ts&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>PushLazy</span>(<span class='kw'>move</span> <span class='op'>|</span>_ : <span class='kw-2'>&amp;</span><span class='ident'>Record</span>, <span class='ident'>ser</span> : <span class='ident'>ValueSerializer</span><span class='op'>|</span> {
+                    <span class='ident'>ser</span>.<span class='ident'>serialize</span>(<span class='ident'>chrono</span>::<span class='ident'>Local</span>::<span class='ident'>now</span>().<span class='ident'>to_rfc3339</span>())
+                }),
+                <span class='string'>&quot;level&quot;</span> <span class='op'>=&gt;</span> <span class='kw'>move</span> <span class='op'>|</span><span class='ident'>rinfo</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span><span class='op'>|</span> {
+                    <span class='ident'>level_to_string</span>(<span class='ident'>rinfo</span>.<span class='ident'>level</span>())
+                },
+                <span class='string'>&quot;msg&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>PushLazy</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='ident'>record</span> : <span class='kw-2'>&amp;</span><span class='ident'>Record</span>, <span class='ident'>ser</span> : <span class='ident'>ValueSerializer</span><span class='op'>|</span> {
+                    <span class='ident'>ser</span>.<span class='ident'>serialize</span>(<span class='ident'>record</span>.<span class='ident'>msg</span>())
+                })
+              )
+            )
     }
 }
 
@@ -402,18 +375,15 @@
     }
 }
 
-<span class='doccomment'>/// Build a default Json formatter</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// See `Format::new()` for details</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>Format</span> {
+<span class='doccomment'>/// Create new `FormatBuilder` to create `Format`</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>FormatBuilder</span> {
     <span class='ident'>Format</span>::<span class='ident'>new</span>()
 }
 
-<span class='doccomment'>/// Use builder to create a custom Json formatter</span>
-<span class='doccomment'>///</span>
 <span class='doccomment'>/// See `FormatBuilder` for details</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>() <span class='op'>-&gt;</span> <span class='ident'>FormatBuilder</span> {
-    <span class='ident'>Format</span>::<span class='ident'>build</span>()
+<span class='doccomment'>///</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>Format</span> {
+    <span class='ident'>Format</span>::<span class='ident'>new</span>().<span class='ident'>add_defaults</span>().<span class='ident'>build</span>()
 }
 </pre>
 </section>
