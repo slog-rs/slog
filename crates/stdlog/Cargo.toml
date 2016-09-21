@@ -1,6 +1,6 @@
 [package]
 name = "slog-stdlog"
-version = "1.0.0-alpha8"
+version = "1.0.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Standard Rust log crate adapter to slog-rs"
 keywords = ["slog", "logging", "json", "log"]
@@ -15,7 +15,7 @@ path = "lib.rs"
 
 [dependencies]
 slog = { version = "1", path = "../.." }
-slog-term = { version = "1.0.0-alpha8", path = "../term" }
+slog-term = { version = "1", path = "../term" }
 log = "0.3.6"
 lazy_static = "0.2.1"
 crossbeam = "0.2.9"

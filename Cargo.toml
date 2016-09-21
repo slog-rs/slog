@@ -47,13 +47,13 @@ members = ["crates/json", "crates/term", "crates/stdlog", "crates/syslog",
 	"crates/example-lib", "crates/nursery"]
 
 [dev-dependencies]
-slog-json = { path = "crates/json", version = "1.0.0-alpha8" }
-slog-term = { path = "crates/term", version = "1.0.0-alpha8" }
-slog-stdlog = { path = "crates/stdlog", version = "1.0.0-alpha8" }
+slog-json = { path = "crates/json", version = "1" }
+slog-term = { path = "crates/term", version = "1" }
+slog-stdlog = { path = "crates/stdlog", version = "1.0.0" }
 slog-syslog = { path = "crates/syslog", version = "1.0.0-alpha8" }
-slog-bunyan = { path = "crates/bunyan", version = "1.0.0-alpha8" }
+slog-bunyan = { path = "crates/bunyan", version = "1" }
 slog-atomic = { path = "crates/atomic", version = "0.3" }
-slog-stream = { path = "crates/stream", version = "1.0.0-alpha8" }
+slog-stream = { path = "crates/stream", version = "1" }
 log = "0.3.6"
 nix = "0.6.0"
 lazy_static = "0.1.16"

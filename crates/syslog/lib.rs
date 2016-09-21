@@ -230,7 +230,7 @@ impl<W: io::Write> Serializer for KSV<W> {
     }
 }
 
-/// ``Streamer` to Unix syslog using RFC 3164 format
+/// `Streamer` to Unix syslog using RFC 3164 format
 pub fn unix_3164(facility: syslog::Facility) -> Streamer3164 {
     Streamer3164::new(syslog::unix(facility).unwrap())
 }

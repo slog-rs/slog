@@ -109,7 +109,7 @@ impl FormatBuilder {
     /// * `ts` - timestamp
     /// * `level` - record logging level name
     /// * `msg` - msg - formatted logging message
-    pub fn add_defaults(self) -> Self {
+    pub fn add_default_keys(self) -> Self {
         self.add_key_values(
             o!(
                 "ts" => PushLazy(move |_ : &Record, ser : ValueSerializer| {
@@ -164,8 +164,7 @@ pub fn new() -> FormatBuilder {
     Format::new()
 }
 
-/// See `FormatBuilder` for details
-///
+/// Default json `Format`
 pub fn default() -> Format {
-    Format::new().add_defaults().build()
+    Format::new().add_default_keys().build()
 }

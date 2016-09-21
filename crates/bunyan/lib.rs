@@ -12,7 +12,7 @@
 //!     let root = slog::Logger::root(
 //!         slog_stream::stream(
 //!                 std::io::stderr(),
-//!                 slog_bunyan::new()
+//!                 slog_bunyan::default()
 //!         ).fuse(), o!("build-id" => "8dfljdf"));
 //! }
 //! ```
@@ -52,11 +52,10 @@ fn level_to_string(level: Level) -> i8 {
     }
 }
 
-fn new_with_ts_fn<F>(ts_f: F) -> slog_json::Format
+fn new_with_ts_fn<F>(ts_f: F) -> slog_json::FormatBuilder
     where F: Fn(&Record) -> String + Send + Sync + 'static
 {
     slog_json::Format::new()
-        .set_newlines(true)
         .add_key_values(o!(
             "pid" => nix::unistd::getpid() as usize,
             "host" => get_hostname(),
@@ -71,12 +70,16 @@ fn new_with_ts_fn<F>(ts_f: F) -> slog_json::Format
                 rinfo.msg().to_string()
             }
         ))
-        .build()
 }
 
-/// Create bunyan formatter
-pub fn new() -> slog_json::Format {
+/// Create `slog_json::FormatBuilder` with bunyan key-values
+pub fn new() -> slog_json::FormatBuilder {
     new_with_ts_fn(|_: &Record| chrono::Local::now().to_rfc3339())
+}
+
+/// Create `slog_json::Format` with bunyan key-values
+pub fn default() -> slog_json::Format {
+    new_with_ts_fn(|_: &Record| chrono::Local::now().to_rfc3339()).build()
 }
 
 #[cfg(test)]
@@ -92,8 +95,8 @@ mod test {
 
     #[test]
     fn trivial() {
-        let formatter =
-            new_with_ts_fn(|_: &Record| UTC.ymd(2014, 7, 8).and_hms(9, 10, 11).to_rfc3339());
+        let format =
+            new_with_ts_fn(|_: &Record| UTC.ymd(2014, 7, 8).and_hms(9, 10, 11).to_rfc3339()).build();
 
 
         let rs = RecordStatic {
@@ -107,7 +110,7 @@ mod test {
         };
 
         let mut v = vec![];
-        formatter.format(&mut v, &Record::new(&rs, format_args!("message"), &[]), &OwnedKeyValueList::root(vec![])).unwrap();
+        format.format(&mut v, &Record::new(&rs, format_args!("message"), &[]), &OwnedKeyValueList::root(vec![])).unwrap();
 
         assert_eq!(String::from_utf8_lossy(&v),
                    "{\"pid\":".to_string() + &nix::unistd::getpid().to_string() + ",\"host\":\"" +
