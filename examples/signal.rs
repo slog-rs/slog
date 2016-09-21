@@ -34,7 +34,7 @@ fn atomic_drain_switch() {
     ATOMIC_DRAIN_SWITCH_STATE.store(new, SeqCst);
 
     if new {
-        ATOMIC_DRAIN_SWITCH.set(stream(io::stdout(), slog_json::new()))
+        ATOMIC_DRAIN_SWITCH.set(stream(io::stdout(), slog_json::default()))
     } else {
         ATOMIC_DRAIN_SWITCH.set(slog_term::streamer().full().stdout().build())
     }

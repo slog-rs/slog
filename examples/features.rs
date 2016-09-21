@@ -73,7 +73,7 @@ fn main() {
                     async_stream(
                         std::io::stderr(),
                         // multiple outputs formats are supported
-                        slog_json::new(),
+                        slog_json::new().build(),
                     ),
                 ),
             );

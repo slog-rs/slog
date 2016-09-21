@@ -12,7 +12,7 @@
 //!     let root = slog::Logger::root(
 //!         slog_stream::stream(
 //!             std::io::stderr(),
-//!             slog_json::new()
+//!             slog_json::default()
 //!         ).fuse(),
 //!         o!("build-id" => "8dfljdf")
 //!     );
@@ -55,41 +55,9 @@ pub struct Format {
 }
 
 impl Format {
-    /// Create new Json formatter
-    ///
-    /// It comes with some default fields (`ts`, `level`, `msg`)
-    /// and uses newlines.
-    ///
-    /// Use `Format::build()` to build a custom Json formatter from
-    /// scratch.
-    pub fn new() -> Self {
-        Format {
-            newlines: true,
-            values: o!(
-                "ts" => PushLazy(move |_ : &Record, ser : ValueSerializer| {
-                   ser.serialize(chrono::Local::now().to_rfc3339())
-                }),
-                "level" => move |rinfo : &Record| {
-                    level_to_string(rinfo.level())
-                },
-                "msg" => PushLazy(move |record : &Record, ser : ValueSerializer| {
-                   ser.serialize(record.msg())
-                })
-                ),
-        }
-    }
-
-    /// Build a Json formatter with custom settings
-    pub fn build() -> FormatBuilder {
+    /// Build a Json formatter
+    pub fn new() -> FormatBuilder {
         FormatBuilder::new()
-    }
-
-    /// Create new `Json` format that does not add
-    /// newlines after each record.
-    pub fn new_nonewline() -> Self {
-        let mut json = Format::new();
-        json.newlines = false;
-        json
     }
 }
 
@@ -120,21 +88,41 @@ impl FormatBuilder {
     }
 
     /// Set writing a newline after ever log record
-    pub fn set_newlines(&mut self, enabled: bool) -> &mut Self {
+    pub fn set_newlines(mut self, enabled: bool) -> Self {
         self.newlines = enabled;
         self
     }
 
     /// Add custom values to be printed with this formatter
-    pub fn add_key_values(&mut self, mut values: Vec<OwnedKeyValue>) -> &mut Self {
+    pub fn add_key_values(mut self, mut values: Vec<OwnedKeyValue>) -> Self {
         self.values.extend(values.drain(..));
         self
     }
 
     /// Add custom values to be printed with this formatter
-    pub fn add_key_value(&mut self, value: OwnedKeyValue) -> &mut Self {
+    pub fn add_key_value(mut self, value: OwnedKeyValue) -> Self {
         self.values.push(value);
         self
+    }
+
+    /// Add default key-values:
+    /// * `ts` - timestamp
+    /// * `level` - record logging level name
+    /// * `msg` - msg - formatted logging message
+    pub fn add_defaults(self) -> Self {
+        self.add_key_values(
+            o!(
+                "ts" => PushLazy(move |_ : &Record, ser : ValueSerializer| {
+                    ser.serialize(chrono::Local::now().to_rfc3339())
+                }),
+                "level" => move |rinfo : &Record| {
+                    level_to_string(rinfo.level())
+                },
+                "msg" => PushLazy(move |record : &Record, ser : ValueSerializer| {
+                    ser.serialize(record.msg())
+                })
+              )
+            )
     }
 }
 
@@ -171,16 +159,13 @@ impl slog_stream::Format for Format {
     }
 }
 
-/// Build a default Json formatter
-///
-/// See `Format::new()` for details
-pub fn new() -> Format {
+/// Create new `FormatBuilder` to create `Format`
+pub fn new() -> FormatBuilder {
     Format::new()
 }
 
-/// Use builder to create a custom Json formatter
-///
 /// See `FormatBuilder` for details
-pub fn build() -> FormatBuilder {
-    Format::build()
+///
+pub fn default() -> Format {
+    Format::new().add_defaults().build()
 }

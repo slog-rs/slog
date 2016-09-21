@@ -10,7 +10,7 @@ use std::io;
 
 fn main() {
     let d1 = slog_term::streamer().stderr().full().build();
-    let d2 = slog_stream::stream(io::stdout(), slog_json::new());
+    let d2 = slog_stream::stream(io::stdout(), slog_json::new().add_defaults().build());
     let log = slog::Logger::root(slog::duplicate(d1, d2).fuse(), o!("version" => env!("CARGO_PKG_VERSION")));
 
     trace!(log, "logging a trace message");

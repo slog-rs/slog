@@ -55,8 +55,8 @@ fn level_to_string(level: Level) -> i8 {
 fn new_with_ts_fn<F>(ts_f: F) -> slog_json::Format
     where F: Fn(&Record) -> String + Send + Sync + 'static
 {
-    let mut b = slog_json::Format::build();
-    b.set_newlines(true)
+    slog_json::Format::new()
+        .set_newlines(true)
         .add_key_values(o!(
             "pid" => nix::unistd::getpid() as usize,
             "host" => get_hostname(),
@@ -70,8 +70,8 @@ fn new_with_ts_fn<F>(ts_f: F) -> slog_json::Format
             "msg" => |rinfo : &Record| {
                 rinfo.msg().to_string()
             }
-        ));
-    b.build()
+        ))
+        .build()
 }
 
 /// Create bunyan formatter

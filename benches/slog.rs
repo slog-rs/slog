@@ -40,11 +40,11 @@ impl io::Write for BlackBoxWriter {
 }
 
 fn empty_json_blackbox() -> impl Drain<Error=()> {
-    stream(BlackBoxWriter, slog_json::build().build()).ignore_err()
+    stream(BlackBoxWriter, slog_json::new().build()).ignore_err()
 }
 
 fn json_blackbox() -> impl Drain<Error=()> {
-    stream(BlackBoxWriter, slog_json::new()).ignore_err()
+    stream(BlackBoxWriter, slog_json::new().build()).ignore_err()
 }
 
 #[bench]
