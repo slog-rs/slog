@@ -13,6 +13,8 @@
   <br>
   <strong><a href="//dpc.github.io/slog-rs/">Documentation (master branch)</a></strong>
   <strong><a href="https://docs.rs/releases/search?query=slog">Documentation (release)</a></strong>
+  <br>
+  <strong><a href="//github.com/dpc/slog-rs/wiki/Introduction-to-structured-logging-with-slog">Introduction</a></strong>
   <strong><a href="//github.com/dpc/slog-rs/wiki/FAQ">FAQ</a></strong>
 </p>
 
