@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["new","Create bunyan formatter"]]});
+initSidebarItems({"fn":[["default","Create `slog_json::Fomrat` with bunyan key-values"],["new","Create `slog_json::FormatBuilder` with bunyan key-values"]]});

@@ -325,7 +325,7 @@
     <span class='doccomment'>/// * `ts` - timestamp</span>
     <span class='doccomment'>/// * `level` - record logging level name</span>
     <span class='doccomment'>/// * `msg` - msg - formatted logging message</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_defaults</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_default_keys</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>add_key_values</span>(
             <span class='macro'>o</span><span class='macro'>!</span>(
                 <span class='string'>&quot;ts&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>PushLazy</span>(<span class='kw'>move</span> <span class='op'>|</span>_ : <span class='kw-2'>&amp;</span><span class='ident'>Record</span>, <span class='ident'>ser</span> : <span class='ident'>ValueSerializer</span><span class='op'>|</span> {
@@ -383,7 +383,7 @@
 <span class='doccomment'>/// See `FormatBuilder` for details</span>
 <span class='doccomment'>///</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>Format</span> {
-    <span class='ident'>Format</span>::<span class='ident'>new</span>().<span class='ident'>add_defaults</span>().<span class='ident'>build</span>()
+    <span class='ident'>Format</span>::<span class='ident'>new</span>().<span class='ident'>add_default_keys</span>().<span class='ident'>build</span>()
 }
 </pre>
 </section>
