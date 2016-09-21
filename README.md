@@ -16,6 +16,8 @@
   <br>
   <strong><a href="//github.com/dpc/slog-rs/wiki/Introduction-to-structured-logging-with-slog">Introduction</a></strong>
   <strong><a href="//github.com/dpc/slog-rs/wiki/FAQ">FAQ</a></strong>
+  <br>
+  <strong><a href="https://crates.io/search?q=slog">All crates</a></strong>
 </p>
 
 ### Status & news
