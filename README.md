@@ -211,7 +211,7 @@ In Cargo.toml:
 
 ```
 [dependencies]
-slog = "*"
+slog = "1"
 ```
 
 In your `main.rs`:
