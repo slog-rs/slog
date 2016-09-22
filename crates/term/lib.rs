@@ -44,15 +44,17 @@ pub struct Format<D: Decorator> {
     mode: FormatMode,
     decorator: D,
     history: sync::Mutex<Vec<usize>>,
+    fn_timestamp: Box<Fn() -> String + Send + Sync>,
 }
 
 impl<D: Decorator> Format<D> {
     /// New Format format that prints using color
-    fn new(mode: FormatMode, d: D) -> Self {
+    fn new(mode: FormatMode, d: D, fn_timestamp: Box<Fn() -> String + Send + Sync>) -> Self {
         Format {
             decorator: d,
             mode: mode,
             history: sync::Mutex::new(vec![]),
+            fn_timestamp: fn_timestamp,
         }
     }
 
@@ -61,8 +63,7 @@ impl<D: Decorator> Format<D> {
                         rd: &D::RecordDecorator,
                         info: &Record)
                         -> io::Result<()> {
-        let ts = chrono::Local::now();
-        try!(rd.fmt_timestamp(io, format_args!("{} ", ts.format("%b %d %H:%M:%S%.3f"))));
+        try!(rd.fmt_timestamp(io, format_args!("{} ", (self.fn_timestamp)())));
         try!(rd.fmt_level(io, format_args!("{} ", info.level().as_short_str())));
 
         try!(rd.fmt_msg(io, format_args!("{}", info.msg())));
@@ -375,12 +376,23 @@ impl<D: Decorator + Send + Sync> StreamFormat for Format<D> {
     }
 }
 
+const TIMESTAMP_FORMAT: &'static str = "%b %d %H:%M:%S%.3f";
+
+fn timestamp_local() -> String {
+    chrono::Local::now().format(TIMESTAMP_FORMAT).to_string()
+}
+
+fn timestamp_utc() -> String {
+    chrono::UTC::now().format(TIMESTAMP_FORMAT).to_string()
+}
+
 /// Streamer builder
 pub struct StreamerBuilder {
     color: Option<bool>, // None = auto
     stdout: bool,
     async: bool,
     mode: FormatMode,
+    fn_timestamp: Box<Fn() -> String + Send + Sync>,
 }
 
 impl StreamerBuilder {
@@ -391,6 +403,7 @@ impl StreamerBuilder {
             stdout: true,
             async: false,
             mode: FormatMode::Full,
+            fn_timestamp: Box::new(timestamp_local),
         }
     }
 
@@ -448,6 +461,23 @@ impl StreamerBuilder {
         self
     }
 
+    /// Use the UTC time zone for the timestamp
+    pub fn use_utc_timestamp(mut self) -> Self {
+        self.fn_timestamp = Box::new(timestamp_utc);
+        self
+    }
+
+    /// Use the local time zone for the timestamp (default)
+    pub fn use_local_timestamp(mut self) -> Self {
+        self.fn_timestamp = Box::new(timestamp_local);
+        self
+    }
+
+    /// Provide a custom function to generate the timestamp
+    pub fn use_custom_timestamp(mut self, f: Box<Fn() -> String + Send + Sync>) -> Self  {
+        self.fn_timestamp = f;
+        self
+    }
 
     /// Build the streamer
     pub fn build(self) -> Box<slog::Drain<Error=io::Error>> {
@@ -457,7 +487,12 @@ impl StreamerBuilder {
             stderr_isatty()
         });
 
-        let format = Format::new(self.mode, ColorDecorator { use_color: color });
+        let format = Format::new(
+            self.mode,
+            ColorDecorator { use_color: color },
+            self.fn_timestamp
+        );
+
         let io = if self.stdout {
             Box::new(io::stdout()) as Box<io::Write + Send>
         } else {
