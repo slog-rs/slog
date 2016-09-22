@@ -94,13 +94,16 @@ Long term goal is to make it a go-to logging crate for Rust.
 
 ### Terminal output example
 
-Full mode:
+Colors overview:
 
 ![slog-rs terminal full-format output](http://i.imgur.com/IUe80gU.png)
 
-Compact mode:
+Compact vs full mode:
 
 ![slog-rs terminal compact output](http://i.imgur.com/P9u2sWP.png)
+![slog-rs terminal full output](http://i.imgur.com/ENiy5H9.png)
+
+
 
 ## Using & help
 
