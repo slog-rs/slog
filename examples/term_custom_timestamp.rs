@@ -11,9 +11,9 @@ use slog::DrainExt;
 fn main() {
     let now = SystemTime::now();
     let streamer = slog_term::StreamerBuilder::new()
-        .use_custom_timestamp(Box::new(move || {
+        .use_custom_timestamp(Box::new(move |sink| {
             let elapsed = now.elapsed().unwrap();
-            format!("{:5}.{:06}", elapsed.as_secs(), elapsed.subsec_nanos()/1000)
+            sink(format_args!("{:5}.{:06}", elapsed.as_secs(), elapsed.subsec_nanos()/1000))
             }));
     let log = slog::Logger::root(streamer.build().fuse(), o!());
 
