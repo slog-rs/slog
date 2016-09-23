@@ -31,6 +31,9 @@ use slog::{Level, OwnedKeyValueList};
 use slog_stream::Format as StreamFormat;
 use slog_stream::{Decorator, RecordDecorator, Streamer, AsyncStreamer};
 
+pub type TimestampSink<'a> = &'a mut FnMut(fmt::Arguments) -> io::Result<()>;
+pub type TimestampFn = Box<Fn(TimestampSink) -> io::Result<()> + Send + Sync>;
+
 /// Formatting mode
 enum FormatMode {
     /// Compact logging format
@@ -44,12 +47,12 @@ pub struct Format<D: Decorator> {
     mode: FormatMode,
     decorator: D,
     history: sync::Mutex<Vec<usize>>,
-    fn_timestamp: Box<Fn() -> String + Send + Sync>,
+    fn_timestamp: TimestampFn,
 }
 
 impl<D: Decorator> Format<D> {
     /// New Format format that prints using color
-    fn new(mode: FormatMode, d: D, fn_timestamp: Box<Fn() -> String + Send + Sync>) -> Self {
+    fn new(mode: FormatMode, d: D, fn_timestamp: TimestampFn) -> Self {
         Format {
             decorator: d,
             mode: mode,
@@ -63,7 +66,7 @@ impl<D: Decorator> Format<D> {
                         rd: &D::RecordDecorator,
                         info: &Record)
                         -> io::Result<()> {
-        try!(rd.fmt_timestamp(io, format_args!("{} ", (self.fn_timestamp)())));
+        try!((self.fn_timestamp)(&mut |args| rd.fmt_timestamp(io, args)));
         try!(rd.fmt_level(io, format_args!("{} ", info.level().as_short_str())));
 
         try!(rd.fmt_msg(io, format_args!("{}", info.msg())));
@@ -378,12 +381,12 @@ impl<D: Decorator + Send + Sync> StreamFormat for Format<D> {
 
 const TIMESTAMP_FORMAT: &'static str = "%b %d %H:%M:%S%.3f";
 
-fn timestamp_local() -> String {
-    chrono::Local::now().format(TIMESTAMP_FORMAT).to_string()
+fn timestamp_local(sink: TimestampSink) -> io::Result<()> {
+    sink(format_args!("{}", chrono::Local::now().format(TIMESTAMP_FORMAT)))
 }
 
-fn timestamp_utc() -> String {
-    chrono::UTC::now().format(TIMESTAMP_FORMAT).to_string()
+fn timestamp_utc(sink: TimestampSink) -> io::Result<()> {
+    sink(format_args!("{}", chrono::UTC::now().format(TIMESTAMP_FORMAT)))
 }
 
 /// Streamer builder
@@ -392,7 +395,7 @@ pub struct StreamerBuilder {
     stdout: bool,
     async: bool,
     mode: FormatMode,
-    fn_timestamp: Box<Fn() -> String + Send + Sync>,
+    fn_timestamp: TimestampFn,
 }
 
 impl StreamerBuilder {
@@ -474,7 +477,7 @@ impl StreamerBuilder {
     }
 
     /// Provide a custom function to generate the timestamp
-    pub fn use_custom_timestamp(mut self, f: Box<Fn() -> String + Send + Sync>) -> Self  {
+    pub fn use_custom_timestamp(mut self, f: TimestampFn) -> Self  {
         self.fn_timestamp = f;
         self
     }
