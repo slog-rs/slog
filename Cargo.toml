@@ -52,7 +52,7 @@ slog-term = { path = "crates/term", version = "1" }
 slog-stdlog = { path = "crates/stdlog", version = "1.0.0" }
 slog-syslog = { path = "crates/syslog", version = "1.0.0-alpha8" }
 slog-bunyan = { path = "crates/bunyan", version = "1" }
-slog-atomic = { path = "crates/atomic", version = "0.3" }
+slog-atomic = { path = "crates/atomic", version = "0.4" }
 slog-stream = { path = "crates/stream", version = "1" }
 log = "0.3.6"
 nix = "0.6.0"
