@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["logger","Access the `Logger` for the current logging scope"],["scope","Execute code in a logging scope"],["set_global_logger","Set global `Logger` that is returned by calls like `logger()` returned outside of any logging scope."]]});

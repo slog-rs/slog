@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `slog_scope` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, slog_scope">
+
+    <title>slog_scope - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'slog_scope', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>slog_scope</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-0' class='srclink' href='../src/slog_scope/lib.rs.html#1-120' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Logging scopes for slog-rs</p>
+
+<p>Logging scopes are convinience functionality for slog-rs that free user from manually passing
+ <code>Logger</code> objects around</p>
+
+<p>Note: Part of a <code>slog</code> logging philosophy is ability to freelly express logging contexts
+ acording to logical structure, rather than code structure. By using logging scopes logging
+ context is tied to code flow again, which is less expressive.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+ <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
+ <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog_scope</span>;
+ <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog_term</span>;
+
+ <span class='kw'>use</span> <span class='ident'>slog</span>::<span class='ident'>DrainExt</span>;
+
+ <span class='kw'>fn</span> <span class='ident'>foo</span>() {
+     <span class='macro'>info</span><span class='macro'>!</span>(<span class='ident'>slog_scope</span>::<span class='ident'>logger</span>(), <span class='string'>&quot;foo&quot;</span>);
+ }
+
+ <span class='kw'>fn</span> <span class='ident'>main</span>() {
+     <span class='kw'>let</span> <span class='ident'>log</span> <span class='op'>=</span> <span class='ident'>slog</span>::<span class='ident'>Logger</span>::<span class='ident'>root</span>(<span class='ident'>slog_term</span>::<span class='ident'>streamer</span>().<span class='ident'>stderr</span>().<span class='ident'>build</span>().<span class='ident'>fuse</span>(), <span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;version&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;0.5&quot;</span>));
+
+     <span class='ident'>slog_scope</span>::<span class='ident'>set_global_logger</span>(<span class='ident'>log</span>);
+     <span class='ident'>slog_scope</span>::<span class='ident'>scope</span>(<span class='ident'>slog_scope</span>::<span class='ident'>logger</span>().<span class='ident'>new</span>(<span class='macro'>o</span><span class='macro'>!</span>(<span class='string'>&quot;scope&quot;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;1&quot;</span>)),
+         <span class='op'>||</span> <span class='ident'>foo</span>()
+     );
+ }<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.logger.html'
+                                  title='slog_scope::logger'>logger</a></td>
+                           <td class='docblock-short'>
+                                <p>Access the <code>Logger</code> for the current logging scope</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.scope.html'
+                                  title='slog_scope::scope'>scope</a></td>
+                           <td class='docblock-short'>
+                                <p>Execute code in a logging scope</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.set_global_logger.html'
+                                  title='slog_scope::set_global_logger'>set_global_logger</a></td>
+                           <td class='docblock-short'>
+                                <p>Set global <code>Logger</code> that is returned by calls like <code>logger()</code> returned outside of any logging
+scope.</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "slog_scope";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

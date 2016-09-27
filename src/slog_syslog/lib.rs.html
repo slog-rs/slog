@@ -511,7 +511,7 @@
     }
 }
 
-<span class='doccomment'>/// ``Streamer` to Unix syslog using RFC 3164 format</span>
+<span class='doccomment'>/// `Streamer` to Unix syslog using RFC 3164 format</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>unix_3164</span>(<span class='ident'>facility</span>: <span class='ident'>syslog</span>::<span class='ident'>Facility</span>) <span class='op'>-&gt;</span> <span class='ident'>Streamer3164</span> {
     <span class='ident'>Streamer3164</span>::<span class='ident'>new</span>(<span class='ident'>syslog</span>::<span class='ident'>unix</span>(<span class='ident'>facility</span>).<span class='ident'>unwrap</span>())
 }

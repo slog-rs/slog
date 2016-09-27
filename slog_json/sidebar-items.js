@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["default","See `FormatBuilder` for details"],["new","Create new `FormatBuilder` to create `Format`"]],"struct":[["Format","Json formatter"],["FormatBuilder","Json formatter builder"]]});
+initSidebarItems({"fn":[["default","Default json `Format`"],["new","Create new `FormatBuilder` to create `Format`"]],"struct":[["Format","Json formatter"],["FormatBuilder","Json formatter builder"]]});

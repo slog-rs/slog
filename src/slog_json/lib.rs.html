@@ -212,7 +212,6 @@
 <span id="168">168</span>
 <span id="169">169</span>
 <span id="170">170</span>
-<span id="171">171</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Json formatter for `slog-rs`</span>
 <span class='doccomment'>//!</span>
@@ -380,8 +379,7 @@
     <span class='ident'>Format</span>::<span class='ident'>new</span>()
 }
 
-<span class='doccomment'>/// See `FormatBuilder` for details</span>
-<span class='doccomment'>///</span>
+<span class='doccomment'>/// Default json `Format`</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>Format</span> {
     <span class='ident'>Format</span>::<span class='ident'>new</span>().<span class='ident'>add_default_keys</span>().<span class='ident'>build</span>()
 }
