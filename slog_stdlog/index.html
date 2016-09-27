@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/slog_stdlog/lib.rs.html#1-261' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/slog_stdlog/lib.rs.html#1-276' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Standard Rust log crate adapter to slog-rs</p>
 
 <p>This crate allows using <code>slog</code> features with code
@@ -63,6 +63,9 @@ legacy logging statements to <code>slog</code>&#39;s <code>Logger</code>. That m
 drains.</p>
 
 <p>See <code>init()</code> documentation for minimal working example.</p>
+
+<p>Note: Whilte <code>slog-scope</code> provides a similiar functionality, the <code>slog-scope</code> and <code>slog-stdlog</code>
+keep track of distinct logginc scopes.</p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
@@ -78,6 +81,13 @@ drains.</p>
                                   title='slog_stdlog::init'>init</a></td>
                            <td class='docblock-short'>
                                 <p>Minimal initialization with default drain</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.logger.html'
+                                  title='slog_stdlog::logger'>logger</a></td>
+                           <td class='docblock-short'>
+                                <p>Access the <code>Logger</code> for the current logging scope</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

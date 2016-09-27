@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-89' class='srclink' href='../src/slog_stdlog/lib.rs.html#232' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-93' class='srclink' href='../src/slog_stdlog/lib.rs.html#247' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct StdLog;</pre><div class='docblock'><p>Drain logging <code>Record</code>s into <code>log</code> crate</p>
 
 <p>Using <code>StdLog</code> is effectively the same as using <code>log::info!(...)</code> and
@@ -57,7 +57,7 @@ other standard logging statements.</p>
 installed via <code>slog-stdlog::set_logger</code> would log things to a <code>StdLog</code>
 drain, which would again log things to the global <code>Logger</code> and so on
 leading to an infinite recursion.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a> for <a class='struct' href='../slog_stdlog/struct.StdLog.html' title='slog_stdlog::StdLog'>StdLog</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-91' class='srclink' href='../src/slog_stdlog/lib.rs.html#234-261' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../slog/trait.Drain.html' title='slog::Drain'>Drain</a> for <a class='struct' href='../slog_stdlog/struct.StdLog.html' title='slog_stdlog::StdLog'>StdLog</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-95' class='srclink' href='../src/slog_stdlog/lib.rs.html#249-276' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='associatedtype.Error' class='type'><span id='Error.t' class='invisible'><code>type <a href='../slog/trait.Drain.html#associatedtype.Error' class='type'>Error</a> = <a class='struct' href='https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html' title='std::io::error::Error'>Error</a></code></span></h4>
 <div class='docblock'><p>Type of potential errors returned during logging</p>
 </div><h4 id='method.log' class='method'><span id='log.v' class='invisible'><code>fn <a href='../slog/trait.Drain.html#tymethod.log' class='fnname'>log</a>(&amp;self, info: &amp;<a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>, _: &amp;<a class='struct' href='../slog/struct.OwnedKeyValueList.html' title='slog::OwnedKeyValueList'>OwnedKeyValueList</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h4>

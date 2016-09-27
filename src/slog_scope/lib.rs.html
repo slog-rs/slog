@@ -161,7 +161,6 @@
 <span id="117">117</span>
 <span id="118">118</span>
 <span id="119">119</span>
-<span id="120">120</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Logging scopes for slog-rs</span>
 <span class='doccomment'>//!</span>
@@ -220,8 +219,7 @@
     );
 }
 
-<span class='doccomment'>/// Set global `Logger` that is returned by calls like `logger()` returned outside of any logging</span>
-<span class='doccomment'>/// scope.</span>
+<span class='doccomment'>/// Set global `Logger` that is returned by calls like `logger()` outside of any logging scope.</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_global_logger</span>(<span class='ident'>l</span>: <span class='ident'>slog</span>::<span class='ident'>Logger</span>) {
     <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>GLOBAL_LOGGER</span>.<span class='ident'>set</span>(<span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>l</span>));
 }
