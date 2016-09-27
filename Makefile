@@ -34,6 +34,7 @@ test-all:
 	cd "crates/syslog"; cargo test $(CARGO_FLAGS)
 	cd "crates/stdlog"; cargo test $(CARGO_FLAGS)
 	cd "crates/atomic"; cargo test $(CARGO_FLAGS)
+	cd "crates/scope"; cargo test $(CARGO_FLAGS)
 	cd "crates/example-lib"; cargo test $(CARGO_FLAGS)
 	cd "crates/nursery"; cargo test $(CARGO_FLAGS)
 
@@ -79,6 +80,7 @@ doc: FORCE
 	cd "crates/syslog"; cargo doc -p slog-syslog
 	cd "crates/stdlog"; cargo doc -p slog-stdlog
 	cd "crates/atomic"; cargo doc -p slog-atomic
+	cd "crates/scope"; cargo doc -p slog-scope
 	cd "crates/example-lib"; cargo doc -p slog-example-lib
 	cd "crates/nursery"; cargo doc -p slog-nursery
 

@@ -44,7 +44,7 @@ release_max_level_trace = []
 [workspace]
 members = ["crates/json", "crates/term", "crates/stdlog", "crates/syslog",
 	"crates/bunyan", "crates/atomic", "crates/stream",
-	"crates/example-lib", "crates/nursery"]
+	"crates/example-lib", "crates/nursery", "crates/scope"]
 
 [dev-dependencies]
 slog-json = { path = "crates/json", version = "1" }

@@ -13,6 +13,9 @@
 //! drains.
 //!
 //! See `init()` documentation for minimal working example.
+//!
+//! Note: Whilte `slog-scope` provides a similiar functionality, the `slog-scope` and `slog-stdlog`
+//! keep track of distinct logginc scopes.
 #![warn(missing_docs)]
 
 #[macro_use]
@@ -194,6 +197,18 @@ pub fn with_current_logger<F, R>(f: F) -> R
             f(&GLOBAL_LOGGER.get())
         } else {
             f(&s[s.len() - 1])
+        }
+    })
+}
+
+/// Access the `Logger` for the current logging scope
+pub fn logger() -> slog::Logger {
+    TL_SCOPES.with(|s| {
+        let s = s.borrow();
+        if s.is_empty() {
+            (*GLOBAL_LOGGER.get()).clone()
+        } else {
+            s[s.len() - 1].clone()
         }
     })
 }
