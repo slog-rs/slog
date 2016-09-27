@@ -79,6 +79,21 @@ impl Logger {
     }
 }
 
+impl fmt::Debug for Logger {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        try!(write!(f, "Logger("));
+        for (i, &(k, _)) in self.values.iter().enumerate() {
+            if i != 0 {
+                try!(write!(f, ", "));
+            }
+
+            try!(write!(f, "{}", k));
+        }
+        try!(write!(f, ")"));
+        Ok(())
+    }
+}
+
 #[doc(hidden)]
 pub struct RecordStatic<'a> {
     /// Logging level

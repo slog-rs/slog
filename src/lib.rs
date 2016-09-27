@@ -141,6 +141,7 @@ pub type Never = ();
 ///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
 /// }
 /// ```
+#[cfg(feature = "std")]
 #[macro_export]
 macro_rules! o(
     () => {
@@ -148,6 +149,7 @@ macro_rules! o(
     };
     ($($k:expr => $v:expr),*) => {
         {
+        use std;
         vec![$(($k, std::boxed::Box::new($v))),*]
         }
     };
@@ -157,6 +159,37 @@ macro_rules! o(
         }
     };
 );
+
+/// Convenience function for building `&[OwnedKeyValue]`
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+///
+/// fn main() {
+///     let drain = slog::Discard;
+///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+/// }
+/// ```
+#[cfg(not(feature = "std"))]
+#[macro_export]
+macro_rules! o(
+    () => {
+        vec![]
+    };
+    ($($k:expr => $v:expr),*) => {
+        {
+            use alloc;
+        vec![$(($k, alloc::boxed::Box::new($v))),*]
+        }
+    };
+    ($($k:expr => $v:expr),*,) => {
+        {
+            o!($($k => $v),*)
+        }
+    };
+);
+
 
 /// Log message of a given level
 ///
