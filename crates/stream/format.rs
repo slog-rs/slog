@@ -25,27 +25,27 @@ pub trait Decorator: Send + Sync + Sized {
 /// Per-record decorator
 pub trait RecordDecorator {
     /// Format a field
-    fn fmt_msg(&self, io: &mut io::Write, args: fmt::Arguments) -> io::Result<()> {
-        io.write_fmt(args)
+    fn fmt_msg(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+        f(io)
     }
     /// Format a key
-    fn fmt_key(&self, io: &mut io::Write, args: fmt::Arguments) -> io::Result<()> {
-        io.write_fmt(args)
+    fn fmt_key(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+        f(io)
     }
     /// Format a separator
-    fn fmt_separator(&self, io: &mut io::Write, args: fmt::Arguments) -> io::Result<()> {
-        io.write_fmt(args)
+    fn fmt_separator(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+        f(io)
     }
     /// Format a value
-    fn fmt_value(&self, io: &mut io::Write, args: fmt::Arguments) -> io::Result<()> {
-        io.write_fmt(args)
+    fn fmt_value(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+        f(io)
     }
     /// Format a timestamp
-    fn fmt_timestamp(&self, io: &mut io::Write, args: fmt::Arguments) -> io::Result<()> {
-        io.write_fmt(args)
+    fn fmt_timestamp(&self, io: &mut io::Write, f : &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+        f(io)
     }
     /// Format a level
-    fn fmt_level(&self, io: &mut io::Write, args: fmt::Arguments) -> io::Result<()> {
-        io.write_fmt(args)
+    fn fmt_level(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+        f(io)
     }
 }

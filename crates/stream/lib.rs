@@ -14,7 +14,7 @@ use slog::Drain;
 use std::cell::RefCell;
 
 use std::sync::{mpsc, Mutex};
-use std::{mem, io, thread, fmt};
+use std::{mem, io, thread};
 use slog::Record;
 
 use slog::OwnedKeyValueList;

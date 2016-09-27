@@ -17,12 +17,10 @@
 extern crate slog;
 extern crate slog_stream;
 extern crate isatty;
-extern crate ansi_term;
 extern crate chrono;
 
 use std::{io, fmt, sync};
 
-use ansi_term::Colour;
 use isatty::{stderr_isatty, stdout_isatty};
 
 use slog::Record;
@@ -31,8 +29,8 @@ use slog::{Level, OwnedKeyValueList};
 use slog_stream::Format as StreamFormat;
 use slog_stream::{Decorator, RecordDecorator, Streamer, AsyncStreamer};
 
-pub type TimestampSink<'a> = &'a mut FnMut(fmt::Arguments) -> io::Result<()>;
-pub type TimestampFn = Box<Fn(TimestampSink) -> io::Result<()> + Send + Sync>;
+/// Timestamp function type
+pub type TimestampFn = Box<Fn(&mut io::Write) -> io::Result<()> + Send + Sync>;
 
 /// Formatting mode
 enum FormatMode {
@@ -66,12 +64,13 @@ impl<D: Decorator> Format<D> {
                         rd: &D::RecordDecorator,
                         info: &Record)
                         -> io::Result<()> {
-        try!((self.fn_timestamp)(&mut |args| rd.fmt_timestamp(io, args)));
-        try!(rd.fmt_level(io, format_args!("{} ", info.level().as_short_str())));
+        try!(rd.fmt_timestamp(io, &*self.fn_timestamp));
+        try!(rd.fmt_level(io, &|io : &mut io::Write| write!(io, " {} ", info.level().as_short_str())));
 
-        try!(rd.fmt_msg(io, format_args!("{}", info.msg())));
+        try!(rd.fmt_msg(io, &|io| write!(io, "{}", info.msg())));
         Ok(())
     }
+
     fn format_full(&self,
                    io: &mut io::Write,
                    info: &Record,
@@ -180,8 +179,8 @@ impl<D: Decorator> Format<D> {
 
 fn severity_to_color(lvl: Level) -> u8 {
     match lvl {
-        Level::Critical => 1,
-        Level::Error => 9,
+        Level::Critical => 5,
+        Level::Error => 1,
         Level::Warning => 3,
         Level::Info => 2,
         Level::Debug => 6,
@@ -207,8 +206,8 @@ impl ColorDecorator {
 
 /// Particular record decorator (color) for terminal output
 pub struct ColorRecordDecorator {
-    level_color: Option<Colour>,
-    key_style: Option<ansi_term::Style>,
+    level_color: Option<u8>,
+    key_bold: bool,
 }
 
 
@@ -218,13 +217,13 @@ impl Decorator for ColorDecorator {
     fn decorate(&self, record: &Record) -> ColorRecordDecorator {
         if self.use_color {
             ColorRecordDecorator {
-                level_color: Some(Colour::Fixed(severity_to_color(record.level()))),
-                key_style: Some(ansi_term::Style::new().bold()),
+                level_color: Some(severity_to_color(record.level())),
+                key_bold: true,
             }
         } else {
             ColorRecordDecorator {
                 level_color: None,
-                key_style: None,
+                key_bold: false,
             }
         }
     }
@@ -232,25 +231,31 @@ impl Decorator for ColorDecorator {
 
 
 impl RecordDecorator for ColorRecordDecorator {
-    fn fmt_level(&self, io: &mut io::Write, args: fmt::Arguments) -> io::Result<()> {
+    fn fmt_level(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
         if let Some(level_color) = self.level_color {
-            write!(io, "{}", level_color.paint(format!("{}", args)))
+            try!(write!(io, "\x1b[3{}m", level_color));
+            try!(f(io));
+            try!(write!(io, "\x1b[39m"));
         } else {
-            io.write_fmt(args)
+            try!(f(io));
         }
+        Ok(())
     }
 
 
-    fn fmt_msg(&self, io: &mut io::Write, args: fmt::Arguments) -> io::Result<()> {
-        if let Some(key_style) = self.key_style {
-            write!(io, "{}", key_style.paint(format!("{}", args)))
+    fn fmt_msg(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+        if self.key_bold {
+            try!(write!(io, "\x1b[1m"));
+            try!(f(io));
+            try!(write!(io, "\x1b[0m"));
         } else {
-            io.write_fmt(args)
+            try!(f(io));
         }
+        Ok(())
     }
 
-    fn fmt_key(&self, io: &mut io::Write, args: fmt::Arguments) -> io::Result<()> {
-        self.fmt_msg(io, args)
+    fn fmt_key(&self, io: &mut io::Write, f: &Fn(&mut io::Write) -> io::Result<()>) -> io::Result<()> {
+        self.fmt_msg(io, f)
     }
 }
 
@@ -268,7 +273,7 @@ impl<W: io::Write, D: RecordDecorator> Serializer<W, D> {
     }
 
     fn print_comma(&mut self) -> io::Result<()> {
-        try!(self.decorator.fmt_separator(&mut self.io, format_args!(", ")));
+        try!(self.decorator.fmt_separator(&mut self.io, &|io : &mut io::Write| write!(io, ", ")));
         Ok(())
     }
 
@@ -279,9 +284,9 @@ impl<W: io::Write, D: RecordDecorator> Serializer<W, D> {
 
 macro_rules! s(
     ($s:expr, $k:expr, $v:expr) => {
-        try!($s.decorator.fmt_key(&mut $s.io, format_args!("{}", $k)));
-        try!($s.decorator.fmt_separator(&mut $s.io, format_args!(": ")));
-        try!($s.decorator.fmt_value(&mut $s.io, format_args!("{}", $v)));
+        try!($s.decorator.fmt_key(&mut $s.io, &|io : &mut io::Write| write!(io, "{}", $k)));
+        try!($s.decorator.fmt_separator(&mut $s.io, &|io : &mut io::Write| write!(io, ": ")));
+        try!($s.decorator.fmt_value(&mut $s.io, &|io : &mut io::Write| write!(io, "{}", $v)));
     };
 );
 
@@ -381,12 +386,12 @@ impl<D: Decorator + Send + Sync> StreamFormat for Format<D> {
 
 const TIMESTAMP_FORMAT: &'static str = "%b %d %H:%M:%S%.3f";
 
-fn timestamp_local(sink: TimestampSink) -> io::Result<()> {
-    sink(format_args!("{}", chrono::Local::now().format(TIMESTAMP_FORMAT)))
+fn timestamp_local(io : &mut io::Write) -> io::Result<()> {
+    write!(io, "{}", chrono::Local::now().format(TIMESTAMP_FORMAT))
 }
 
-fn timestamp_utc(sink: TimestampSink) -> io::Result<()> {
-    sink(format_args!("{}", chrono::UTC::now().format(TIMESTAMP_FORMAT)))
+fn timestamp_utc(io : &mut io::Write) -> io::Result<()> {
+    write!(io, "{}", chrono::UTC::now().format(TIMESTAMP_FORMAT))
 }
 
 /// Streamer builder

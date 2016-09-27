@@ -17,5 +17,4 @@ path = "lib.rs"
 slog = { version = "1", path = "../.." }
 slog-stream = { version = "1", path = "../stream" }
 isatty = "0.1"
-ansi_term = "0.7"
 chrono = "0.2"
