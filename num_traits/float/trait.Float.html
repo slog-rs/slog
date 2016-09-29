@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-797' class='srclink' href='../../src/num_traits/float.rs.html#7-865' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-797' class='srclink' href='../../src/num_traits/float.rs.html#10-904' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Float: <a class='trait' href='../../num_traits/trait.Num.html' title='num_traits::Num'>Num</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> + <a class='trait' href='../../num_traits/cast/trait.NumCast.html' title='num_traits::cast::NumCast'>NumCast</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Neg.html' title='core::ops::Neg'>Neg</a>&lt;Output=Self&gt; {
     fn <a href='#tymethod.nan' class='fnname'>nan</a>() -&gt; Self;
     fn <a href='#tymethod.infinity' class='fnname'>infinity</a>() -&gt; Self;
@@ -103,6 +103,9 @@
     fn <a href='#tymethod.acosh' class='fnname'>acosh</a>(self) -&gt; Self;
     fn <a href='#tymethod.atanh' class='fnname'>atanh</a>(self) -&gt; Self;
     fn <a href='#tymethod.integer_decode' class='fnname'>integer_decode</a>(self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i8.html'>i8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>;
+
+    fn <a href='#method.to_degrees' class='fnname'>to_degrees</a>(self) -&gt; Self { ... }
+    fn <a href='#method.to_radians' class='fnname'>to_radians</a>(self) -&gt; Self { ... }
 }</pre>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
@@ -801,6 +804,29 @@ The floating point encoding is documented in the <a href="../../../../../referen
 
 <span class='comment'>// 1 * 8388608 * 2^(-22) == 2</span>
 <span class='kw'>let</span> <span class='ident'>abs_difference</span> <span class='op'>=</span> (<span class='ident'>sign_f</span> <span class='op'>*</span> <span class='ident'>mantissa_f</span> <span class='op'>*</span> <span class='ident'>exponent_f</span> <span class='op'>-</span> <span class='ident'>num</span>).<span class='ident'>abs</span>();
+
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>abs_difference</span> <span class='op'>&lt;</span> <span class='number'>1e-10</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div></div>
+            <h2 id='provided-methods'>Provided Methods</h2>
+            <div class='methods'>
+        <h3 id='method.to_degrees' class='method stab '><span id='to_degrees.v' class='invisible'><code>fn <a href='#method.to_degrees' class='fnname'>to_degrees</a>(self) -&gt; Self</code></span></h3><div class='docblock'><p>Converts radians to degrees.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>f64</span>::<span class='ident'>consts</span>;
+
+<span class='kw'>let</span> <span class='ident'>angle</span> <span class='op'>=</span> <span class='ident'>consts</span>::<span class='ident'>PI</span>;
+
+<span class='kw'>let</span> <span class='ident'>abs_difference</span> <span class='op'>=</span> (<span class='ident'>angle</span>.<span class='ident'>to_degrees</span>() <span class='op'>-</span> <span class='number'>180.0</span>).<span class='ident'>abs</span>();
+
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>abs_difference</span> <span class='op'>&lt;</span> <span class='number'>1e-10</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div><h3 id='method.to_radians' class='method stab '><span id='to_radians.v' class='invisible'><code>fn <a href='#method.to_radians' class='fnname'>to_radians</a>(self) -&gt; Self</code></span></h3><div class='docblock'><p>Converts degrees to radians.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>f64</span>::<span class='ident'>consts</span>;
+
+<span class='kw'>let</span> <span class='ident'>angle</span> <span class='op'>=</span> <span class='number'>180.0_f64</span>;
+
+<span class='kw'>let</span> <span class='ident'>abs_difference</span> <span class='op'>=</span> (<span class='ident'>angle</span>.<span class='ident'>to_radians</span>() <span class='op'>-</span> <span class='ident'>consts</span>::<span class='ident'>PI</span>).<span class='ident'>abs</span>();
 
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>abs_difference</span> <span class='op'>&lt;</span> <span class='number'>1e-10</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
 </div></div>

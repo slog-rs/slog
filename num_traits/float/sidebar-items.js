@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["Float",""]]});
+initSidebarItems({"trait":[["Float",""],["FloatConst",""]]});
