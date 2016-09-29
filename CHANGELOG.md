@@ -1,3 +1,6 @@
+**Note:** `slog-*` sub-crates have their own ChangeLog files under
+corresponding `crates/*/` directory.
+
 # Change Log
 All notable changes to this project will be documented in this file.
 
