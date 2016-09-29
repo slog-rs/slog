@@ -47,14 +47,14 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-498' class='srclink' href='../src/slog/src/_logger.rs.html#106-110' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-517' class='srclink' href='../src/slog/src/_logger.rs.html#121-125' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Record&lt;'a&gt; { /* fields omitted */ }</pre><div class='docblock'><p>One logging record</p>
 
 <p>Corresponds to one logging statement like <code>info!(...)</code> and carries all it&#39;s
 data: eg. message, key-values, key-values of <code>Logger</code> used to execute it.</p>
 
 <p>Record is passed to <code>Drain</code> associated with a given logger hierarchy.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-503' class='srclink' href='../src/slog/src/_logger.rs.html#113-175' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class='struct' href='../slog/struct.Record.html' title='slog::Record'>Record</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-522' class='srclink' href='../src/slog/src/_logger.rs.html#128-190' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.msg' class='method'><span id='msg.v' class='invisible'><code>fn <a href='#method.msg' class='fnname'>msg</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Arguments.html' title='core::fmt::Arguments'>Arguments</a></code></span></h4>
 <div class='docblock'><p>Get a log record message</p>
 </div><h4 id='method.level' class='method'><span id='level.v' class='invisible'><code>fn <a href='#method.level' class='fnname'>level</a>(&amp;self) -&gt; <a class='enum' href='../slog/enum.Level.html' title='slog::Level'>Level</a></code></span></h4>
