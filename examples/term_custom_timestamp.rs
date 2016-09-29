@@ -11,10 +11,10 @@ use slog::DrainExt;
 fn main() {
     let now = SystemTime::now();
     let streamer = slog_term::StreamerBuilder::new()
-        .use_custom_timestamp(Box::new(move |io| {
+        .use_custom_timestamp(move |io| {
             let elapsed = now.elapsed().unwrap();
             write!(io, "{:5}.{:06}", elapsed.as_secs(), elapsed.subsec_nanos()/1000)
-            }));
+            });
     let log = slog::Logger::root(streamer.build().fuse(), o!());
 
     slog_trace!(log, "logging a trace message");

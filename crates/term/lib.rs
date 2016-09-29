@@ -30,7 +30,7 @@ use slog_stream::Format as StreamFormat;
 use slog_stream::{Decorator, RecordDecorator, Streamer, AsyncStreamer};
 
 /// Timestamp function type
-pub type TimestampFn = Box<Fn(&mut io::Write) -> io::Result<()> + Send + Sync>;
+type TimestampFn = Fn(&mut io::Write) -> io::Result<()> + Send + Sync;
 
 /// Formatting mode
 enum FormatMode {
@@ -45,12 +45,12 @@ pub struct Format<D: Decorator> {
     mode: FormatMode,
     decorator: D,
     history: sync::Mutex<Vec<usize>>,
-    fn_timestamp: TimestampFn,
+    fn_timestamp: Box<TimestampFn>,
 }
 
 impl<D: Decorator> Format<D> {
     /// New Format format that prints using color
-    fn new(mode: FormatMode, d: D, fn_timestamp: TimestampFn) -> Self {
+    fn new(mode: FormatMode, d: D, fn_timestamp: Box<TimestampFn>) -> Self {
         Format {
             decorator: d,
             mode: mode,
@@ -400,7 +400,7 @@ pub struct StreamerBuilder {
     stdout: bool,
     async: bool,
     mode: FormatMode,
-    fn_timestamp: TimestampFn,
+    fn_timestamp: Box<TimestampFn>,
 }
 
 impl StreamerBuilder {
@@ -482,8 +482,9 @@ impl StreamerBuilder {
     }
 
     /// Provide a custom function to generate the timestamp
-    pub fn use_custom_timestamp(mut self, f: TimestampFn) -> Self  {
-        self.fn_timestamp = f;
+    pub fn use_custom_timestamp<F>(mut self, f: F) -> Self
+        where F : Fn(&mut io::Write) -> io::Result<()> + 'static + Send + Sync {
+        self.fn_timestamp = Box::new(f);
         self
     }
 
