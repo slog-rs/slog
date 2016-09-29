@@ -1,6 +1,6 @@
 [package]
 name = "slog-stream"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "`io::Write` streamer for slog-rs"
 keywords = ["log", "logging", "structured", "hierarchical", "stream"]
