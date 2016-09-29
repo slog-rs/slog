@@ -44,7 +44,7 @@ fn empty_json_blackbox() -> impl Drain<Error=()> {
 }
 
 fn json_blackbox() -> impl Drain<Error=()> {
-    stream(BlackBoxWriter, slog_json::new().build()).ignore_err()
+    stream(BlackBoxWriter, slog_json::default()).ignore_err()
 }
 
 #[bench]
