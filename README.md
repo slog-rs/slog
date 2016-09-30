@@ -2,17 +2,25 @@
 
 <p align="center">
   <a href="https://travis-ci.org/dpc/slog-rs">
-      <img src="https://img.shields.io/travis/dpc/slog-rs/master.svg?style=flat-square" alt="Travis CI Build Status">
+      <img src="https://img.shields.io/travis/dpc/slog-rs/master.svg" alt="Travis CI Build Status">
   </a>
+
   <a href="https://crates.io/crates/slog">
-      <img src="http://meritbadge.herokuapp.com/slog?style=flat-square" alt="crates.io">
+      <img src="https://img.shields.io/crates/d/slog.svg" alt="slog-rs on crates.io">
   </a>
+
   <a href="https://gitter.im/dpc/slog-rs">
-      <img src="https://img.shields.io/badge/GITTER-join%20chat-green.svg?style=flat-square" alt="Gitter Chat">
+      <img src="https://img.shields.io/gitter/room/dpc/slog-rs.svg" alt="slog-rs Gitter Chat">
   </a>
-  <br>
-  <strong><a href="//dpc.github.io/slog-rs/">Documentation (master branch)</a></strong>
-  <strong><a href="https://docs.rs/releases/search?query=slog">Documentation (release)</a></strong>
+
+  <a href="https://docs.rs/releases/search?query=slog-">
+      <img src="https://docs.rs/slog/badge.svg" alt="docs-rs: release versions documentation">
+  </a>
+
+  <a href="//dpc.github.io/slog-rs/">
+      <img src="https://img.shields.io/badge/docs-master-blue.svg" alt="docs-rs: master branch documentation">
+  </a>
+
   <br>
   <strong><a href="//github.com/dpc/slog-rs/wiki/Introduction-to-structured-logging-with-slog">Introduction</a></strong>
   <strong><a href="//github.com/dpc/slog-rs/wiki/FAQ">FAQ</a></strong>
