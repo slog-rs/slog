@@ -70,8 +70,11 @@ $(CRATES):
 	cd "crates/$@"; cargo build $(CARGO_FLAGS)
 	cd "crates/$@"; cargo test $(CARGO_FLAGS)
 
+examples/drain-graph.png: examples/drain-graph.dot
+	dot -Tpng $^ > $@
+
 .PHONY: doc
-doc: FORCE
+doc: FORCE examples/drain-graph.png
 	cargo doc -p slog
 	cd "crates/term"; cargo doc -p slog-term
 	cd "crates/serde"; cargo doc -p slog-serde
