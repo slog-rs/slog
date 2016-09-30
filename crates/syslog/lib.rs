@@ -88,13 +88,25 @@ impl Drain for Streamer3164 {
                         let io = try!(self.io
                             .lock()
                             .map_err(|_| io::Error::new(io::ErrorKind::Other, "locking error")));
-                        try!(io.send(sever, &String::from_utf8_lossy(&buf)));
+
+                        let buf = String::from_utf8_lossy(&buf);
+                        let buf = io.format_3164(sever, &buf).into_bytes();
+
+                        let mut pos = 0;
+                        while pos < buf.len() {
+                            let n = try!(io.send_raw(&buf[pos..]));
+                            if n == 0 {
+                                break
+                            }
+
+                            pos += n;
+                        }
                     }
 
                     Ok(())
-
                 }
             }();
+            buf.clear();
             res
         })
     }
