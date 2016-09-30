@@ -35,7 +35,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 * hierarchical loggers
 * lazily evaluated values
 * modular, lightweight and very extensible
-	* tiny core crate that does not pull any other dependencies
+	* tiny core crate that does not pull any dependencies
 	* feature-crates for specific functionality
 * backward compatibility for standard `log` crate (`slog-stdlog` crate)
 	* supports logging-scopes
