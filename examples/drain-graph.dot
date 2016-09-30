@@ -6,6 +6,5 @@ digraph G {
 	"LevelFilter-2" -> Syslog;
 	File -> "slog_stream::Streamer" [arrowhead =diamond, label = "owns"];
 	"slog_stream::Streamer" -> "slog_json::Format" [label = "serializes using"];
-	"slog_json::Format" -> "slog_stream::Format" [label = "decorates elements with"];
-	"slog_stream::Format" -> File [label = "writes to"];
+	"slog_json::Format" -> "File" [label = "writes to"];
 }
