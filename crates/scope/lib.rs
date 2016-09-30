@@ -31,7 +31,7 @@
 
 #![warn(missing_docs)]
 
-#[macro_use]
+#[macro_use(o, slog_log, slog_trace, slog_debug, slog_info, slog_warn, slog_error)]
 extern crate slog;
 #[macro_use]
 extern crate lazy_static;
@@ -42,6 +42,12 @@ use slog::*;
 use std::sync::Arc;
 use std::cell::RefCell;
 use crossbeam::sync::ArcCell;
+
+#[macro_export] macro_rules! trace( ($($args:tt)+) => { slog_trace![$crate::logger(), $($args)+]; };);
+#[macro_export] macro_rules! debug( ($($args:tt)+) => { slog_debug![$crate::logger(), $($args)+]; };);
+#[macro_export] macro_rules! info( ($($args:tt)+) => { slog_info![$crate::logger(), $($args)+]; };);
+#[macro_export] macro_rules! warn( ($($args:tt)+) => { slog_warn![$crate::logger(), $($args)+]; };);
+#[macro_export] macro_rules! error( ($($args:tt)+) => { slog_error![$crate::logger(), $($args)+]; };);
 
 thread_local! {
     static TL_SCOPES: RefCell<Vec<slog::Logger>> = RefCell::new(Vec::with_capacity(8))
