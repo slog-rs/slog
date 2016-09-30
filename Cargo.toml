@@ -49,6 +49,7 @@ members = ["crates/json", "crates/term", "crates/stdlog", "crates/syslog",
 [dev-dependencies]
 slog-json = { path = "crates/json", version = "1" }
 slog-term = { path = "crates/term", version = "1" }
+slog-scope = { path = "crates/scope", version = "0" }
 slog-stdlog = { path = "crates/stdlog", version = "1.0.0" }
 slog-syslog = { path = "crates/syslog", version = "1.0.0-alpha8" }
 slog-bunyan = { path = "crates/bunyan", version = "1" }
