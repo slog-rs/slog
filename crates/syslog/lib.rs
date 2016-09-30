@@ -116,16 +116,18 @@ impl slog_stream::Format for Format3164 {
               rinfo: &Record,
               logger_values: &OwnedKeyValueList)
               -> io::Result<()> {
-        let mut ser = KSV::new(io, "=".into());
+        try!(write!(io, "{}", rinfo.msg()));
+
+        let mut ser = KSV::new(io, ": ".into());
         {
             for &(ref k, ref v) in logger_values.iter() {
+                try!(ser.io().write_all(", ".as_bytes()));
                 try!(v.serialize(rinfo, k, &mut ser));
-                let _ = try!(ser.io().write_all(" ".as_bytes()));
             }
 
             for &(ref k, ref v) in rinfo.values().iter() {
+                try!(ser.io().write_all(", ".as_bytes()));
                 try!(v.serialize(rinfo, k, &mut ser));
-                let _ = try!(ser.io().write_all(" ".as_bytes()));
             }
         }
         Ok(())
