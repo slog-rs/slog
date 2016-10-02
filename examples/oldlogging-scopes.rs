@@ -31,7 +31,7 @@ fn main() {
         || {
             info!("entering foo!");
             foo();
-            info!("left foo!");
+            info!("leaving foo!");
         }
     )
 }
