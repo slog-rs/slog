@@ -149,8 +149,7 @@ macro_rules! o(
     };
     ($($k:expr => $v:expr),*) => {
         {
-        use std;
-        vec![$(($k, std::boxed::Box::new($v))),*]
+        vec![$(($k, ::std::boxed::Box::new($v))),*]
         }
     };
     ($($k:expr => $v:expr),*,) => {
