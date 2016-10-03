@@ -1,6 +1,6 @@
 [package]
 name = "slog-stdlog"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Standard Rust log crate adapter to slog-rs"
 keywords = ["slog", "logging", "json", "log"]
