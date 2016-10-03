@@ -8,3 +8,13 @@ fn logger_fmt_debug_sanity() {
 
     assert_eq!(format!("{:?}", log), "Logger(b, c, a)");
 }
+
+#[cfg(test)]
+mod tests {
+    use {Logger, Discard};
+    /// ensure o! macro expands without error inside a module
+    #[test]
+    fn test_o_macro_expansion() {
+        let _ = Logger::root(Discard, o!("a" => "aa"));
+    }
+}
