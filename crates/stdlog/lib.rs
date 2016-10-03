@@ -247,6 +247,56 @@ pub fn scope<SF, R>(logger: slog::Logger, f: SF) -> R
 /// leading to an infinite recursion.
 pub struct StdLog;
 
+struct LazyLogString<'a> {
+    info: &'a slog::Record<'a>,
+    logger_values : &'a slog::OwnedKeyValueList
+}
+
+impl<'a> LazyLogString<'a> {
+
+    fn new(info : &'a slog::Record, logger_values : &'a slog::OwnedKeyValueList) -> Self {
+
+        LazyLogString {
+            info: info,
+            logger_values: logger_values,
+        }
+    }
+}
+
+impl<'a> fmt::Display for LazyLogString<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+
+        try!(write!(f, "{}", self.info.msg()));
+
+        let io = io::Cursor::new(Vec::new());
+        let mut ser = KSV::new(io, ": ".into());
+
+        let res = {
+            || -> io::Result<()> {
+
+            for &(ref k, ref v) in self.logger_values.iter() {
+                try!(ser.io().write_all(", ".as_bytes()));
+                try!(v.serialize(self.info, k, &mut ser));
+            }
+
+            for &(ref k, ref v) in self.info.values().iter() {
+                try!(ser.io().write_all(", ".as_bytes()));
+                try!(v.serialize(self.info, k, &mut ser));
+            }
+            Ok(())
+        }
+        }().map_err(|_| fmt::Error);
+
+        try!(res);
+
+        let values = ser.into_inner().into_inner();
+
+
+        write!(f, "{}", String::from_utf8_lossy(&values))
+
+    }
+}
+
 impl slog::Drain for StdLog {
     type Error = io::Error;
     fn log(&self, info: &slog::Record, logger_values : &slog::OwnedKeyValueList) -> io::Result<()> {
@@ -268,25 +318,10 @@ impl slog::Drain for StdLog {
             __line: info.line(),
         };
 
-        let io = io::Cursor::new(Vec::new());
-        let mut ser = KSV::new(io, ": ".into());
-        {
-            for &(ref k, ref v) in logger_values.iter() {
-                try!(ser.io().write_all(", ".as_bytes()));
-                try!(v.serialize(info, k, &mut ser));
-            }
-
-            for &(ref k, ref v) in info.values().iter() {
-                try!(ser.io().write_all(", ".as_bytes()));
-                try!(v.serialize(info, k, &mut ser));
-            }
-        }
-
-        let values = ser.into_inner().into_inner();
-
+        let lazy = LazyLogString::new(info, logger_values);
         // Please don't yell at me for this! :D
         // https://github.com/rust-lang-nursery/log/issues/95
-        log::__log(level, target, &location, format_args!("{}{}", info.msg(), String::from_utf8_lossy(&values)));
+        log::__log(level, target, &location, format_args!("{}", lazy));
 
         Ok(())
     }
