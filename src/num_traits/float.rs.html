@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/num-traits-0.1.35/src/float.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/dpc/.cargo/registry/src/github.com-1ecc6299db9ec823/num-traits-0.1.36/src/float.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>float.rs.html -- source</title>
@@ -1361,10 +1361,40 @@
 <span id="1317">1317</span>
 <span id="1318">1318</span>
 <span id="1319">1319</span>
+<span id="1320">1320</span>
+<span id="1321">1321</span>
+<span id="1322">1322</span>
+<span id="1323">1323</span>
+<span id="1324">1324</span>
+<span id="1325">1325</span>
+<span id="1326">1326</span>
+<span id="1327">1327</span>
+<span id="1328">1328</span>
+<span id="1329">1329</span>
+<span id="1330">1330</span>
+<span id="1331">1331</span>
+<span id="1332">1332</span>
+<span id="1333">1333</span>
+<span id="1334">1334</span>
+<span id="1335">1335</span>
+<span id="1336">1336</span>
+<span id="1337">1337</span>
+<span id="1338">1338</span>
+<span id="1339">1339</span>
+<span id="1340">1340</span>
+<span id="1341">1341</span>
+<span id="1342">1342</span>
+<span id="1343">1343</span>
+<span id="1344">1344</span>
+<span id="1345">1345</span>
+<span id="1346">1346</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Neg</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>num</span>::<span class='ident'>FpCategory</span>;
+
+<span class='comment'>// Used for default implementation of `epsilon`</span>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>f32</span>;
 
 <span class='kw'>use</span> {<span class='ident'>Num</span>, <span class='ident'>NumCast</span>};
 
@@ -1452,6 +1482,25 @@
     <span class='doccomment'>/// assert_eq!(x, f64::MIN_POSITIVE);</span>
     <span class='doccomment'>/// ```</span>
     <span class='kw'>fn</span> <span class='ident'>min_positive_value</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+
+    <span class='doccomment'>/// Returns epsilon, a small positive value.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='doccomment'>/// use num_traits::Float;</span>
+    <span class='doccomment'>/// use std::f64;</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// let x: f64 = Float::epsilon();</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// assert_eq!(x, f64::EPSILON);</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Panics</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// The default implementation will panic if `f32::EPSILON` cannot</span>
+    <span class='doccomment'>/// be cast to `Self`.</span>
+    <span class='kw'>fn</span> <span class='ident'>epsilon</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+        <span class='self'>Self</span>::<span class='ident'>from</span>(<span class='ident'>f32</span>::<span class='ident'>EPSILON</span>).<span class='ident'>expect</span>(<span class='string'>&quot;Unable to cast from f32::EPSILON&quot;</span>)
+    }
 
     <span class='doccomment'>/// Returns the largest finite value that this type can represent.</span>
     <span class='doccomment'>///</span>
@@ -2298,6 +2347,11 @@
             <span class='attribute'>#[<span class='ident'>inline</span>]</span>
             <span class='kw'>fn</span> <span class='ident'>min_positive_value</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
                 ::<span class='ident'>std</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>::<span class='ident'>MIN_POSITIVE</span>
+            }
+
+            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+            <span class='kw'>fn</span> <span class='ident'>epsilon</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
+                ::<span class='ident'>std</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>::<span class='ident'>EPSILON</span>
             }
 
             <span class='attribute'>#[<span class='ident'>inline</span>]</span>

@@ -161,6 +161,13 @@
 <span id="117">117</span>
 <span id="118">118</span>
 <span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Logging scopes for slog-rs</span>
 <span class='doccomment'>//!</span>
@@ -195,7 +202,7 @@
 
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>missing_docs</span>)]</span>
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='attribute'>#[<span class='ident'>macro_use</span>(<span class='ident'>o</span>, <span class='ident'>slog_log</span>, <span class='ident'>slog_trace</span>, <span class='ident'>slog_debug</span>, <span class='ident'>slog_info</span>, <span class='ident'>slog_warn</span>, <span class='ident'>slog_error</span>)]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>slog</span>;
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>lazy_static</span>;
@@ -206,6 +213,13 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>RefCell</span>;
 <span class='kw'>use</span> <span class='ident'>crossbeam</span>::<span class='ident'>sync</span>::<span class='ident'>ArcCell</span>;
+
+<span class='attribute'>#[<span class='ident'>macro_export</span>]</span> <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>crit</span>( ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> { <span class='macro'>slog_trace</span><span class='macro'>!</span>[<span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>logger</span>(), $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>)<span class='op'>+</span>]; };);
+<span class='attribute'>#[<span class='ident'>macro_export</span>]</span> <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>trace</span>( ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> { <span class='macro'>slog_trace</span><span class='macro'>!</span>[<span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>logger</span>(), $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>)<span class='op'>+</span>]; };);
+<span class='attribute'>#[<span class='ident'>macro_export</span>]</span> <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>debug</span>( ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> { <span class='macro'>slog_debug</span><span class='macro'>!</span>[<span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>logger</span>(), $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>)<span class='op'>+</span>]; };);
+<span class='attribute'>#[<span class='ident'>macro_export</span>]</span> <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>info</span>( ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> { <span class='macro'>slog_info</span><span class='macro'>!</span>[<span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>logger</span>(), $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>)<span class='op'>+</span>]; };);
+<span class='attribute'>#[<span class='ident'>macro_export</span>]</span> <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>warn</span>( ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> { <span class='macro'>slog_warn</span><span class='macro'>!</span>[<span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>logger</span>(), $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>)<span class='op'>+</span>]; };);
+<span class='attribute'>#[<span class='ident'>macro_export</span>]</span> <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>error</span>( ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>:<span class='ident'>tt</span>)<span class='op'>+</span>) <span class='op'>=&gt;</span> { <span class='macro'>slog_error</span><span class='macro'>!</span>[<span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>logger</span>(), $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>args</span>)<span class='op'>+</span>]; };);
 
 <span class='macro'>thread_local</span><span class='macro'>!</span> {
     <span class='kw'>static</span> <span class='ident'>TL_SCOPES</span>: <span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>slog</span>::<span class='ident'>Logger</span><span class='op'>&gt;&gt;</span> <span class='op'>=</span> <span class='ident'>RefCell</span>::<span class='ident'>new</span>(<span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>8</span>))

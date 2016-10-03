@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-797' class='srclink' href='../num_traits/float/trait.Float.html?gotosrc=797' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-798' class='srclink' href='../num_traits/float/trait.Float.html?gotosrc=798' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Float: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> + <a class='trait' href='../num/cast/trait.NumCast.html' title='num::cast::NumCast'>NumCast</a> + <a class='trait' href='../num/trait.Num.html' title='num::Num'>Num</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Neg.html' title='core::ops::Neg'>Neg</a>&lt;Output=Self&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a>&lt;Self&gt; {
     fn <a href='#tymethod.nan' class='fnname'>nan</a>() -&gt; Self;
     fn <a href='#tymethod.infinity' class='fnname'>infinity</a>() -&gt; Self;
@@ -104,6 +104,7 @@
     fn <a href='#tymethod.atanh' class='fnname'>atanh</a>(self) -&gt; Self;
     fn <a href='#tymethod.integer_decode' class='fnname'>integer_decode</a>(self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i8.html'>i8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>;
 
+    fn <a href='#method.epsilon' class='fnname'>epsilon</a>() -&gt; Self { ... }
     fn <a href='#method.to_degrees' class='fnname'>to_degrees</a>(self) -&gt; Self { ... }
     fn <a href='#method.to_radians' class='fnname'>to_radians</a>(self) -&gt; Self { ... }
 }</pre>
@@ -1409,7 +1410,28 @@ assert!(abs_difference &lt; 1e-10);
 </div></div>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
-        <h3 id='method.to_degrees' class='method stab '><span id='to_degrees.v' class='invisible'><code>fn <a href='#method.to_degrees' class='fnname'>to_degrees</a>(self) -&gt; Self</code></span></h3><div class='docblock'><p>Converts radians to degrees.</p>
+        <h3 id='method.epsilon' class='method stab '><span id='epsilon.v' class='invisible'><code>fn <a href='#method.epsilon' class='fnname'>epsilon</a>() -&gt; Self</code></span></h3><div class='docblock'><p>Returns epsilon, a small positive value.</p>
+
+<span class='rusttest'>extern crate num;
+fn main() {
+    use num_traits::Float;
+use std::f64;
+
+let x: f64 = Float::epsilon();
+
+assert_eq!(x, f64::EPSILON);
+}</span><pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>num_traits</span>::<span class='ident'>Float</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>f64</span>;
+
+<span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>f64</span> <span class='op'>=</span> <span class='ident'>Float</span>::<span class='ident'>epsilon</span>();
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>x</span>, <span class='ident'>f64</span>::<span class='ident'>EPSILON</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+
+<h1 id='panics' class='section-header'><a href='#panics'>Panics</a></h1>
+<p>The default implementation will panic if <code>f32::EPSILON</code> cannot
+be cast to <code>Self</code>.</p>
+</div><h3 id='method.to_degrees' class='method stab '><span id='to_degrees.v' class='invisible'><code>fn <a href='#method.to_degrees' class='fnname'>to_degrees</a>(self) -&gt; Self</code></span></h3><div class='docblock'><p>Converts radians to degrees.</p>
 
 <span class='rusttest'>fn main() {
     use std::f64::consts;
