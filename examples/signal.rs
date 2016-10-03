@@ -12,6 +12,7 @@ extern crate lazy_static;
 use nix::sys::signal;
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::SeqCst;
+use std::time::Duration;
 
 use std::{thread, io};
 use slog::*;
@@ -64,6 +65,6 @@ fn main() {
     info!(log, "kill -SIGUSR1 {}", pid);
     loop {
         info!(log, "tick");
-        thread::sleep_ms(3000);
+        thread::sleep(Duration::from_millis(3000));
     }
 }
