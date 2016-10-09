@@ -11,15 +11,17 @@
 //! context is tied to code flow again, which is less expressive.
 //!
 //! ```
-//!#[macro_use]
+//! #[macro_use(o, slog_info, slog_log)]
 //! extern crate slog;
+//! #[macro_use]
 //! extern crate slog_scope;
 //! extern crate slog_term;
 //!
 //! use slog::DrainExt;
 //!
 //! fn foo() {
-//!     info!(slog_scope::logger(), "foo");
+//!     slog_info!(slog_scope::logger(), "foo");
+//!     info!("foo"); // Same as above, but more ergonomic.
 //! }
 //!
 //! fn main() {
