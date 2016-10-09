@@ -101,10 +101,9 @@ impl Drop for ScopeGuard {
 pub fn logger() -> Logger {
     TL_SCOPES.with(|s| {
         let s = s.borrow();
-        if s.is_empty() {
-            (*GLOBAL_LOGGER.get()).clone()
-        } else {
-            s[s.len() - 1].clone()
+        match s.last() {
+          Some(logger) => logger.clone(),
+          None => (*GLOBAL_LOGGER.get()).clone(),
         }
     })
 }
