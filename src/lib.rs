@@ -124,6 +124,9 @@ use std::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
 
+/// Error type that allows custom implementations of the Serialize trait.
+pub use ser::Error;
+
 /// This type is here just to abstract away lack of `!` type support in stable
 /// rust during time of 1.0 release. It will be switched to `!` at some point
 /// and `Never` should not be considered "stable" API.
