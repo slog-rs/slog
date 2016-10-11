@@ -65,6 +65,34 @@ impl From<Error> for std::io::Error {
     }
 }
 
+#[cfg(feature = "std")]
+impl std::error::Error for Error {
+    fn description(&self) -> &str {
+        match *self {
+            Error::Io(ref e) => e.description(),
+            Error::Other => "serialization error"
+        }
+    }
+
+    fn cause(&self) -> Option<&std::error::Error> {
+        match *self {
+            Error::Io(ref e) => Some(e),
+            Error::Other => None
+        }
+    }
+}
+
+#[cfg(feature = "std")]
+impl core::fmt::Display for Error {
+    fn fmt(&self, fmt: &mut core::fmt::Formatter) -> std::fmt::Result {
+        match *self {
+            Error::Io(ref e) => e.fmt(fmt),
+            Error::Other => fmt.write_str("Other serialization error")
+        }
+    }
+
+}
+
 /// Value that can be serialized
 ///
 /// Loggers require values in key-value pairs to
