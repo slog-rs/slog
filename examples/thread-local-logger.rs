@@ -20,7 +20,7 @@ use std::thread;
 use slog::Logger;
 
 thread_local!(static TL_LOG: RefCell<Logger> = RefCell::new(
-    Logger::root(slog::Discard, o!("logger" => "unititalized"))
+    Logger::root(slog::Discard, o!("logger" => "uninitialized"))
 ));
 
 fn foo() {
