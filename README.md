@@ -38,7 +38,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 ### Features
 
 * flexible & easy to use
-* great performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
+* great performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log) and  [what makes slog fast](https://github.com/dpc/slog-rs/wiki/What-makes-slog-fast)
 * `#![no_std]` support (with opt-out `std` cargo feature flag)
 * hierarchical loggers
 * lazily evaluated values
