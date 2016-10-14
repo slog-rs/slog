@@ -109,15 +109,6 @@ use std::sync::Arc;
 #[cfg(not(feature = "std"))]
 use alloc::arc::Arc;
 
-#[cfg(feature = "std")]
-use std::slice;
-#[cfg(not(feature = "std"))]
-use core::slice;
-
-#[cfg(feature = "std")]
-use std::vec::Vec;
-#[cfg(not(feature = "std"))]
-use collections::vec::Vec;
 
 #[cfg(feature = "std")]
 use std::boxed::Box;
@@ -130,7 +121,7 @@ use alloc::boxed::Box;
 #[doc(hidden)]
 pub type Never = ();
 
-/// Convenience function for building `&[OwnedKeyValue]`
+/// Convenience macro for building `SyncMultiSerialize` trait object
 ///
 /// ```
 /// #[macro_use]
@@ -144,22 +135,24 @@ pub type Never = ();
 #[cfg(feature = "std")]
 #[macro_export]
 macro_rules! o(
+    (@ $k:expr => $v:expr, $($args:tt)+) => {
+        ($k, $v, o!(@ $($args)+))
+    };
+    (@ $k:expr => $v:expr) => {
+        ($k, $v)
+    };
+    (@ $k:expr => $v:expr,) => {
+        ($k, $v)
+    };
     () => {
-        vec![]
+        None
     };
-    ($($k:expr => $v:expr),*) => {
-        {
-        vec![$(($k, ::std::boxed::Box::new($v))),*]
-        }
-    };
-    ($($k:expr => $v:expr),*,) => {
-        {
-            o!($($k => $v),*)
-        }
+    ($($args:tt)+) => {
+        Some(::std::boxed::Box::new(o!(@ $($args)+)))
     };
 );
 
-/// Convenience function for building `&[OwnedKeyValue]`
+/// Convenience macro for building `SyncMultiSerialize` trait object
 ///
 /// ```
 /// #[macro_use]
@@ -173,22 +166,22 @@ macro_rules! o(
 #[cfg(not(feature = "std"))]
 #[macro_export]
 macro_rules! o(
+    (@ $k:expr => $v:expr, $($args:tt)+) => {
+        ($k, $v, o!(@ $($args)+))
+    };
+    (@ $k:expr => $v:expr) => {
+        ($k, $v)
+    };
+    (@ $k:expr => $v:expr,) => {
+        ($k, $v)
+    };
     () => {
-        vec![]
+        None
     };
-    ($($k:expr => $v:expr),*) => {
-        {
-            use alloc;
-        vec![$(($k, alloc::boxed::Box::new($v))),*]
-        }
-    };
-    ($($k:expr => $v:expr),*,) => {
-        {
-            o!($($k => $v),*)
-        }
+    ($($args:tt)+) => {
+        Some(::alloc::boxed::Box::new(o!(@ $($args)+)))
     };
 );
-
 
 /// Log message of a given level
 ///
@@ -555,45 +548,46 @@ pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
 /// Key value pair that can be owned by `Logger`
 ///
 /// See `o!(...)` macro.
-pub type OwnedKeyValue = (&'static str, Box<ser::SyncSerialize>);
+pub type OwnedKeyValue<'a> = (&'static str, &'a ser::SyncSerialize);
 
-/// Chain of `OwnedKeyValue`-s of a `Logger` and its ancestors
+/// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
 pub struct OwnedKeyValueList {
     parent: Option<Arc<OwnedKeyValueList>>,
-    values: Vec<OwnedKeyValue>,
+    values: Option<Box<ser::SyncMultiSerialize>>,
 }
 
 impl OwnedKeyValueList {
-    /// New `OwnedKeyValue` with a parent
-    pub fn new(values: Vec<OwnedKeyValue>, parent: Arc<OwnedKeyValueList>) -> Self {
+    /// New `OwnedKeyValueList` node with an existing parent
+    pub fn new(values: Box<ser::SyncMultiSerialize>, parent: Arc<OwnedKeyValueList>) -> Self {
         OwnedKeyValueList {
             parent: Some(parent),
-            values: values,
+            values: Some(values),
         }
     }
 
-    /// New `OwnedKeyValue` without a parent (root)
-    pub fn root(values: Vec<OwnedKeyValue>) -> Self {
+    /// New `OwnedKeyValue` node without a parent (root)
+    pub fn root(values: Option<Box<ser::SyncMultiSerialize>>) -> Self {
         OwnedKeyValueList {
             parent: None,
             values: values,
         }
     }
 
-    /// Get the parent element on the chain of values
+    /// Get the parent node element on the chain of values
+    ///
+    /// Since `OwnedKeyValueList` is just a chain of `SyncMultiSerialize` instances: each
+    /// containing one more more `OwnedKeyValue`, it's possible to iterate through the whole list
+    /// group-by-group with `parent()` and `values()`.
     pub fn parent(&self) -> &Option<Arc<OwnedKeyValueList>> {
         &self.parent
     }
 
-    /// Get the top-node values
-    ///
-    /// Since `OwnedKeyValueList` is just a chain of `Vec<OwnedKeyValue>`
-    /// it's possible to iterate through it group-by-group.
-    pub fn values(&self) -> &Vec<OwnedKeyValue> {
-        &self.values
+    /// Get the head node `SyncMultiSerialize` values
+    pub fn values(&self) -> Option<&ser::SyncMultiSerialize> {
+        self.values.as_ref().map(|b| &**b)
     }
 
-    /// Iterator over `OwnedKeyValue`-s
+    /// Iterator over all `OwnedKeyValue`-s in every `SyncMultiSerialize` of the list
     pub fn iter(&self) -> OwnedKeyValueListIterator {
         OwnedKeyValueListIterator::new(self)
     }
@@ -601,33 +595,38 @@ impl OwnedKeyValueList {
 
 /// Iterator over `OwnedKeyValue`-s
 pub struct OwnedKeyValueListIterator<'a> {
-    next_node: &'a Option<Arc<OwnedKeyValueList>>,
-    iter: slice::Iter<'a, OwnedKeyValue>,
+    next_node: Option<&'a Arc<OwnedKeyValueList>>,
+    cur: Option<&'a ser::SyncMultiSerialize>,
 }
 
 impl<'a> OwnedKeyValueListIterator<'a> {
     fn new(node: &'a OwnedKeyValueList) -> Self {
         OwnedKeyValueListIterator {
-            next_node: &node.parent,
-            iter: node.values.iter(),
+            next_node: node.parent.as_ref(),
+            cur: node.values.as_ref().map(|v| &**v),
         }
     }
 }
 
 impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
-    type Item = &'a OwnedKeyValue;
+    type Item = OwnedKeyValue<'a>;
     fn next(&mut self) -> Option<Self::Item> {
         loop {
-            match self.iter.next() {
-                Some(x) => return Some(&*x),
+            let cur = self.cur;
+            match cur {
+                Some(x) => {
+                    let tail = x.tail();
+                    self.cur = tail;
+                    return Some(x.head())
+                },
                 None => {
-                    match *self.next_node {
+                    self.next_node = match self.next_node {
                         Some(ref node) => {
-                            self.iter = node.values.iter();
-                            self.next_node = &node.parent;
+                            self.cur = node.values.as_ref().map(|v| &**v);
+                            node.parent.as_ref()
                         }
                         None => return None,
-                    }
+                    };
                 }
             }
         }

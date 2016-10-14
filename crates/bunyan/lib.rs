@@ -110,7 +110,7 @@ mod test {
         };
 
         let mut v = vec![];
-        format.format(&mut v, &Record::new(&rs, format_args!("message"), &[]), &OwnedKeyValueList::root(vec![])).unwrap();
+        format.format(&mut v, &Record::new(&rs, format_args!("message"), &[]), &OwnedKeyValueList::root(None)).unwrap();
 
         assert_eq!(String::from_utf8_lossy(&v),
                    "{\"pid\":".to_string() + &nix::unistd::getpid().to_string() + ",\"host\":\"" +

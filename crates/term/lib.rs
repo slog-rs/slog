@@ -83,7 +83,7 @@ impl<D: Decorator> Format<D> {
         try!(self.print_msg_header(io, &r_decorator, info));
         let mut serializer = Serializer::new(io, r_decorator);
 
-        for &(k, ref v) in logger_values.iter() {
+        for (k, ref v) in logger_values.iter() {
             try!(serializer.print_comma());
             try!(v.serialize(info, k, &mut serializer));
         }
@@ -149,24 +149,31 @@ impl<D: Decorator> Format<D> {
     fn format_recurse<W: io::Write>(&self,
                                     ser: &mut Serializer<W, D::RecordDecorator>,
                                     info: &slog::Record,
-                                    logger_values: &slog::OwnedKeyValueList)
+                                    logger_values_ref: &slog::OwnedKeyValueList)
                                     -> io::Result<usize> {
-        let mut indent = if logger_values.parent().is_none() {
+        let mut indent = if logger_values_ref.parent().is_none() {
             0
         } else {
-            try!(self.format_recurse(ser, info, logger_values.parent().as_ref().unwrap()))
+            try!(self.format_recurse(ser, info, logger_values_ref.parent().as_ref().unwrap()))
         };
 
-        if !logger_values.values().is_empty() {
-            if self.should_print(logger_values.values() as *const _ as usize, indent) {
+        if let Some(logger_values) = logger_values_ref.values() {
+            if self.should_print(logger_values_ref as *const _ as usize, indent) {
                 try!(self.print_indent(&mut ser.io, indent));
                 let mut clean = true;
-                for &(k, ref v) in logger_values.values() {
+                let mut logger_values = logger_values;
+                loop {
+                    let (k, ref v) = logger_values.head();
                     if !clean {
                         try!(ser.print_comma());
                     }
                     try!(v.serialize(info, k, ser));
                     clean = false;
+                    logger_values = if let Some(v) = logger_values.tail() {
+                        v
+                    } else {
+                        break;
+                    }
                 }
                 try!(write!(&mut ser.io, "\n"));
             }

@@ -37,7 +37,7 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
-    pub fn root<D: 'static + Drain<Error=Never> + Sized>(d: D, values: Vec<OwnedKeyValue>) -> Logger {
+    pub fn root<D: 'static + Drain<Error=Never> + Sized>(d: D, values: Option<Box<ser::SyncMultiSerialize>>) -> Logger {
         Logger {
             drain: Arc::new(d),
             values: Arc::new(OwnedKeyValueList::root(values)),
@@ -62,10 +62,14 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"));
     ///     let log = root.new(o!("key" => "value"));
     /// }
-    pub fn new(&self, values: Vec<OwnedKeyValue>) -> Logger {
+    pub fn new(&self, values: Option<Box<ser::SyncMultiSerialize>>) -> Logger {
         Logger {
             drain: self.drain.clone(),
-            values: Arc::new(OwnedKeyValueList::new(values, self.values.clone())),
+            values: if let Some(v) = values {
+                Arc::new(OwnedKeyValueList::new(v, self.values.clone()))
+            } else {
+                self.values.clone()
+            },
         }
     }
 
@@ -82,12 +86,12 @@ impl Logger {
 impl fmt::Debug for Logger {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "Logger("));
-        for (i, &(k, _)) in self.values.iter().enumerate() {
+        for (i, (key, _)) in self.values.iter().enumerate() {
             if i != 0 {
                 try!(write!(f, ", "));
             }
 
-            try!(write!(f, "{}", k));
+            try!(write!(f, "{}", key));
         }
         try!(write!(f, ")"));
         Ok(())

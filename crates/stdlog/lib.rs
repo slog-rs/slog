@@ -274,7 +274,7 @@ impl<'a> fmt::Display for LazyLogString<'a> {
         let res = {
             || -> io::Result<()> {
 
-            for &(ref k, ref v) in self.logger_values.iter() {
+            for (ref k, ref v) in self.logger_values.iter() {
                 try!(ser.io().write_all(", ".as_bytes()));
                 try!(v.serialize(self.info, k, &mut ser));
             }

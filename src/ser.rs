@@ -114,6 +114,14 @@ pub trait Serialize {
 pub trait SyncSerialize: Send + Sync + 'static + Serialize {}
 
 
+/// Multiple key-values pairs that can be serialized
+pub trait SyncMultiSerialize : Send + Sync + 'static {
+    /// Key and value of the first key-value pair
+    fn head(&self) -> (&'static str, &SyncSerialize);
+    /// Next key-value pair (and all following ones)
+    fn tail(&self) -> Option<&SyncMultiSerialize>;
+}
+
 /// Serializer
 ///
 /// Drains using `Format` will internally use
@@ -336,4 +344,27 @@ impl<F> Serialize for PushLazy<F>
 impl<F> SyncSerialize for PushLazy<F>
      where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>)
      -> result::Result<(), Error> {
+}
+
+impl<A : SyncSerialize> SyncMultiSerialize for (&'static str, A) {
+    fn tail(&self) -> Option<&SyncMultiSerialize> {
+        None
+    }
+
+    fn head(&self) -> (&'static str, &SyncSerialize) {
+        let (ref key, ref val) = *self;
+        (key, val)
+    }
+}
+
+impl<A : SyncSerialize, R : SyncMultiSerialize> SyncMultiSerialize for (&'static str, A, R) {
+    fn tail(&self) -> Option<&SyncMultiSerialize> {
+        let (_, _, ref tail) = *self;
+        Some(tail)
+    }
+
+    fn head(&self) -> (&'static str, &SyncSerialize) {
+        let (ref key, ref val, _) = *self;
+        (key, val)
+    }
 }
