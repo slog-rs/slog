@@ -132,7 +132,7 @@ impl slog_stream::Format for Format3164 {
 
         let mut ser = KSV::new(io, ": ".into());
         {
-            for &(ref k, ref v) in logger_values.iter() {
+            for (ref k, ref v) in logger_values.iter() {
                 try!(ser.io().write_all(", ".as_bytes()));
                 try!(v.serialize(rinfo, k, &mut ser));
             }

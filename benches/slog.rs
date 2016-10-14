@@ -144,9 +144,9 @@ fn logger_new_nonempty_10(b: &mut Bencher) {
                 "u64" => 0u64,
                 "bool" => false,
                 "str" => "",
-                "f32" => 0f32, 
-                "f64" => 0f64, 
-                "option" => Some(0), 
+                "f32" => 0f32,
+                "f64" => 0f64,
+                "option" => Some(0),
                 "unit" => (),
                 ));
     });

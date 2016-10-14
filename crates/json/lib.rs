@@ -28,12 +28,13 @@ extern crate serde_json;
 extern crate chrono;
 
 use std::io;
+use std::sync::Arc;
 
 use slog_serde::SerdeSerializer;
 use slog::Record;
-use slog::{Level, OwnedKeyValue, OwnedKeyValueList};
+use slog::{Level, OwnedKeyValueList};
 use slog::Level::*;
-use slog::ser::{PushLazy, ValueSerializer};
+use slog::ser::{PushLazy, ValueSerializer, SyncMultiSerialize};
 
 fn level_to_string(level: Level) -> &'static str {
     match level {
@@ -51,7 +52,7 @@ fn level_to_string(level: Level) -> &'static str {
 /// Each record will be printed as a Json map.
 pub struct Format {
     newlines: bool,
-    values: Vec<OwnedKeyValue>,
+    values: OwnedKeyValueList,
 }
 
 impl Format {
@@ -66,14 +67,14 @@ impl Format {
 /// Create with `Format::build`.
 pub struct FormatBuilder {
     newlines: bool,
-    values: Vec<OwnedKeyValue>,
+    values: OwnedKeyValueList,
 }
 
 impl FormatBuilder {
     fn new() -> Self {
         FormatBuilder {
             newlines: true,
-            values: vec![],
+            values: OwnedKeyValueList::root(None),
         }
     }
 
@@ -94,14 +95,18 @@ impl FormatBuilder {
     }
 
     /// Add custom values to be printed with this formatter
-    pub fn add_key_values(mut self, mut values: Vec<OwnedKeyValue>) -> Self {
-        self.values.extend(values.drain(..));
+    pub fn add_key_values(mut self, values: Option<Box<SyncMultiSerialize>>) -> Self {
+        if let Some(v) = values {
+            self.values = OwnedKeyValueList::new(v, Arc::new(self.values));
+        }
         self
     }
 
     /// Add custom values to be printed with this formatter
-    pub fn add_key_value(mut self, value: OwnedKeyValue) -> Self {
-        self.values.push(value);
+    pub fn add_key_value(mut self, value: Option<Box<SyncMultiSerialize>>) -> Self {
+        if let Some(v) = value {
+            self.values = OwnedKeyValueList::new(v, Arc::new(self.values));
+        }
         self
     }
 
@@ -137,10 +142,11 @@ impl slog_stream::Format for Format {
             let serializer = serde_json::Serializer::new(io);
             let mut serializer = try!(SerdeSerializer::start(serializer));
 
-            for &(ref k, ref v) in self.values.iter() {
+            for (ref k, ref v) in self.values.iter() {
                 try!(v.serialize(rinfo, k, &mut serializer));
             }
-            for &(ref k, ref v) in logger_values.iter() {
+
+            for (ref k, ref v) in logger_values.iter() {
                 try!(v.serialize(rinfo, k, &mut serializer));
             }
 
