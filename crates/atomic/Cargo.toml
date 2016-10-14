@@ -2,7 +2,7 @@
 name = "slog-atomic"
 version = "0.4.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
-description = "Unix terminal drain and formatter for slog-rs"
+description = "Atomic run-time controllable drain for slog-rs"
 keywords = ["slog", "logging", "log",  "atomic"]
 license = "MPL-2.0"
 documentation = "https://dpc.github.io/slog-rs/"
