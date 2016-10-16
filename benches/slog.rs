@@ -321,7 +321,7 @@ fn log_stream_json_blackbox_strpushclosure(b: &mut Bencher) {
 fn tmp_file_write_1b(b: &mut Bencher) {
     use std::io::Write;
 
-    let mut f = std::fs::OpenOptions::new().create(true).truncate(true).append(true).open("/tmp/slog-test-1b").unwrap();
+    let mut f = std::fs::OpenOptions::new().write(true).create(true).truncate(true).open("/tmp/slog-test-1b").unwrap();
 
     b.iter(|| {
         f.write_all(&[0]).unwrap();
@@ -333,7 +333,7 @@ fn tmp_file_write_1b(b: &mut Bencher) {
 fn tmp_file_write_1kib(b: &mut Bencher) {
     use std::io::Write;
 
-    let mut f = std::fs::OpenOptions::new().create(true).truncate(true).append(true).open("/tmp/slog-test-1k").unwrap();
+    let mut f = std::fs::OpenOptions::new().write(true).create(true).truncate(true).open("/tmp/slog-test-1k").unwrap();
 
     let buf = vec!(0u8; 1024);
     b.iter(|| {
