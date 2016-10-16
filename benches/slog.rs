@@ -235,6 +235,46 @@ fn log_stream_json_blackbox_i32val(b: &mut Bencher) {
 }
 
 #[bench]
+fn log_stream_json_blackbox_10(b: &mut Bencher) {
+    let log = Logger::root(json_blackbox(), o!());
+
+    b.iter(|| {
+        info!(log, "";
+              "u8" => 0u8,
+              "u16" => 0u16,
+              "u32" => 0u32,
+              "u64" => 0u64,
+              "bool" => false,
+              "str" => "",
+              "f32" => 0f32,
+              "f64" => 0f64,
+              "option" => Some(0),
+              "unit" => (),
+              );
+    });
+}
+
+#[bench]
+fn log_stream_empty_json_blackbox_10(b: &mut Bencher) {
+    let log = Logger::root(empty_json_blackbox(), o!());
+
+    b.iter(|| {
+        info!(log, "";
+              "u8" => 0u8,
+              "u16" => 0u16,
+              "u32" => 0u32,
+              "u64" => 0u64,
+              "bool" => false,
+              "str" => "",
+              "f32" => 0f32,
+              "f64" => 0f64,
+              "option" => Some(0),
+              "unit" => (),
+              );
+    });
+}
+
+#[bench]
 fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
 
     let log = Logger::root(json_blackbox(), o!());
@@ -277,3 +317,26 @@ fn log_stream_json_blackbox_strpushclosure(b: &mut Bencher) {
     });
 }
 
+#[bench]
+fn tmp_file_write_1b(b: &mut Bencher) {
+    use std::io::Write;
+
+    let mut f = std::fs::OpenOptions::new().create(true).truncate(true).append(true).open("/tmp/slog-test-1b").unwrap();
+
+    b.iter(|| {
+        f.write_all(&[0]).unwrap();
+    });
+}
+
+
+#[bench]
+fn tmp_file_write_1kib(b: &mut Bencher) {
+    use std::io::Write;
+
+    let mut f = std::fs::OpenOptions::new().create(true).truncate(true).append(true).open("/tmp/slog-test-1k").unwrap();
+
+    let buf = vec!(0u8; 1024);
+    b.iter(|| {
+        f.write_all(&buf).unwrap();
+    });
+}
