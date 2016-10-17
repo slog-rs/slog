@@ -43,7 +43,7 @@ release_max_level_trace = []
 
 [workspace]
 members = ["crates/json", "crates/term", "crates/stdlog", "crates/syslog",
-	"crates/bunyan", "crates/atomic", "crates/stream",
+	"crates/journald", "crates/bunyan", "crates/atomic", "crates/stream",
 	"crates/example-lib", "crates/nursery", "crates/scope"]
 
 [dev-dependencies]
@@ -52,6 +52,7 @@ slog-term = { path = "crates/term", version = "1" }
 slog-scope = { path = "crates/scope", version = "0" }
 slog-stdlog = { path = "crates/stdlog", version = "1" }
 slog-syslog = { path = "crates/syslog", version = "1.0.0-alpha8" }
+slog-journald = { path = "crates/journald", version = "1" }
 slog-bunyan = { path = "crates/bunyan", version = "1" }
 slog-atomic = { path = "crates/atomic", version = "0.4" }
 slog-stream = { path = "crates/stream", version = "1" }

@@ -1,0 +1,19 @@
+[package]
+name = "slog-journald"
+version = "1.0.0"
+authors = ["Thayne McCombs <astrothayne@gmail.com>"]
+description = "Journald drain for slog-rs"
+keywords = ["slog", "logging", "log", "journald", "systemd"]
+license = "MPL-2.0"
+documentation = "https://dpc.github.io/slog-rs/"
+homepage = "https://github.com/dpc/slog-rs"
+repository = "https://github.com/dpc/slog-rs"
+readme = "../../README.md"
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+slog = { version = "1", path = "../.." }
+libc = "0.2"
+libsystemd-sys = "0.0"
