@@ -8,6 +8,8 @@ endif
 
 default: $(DEFAULT_TARGET)
 
+CARGO_FLAGS += -v
+
 ALL_TARGETS += build $(EXAMPLES) test doc crates
 ifneq ($(RELEASE),)
 $(info RELEASE BUILD: $(PKG_NAME))
