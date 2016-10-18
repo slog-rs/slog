@@ -75,7 +75,7 @@ examples/drain-graph.png: examples/drain-graph.dot
 
 .PHONY: doc
 doc: FORCE examples/drain-graph.png
-	cargo doc -p slog
+	cargo doc
 	cd "crates/term"; cargo doc -p slog-term
 	cd "crates/serde"; cargo doc -p slog-serde
 	cd "crates/json"; cargo doc -p slog-json
