@@ -1,29 +1,24 @@
 # slog-rs - Structured, composable logging for [Rust][rust]
 
 <p align="center">
-  <a href="https://travis-ci.org/dpc/slog-rs">
-      <img src="https://img.shields.io/travis/dpc/slog-rs/master.svg" alt="Travis CI Build Status">
+  <a href="https://travis-ci.org/slog-rs/slog">
+      <img src="https://img.shields.io/travis/slog-rs/slog/master.svg" alt="Travis CI Build Status">
   </a>
 
   <a href="https://crates.io/crates/slog">
       <img src="https://img.shields.io/crates/d/slog.svg" alt="slog-rs on crates.io">
   </a>
 
-  <a href="https://gitter.im/dpc/slog-rs">
-      <img src="https://img.shields.io/gitter/room/dpc/slog-rs.svg" alt="slog-rs Gitter Chat">
+  <a href="https://gitter.im/slog-rs/slog">
+      <img src="https://img.shields.io/gitter/room/slog-rs/slog.svg" alt="slog-rs Gitter Chat">
   </a>
 
   <a href="https://docs.rs/releases/search?query=slog-">
       <img src="https://docs.rs/slog/badge.svg" alt="docs-rs: release versions documentation">
   </a>
-
-  <a href="//dpc.github.io/slog-rs/">
-      <img src="https://img.shields.io/badge/docs-master-blue.svg" alt="docs-rs: master branch documentation">
-  </a>
-
   <br>
-  <strong><a href="//github.com/dpc/slog-rs/wiki/Introduction-to-structured-logging-with-slog">Introduction</a></strong>
-  <strong><a href="//github.com/dpc/slog-rs/wiki/FAQ">FAQ</a></strong>
+  <strong><a href="//github.com/slog-rs/slog/wiki/Introduction-to-structured-logging-with-slog">Introduction</a></strong>
+  <strong><a href="//github.com/slog-rs/slog/wiki/FAQ">FAQ</a></strong>
   <br>
   <strong><a href="https://crates.io/search?q=slog">All crates</a></strong>
 </p>
@@ -38,7 +33,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 ### Features
 
 * flexible & easy to use
-* great performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log) and  [what makes slog fast](https://github.com/dpc/slog-rs/wiki/What-makes-slog-fast)
+* great performance; see: [slog bench log](https://github.com/slog-rs/slog/wiki/Bench-log) and  [what makes slog fast](https://github.com/slog-rs/slog/wiki/What-makes-slog-fast)
 * `#![no_std]` support (with opt-out `std` cargo feature flag)
 * hierarchical loggers
 * lazily evaluated values
@@ -53,7 +48,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 	* filtering
 		* compile-time log level filter using cargo features (same as in `log` crate)
 		* by level, msg, and any other meta-data
-		* [`slog-envlogger`](https://github.com/dpc/slog-envlogger) - port of `env_logger`
+		* [`slog-envlogger`](https://github.com/slog-rs/envlogger) - port of `env_logger`
 	* multiple outputs
 	* asynchronous IO writing
 	* terminal output, with color support (`slog-term` crate)
@@ -87,18 +82,16 @@ Long term goal is to make it a go-to logging crate for Rust.
 * **lazy evaluation** and **asynchronous IO** included. Waiting to
   finish writing logging information to disk, or spending time calculating
   data that will be thrown away at the current logging level, are sources of big
-  performance waste. Use [`AsyncStreamer`][async-streamer] drain, and closures
+  performance waste. Use `AsyncStreamer` drain, and closures
   to make your logging fast.
-* **run-time configuration** - [`AtomicSwitch`][atomic-switch] drain allows
+* **run-time configuration** - `AtomicSwitch` drain allows
   changing logging behavior in the running program. You could use eg. signal
   handlers to change logging level or logging destinations. See
   [`signal` example][signal].
 
-[signal]: https://github.com/dpc/slog-rs/blob/master/examples/signal.rs
+[signal]: https://github.com/slog-rs/slog/blob/master/examples/signal.rs
 [env_logger]: https://crates.io/crates/env_logger
-[functional-overview]: https://github.com/dpc/slog-rs/wiki/Functional-overview
-[async-streamer]: http://dpc.pw/slog-rs/slog/drain/struct.AsyncStreamer.html
-[atomic-switch]: http://dpc.pw/slog-rs/slog/drain/struct.AtomicSwitch.html
+[functional-overview]: https://github.com/slog-rs/slog/wiki/Functional-overview
 
 ### Terminal output example
 
@@ -194,17 +187,17 @@ fn main() {
 See `examples/features.rs` for full/current code.
 
 
-Read [Documentation](//dpc.github.io/slog-rs/) for details and features.
+Read [Documentation](https://docs.rs/slog/) for details and features.
 
 See [faq] for answers to common questions. If you want to say hi, or need help
 use [#slog-rs gitter.im][slog-rs gitter].
 
 To report a bug or ask for features use [github issues][issues].
 
-[faq]: https://github.com/dpc/slog-rs/wiki/FAQ
+[faq]: https://github.com/slog-rs/slog/wiki/FAQ
 [rust]: http://rust-lang.org
-[slog-rs gitter]: https://gitter.im/dpc/slog-rs
-[issues]: //github.com/dpc/slog-rs/issues
+[slog-rs gitter]: https://gitter.im/slog-rs/slog
+[issues]: //github.com/slog-rs/slog/issues
 [log15]: //github.com/inconshreveable/log15
 
 ### Building & running
@@ -228,9 +221,3 @@ In your `main.rs`:
 #[macro_use]
 extern crate slog;
 ```
-
-### Alternatives
-
-Please fill an issue if slog does not fill your needs. I will appreciate any
-feedback. You might look into issue discussing [slog-rs
-alternatives](https://github.com/dpc/slog-rs/issues/17) too.
