@@ -12,7 +12,7 @@
 #[derive(Clone)]
 pub struct Logger {
     drain: Arc<Drain<Error=Never>>,
-    values: Arc<OwnedKeyValueList>,
+    values: OwnedKeyValueList,
 }
 
 impl Logger {
@@ -40,7 +40,7 @@ impl Logger {
     pub fn root<D: 'static + Drain<Error=Never> + Sized>(d: D, values: Option<Box<ser::SyncMultiSerialize>>) -> Logger {
         Logger {
             drain: Arc::new(d),
-            values: Arc::new(OwnedKeyValueList::root(values)),
+            values: OwnedKeyValueList::root(values),
         }
     }
 
@@ -66,7 +66,7 @@ impl Logger {
         Logger {
             drain: self.drain.clone(),
             values: if let Some(v) = values {
-                Arc::new(OwnedKeyValueList::new(v, self.values.clone()))
+                OwnedKeyValueList::new(v, self.values.clone())
             } else {
                 self.values.clone()
             },
@@ -79,7 +79,7 @@ impl Logger {
     /// documentation.
     #[inline]
     pub fn log(&self, record: &Record) {
-        let _ = self.drain.log(&record, &*self.values);
+        let _ = self.drain.log(&record, &self.values);
     }
 }
 

@@ -39,6 +39,14 @@ impl io::Write for BlackBoxWriter {
     }
 }
 
+fn async_empty_json_blackbox() -> impl Drain<Error=()> {
+    async_stream(BlackBoxWriter, slog_json::new().build()).ignore_err()
+}
+
+fn async_json_blackbox() -> impl Drain<Error=()> {
+    async_stream(BlackBoxWriter, slog_json::default()).ignore_err()
+}
+
 fn empty_json_blackbox() -> impl Drain<Error=()> {
     stream(BlackBoxWriter, slog_json::new().build()).ignore_err()
 }
@@ -275,6 +283,48 @@ fn log_stream_empty_json_blackbox_10(b: &mut Bencher) {
 }
 
 #[bench]
+fn log_stream_empty_json_blackbox_log_10(b: &mut Bencher) {
+    let log = Logger::root(empty_json_blackbox(), o!());
+    let log = log.new(o!(
+            "u8" => 0u8,
+            "u16" => 0u16,
+            "u32" => 0u32,
+            "u64" => 0u64,
+            "bool" => false,
+            "str" => "",
+            "f32" => 0f32,
+            "f64" => 0f64,
+            "option" => Some(0),
+            "unit" => (),
+            ));
+
+    b.iter(|| {
+        info!(log, "");
+    });
+}
+
+#[bench]
+fn log_stream_json_blackbox_log_10(b: &mut Bencher) {
+    let log = Logger::root(json_blackbox(), o!());
+    let log = log.new(o!(
+            "u8" => 0u8,
+            "u16" => 0u16,
+            "u32" => 0u32,
+            "u64" => 0u64,
+            "bool" => false,
+            "str" => "",
+            "f32" => 0f32,
+            "f64" => 0f64,
+            "option" => Some(0),
+            "unit" => (),
+            ));
+
+    b.iter(|| {
+        info!(log, "");
+    });
+}
+
+#[bench]
 fn log_stream_json_blackbox_i32closure(b: &mut Bencher) {
 
     let log = Logger::root(json_blackbox(), o!());
@@ -314,6 +364,106 @@ fn log_stream_json_blackbox_strpushclosure(b: &mut Bencher) {
         info!(log, ""; "str" => PushLazy(|_:&Record, ser : ValueSerializer|{
             ser.serialize(LONG_STRING)
         }));
+    });
+}
+
+#[bench]
+fn log_stream_async_json_blackbox_i32val(b: &mut Bencher) {
+    let log = Logger::root(async_json_blackbox(), o!());
+
+    b.iter(|| {
+        info!(log, "";  "i32" => 5);
+    });
+}
+
+#[bench]
+fn log_stream_async_json_blackbox_10(b: &mut Bencher) {
+    let log = Logger::root(async_json_blackbox(), o!());
+
+    b.iter(|| {
+        info!(log, "";
+              "u8" => 0u8,
+              "u16" => 0u16,
+              "u32" => 0u32,
+              "u64" => 0u64,
+              "bool" => false,
+              "str" => "",
+              "f32" => 0f32,
+              "f64" => 0f64,
+              "option" => Some(0),
+              "unit" => (),
+              );
+    });
+}
+
+#[bench]
+fn log_stream_async_empty_json_blackbox_i32val(b: &mut Bencher) {
+    let log = Logger::root(async_empty_json_blackbox(), o!());
+
+    b.iter(|| {
+        info!(log, "";  "i32" => 5);
+    });
+}
+
+#[bench]
+fn log_stream_async_empty_json_blackbox_10(b: &mut Bencher) {
+    let log = Logger::root(async_empty_json_blackbox(), o!());
+
+    b.iter(|| {
+        info!(log, "";
+              "u8" => 0u8,
+              "u16" => 0u16,
+              "u32" => 0u32,
+              "u64" => 0u64,
+              "bool" => false,
+              "str" => "",
+              "f32" => 0f32,
+              "f64" => 0f64,
+              "option" => Some(0),
+              "unit" => (),
+              );
+    });
+}
+
+#[bench]
+fn log_stream_async_json_blackbox_log_10(b: &mut Bencher) {
+    let log = Logger::root(async_json_blackbox(), o!());
+    let log = log.new(o!(
+            "u8" => 0u8,
+            "u16" => 0u16,
+            "u32" => 0u32,
+            "u64" => 0u64,
+            "bool" => false,
+            "str" => "",
+            "f32" => 0f32,
+            "f64" => 0f64,
+            "option" => Some(0),
+            "unit" => (),
+            ));
+
+    b.iter(|| {
+        info!(log, "");
+    });
+}
+
+#[bench]
+fn log_stream_async_empty_json_blackbox_log_10(b: &mut Bencher) {
+    let log = Logger::root(async_empty_json_blackbox(), o!());
+    let log = log.new(o!(
+            "u8" => 0u8,
+            "u16" => 0u16,
+            "u32" => 0u32,
+            "u64" => 0u64,
+            "bool" => false,
+            "str" => "",
+            "f32" => 0f32,
+            "f64" => 0f64,
+            "option" => Some(0),
+            "unit" => (),
+            ));
+
+    b.iter(|| {
+        info!(log, "");
     });
 }
 

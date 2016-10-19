@@ -544,26 +544,35 @@ pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
 /// See `o!(...)` macro.
 pub type OwnedKeyValue<'a> = (&'static str, &'a ser::SyncSerialize);
 
-/// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
-pub struct OwnedKeyValueList {
-    parent: Option<Arc<OwnedKeyValueList>>,
+struct OwnedKeyValueListInner {
+    parent: Option<OwnedKeyValueList>,
     values: Option<Box<ser::SyncMultiSerialize>>,
+}
+
+/// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
+#[derive(Clone)]
+pub struct OwnedKeyValueList {
+    inner : Arc<OwnedKeyValueListInner>,
 }
 
 impl OwnedKeyValueList {
     /// New `OwnedKeyValueList` node with an existing parent
-    pub fn new(values: Box<ser::SyncMultiSerialize>, parent: Arc<OwnedKeyValueList>) -> Self {
+    pub fn new(values: Box<ser::SyncMultiSerialize>, parent: OwnedKeyValueList) -> Self {
         OwnedKeyValueList {
-            parent: Some(parent),
-            values: Some(values),
+            inner: Arc::new(OwnedKeyValueListInner {
+                parent: Some(parent),
+                values: Some(values),
+            })
         }
     }
 
     /// New `OwnedKeyValue` node without a parent (root)
     pub fn root(values: Option<Box<ser::SyncMultiSerialize>>) -> Self {
         OwnedKeyValueList {
-            parent: None,
-            values: values,
+            inner: Arc::new(OwnedKeyValueListInner {
+                parent: None,
+                values: values,
+            })
         }
     }
 
@@ -572,13 +581,13 @@ impl OwnedKeyValueList {
     /// Since `OwnedKeyValueList` is just a chain of `SyncMultiSerialize` instances: each
     /// containing one more more `OwnedKeyValue`, it's possible to iterate through the whole list
     /// group-by-group with `parent()` and `values()`.
-    pub fn parent(&self) -> &Option<Arc<OwnedKeyValueList>> {
-        &self.parent
+    pub fn parent(&self) -> &Option<OwnedKeyValueList> {
+        &self.inner.parent
     }
 
     /// Get the head node `SyncMultiSerialize` values
     pub fn values(&self) -> Option<&ser::SyncMultiSerialize> {
-        self.values.as_ref().map(|b| &**b)
+        self.inner.values.as_ref().map(|b| &**b)
     }
 
     /// Iterator over all `OwnedKeyValue`-s in every `SyncMultiSerialize` of the list
@@ -589,15 +598,15 @@ impl OwnedKeyValueList {
 
 /// Iterator over `OwnedKeyValue`-s
 pub struct OwnedKeyValueListIterator<'a> {
-    next_node: Option<&'a Arc<OwnedKeyValueList>>,
+    next_node: Option<&'a OwnedKeyValueList>,
     cur: Option<&'a ser::SyncMultiSerialize>,
 }
 
 impl<'a> OwnedKeyValueListIterator<'a> {
     fn new(node: &'a OwnedKeyValueList) -> Self {
         OwnedKeyValueListIterator {
-            next_node: node.parent.as_ref(),
-            cur: node.values.as_ref().map(|v| &**v),
+            next_node: node.inner.parent.as_ref(),
+            cur: node.inner.values.as_ref().map(|v| &**v),
         }
     }
 }
@@ -616,8 +625,8 @@ impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
                 None => {
                     self.next_node = match self.next_node {
                         Some(ref node) => {
-                            self.cur = node.values.as_ref().map(|v| &**v);
-                            node.parent.as_ref()
+                            self.cur = node.inner.values.as_ref().map(|v| &**v);
+                            node.inner.parent.as_ref()
                         }
                         None => return None,
                     };

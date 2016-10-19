@@ -28,7 +28,6 @@ extern crate serde_json;
 extern crate chrono;
 
 use std::io;
-use std::sync::Arc;
 
 use slog_serde::SerdeSerializer;
 use slog::Record;
@@ -97,7 +96,7 @@ impl FormatBuilder {
     /// Add custom values to be printed with this formatter
     pub fn add_key_values(mut self, values: Option<Box<SyncMultiSerialize>>) -> Self {
         if let Some(v) = values {
-            self.values = OwnedKeyValueList::new(v, Arc::new(self.values));
+            self.values = OwnedKeyValueList::new(v, self.values);
         }
         self
     }
@@ -105,7 +104,7 @@ impl FormatBuilder {
     /// Add custom values to be printed with this formatter
     pub fn add_key_value(mut self, value: Option<Box<SyncMultiSerialize>>) -> Self {
         if let Some(v) = value {
-            self.values = OwnedKeyValueList::new(v, Arc::new(self.values));
+            self.values = OwnedKeyValueList::new(v, self.values);
         }
         self
     }
