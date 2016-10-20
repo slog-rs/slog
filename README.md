@@ -1,5 +1,7 @@
 # slog-rs - Structured, composable logging for [Rust][rust]
 
+[![Join the chat at https://gitter.im/slog-rs/slog](https://badges.gitter.im/slog-rs/slog.svg)](https://gitter.im/slog-rs/slog?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 <p align="center">
   <a href="https://travis-ci.org/slog-rs/slog">
       <img src="https://img.shields.io/travis/slog-rs/slog/master.svg" alt="Travis CI Build Status">
