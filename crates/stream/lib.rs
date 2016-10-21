@@ -49,27 +49,26 @@ impl<W: io::Write, F: Format> Streamer<W, F> {
 impl<W: 'static + io::Write + Send, F: Format + Send> Drain for Streamer<W, F> {
     type Error = io::Error;
 
-    fn log(&self,
-           info: &Record,
-           logger_values: &OwnedKeyValueList)
-        -> io::Result<()> {
+    fn log(&self, info: &Record, logger_values: &OwnedKeyValueList) -> io::Result<()> {
 
-            TL_BUF.with(|buf| {
-                let mut buf = buf.borrow_mut();
-                let res = {
-                    || {
-                        try!(self.format.format(&mut *buf, info, logger_values));
-                        {
-                            let mut io = try!(self.io.lock().map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
-                            try!(io.write_all(&buf));
-                        }
-                        Ok(())
+        TL_BUF.with(|buf| {
+            let mut buf = buf.borrow_mut();
+            let res = {
+                || {
+                    try!(self.format.format(&mut *buf, info, logger_values));
+                    {
+                        let mut io = try!(self.io
+                            .lock()
+                            .map_err(|_| io::Error::new(io::ErrorKind::Other, "lock error")));
+                        try!(io.write_all(&buf));
                     }
-                }();
-                buf.clear();
-                res
-            })
-        }
+                    Ok(())
+                }
+            }();
+            buf.clear();
+            res
+        })
+    }
 }
 
 /// Drain formating records and writing them to a byte-stream (`io::Write`)
@@ -83,24 +82,22 @@ pub struct AsyncStreamer {
 
 impl AsyncStreamer {
     /// Create new `AsyncStreamer` writing to `io` using `format`
-    pub fn new<W: io::Write + Send + 'static, F : Format+Send+'static>(io: W, format: F) -> Self {
-        AsyncStreamer {
-            io: AsyncIoWriter::new(io, format),
-        }
+    pub fn new<W: io::Write + Send + 'static, F: Format + Send + 'static>(io: W,
+                                                                          format: F)
+                                                                          -> Self {
+        AsyncStreamer { io: AsyncIoWriter::new(io, format) }
     }
 }
 
-type RecordValues = Vec<(&'static str, Box<Serialize+Send>)>;
+type RecordValues = Vec<(&'static str, Box<Serialize + Send>)>;
 
 struct ToSendSerializer {
-    record_values : RecordValues,
+    record_values: RecordValues,
 }
 
 impl ToSendSerializer {
     fn new() -> Self {
-        ToSendSerializer {
-            record_values: Vec::new(),
-        }
+        ToSendSerializer { record_values: Vec::new() }
     }
 
     fn finish(self) -> RecordValues {
@@ -109,75 +106,104 @@ impl ToSendSerializer {
 }
 
 impl Serializer for ToSendSerializer {
-    fn emit_bool(&mut self, key: &'static str, val: bool) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_unit(&mut self, key: &'static str) -> ser::Result
-    { self.record_values.push((key, Box::new(()))); Ok(())}
-    fn emit_none(&mut self, key: &'static str) -> ser::Result
-    {
-        let val : Option<()> = None;
-        self.record_values.push((key, Box::new(val))); Ok(())
+    fn emit_bool(&mut self, key: &'static str, val: bool) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
     }
-    fn emit_char(&mut self, key: &'static str, val: char) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_u8(&mut self, key: &'static str, val: u8) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_i8(&mut self, key: &'static str, val: i8) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_u16(&mut self, key: &'static str, val: u16) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_i16(&mut self, key: &'static str, val: i16) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_u32(&mut self, key: &'static str, val: u32) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_i32(&mut self, key: &'static str, val: i32) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_f32(&mut self, key: &'static str, val: f32) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_u64(&mut self, key: &'static str, val: u64) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_i64(&mut self, key: &'static str, val: i64) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_f64(&mut self, key: &'static str, val: f64) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_usize(&mut self, key: &'static str, val: usize) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_isize(&mut self, key: &'static str, val: isize) -> ser::Result
-    { self.record_values.push((key, Box::new(val))); Ok(())}
-    fn emit_str(&mut self, key: &'static str, val: &str) -> ser::Result
-    { self.record_values.push((key, Box::new(String::from(val)))); Ok(())}
-    fn emit_arguments(&mut self, key: &'static str, val: &fmt::Arguments) -> ser::Result
-    { self.record_values.push((key, Box::new(fmt::format(*val)))); Ok(())}
+    fn emit_unit(&mut self, key: &'static str) -> ser::Result {
+        self.record_values.push((key, Box::new(())));
+        Ok(())
+    }
+    fn emit_none(&mut self, key: &'static str) -> ser::Result {
+        let val: Option<()> = None;
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_char(&mut self, key: &'static str, val: char) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_u8(&mut self, key: &'static str, val: u8) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_i8(&mut self, key: &'static str, val: i8) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_u16(&mut self, key: &'static str, val: u16) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_i16(&mut self, key: &'static str, val: i16) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_u32(&mut self, key: &'static str, val: u32) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_i32(&mut self, key: &'static str, val: i32) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_f32(&mut self, key: &'static str, val: f32) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_u64(&mut self, key: &'static str, val: u64) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_i64(&mut self, key: &'static str, val: i64) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_f64(&mut self, key: &'static str, val: f64) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_usize(&mut self, key: &'static str, val: usize) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_isize(&mut self, key: &'static str, val: isize) -> ser::Result {
+        self.record_values.push((key, Box::new(val)));
+        Ok(())
+    }
+    fn emit_str(&mut self, key: &'static str, val: &str) -> ser::Result {
+        self.record_values.push((key, Box::new(String::from(val))));
+        Ok(())
+    }
+    fn emit_arguments(&mut self, key: &'static str, val: &fmt::Arguments) -> ser::Result {
+        self.record_values.push((key, Box::new(fmt::format(*val))));
+        Ok(())
+    }
 }
 
 
 impl Drain for AsyncStreamer {
     type Error = io::Error;
 
-    fn log(&self,
-           record: &Record,
-           logger_values: &OwnedKeyValueList)
-           -> io::Result<()> {
+    fn log(&self, record: &Record, logger_values: &OwnedKeyValueList) -> io::Result<()> {
 
-               let mut ser = ToSendSerializer::new();
-               for &(k, v) in record.values() {
-                   try!(v.serialize(record, k, &mut ser))
-               }
+        let mut ser = ToSendSerializer::new();
+        for &(k, v) in record.values() {
+            try!(v.serialize(record, k, &mut ser))
+        }
 
-               self.io.send(
-                   AsyncRecord {
-                       msg: fmt::format(record.msg()),
-                       level: record.level(),
-                       file: record.file(),
-                       line: record.line(),
-                       column: record.column(),
-                       function: record.function(),
-                       module: record.module(),
-                       target: String::from(record.target()),
-                       logger_values: logger_values.clone(),
-                       record_values: ser.finish(),
-                   }
-                   )
+        self.io.send(AsyncRecord {
+            msg: fmt::format(record.msg()),
+            level: record.level(),
+            file: record.file(),
+            line: record.line(),
+            column: record.column(),
+            function: record.function(),
+            module: record.module(),
+            target: String::from(record.target()),
+            logger_values: logger_values.clone(),
+            record_values: ser.finish(),
+        })
     }
 }
 
@@ -191,7 +217,7 @@ struct AsyncRecord {
     module: &'static str,
     target: String,
     logger_values: OwnedKeyValueList,
-    record_values: Vec<(&'static str, Box<Serialize+Send>)>,
+    record_values: Vec<(&'static str, Box<Serialize + Send>)>,
 }
 
 enum AsyncIoMsg {
@@ -216,7 +242,9 @@ struct AsyncIoWriter {
 
 impl AsyncIoWriter {
     /// Create `AsyncIoWriter`
-    pub fn new<W: io::Write + Send + 'static, F : Format+Send+'static>(mut io: W, format : F) -> Self {
+    pub fn new<W: io::Write + Send + 'static, F: Format + Send + 'static>(mut io: W,
+                                                                          format: F)
+                                                                          -> Self {
         let (tx, rx) = mpsc::channel();
         let join = thread::spawn(move || {
             TL_BUF.with(|buf| {
@@ -233,21 +261,19 @@ impl AsyncIoWriter {
                                 module: r.module,
                                 target: &r.target,
                             };
-                            let record_values : Vec<_> = r.record_values
+                            let record_values: Vec<_> = r.record_values
                                 .iter()
-                                .map(|&(k, ref v)| (k, v as &Serialize)).
-                                collect();
+                                .map(|&(k, ref v)| (k, v as &Serialize))
+                                .collect();
                             format.format(&mut *buf,
-                                          &Record::new(
-                                              &rs,
-                                              format_args!("{}", r.msg),
-                                              record_values.as_slice(),
-                                              ),
-                                              &r.logger_values,
-                                              ).unwrap();
+                                        &Record::new(&rs,
+                                                     format_args!("{}", r.msg),
+                                                     record_values.as_slice()),
+                                        &r.logger_values)
+                                .unwrap();
                             io.write_all(&mut *buf).unwrap();
                             buf.clear();
-                        },
+                        }
                         AsyncIoMsg::Eof => return,
                     }
                 }
@@ -271,7 +297,7 @@ impl AsyncIoWriter {
     ///
     /// As an optimization, when `buf` is already an owned
     /// `Vec`, it can be sent over channel without copying.
-    pub fn send(&self, r : AsyncRecord) -> io::Result<()> {
+    pub fn send(&self, r: AsyncRecord) -> io::Result<()> {
         let sender = self.get_sender();
 
         sender.send(AsyncIoMsg::Record(r))
@@ -298,6 +324,8 @@ pub fn stream<W: io::Write + Send, F: Format>(io: W, format: F) -> Streamer<W, F
 /// Stream logging records to IO asynchronously
 ///
 /// Create `AsyncStreamer` drain
-pub fn async_stream<W: io::Write + Send + 'static, F: Format + Send + 'static>(io: W, format: F) -> AsyncStreamer {
+pub fn async_stream<W: io::Write + Send + 'static, F: Format + Send + 'static>(io: W,
+                                                                               format: F)
+                                                                               -> AsyncStreamer {
     AsyncStreamer::new(io, format)
 }
