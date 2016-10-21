@@ -7,15 +7,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 1.1.1 (Unreleased)
+## 1.2.0 - [Unreleased]
 ### Changed
 
+* **BREAKING**: `Serializer` takes `key : &'static str` now
 * Fixed corner cases in `info!(...)` and other macros
 
 ## 1.1.0
 ### Changed
 
-* BREAKING: Rewrite handling of owned values.
+* **BREAKING**: Rewrite handling of owned values.
 
 ## 1.0.1
 ### Changed

@@ -78,10 +78,6 @@ pub fn stream<W: io::Write + Send, F: Format>(io: W, format: F) -> Streamer<W, F
     Streamer::new(io, format)
 }
 
-#[deprecated]
-/// Old name of `async_stream` result
-pub type AsyncStreamer = Async;
-
 /// Stream logging records to IO asynchronously
 ///
 /// Create `AsyncStreamer` drain
