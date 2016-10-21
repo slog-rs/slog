@@ -55,6 +55,7 @@ slog-syslog = "1.0.0-alpha9"
 slog-bunyan = { path = "crates/bunyan", version = "1" }
 slog-atomic = { path = "crates/atomic", version = "0.4" }
 slog-stream = { path = "crates/stream", version = "1" }
+slog-extra = "0.1.0"
 log = "0.3.6"
 nix = "0.6.0"
 lazy_static = "0.1.16"

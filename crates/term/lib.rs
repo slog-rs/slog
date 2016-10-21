@@ -27,7 +27,7 @@ use slog::Record;
 use slog::ser;
 use slog::{Level, OwnedKeyValueList};
 use slog_stream::Format as StreamFormat;
-use slog_stream::{Decorator, RecordDecorator, Streamer, AsyncStreamer};
+use slog_stream::{Decorator, RecordDecorator, stream, async_stream};
 
 /// Timestamp function type
 type TimestampFn = Fn(&mut io::Write) -> io::Result<()> + Send + Sync;
@@ -516,9 +516,9 @@ impl StreamerBuilder {
         };
 
         if self.async {
-            Box::new(AsyncStreamer::new(io, format))
+            Box::new(async_stream(io, format))
         } else {
-            Box::new(Streamer::new(io, format))
+            Box::new(stream(io, format))
         }
     }
 }

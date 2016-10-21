@@ -15,4 +15,5 @@ path = "lib.rs"
 
 [dependencies]
 slog = { version = "1", path = "../.." }
-thread_local = { version = "0.2.6" }
+slog-extra = "0.1.0"
+thread_local = "0.2.6"
