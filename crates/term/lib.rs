@@ -30,10 +30,10 @@ use slog_stream::Format as StreamFormat;
 use slog_stream::{Decorator, RecordDecorator, stream, async_stream};
 
 /// Timestamp function type
-type TimestampFn = Fn(&mut io::Write) -> io::Result<()> + Send + Sync;
+pub type TimestampFn = Fn(&mut io::Write) -> io::Result<()> + Send + Sync;
 
 /// Formatting mode
-enum FormatMode {
+pub enum FormatMode {
     /// Compact logging format
     Compact,
     /// Full logging format
@@ -50,7 +50,7 @@ pub struct Format<D: Decorator> {
 
 impl<D: Decorator> Format<D> {
     /// New Format format that prints using color
-    fn new(mode: FormatMode, d: D, fn_timestamp: Box<TimestampFn>) -> Self {
+    pub fn new(mode: FormatMode, d: D, fn_timestamp: Box<TimestampFn>) -> Self {
         Format {
             decorator: d,
             mode: mode,
