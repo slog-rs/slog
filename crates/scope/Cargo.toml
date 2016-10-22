@@ -20,4 +20,4 @@ crossbeam = "0.2.9"
 
 
 [dev-dependencies]
-slog-term = { path = "../term", version = "1" }
+slog-term = "1.3"

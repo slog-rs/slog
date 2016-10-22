@@ -19,4 +19,4 @@ slog-stdlog = { version = "1", path = "../stdlog" }
 
 [dev-dependencies]
 env_logger = "0.3.5"
-slog-term = { path = "../term", version = "1" }
+slog-term = "1.3"
