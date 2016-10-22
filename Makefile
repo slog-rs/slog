@@ -27,11 +27,9 @@ run test build clean:
 
 test-all:
 	cargo test $(CARGO_FLAGS)
-	cd "crates/term"; cargo test $(CARGO_FLAGS)
 	cd "crates/serde"; cargo test $(CARGO_FLAGS)
 	cd "crates/json"; cargo test $(CARGO_FLAGS)
 	cd "crates/bunyan"; cargo test $(CARGO_FLAGS)
-	cd "crates/syslog"; cargo test $(CARGO_FLAGS)
 	cd "crates/stdlog"; cargo test $(CARGO_FLAGS)
 	cd "crates/atomic"; cargo test $(CARGO_FLAGS)
 	cd "crates/scope"; cargo test $(CARGO_FLAGS)
@@ -70,17 +68,12 @@ $(CRATES):
 	cd "crates/$@"; cargo build $(CARGO_FLAGS)
 	cd "crates/$@"; cargo test $(CARGO_FLAGS)
 
-examples/drain-graph.png: examples/drain-graph.dot
-	dot -Tpng $^ > $@
-
 .PHONY: doc
-doc: FORCE examples/drain-graph.png
+doc: FORCE
 	cargo doc
-	cd "crates/term"; cargo doc -p slog-term
 	cd "crates/serde"; cargo doc -p slog-serde
 	cd "crates/json"; cargo doc -p slog-json
 	cd "crates/bunyan"; cargo doc -p slog-bunyan
-	cd "crates/syslog"; cargo doc -p slog-syslog
 	cd "crates/stdlog"; cargo doc -p slog-stdlog
 	cd "crates/atomic"; cargo doc -p slog-atomic
 	cd "crates/scope"; cargo doc -p slog-scope
