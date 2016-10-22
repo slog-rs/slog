@@ -212,7 +212,7 @@ In Cargo.toml:
 
 ```
 [dependencies]
-slog = "1"
+slog = "1.2"
 ```
 
 In your `main.rs`:

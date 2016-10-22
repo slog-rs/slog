@@ -68,7 +68,7 @@
 //! `Cargo.toml`:
 //!
 //! ```norust
-//! slog = { version = "1.0.0", features = ["max_level_trace", "release_max_level_warn"] }
+//! slog = { version = "1.2", features = ["max_level_trace", "release_max_level_warn"] }
 //! ```
 //!
 //! Due to the `macro_rules` limitation log macros syntax comes in several
