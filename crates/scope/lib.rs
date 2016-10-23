@@ -1,6 +1,6 @@
 //! Logging scopes for slog-rs
 //!
-//! Logging scopes are convinience functionality for slog-rs that free user from manually passing
+//! Logging scopes are convinience functionality for slog-rs to free user from manually passing
 //! `Logger` objects around.
 //!
 //! Set of macros is also provided as an alternative to original `slog` crate macros, for logging
