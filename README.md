@@ -82,7 +82,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 * **lazy evaluation** and **asynchronous IO** included. Waiting to
   finish writing logging information to disk, or spending time calculating
   data that will be thrown away at the current logging level, are sources of big
-  performance waste. Use `AsyncStreamer` drain, and closures
+  performance waste. Use `Async` drain, and closures
   to make your logging fast.
 * **run-time configuration** - `AtomicSwitch` drain allows
   changing logging behavior in the running program. You could use eg. signal
