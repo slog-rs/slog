@@ -319,7 +319,20 @@ macro_rules! log(
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
 ///
-/// See `log` for documentation.
+/// See `log` for format documentation.
+///
+/// ```
+/// #[macro_use(o,slog_log,slog_info)]
+/// extern crate slog;
+///
+/// use slog::DrainExt;
+///
+/// fn main() {
+///     let log = slog::Logger::root(slog::Discard, o!());
+///
+///     slog_info!(log, "some interesting info"; "where" => "right here");
+/// }
+/// ```
 #[macro_export]
 macro_rules! slog_log(
     ($lvl:expr, $l:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
@@ -402,7 +415,7 @@ macro_rules! crit(
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
 ///
-/// See `log` for documentation.
+/// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! slog_crit(
     ($($args:tt)+) => {
@@ -425,7 +438,7 @@ macro_rules! error(
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
 ///
-/// See `log` for documentation.
+/// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! slog_error(
     ($($args:tt)+) => {
@@ -449,7 +462,7 @@ macro_rules! warn(
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
 ///
-/// See `log` for documentation.
+/// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! slog_warn(
     ($($args:tt)+) => {
@@ -459,7 +472,7 @@ macro_rules! slog_warn(
 
 /// Log info level record
 ///
-/// See `log` for documentation.
+/// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! info(
     ($($args:tt)+) => {
@@ -472,7 +485,7 @@ macro_rules! info(
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
 ///
-/// See `log` for documentation.
+/// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! slog_info(
     ($($args:tt)+) => {
@@ -495,7 +508,7 @@ macro_rules! debug(
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
 ///
-/// See `log` for documentation.
+/// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! slog_debug(
     ($($args:tt)+) => {
@@ -519,7 +532,7 @@ macro_rules! trace(
 /// Prefer shorter version, unless it clashes with
 /// existing `log` crate macro.
 ///
-/// See `log` for documentation.
+/// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! slog_trace(
     ($($args:tt)+) => {
