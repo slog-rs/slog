@@ -607,6 +607,11 @@ impl OwnedKeyValueList {
     pub fn iter(&self) -> OwnedKeyValueListIterator {
         OwnedKeyValueListIterator::new(self)
     }
+
+    /// Get a unique stable identifier for this node
+    pub fn id(&self) -> usize {
+        &*self.inner as *const _ as usize
+    }
 }
 
 /// Iterator over `OwnedKeyValue`-s
