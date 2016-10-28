@@ -1,6 +1,9 @@
-# slog-rs - Structured, composable logging for [Rust][rust]
-
 <p align="center">
+
+  <img src="https://cdn.rawgit.com/slog-rs/misc/master/media/slog.svg" alt="slog-rs logo">
+
+  <br>
+
   <a href="https://travis-ci.org/slog-rs/slog">
       <img src="https://img.shields.io/travis/slog-rs/slog/master.svg" alt="Travis CI Build Status">
   </a>
@@ -23,12 +26,15 @@
   <strong><a href="https://crates.io/search?q=slog">All crates</a></strong>
 </p>
 
+# slog-rs - The Logging for [Rust][rust]
+
 ### Status & news
 
-Testing, feedback, PRs, etc. are very welcome. I'd be also very happy to share
-the ownership of the project with other people to make it more community-driven.
+`slog` is an ecosystem of reusable components for structured, composable logging
+for [Rust][rust].
 
-Long term goal is to make it a go-to logging crate for Rust.
+The ambition is to be The Logging Framework for Rust. `slog` should accommodate
+variety of logging features and requirements.
 
 ### Features
 
@@ -40,7 +46,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 * modular, lightweight and very extensible
 	* tiny core crate that does not pull any dependencies
 	* feature-crates for specific functionality
-* backward compatibility for standard `log` crate (`slog-stdlog` crate)
+* bidirectional compatibility with standard `log` crate (`slog-stdlog` crate)
 	* supports logging-scopes
 	* using slog in library does not force users of the library to use slog
 	  (but gives benefits); see `crates/example-lib`
@@ -50,7 +56,7 @@ Long term goal is to make it a go-to logging crate for Rust.
 		* by level, msg, and any other meta-data
 		* [`slog-envlogger`](https://github.com/slog-rs/envlogger) - port of `env_logger`
 	* multiple outputs
-	* asynchronous IO writing
+	* efficient asynchronous logging
 	* terminal output, with color support (`slog-term` crate)
 	* Json (`slog-json` crate)
 		* Bunyan (`slog-bunyan` crate)
