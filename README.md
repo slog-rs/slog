@@ -1,7 +1,8 @@
 <p align="center">
 
+  <a href="https://github.com/slog-rs/slog">
   <img src="https://cdn.rawgit.com/slog-rs/misc/master/media/slog.svg" alt="slog-rs logo">
-
+  </a>
   <br>
 
   <a href="https://travis-ci.org/slog-rs/slog">
