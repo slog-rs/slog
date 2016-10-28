@@ -95,13 +95,15 @@ variety of logging features and requirements.
   handlers to change logging level or logging destinations. See
   [`signal` example][signal].
 
-[signal]: https://github.com/slog-rs/slog/blob/master/examples/signal.rs
+[signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
 [env_logger]: https://crates.io/crates/env_logger
 [functional-overview]: https://github.com/slog-rs/slog/wiki/Functional-overview
 
 ### Terminal output example
 
-Colors overview:
+`slog-term` is only one of many `slog` features - useful showcase.
+
+Automatic TTY detection and colors:
 
 ![slog-rs terminal full-format output](http://i.imgur.com/IUe80gU.png)
 
@@ -114,97 +116,22 @@ Compact vs full mode:
 
 ## Using & help
 
-### Code snippet
+See
+[examples/features.rs](https://github.com/slog-rs/misc/blob/master/examples/features.rs)
+for full quick code example overview.
 
-Excerpt from `examples/features.rs`:
-
-```rust
-fn main() {
-    // Create a new drain hierarchy, for the need of your program.
-    // Choose from collection of existing drains, or write your own
-    // `struct`-s implementing `Drain` trait.
-    let drain = slog_term::streamer().async().full().build();
-
-    // `AtomicSwitch` is a drain that wraps other drain and allows to change
-    // it atomically in runtime.
-    let ctrl = AtomicSwitchCtrl::new(drain);
-    let drain = ctrl.drain();
-
-    // Get a root logger that will log into a given drain.
-    //
-    // Note `o!` macro for more natural `OwnedKeyValue` sequence building.
-    let root = Logger::root(drain.fuse(), o!("version" => VERSION, "build-id" => "8dfljdf"));
-
-    // Build logging context as data becomes available.
-    //
-    // Create child loggers from existing ones. Children clone `key: value`
-    // pairs from their parents.
-    let log = root.new(o!("child" => 1));
-
-    // Closures can be used for values that change at runtime.
-    // Data captured by the closure needs to be `Send+Sync`.
-    let counter = Arc::new(AtomicUsize::new(0));
-    let log = log.new(o!("counter" => {
-        let counter = counter.clone();
-        // Note the `move` to capture `counter`,
-        // and unfortunate `|_ : &_|` that helps
-        // current `rustc` limitations. In the future,
-        // a `|_|` could work.
-        move |_ : &Record| { counter.load(SeqCst)}
-    }));
-
-    // Loggers  can be cloned, passed between threads and stored without hassle.
-    let join = thread::spawn({
-        let log = log.clone();
-        move || {
-
-            info!(log, "before-fetch-add"); // counter == 0
-            counter.fetch_add(1, SeqCst);
-            info!(log, "after-fetch-add"); // counter == 1
-
-            // `AtomicSwitch` drain can swap it's interior atomically (race-free).
-            ctrl.set(
-                // drains are composable and reusable
-                level_filter(
-                    Level::Info,
-                    async_stream(
-                        std::io::stderr(),
-                        // multiple outputs formats are supported
-                        slog_json::default(),
-                    ),
-                ),
-            );
-
-            // Closures can be used for lazy evaluation:
-            // This `slow_fib` won't be evaluated, as the current drain discards
-            // "trace" level logging records.
-            debug!(log, "debug"; "lazy-closure" => |_ : &Record| slow_fib(40));
-
-            info!(log, "subthread"; "stage" => "start");
-            thread::sleep(Duration::new(1, 0));
-            info!(log, "subthread"; "stage" => "end");
-        }
-    });
-
-    join.join().unwrap();
-}
-```
-
-See `examples/features.rs` for full/current code.
-
+See [faq] for answers to common questions and [wiki] for other documentation
+articles. If you want to say hi, or need help use [slog-rs gitter] channel.
 
 Read [Documentation](https://docs.rs/slog/) for details and features.
-
-See [faq] for answers to common questions. If you want to say hi, or need help
-use [#slog-rs gitter.im][slog-rs gitter].
 
 To report a bug or ask for features use [github issues][issues].
 
 [faq]: https://github.com/slog-rs/slog/wiki/FAQ
+[wiki]: https://github.com/slog-rs/slog/wiki/
 [rust]: http://rust-lang.org
 [slog-rs gitter]: https://gitter.im/slog-rs/slog
 [issues]: //github.com/slog-rs/slog/issues
-[log15]: //github.com/inconshreveable/log15
 
 ### Building & running
 
