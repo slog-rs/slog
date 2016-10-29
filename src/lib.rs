@@ -18,7 +18,7 @@
 //! 	* filtering
 //! 		* compile-time log level filter using cargo features (same as in `log` crate)
 //! 		* by level, msg, and any other meta-data
-//! 		* [`slog-envlogger`](https://github.com/dpc/slog-envlogger) - port of `env_logger`
+//! 		* [`slog-envlogger`](https://github.com/slog-rs/envlogger) - port of `env_logger`
 //! 	* multiple outputs
 //! 	* asynchronous IO writing
 //! 	* terminal output, with color support (`slog-term` crate)
@@ -80,7 +80,7 @@
 //! can use `.fuse()` or `.ignore_err()` methods from `DrainExt` to do
 //! it conveniently.
 //!
-//! [signal]: https://github.com/dpc/slog-rs/blob/master/examples/signal.rs
+//! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
 //! [env_logger]: https://crates.io/crates/env_logger
 //! [functional-overview]: https://github.com/dpc/slog-rs/wiki/Functional-overview
 //! [async-streamer]: http://dpc.pw/slog-rs/slog/drain/struct.AsyncStreamer.html
