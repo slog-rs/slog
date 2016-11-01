@@ -17,23 +17,23 @@ use std::sync::Arc;
 use crossbeam::sync::ArcCell;
 
 /// Handle to `AtomicSwitch` that controls it.
-pub struct AtomicSwitchCtrl<E>(Arc<ArcCell<Box<Drain<Error=E>>>>);
+pub struct AtomicSwitchCtrl<E>(Arc<ArcCell<Box<Drain<Error=E>+Send+Sync>>>);
 
 /// Drain wrapping another drain, allowing atomic substitution in runtime
-pub struct AtomicSwitch<E>(Arc<ArcCell<Box<Drain<Error=E>>>>);
+pub struct AtomicSwitch<E>(Arc<ArcCell<Box<Drain<Error=E>+Send+Sync>>>);
 
 impl<E> AtomicSwitch<E> {
     /// Wrap `drain` in `AtomicSwitch` to allow swapping it later
     ///
     /// Use `AtomicSwitch::ctrl()` to get a handle to it
-    pub fn new<D: Drain<Error=E> + 'static>(drain: D) -> Self {
-        AtomicSwitch::new_from_arc(Arc::new(ArcCell::new(Arc::new(Box::new(drain) as Box<Drain<Error=E>>))))
+    pub fn new<D: Drain<Error=E> + 'static + Send+Sync>(drain: D) -> Self {
+        AtomicSwitch::new_from_arc(Arc::new(ArcCell::new(Arc::new(Box::new(drain) as Box<Drain<Error=E>+Send+Sync>))))
     }
 
     /// Create new `AtomicSwitch` from an existing `Arc<...>`
     ///
     /// See `AtomicSwitch::new()`
-    pub fn new_from_arc(d: Arc<ArcCell<Box<Drain<Error=E>>>>) -> Self {
+    pub fn new_from_arc(d: Arc<ArcCell<Box<Drain<Error=E>+Send+Sync>>>) -> Self {
         AtomicSwitch(d)
     }
 
@@ -44,18 +44,18 @@ impl<E> AtomicSwitch<E> {
 }
 
 impl<E> AtomicSwitchCtrl<E> {
-    /// Get Arc to the currently wrapped drain 
-    pub fn get(&self) -> Arc<Box<Drain<Error=E>>> {
+    /// Get Arc to the currently wrapped drain
+    pub fn get(&self) -> Arc<Box<Drain<Error=E>+Send+Sync>> {
         self.0.get()
     }
 
     /// Set the current wrapped drain
-    pub fn set<D: Drain<Error=E>>(&self, drain: D) {
+    pub fn set<D: Drain<Error=E>+Send+Sync>(&self, drain: D) {
         let _ = self.0.set(Arc::new(Box::new(drain)));
     }
 
     /// Swap the existing drain with a new one
-    pub fn swap(&self, drain: Arc<Box<Drain<Error=E>>>) -> Arc<Box<Drain<Error=E>>> {
+    pub fn swap(&self, drain: Arc<Box<Drain<Error=E>+Send+Sync>>) -> Arc<Box<Drain<Error=E>+Send+Sync>> {
         self.0.set(drain)
     }
 
