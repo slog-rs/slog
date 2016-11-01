@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.3.0 - 2016-10-31
+### Changed
+
+* **BREAKING**: Removed `Send+Sync` from `Drain`
+
 ## 1.2.1 - 2016-10-27
 ### Added
 
