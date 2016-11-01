@@ -6,7 +6,7 @@
 ///
 /// Implementing this trait allows writing own Drains, that can be combined
 /// with other drains.
-pub trait Drain: Send + Sync {
+pub trait Drain {
     /// Type of potential errors returned during logging
     type Error;
     /// Log one logging record

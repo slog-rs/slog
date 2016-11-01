@@ -11,7 +11,7 @@
 /// freely passed around the code.
 #[derive(Clone)]
 pub struct Logger {
-    drain: Arc<Drain<Error=Never>>,
+    drain: Arc<Drain<Error=Never>+Send+Sync>,
     values: OwnedKeyValueList,
 }
 
@@ -37,7 +37,7 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
-    pub fn root<D: 'static + Drain<Error=Never> + Sized>(d: D, values: Option<Box<ser::SyncMultiSerialize>>) -> Logger {
+    pub fn root<D: 'static + Drain<Error=Never> + Sized+Send+Sync>(d: D, values: Option<Box<ser::SyncMultiSerialize>>) -> Logger {
         Logger {
             drain: Arc::new(d),
             values: OwnedKeyValueList::root(values),
