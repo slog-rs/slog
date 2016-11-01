@@ -1,6 +1,6 @@
 [package]
 name = "slog-atomic"
-version = "0.4.0"
+version = "0.4.1"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Atomic run-time controllable drain for slog-rs"
 keywords = ["slog", "logging", "log",  "atomic"]
