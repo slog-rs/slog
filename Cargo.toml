@@ -5,9 +5,9 @@ authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Structured, composable logging for Rust"
 keywords = ["log", "logging", "structured", "hierarchical"]
 license = "MPL-2.0"
-documentation = "https://dpc.github.io/slog-rs/"
-homepage = "https://github.com/dpc/slog-rs"
-repository = "https://github.com/dpc/slog-rs"
+documentation = "https://docs.rs/slog"
+homepage = "https://github.com/slog-rs/slog"
+repository = "https://github.com/slog-rs/slog"
 readme = "README.md"
 
 [profile.release]
