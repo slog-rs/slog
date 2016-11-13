@@ -33,9 +33,9 @@ pub struct SerdeSerializer<S: serde::Serializer>{
 impl<S: serde::Serializer> SerdeSerializer<S> {
 
     /// Start serializing map of values
-    pub fn start(mut ser : S) -> result::Result<Self, ser::Error> {
+    pub fn start(mut ser : S, len: Option<usize>) -> result::Result<Self, ser::Error> {
         let map_state = try!(
-            ser.serialize_map(None)
+            ser.serialize_map(len)
                 .map_err(|_| io::Error::new(io::ErrorKind::Other, "serde serialization error"))
         );
         Ok(SerdeSerializer {
