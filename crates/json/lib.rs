@@ -139,7 +139,7 @@ impl slog_stream::Format for Format {
 
         let io = {
             let serializer = serde_json::Serializer::new(io);
-            let mut serializer = try!(SerdeSerializer::start(serializer));
+            let mut serializer = try!(SerdeSerializer::start(serializer, None));
 
             for (ref k, ref v) in self.values.iter() {
                 try!(v.serialize(rinfo, k, &mut serializer));
