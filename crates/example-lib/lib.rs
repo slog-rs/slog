@@ -1,4 +1,5 @@
-//! Example of a library utilizing `slog`
+//! Example of a library utilizing `slog` logging under the-hood but providing it's user with
+//! possibility to ignore `slog` functionality.
 #![warn(missing_docs)]
 
 /// Re-export slog
@@ -20,11 +21,15 @@ impl MyLib {
 
     /// Initialize `MyLib`, possibly providing custom logger
     ///
-    /// `logger = None`, will make `MyLib` log to the standard `log`
-    /// crate.
-    pub fn init(logger : Option<slog::Logger>) -> Self {
+    /// `logger = None`, will make `MyLib` log to the `slog-stdlog`
+    /// drain. This make the library effectively work the same
+    /// as it was just using `log` instead of `slog`.
+    ///
+    /// `Into` trick allows passing `Logger` directly, without the `Some` part.
+    /// See http://xion.io/post/code/rust-optional-args.html
+    pub fn init<L : Into<Option<slog::Logger>>>(logger : L) -> Self {
         MyLib {
-            logger: logger.unwrap_or(slog::Logger::root(slog_stdlog::StdLog.fuse(), o!())),
+            logger: logger.into().unwrap_or(slog::Logger::root(slog_stdlog::StdLog.fuse(), o!())),
         }
     }
 
