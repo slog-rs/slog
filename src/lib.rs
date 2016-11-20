@@ -183,6 +183,53 @@ macro_rules! o(
     };
 );
 
+/// An alternative, longer-name version of `o` macro
+///
+/// Use in case of macro name collisions
+#[cfg(feature = "std")]
+#[macro_export]
+macro_rules! o(
+    (@ $k:expr => $v:expr, $($args:tt)+) => {
+        ($k, $v, o!(@ $($args)+))
+    };
+    (@ $k:expr => $v:expr) => {
+        ($k, $v)
+    };
+    (@ $k:expr => $v:expr,) => {
+        ($k, $v)
+    };
+    () => {
+        None
+    };
+    ($($args:tt)+) => {
+        Some(::std::boxed::Box::new(o!(@ $($args)+)))
+    };
+);
+
+/// An alternative, longer-name version of `o` macro
+///
+/// Use in case of macro name collisions
+#[cfg(not(feature = "std"))]
+#[macro_export]
+macro_rules! o(
+    (@ $k:expr => $v:expr, $($args:tt)+) => {
+        ($k, $v, o!(@ $($args)+))
+    };
+    (@ $k:expr => $v:expr) => {
+        ($k, $v)
+    };
+    (@ $k:expr => $v:expr,) => {
+        ($k, $v)
+    };
+    () => {
+        None
+    };
+    ($($args:tt)+) => {
+        Some(::alloc::boxed::Box::new(o!(@ $($args)+)))
+    };
+);
+
+
 /// Log message of a given level
 ///
 /// Use wrappers `error!`, `warn!` etc. instead
