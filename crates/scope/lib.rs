@@ -6,8 +6,8 @@
 //! Set of macros is also provided as an alternative to original `slog` crate macros, for logging
 //! directly to `Logger` of the current logging scope.
 //!
-//! Note: Part of a `slog` logging philosophy is ability to freelly express logging contexts
-//! acording to logical structure, rather than code structure. By using logging scopes logging
+//! Note: Part of a `slog` logging philosophy is ability to freely express logging contexts
+//! according to logical structure, rather than code structure. By using logging scopes the logging
 //! context is tied to code flow again, which is less expressive.
 //!
 //! ```
