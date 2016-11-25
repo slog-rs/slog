@@ -103,6 +103,7 @@ extern crate collections;
 use core::str::FromStr;
 use core::fmt;
 use core::result;
+use core::sync::atomic;
 
 #[cfg(feature = "std")]
 use std::sync::Arc;
@@ -605,6 +606,7 @@ pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
 pub type OwnedKeyValue<'a> = (&'static str, &'a ser::SyncSerialize);
 
 struct OwnedKeyValueListInner {
+    id : usize,
     parent: Option<OwnedKeyValueList>,
     values: Option<Box<ser::SyncMultiSerialize>>,
 }
@@ -615,11 +617,14 @@ pub struct OwnedKeyValueList {
     inner : Arc<OwnedKeyValueListInner>,
 }
 
+static NEXT_OKV_ID: atomic::AtomicUsize = atomic::ATOMIC_USIZE_INIT;
+
 impl OwnedKeyValueList {
     /// New `OwnedKeyValueList` node with an existing parent
     pub fn new(values: Box<ser::SyncMultiSerialize>, parent: OwnedKeyValueList) -> Self {
         OwnedKeyValueList {
             inner: Arc::new(OwnedKeyValueListInner {
+                id: NEXT_OKV_ID.fetch_add(1, atomic::Ordering::Relaxed),
                 parent: Some(parent),
                 values: Some(values),
             })
@@ -630,6 +635,7 @@ impl OwnedKeyValueList {
     pub fn root(values: Option<Box<ser::SyncMultiSerialize>>) -> Self {
         OwnedKeyValueList {
             inner: Arc::new(OwnedKeyValueListInner {
+                id: NEXT_OKV_ID.fetch_add(1, atomic::Ordering::Relaxed),
                 parent: None,
                 values: values,
             })
@@ -657,7 +663,7 @@ impl OwnedKeyValueList {
 
     /// Get a unique stable identifier for this node
     pub fn id(&self) -> usize {
-        &*self.inner as *const _ as usize
+        self.inner.id
     }
 }
 
