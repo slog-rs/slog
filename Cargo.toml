@@ -22,6 +22,18 @@ debug = false
 lto = true
 debug-assertions = false
 
+[workspace]
+members = [
+"crates/atomic",
+"crates/bunyan",
+"crates/example-lib",
+"crates/json",
+"crates/nursery",
+"crates/scope",
+"crates/serde",
+"crates/stdlog",
+]
+
 [features]
 
 std = []
