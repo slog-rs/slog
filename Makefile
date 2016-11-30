@@ -33,7 +33,6 @@ test-all:
 	cd "crates/json"; cargo test $(CARGO_FLAGS)
 	cd "crates/bunyan"; cargo test $(CARGO_FLAGS)
 	cd "crates/stdlog"; cargo test $(CARGO_FLAGS)
-	cd "crates/scope"; cargo test $(CARGO_FLAGS)
 	cd "crates/example-lib"; cargo test $(CARGO_FLAGS)
 	cd "crates/nursery"; cargo test $(CARGO_FLAGS)
 
@@ -76,7 +75,6 @@ doc: FORCE
 	cd "crates/json"; cargo doc -p slog-json
 	cd "crates/bunyan"; cargo doc -p slog-bunyan
 	cd "crates/stdlog"; cargo doc -p slog-stdlog
-	cd "crates/scope"; cargo doc -p slog-scope
 	cd "crates/example-lib"; cargo doc -p slog-example-lib
 	cd "crates/nursery"; cargo doc -p slog-nursery
 

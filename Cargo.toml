@@ -28,7 +28,6 @@ members = [
 "crates/example-lib",
 "crates/json",
 "crates/nursery",
-"crates/scope",
 "crates/serde",
 "crates/stdlog",
 ]
