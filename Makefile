@@ -27,15 +27,6 @@ all: $(ALL_TARGETS)
 run test build clean:
 	cargo $@ $(CARGO_FLAGS)
 
-test-all:
-	cargo test $(CARGO_FLAGS)
-	cd "crates/serde"; cargo test $(CARGO_FLAGS)
-	cd "crates/json"; cargo test $(CARGO_FLAGS)
-	cd "crates/bunyan"; cargo test $(CARGO_FLAGS)
-	cd "crates/stdlog"; cargo test $(CARGO_FLAGS)
-	cd "crates/example-lib"; cargo test $(CARGO_FLAGS)
-	cd "crates/nursery"; cargo test $(CARGO_FLAGS)
-
 check:
 	$(info Running check; use `make build` to actually build)
 	cargo $@ $(CARGO_FLAGS)
@@ -71,12 +62,6 @@ $(CRATES):
 .PHONY: doc
 doc: FORCE
 	cargo doc
-	cd "crates/serde"; cargo doc -p slog-serde
-	cd "crates/json"; cargo doc -p slog-json
-	cd "crates/bunyan"; cargo doc -p slog-bunyan
-	cd "crates/stdlog"; cargo doc -p slog-stdlog
-	cd "crates/example-lib"; cargo doc -p slog-example-lib
-	cd "crates/nursery"; cargo doc -p slog-nursery
 
 .PHONY: publishdoc
 publishdoc:
