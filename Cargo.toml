@@ -24,7 +24,6 @@ debug-assertions = false
 
 [workspace]
 members = [
-"crates/atomic",
 "crates/bunyan",
 "crates/example-lib",
 "crates/json",
