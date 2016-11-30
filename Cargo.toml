@@ -26,7 +26,6 @@ debug-assertions = false
 members = [
 "crates/example-lib",
 "crates/nursery",
-"crates/serde",
 "crates/stdlog",
 ]
 
