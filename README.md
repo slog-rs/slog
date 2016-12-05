@@ -158,3 +158,7 @@ In your `main.rs`:
 #[macro_use]
 extern crate slog;
 ```
+
+## About
+
+* [24 days of Rust - structured logging](https://siciarz.net/24-days-rust-structured-logging/) - review and tutorial by Zbigniew Siciarz 2016-12-05
