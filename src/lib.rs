@@ -656,6 +656,10 @@ impl OwnedKeyValueList {
     }
 
     /// Get a unique stable identifier for this node
+    ///
+    /// This function is buggy and will be removed at some point.
+    /// Please see https://github.com/slog-rs/slog/issues/90
+    #[deprecated]
     pub fn id(&self) -> usize {
         &*self.inner as *const _ as usize
     }
