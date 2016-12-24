@@ -24,9 +24,7 @@ debug-assertions = false
 
 [workspace]
 members = [
-"crates/example-lib",
 "crates/nursery",
-"crates/stdlog",
 ]
 
 [features]
