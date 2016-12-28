@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 * Deprecate `OwnedKeyValueList::id`
+* Updated documentation
 
 ## 1.3.2 - 2016-11-19
 ### Added

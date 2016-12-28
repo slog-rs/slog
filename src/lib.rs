@@ -83,8 +83,19 @@
 //! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
 //! [env_logger]: https://crates.io/crates/env_logger
 //! [functional-overview]: https://github.com/dpc/slog-rs/wiki/Functional-overview
-//! [async-streamer]: http://dpc.pw/slog-rs/slog/drain/struct.AsyncStreamer.html
-//! [atomic-switch]: http://dpc.pw/slog-rs/slog/drain/struct.AtomicSwitch.html
+//! [atomic-switch]: https://docs.rs/slog-atomic/0.4.3/slog_atomic/
+//!
+//! ## Examples & help
+//!
+//! Look at [slog-rs examples in `slog-misc`
+//! repository](https://github.com/slog-rs/misc/tree/master/examples)
+//!
+//! Read [slog-rs wiki pages](https://github.com/slog-rs/slog/wiki)
+//!
+//! Check sources of other [software using
+//! slog-rs](https://crates.io/crates/slog/reverse_dependencies)
+//!
+//! Visit [slog-rs gitter channel](https://gitter.im/slog-rs/slog) for immediate help.
 
 #![cfg_attr(not(feature = "std"), feature(alloc))]
 #![cfg_attr(not(feature = "std"), feature(collections))]
