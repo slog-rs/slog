@@ -32,6 +32,19 @@
 
 # slog-rs - The Logging for [Rust][rust]
 
+### Table of Contents
+
+* [Status & news](#status--news)
+* [`slog` crate](#slog-crate)
+  * [Features](#features)
+  * [Advantages over log crate](#advantages-over-log-crate)
+  * [Terminal output example](#terminal-output-example)
+  * [Using & help](#using--help)
+  * [Compatibility Policy](#compatibility-policy)
+* [Slog community](#slog-community)
+  * [Overview](#overview)
+* [Slog related resources](#slog-related-resources)
+
 ### Status & news
 
 `slog` is an ecosystem of reusable components for structured, composable logging
@@ -39,6 +52,8 @@ for [Rust][rust].
 
 The ambition is to be The Logging Framework for Rust. `slog` should accommodate
 variety of logging features and requirements.
+
+## `slog` crate
 
 ### Features
 
@@ -137,18 +152,21 @@ To report a bug or ask for features use [github issues][issues].
 [slog-rs gitter]: https://gitter.im/slog-rs/slog
 [issues]: //github.com/slog-rs/slog/issues
 
-### Slog organization
+#### In your project
 
-https://github.com/slog-rs github organization is home of `slog` ecosystem,
-and https://github.com/slog-rs/slog is core `slog` library repository.
+In Cargo.toml:
 
-Dawid Ciężarkiewicz is an original author and current maintainer of `slog` and
-therefore considered a benevolent dictator over the project. Dawid follows and
-expects you to follow his own [Code of
-Conduct](https://github.com/dpc/public/COC.md).
+```
+[dependencies]
+slog = "1.2"
+```
 
-Any particular repositories under slog ecosystem might be authored,
-controlled, maintained by other entities with various level of autonomy.
+In your `main.rs`:
+
+```
+#[macro_use]
+extern crate slog;
+```
 
 ### Compatibility Policy
 
@@ -184,22 +202,23 @@ guaranteed to compile with 1.12.0 and beyond, etc.
 Upon bumping the minimum version of Rust (assuming it's within the stable-2
 range), it *must* be clearly annotated in the `CHANGELOG.md`
 
-#### In your project
 
-In Cargo.toml:
+## Slog community
 
-```
-[dependencies]
-slog = "1.2"
-```
+### Overview
 
-In your `main.rs`:
+Slog related crates are hosted under [slog github
+organization](https://github.com/slog-rs).
 
-```
-#[macro_use]
-extern crate slog;
-```
+Dawid Ciężarkiewicz is the original author and current maintainer of `slog` and
+therefore self-appointed benevolent dictator over the project. When working on
+slog Dawid follows and expects everyone to follow his [Code of
+Conduct](https://github.com/dpc/public/blob/master/COC.md).
 
-## About
+Any particular repositories under slog ecosystem might be created, controlled,
+maintained by other entities with various level of autonomy. Lets work together
+toward a common goal in respectful and welcoming atmosphere!
+
+## slog-related resources
 
 * [24 days of Rust - structured logging](https://siciarz.net/24-days-rust-structured-logging/) - review and tutorial by Zbigniew Siciarz 2016-12-05
