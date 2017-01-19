@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.4.1 - 2017-01-19
+### Changed
+
+* Fix an invalid syntax exposed by nightly rust change (Issue #103)
+
 ## 1.4.0 - 2016-12-27
 ### Changed
 
