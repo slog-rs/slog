@@ -116,7 +116,7 @@ impl<D: Drain> Drain for Filter<D> {
 pub struct MapError<D: Drain, E> {
     drain: D,
     // eliminated dynamic dispatch, after rust learns `-> impl Trait`
-    map_fn: Box<(Fn(D::Error) -> E) + 'static+ Send+Sync>,
+    map_fn: Box<Fn(D::Error) -> E + 'static+ Send+Sync>,
 }
 
 impl<D: Drain, E> MapError<D, E> {
