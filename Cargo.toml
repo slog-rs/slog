@@ -4,6 +4,7 @@ version = "1.4.1"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Structured, composable logging for Rust"
 keywords = ["log", "logging", "structured", "hierarchical"]
+categories = ["development-tools::debugging"]
 license = "MPL-2.0"
 documentation = "https://docs.rs/slog"
 homepage = "https://github.com/slog-rs/slog"
