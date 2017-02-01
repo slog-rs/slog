@@ -685,8 +685,8 @@ pub struct OwnedKeyValueListIterator<'a> {
 impl<'a> OwnedKeyValueListIterator<'a> {
     fn new(node: &'a OwnedKeyValueList) -> Self {
         OwnedKeyValueListIterator {
-            next_node: node.inner.parent.as_ref(),
-            cur: node.inner.values.as_ref().map(|v| &**v),
+            next_node: Some(node),
+            cur: None,
         }
     }
 }
