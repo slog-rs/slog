@@ -146,20 +146,29 @@ pub type Never = ();
 #[cfg(feature = "std")]
 #[macro_export]
 macro_rules! o(
-    (@ $k:expr => $v:expr, $($args:tt)+) => {
-        ($k, $v, o!(@ $($args)+))
+    (@ ; $k:expr => $v:expr) => {
+        o!(@ ($k, $v); )
     };
-    (@ $k:expr => $v:expr) => {
-        ($k, $v)
+    (@ ; $k:expr => $v:expr, $($args:tt)*) => {
+        o!(@ ($k, $v); $($args)* )
     };
-    (@ $k:expr => $v:expr,) => {
-        ($k, $v)
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        o!(@ ($k, $v, $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        o!(@ ($k, $v, $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
     };
     () => {
         None
     };
     ($($args:tt)+) => {
-        Some(::std::boxed::Box::new(o!(@ $($args)+)))
+        Some(::std::boxed::Box::new(o!(@ ; $($args)+)))
     };
 );
 
@@ -177,20 +186,29 @@ macro_rules! o(
 #[cfg(not(feature = "std"))]
 #[macro_export]
 macro_rules! o(
-    (@ $k:expr => $v:expr, $($args:tt)+) => {
-        ($k, $v, o!(@ $($args)+))
+    (@ ; $k:expr => $v:expr) => {
+        o!(@ ($k, $v); )
     };
-    (@ $k:expr => $v:expr) => {
-        ($k, $v)
+    (@ ; $k:expr => $v:expr, $($args:tt)*) => {
+        o!(@ ($k, $v); $($args)* )
     };
-    (@ $k:expr => $v:expr,) => {
-        ($k, $v)
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        o!(@ ($k, $v, $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        o!(@ ($k, $v, $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
     };
     () => {
         None
     };
     ($($args:tt)+) => {
-        Some(::alloc::boxed::Box::new(o!(@ $($args)+)))
+        Some(::std::boxed::Box::new(o!(@ ; $($args)+)))
     };
 );
 
@@ -200,20 +218,29 @@ macro_rules! o(
 #[cfg(feature = "std")]
 #[macro_export]
 macro_rules! slog_o(
-    (@ $k:expr => $v:expr, $($args:tt)+) => {
-        ($k, $v, slog_o!(@ $($args)+))
+    (@ ; $k:expr => $v:expr) => {
+        o!(@ ($k, $v); )
     };
-    (@ $k:expr => $v:expr) => {
-        ($k, $v)
+    (@ ; $k:expr => $v:expr, $($args:tt)*) => {
+        o!(@ ($k, $v); $($args)* )
     };
-    (@ $k:expr => $v:expr,) => {
-        ($k, $v)
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        o!(@ ($k, $v, $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        o!(@ ($k, $v, $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
     };
     () => {
         None
     };
     ($($args:tt)+) => {
-        Some(::std::boxed::Box::new(slog_o!(@ $($args)+)))
+        Some(::std::boxed::Box::new(o!(@ ; $($args)+)))
     };
 );
 
@@ -223,20 +250,29 @@ macro_rules! slog_o(
 #[cfg(not(feature = "std"))]
 #[macro_export]
 macro_rules! slog_o(
-    (@ $k:expr => $v:expr, $($args:tt)+) => {
-        ($k, $v, slog_o!(@ $($args)+))
+    (@ ; $k:expr => $v:expr) => {
+        o!(@ ($k, $v); )
     };
-    (@ $k:expr => $v:expr) => {
-        ($k, $v)
+    (@ ; $k:expr => $v:expr, $($args:tt)*) => {
+        o!(@ ($k, $v); $($args)* )
     };
-    (@ $k:expr => $v:expr,) => {
-        ($k, $v)
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        o!(@ ($k, $v, $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        o!(@ ($k, $v, $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
     };
     () => {
         None
     };
     ($($args:tt)+) => {
-        Some(::alloc::boxed::Box::new(slog_o!(@ $($args)+)))
+        Some(::std::boxed::Box::new(o!(@ ; $($args)+)))
     };
 );
 
