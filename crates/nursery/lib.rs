@@ -4,7 +4,6 @@
 //! at a given moment are useful but not final.
 #![warn(missing_docs)]
 
-#[macro_use]
 extern crate slog;
 
 use slog::*;
