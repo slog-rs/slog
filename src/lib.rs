@@ -696,6 +696,21 @@ impl OwnedKeyValueList {
     }
 
     /// Iterator over all `OwnedKeyValue`-s in every `SyncMultiSerialize` of the list
+    ///
+    /// The order is reverse to how it was built. Eg.
+    ///
+    /// ```
+    /// #[macro_use]
+    /// extern crate slog;
+    ///
+    /// fn main() {
+    ///     let drain = slog::Discard;
+    ///     let root = slog::Logger::root(drain, o!("k1" => "v1", "k2" => "k2"));
+    ///     let _log = root.new(o!("k3" => "v3", "k4" => "v4"));
+    /// }
+    /// ```
+    ///
+    /// Will produce `OwnedKeyValueList.iter()` that returns `k4, k3, k2, k1`.
     pub fn iter(&self) -> OwnedKeyValueListIterator {
         OwnedKeyValueListIterator::new(self)
     }
