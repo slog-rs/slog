@@ -32,7 +32,7 @@ impl Logger {
     /// extern crate slog;
     ///
     /// fn main() {
-    ///     let root = slog::Logger::root(
+    ///     let _root = slog::Logger::root(
     ///         slog::Discard,
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
@@ -60,7 +60,7 @@ impl Logger {
     /// fn main() {
     ///     let root = slog::Logger::root(slog::Discard,
     ///         o!("key1" => "value1", "key2" => "value2"));
-    ///     let log = root.new(o!("key" => "value"));
+    ///     let _log = root.new(o!("key" => "value"));
     /// }
     pub fn new(&self, values: Option<Box<ser::SyncMultiSerialize>>) -> Logger {
         Logger {

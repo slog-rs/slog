@@ -140,7 +140,7 @@ pub type Never = ();
 ///
 /// fn main() {
 ///     let drain = slog::Discard;
-///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     let _root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
 /// }
 /// ```
 #[cfg(feature = "std")]
@@ -180,7 +180,7 @@ macro_rules! o(
 ///
 /// fn main() {
 ///     let drain = slog::Discard;
-///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     let _root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
 /// }
 /// ```
 #[cfg(not(feature = "std"))]
@@ -418,8 +418,6 @@ macro_rules! log(
 /// ```
 /// #[macro_use(o,slog_log,slog_info)]
 /// extern crate slog;
-///
-/// use slog::DrainExt;
 ///
 /// fn main() {
 ///     let log = slog::Logger::root(slog::Discard, o!());
