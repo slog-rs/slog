@@ -20,7 +20,7 @@ pub trait Drain {
     /// * pass this information (or not) to the sub-logger(s) (filters)
     /// * format and write the information the a destination (writers)
     /// * deal with the errors returned from the sub-logger(s)
-    fn log(&self, info: &Record, &OwnedKeyValueList) -> result::Result<(), Self::Error>;
+    fn log(&self, record: &Record, values : &OwnedKeyValueList) -> result::Result<(), Self::Error>;
 }
 
 impl<D: Drain+?Sized> Drain for Box<D> {
