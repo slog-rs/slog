@@ -12,7 +12,7 @@
 #[derive(Clone)]
 pub struct Logger {
     drain: Arc<Drain<Error=Never>+Send+Sync>,
-    values: OwnedKeyValueList,
+    list: OwnedKeyValueList,
 }
 
 impl Logger {
@@ -40,7 +40,14 @@ impl Logger {
     pub fn root<D: 'static + Drain<Error=Never> + Sized+Send+Sync>(d: D, values: Option<Box<ser::SyncMultiSerialize>>) -> Logger {
         Logger {
             drain: Arc::new(d),
-            values: OwnedKeyValueList::root(values),
+            list: OwnedKeyValueList {
+                next: None,
+                list: Arc::new(OwnedKeyValueListNode {
+                    next: None,
+                    values: values,
+                })
+            }
+
         }
     }
 
@@ -65,10 +72,15 @@ impl Logger {
     pub fn new(&self, values: Option<Box<ser::SyncMultiSerialize>>) -> Logger {
         Logger {
             drain: self.drain.clone(),
-            values: if let Some(v) = values {
-                OwnedKeyValueList::new(v, self.values.clone())
+            list: if let Some(v) = values {
+                OwnedKeyValueList {
+                    next: None,
+                    list: Arc::new(OwnedKeyValueListNode {
+                    next: Some(self.list.list.clone()),
+                    values: Some(v),
+                })}
             } else {
-                self.values.clone()
+                self.list.clone()
             },
         }
     }
@@ -79,14 +91,17 @@ impl Logger {
     /// documentation.
     #[inline]
     pub fn log(&self, record: &Record) {
-        let _ = self.drain.log(&record, &self.values);
+        let _ = self.drain.log(
+            &record,
+            &self.list,
+            );
     }
 }
 
 impl fmt::Debug for Logger {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "Logger("));
-        for (i, (key, _)) in self.values.iter().enumerate() {
+        for (i, (key, _)) in self.list.iter().enumerate() {
             if i != 0 {
                 try!(write!(f, ", "));
             }
@@ -95,6 +110,21 @@ impl fmt::Debug for Logger {
         }
         try!(write!(f, ")"));
         Ok(())
+    }
+}
+
+impl Drain for Logger {
+
+    type Error = Never;
+
+    fn log(&self, record: &Record, values : &OwnedKeyValueList) -> result::Result<(), Self::Error> {
+        debug_assert!(self.list.next.is_none());
+
+        let chained = values.append(&self.list);
+        self.drain.log(
+            &record,
+            &chained,
+            )
     }
 }
 
