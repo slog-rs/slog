@@ -37,13 +37,14 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
-    pub fn root<D: 'static + Drain<Error=Never> + Sized+Send+Sync>(d: D, values: Option<Box<ser::SyncMultiSerialize>>) -> Logger {
+    pub fn root<D>(d: D, values: Option<Box<ser::SyncMultiSerialize>>) -> Logger
+    where D: 'static + Drain<Error=Never> + Sized+Send+Sync{
         Logger {
             drain: Arc::new(d),
             list: OwnedKeyValueList {
-                next: None,
-                list: Arc::new(OwnedKeyValueListNode {
-                    next: None,
+                next_list: None,
+                node: Arc::new(OwnedKeyValueListNode {
+                    next_node: None,
                     values: values,
                 })
             }
@@ -74,11 +75,14 @@ impl Logger {
             drain: self.drain.clone(),
             list: if let Some(v) = values {
                 OwnedKeyValueList {
-                    next: None,
-                    list: Arc::new(OwnedKeyValueListNode {
-                    next: Some(self.list.list.clone()),
-                    values: Some(v),
-                })}
+                    next_list: None,
+                    node: Arc::new(
+                        OwnedKeyValueListNode {
+                            next_node: Some(self.list.node.clone()),
+                            values: Some(v),
+                        }
+                        )
+                }
             } else {
                 self.list.clone()
             },
@@ -118,7 +122,7 @@ impl Drain for Logger {
     type Error = Never;
 
     fn log(&self, record: &Record, values : &OwnedKeyValueList) -> result::Result<(), Self::Error> {
-        debug_assert!(self.list.next.is_none());
+        debug_assert!(self.list.next_list.is_none());
 
         let chained = values.append(&self.list);
         self.drain.log(
