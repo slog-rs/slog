@@ -2,7 +2,7 @@
 mod tests {
 
     use *;
-    use {Drain};
+    use Drain;
 
     /// ensure o! macro expands without error inside a module
     #[test]
@@ -23,9 +23,12 @@ mod tests {
     fn multichain() {
         struct CheckOwned;
 
-        impl Drain for CheckOwned{
+        impl Drain for CheckOwned {
             type Error = Never;
-            fn log(&self, record: &Record, values : &OwnedKeyValueList) -> result::Result<(), Self::Error> {
+            fn log(&self,
+                   record: &Record,
+                   values: &OwnedKeyValueList)
+                   -> result::Result<(), Self::Error> {
                 assert_eq!(format!("{}", record.msg()), format!("{:?}", values));
                 Ok(())
             }

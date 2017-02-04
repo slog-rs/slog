@@ -340,7 +340,6 @@ macro_rules! slog_o(
 ///     info!(root, "formatted: {}", 1);
 /// }
 /// ```
-
 #[macro_export]
 macro_rules! log(
     ($lvl:expr, $l:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
@@ -654,6 +653,13 @@ struct OwnedKeyValueListNode {
     values: Option<Box<ser::SyncMultiSerialize>>,
 }
 
+/// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
+#[derive(Clone)]
+pub struct OwnedKeyValueList {
+    next: Option<Arc<OwnedKeyValueList>>,
+    list: Arc<OwnedKeyValueListNode>,
+}
+
 impl fmt::Debug for OwnedKeyValueList {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "("));
@@ -669,37 +675,32 @@ impl fmt::Debug for OwnedKeyValueList {
     }
 }
 
-/// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
-#[derive(Clone)]
-pub struct OwnedKeyValueList {
-    next: Option<Arc<OwnedKeyValueList>>,
-    list : Arc<OwnedKeyValueListNode>,
-}
-
 impl OwnedKeyValueList {
     /// New `OwnedKeyValueList` node with an existing parent
+    #[deprecated]
     pub fn new(values: Box<ser::SyncMultiSerialize>, parent: OwnedKeyValueList) -> Self {
         OwnedKeyValueList {
             next: None,
             list: Arc::new(OwnedKeyValueListNode {
-                next : Some(parent.list),
+                next: Some(parent.list),
                 values: Some(values),
-            })
+            }),
         }
     }
 
     /// New `OwnedKeyValue` node without a parent (root)
+    #[deprecated]
     pub fn root(values: Option<Box<ser::SyncMultiSerialize>>) -> Self {
         OwnedKeyValueList {
             next: None,
             list: Arc::new(OwnedKeyValueListNode {
-                next : None,
+                next: None,
                 values: values,
-            })
+            }),
         }
     }
 
-    fn append(&self, other : &OwnedKeyValueList) -> OwnedKeyValueList {
+    fn append(&self, other: &OwnedKeyValueList) -> OwnedKeyValueList {
         if let Some(ref next) = self.next {
             OwnedKeyValueList {
                 next: Some(Arc::new(next.append(other))),
@@ -721,14 +722,16 @@ impl OwnedKeyValueList {
     pub fn parent(&self) -> Option<OwnedKeyValueList> {
         if let Some(next) = self.list.next.as_ref() {
             OwnedKeyValueList {
-                next: self.next.clone(),
-                list: next.clone(),
-            }.into()
+                    next: self.next.clone(),
+                    list: next.clone(),
+                }
+                .into()
         } else if let Some(next) = self.next.as_ref() {
             OwnedKeyValueList {
-                next: next.next.clone(),
-                list: next.list.clone(),
-            }.into()
+                    next: next.next.clone(),
+                    list: next.list.clone(),
+                }
+                .into()
         } else {
             None
         }
@@ -777,7 +780,7 @@ pub struct OwnedKeyValueListIterator<'a> {
 }
 
 impl<'a> OwnedKeyValueListIterator<'a> {
-    fn new(list : &'a OwnedKeyValueList) -> Self {
+    fn new(list: &'a OwnedKeyValueList) -> Self {
         OwnedKeyValueListIterator {
             next_list: Some(list),
             next_node: None,
@@ -793,7 +796,7 @@ impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
             if let Some(x) = self.cur.take() {
                 let tail = x.tail();
                 self.cur = tail;
-                return Some(x.head())
+                return Some(x.head());
             }
             if let Some(node) = self.next_node.take() {
                 self.cur = node.values.as_ref().map(|v| &**v);
@@ -801,11 +804,11 @@ impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
                 continue;
             }
             if let Some(list) = self.next_list.take() {
-                self.next_node= Some(&*list.list);
+                self.next_node = Some(&*list.list);
                 self.next_list = list.next.as_ref().map(|next| &**next);
                 continue;
             }
-            return None
+            return None;
         }
     }
 }
