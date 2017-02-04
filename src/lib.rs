@@ -649,15 +649,15 @@ pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
 pub type OwnedKeyValue<'a> = (&'static str, &'a ser::SyncSerialize);
 
 struct OwnedKeyValueListNode {
-    next: Option<Arc<OwnedKeyValueListNode>>,
+    next_node: Option<Arc<OwnedKeyValueListNode>>,
     values: Option<Box<ser::SyncMultiSerialize>>,
 }
 
 /// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
 #[derive(Clone)]
 pub struct OwnedKeyValueList {
-    next: Option<Arc<OwnedKeyValueList>>,
-    list: Arc<OwnedKeyValueListNode>,
+    next_list: Option<Arc<OwnedKeyValueList>>,
+    node: Arc<OwnedKeyValueListNode>,
 }
 
 impl fmt::Debug for OwnedKeyValueList {
@@ -680,9 +680,9 @@ impl OwnedKeyValueList {
     #[deprecated]
     pub fn new(values: Box<ser::SyncMultiSerialize>, parent: OwnedKeyValueList) -> Self {
         OwnedKeyValueList {
-            next: None,
-            list: Arc::new(OwnedKeyValueListNode {
-                next: Some(parent.list),
+            next_list: None,
+            node: Arc::new(OwnedKeyValueListNode {
+                next_node: Some(parent.node),
                 values: Some(values),
             }),
         }
@@ -692,25 +692,22 @@ impl OwnedKeyValueList {
     #[deprecated]
     pub fn root(values: Option<Box<ser::SyncMultiSerialize>>) -> Self {
         OwnedKeyValueList {
-            next: None,
-            list: Arc::new(OwnedKeyValueListNode {
-                next: None,
+            next_list: None,
+            node: Arc::new(OwnedKeyValueListNode {
+                next_node: None,
                 values: values,
             }),
         }
     }
 
     fn append(&self, other: &OwnedKeyValueList) -> OwnedKeyValueList {
-        if let Some(ref next) = self.next {
-            OwnedKeyValueList {
-                next: Some(Arc::new(next.append(other))),
-                list: self.list.clone(),
-            }
-        } else {
-            OwnedKeyValueList {
-                next: Some(Arc::new(other.clone())),
-                list: self.list.clone(),
-            }
+        OwnedKeyValueList {
+            next_list: Some(Arc::new(if let Some(ref next) = self.next_list {
+                next.append(other)
+            } else {
+                other.clone()
+            })),
+            node: self.node.clone(),
         }
     }
 
@@ -720,16 +717,16 @@ impl OwnedKeyValueList {
     /// containing one more more `OwnedKeyValue`, it's possible to iterate through the whole list
     /// group-by-group with `parent()` and `values()`.
     pub fn parent(&self) -> Option<OwnedKeyValueList> {
-        if let Some(next) = self.list.next.as_ref() {
+        if let Some(next) = self.node.next_node.as_ref() {
             OwnedKeyValueList {
-                    next: self.next.clone(),
-                    list: next.clone(),
+                    next_list: self.next_list.clone(),
+                    node: next.clone(),
                 }
                 .into()
-        } else if let Some(next) = self.next.as_ref() {
+        } else if let Some(next) = self.next_list.as_ref() {
             OwnedKeyValueList {
-                    next: next.next.clone(),
-                    list: next.list.clone(),
+                    next_list: next.next_list.clone(),
+                    node: next.node.clone(),
                 }
                 .into()
         } else {
@@ -739,7 +736,7 @@ impl OwnedKeyValueList {
 
     /// Get the head node `SyncMultiSerialize` values
     pub fn values(&self) -> Option<&ser::SyncMultiSerialize> {
-        self.list.values.as_ref().map(|b| &**b)
+        self.node.values.as_ref().map(|b| &**b)
     }
 
     /// Iterator over all `OwnedKeyValue`-s in every `SyncMultiSerialize` of the list
@@ -768,7 +765,7 @@ impl OwnedKeyValueList {
     /// Please see https://github.com/slog-rs/slog/issues/90
     #[deprecated]
     pub fn id(&self) -> usize {
-        &*self.list as *const _ as usize
+        &*self.node as *const _ as usize
     }
 }
 
@@ -800,12 +797,12 @@ impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
             }
             if let Some(node) = self.next_node.take() {
                 self.cur = node.values.as_ref().map(|v| &**v);
-                self.next_node = node.next.as_ref().map(|next| &**next);
+                self.next_node = node.next_node.as_ref().map(|next| &**next);
                 continue;
             }
             if let Some(list) = self.next_list.take() {
-                self.next_node = Some(&*list.list);
-                self.next_list = list.next.as_ref().map(|next| &**next);
+                self.next_node = Some(&*list.node);
+                self.next_list = list.next_list.as_ref().map(|next| &**next);
                 continue;
             }
             return None;
