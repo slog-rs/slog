@@ -34,7 +34,7 @@ pub enum Error {
     /// `io::Error`
     Io(std::io::Error),
     /// Other error
-    Other
+    Other,
 }
 
 #[derive(Debug)]
@@ -42,7 +42,7 @@ pub enum Error {
 /// Serialization Error
 pub enum Error {
     /// Other error
-    Other
+    Other,
 }
 
 /// Serialization `Result`
@@ -56,14 +56,14 @@ impl From<std::io::Error> for Error {
 }
 
 impl From<core::fmt::Error> for Error {
-    fn from(_ : core::fmt::Error) -> Error {
+    fn from(_: core::fmt::Error) -> Error {
         Error::Other
     }
 }
 
 #[cfg(feature = "std")]
 impl From<Error> for std::io::Error {
-    fn from(e : Error) -> std::io::Error {
+    fn from(e: Error) -> std::io::Error {
         match e {
             Error::Io(e) => e,
             Error::Other => std::io::Error::new(std::io::ErrorKind::Other, "other error"),
@@ -76,14 +76,14 @@ impl std::error::Error for Error {
     fn description(&self) -> &str {
         match *self {
             Error::Io(ref e) => e.description(),
-            Error::Other => "serialization error"
+            Error::Other => "serialization error",
         }
     }
 
     fn cause(&self) -> Option<&std::error::Error> {
         match *self {
             Error::Io(ref e) => Some(e),
-            Error::Other => None
+            Error::Other => None,
         }
     }
 }
@@ -93,10 +93,9 @@ impl core::fmt::Display for Error {
     fn fmt(&self, fmt: &mut core::fmt::Formatter) -> std::fmt::Result {
         match *self {
             Error::Io(ref e) => e.fmt(fmt),
-            Error::Other => fmt.write_str("Other serialization error")
+            Error::Other => fmt.write_str("Other serialization error"),
         }
     }
-
 }
 
 /// Value that can be serialized
@@ -109,7 +108,11 @@ pub trait Serialize {
     ///
     /// Structs implementing this trait should generally
     /// only call respective methods of `serializer`.
-    fn serialize(&self, record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error>;
+    fn serialize(&self,
+                 record: &Record,
+                 key: &'static str,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error>;
 }
 
 /// Value that can be serialized and stored
@@ -121,7 +124,7 @@ pub trait SyncSerialize: Send + Sync + 'static + Serialize {}
 
 
 /// Multiple key-values pairs that can be serialized
-pub trait SyncMultiSerialize : Send + Sync + 'static {
+pub trait SyncMultiSerialize: Send + Sync + 'static {
     /// Key and value of the first key-value pair
     fn head(&self) -> (&'static str, &SyncSerialize);
     /// Next key-value pair (and all following ones)
@@ -200,7 +203,11 @@ impl_serialize_for!(i64, emit_i64);
 impl_serialize_for!(f64, emit_f64);
 
 impl Serialize for () {
-    fn serialize(&self, _record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error> {
+    fn serialize(&self,
+                 _record: &Record,
+                 key: &'static str,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error> {
         serializer.emit_unit(key)
     }
 }
@@ -208,19 +215,31 @@ impl Serialize for () {
 impl SyncSerialize for () {}
 
 impl Serialize for str {
-    fn serialize(&self, _record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error> {
+    fn serialize(&self,
+                 _record: &Record,
+                 key: &'static str,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error> {
         serializer.emit_str(key, self)
     }
 }
 
 impl<'a> Serialize for &'a str {
-    fn serialize(&self, _record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error> {
+    fn serialize(&self,
+                 _record: &Record,
+                 key: &'static str,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error> {
         serializer.emit_str(key, self)
     }
 }
 
-impl<'a> Serialize for fmt::Arguments<'a>{
-    fn serialize(&self, _record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error> {
+impl<'a> Serialize for fmt::Arguments<'a> {
+    fn serialize(&self,
+                 _record: &Record,
+                 key: &'static str,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error> {
         serializer.emit_arguments(key, self)
     }
 }
@@ -230,7 +249,11 @@ impl SyncSerialize for fmt::Arguments<'static> {}
 impl SyncSerialize for &'static str {}
 
 impl Serialize for String {
-    fn serialize(&self, _record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error> {
+    fn serialize(&self,
+                 _record: &Record,
+                 key: &'static str,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error> {
         serializer.emit_str(key, self.as_str())
     }
 }
@@ -238,7 +261,11 @@ impl Serialize for String {
 impl SyncSerialize for String {}
 
 impl<T: Serialize> Serialize for Option<T> {
-    fn serialize(&self, record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error> {
+    fn serialize(&self,
+                 record: &Record,
+                 key: &'static str,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error> {
         match *self {
             Some(ref s) => s.serialize(record, key, serializer),
             None => serializer.emit_none(key),
@@ -249,8 +276,12 @@ impl<T: Serialize> Serialize for Option<T> {
 impl<T: Serialize + Send + Sync + 'static> SyncSerialize for Option<T> {}
 
 
-impl Serialize for Box<Serialize+Send+'static> {
-    fn serialize(&self, record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error> {
+impl Serialize for Box<Serialize + Send + 'static> {
+    fn serialize(&self,
+                 record: &Record,
+                 key: &'static str,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error> {
         (**self).serialize(record, key, serializer)
     }
 }
@@ -258,7 +289,11 @@ impl Serialize for Box<Serialize+Send+'static> {
 impl<T> Serialize for Arc<T>
     where T: Serialize
 {
-    fn serialize(&self, record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error> {
+    fn serialize(&self,
+                 record: &Record,
+                 key: &'static str,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error> {
         (**self).serialize(record, key, serializer)
     }
 }
@@ -268,7 +303,11 @@ impl<T> SyncSerialize for Arc<T> where T: SyncSerialize {}
 impl<T> Serialize for Rc<T>
     where T: Serialize
 {
-    fn serialize(&self, record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error> {
+    fn serialize(&self,
+                 record: &Record,
+                 key: &'static str,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error> {
         (**self).serialize(record, key, serializer)
     }
 }
@@ -276,7 +315,11 @@ impl<T> Serialize for Rc<T>
 impl<T> Serialize for core::num::Wrapping<T>
     where T: Serialize
 {
-    fn serialize(&self, record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error> {
+    fn serialize(&self,
+                 record: &Record,
+                 key: &'static str,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error> {
         self.0.serialize(record, key, serializer)
     }
 }
@@ -286,7 +329,11 @@ impl<T> SyncSerialize for core::num::Wrapping<T> where T: SyncSerialize {}
 impl<S: 'static + Serialize, F> Serialize for F
     where F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> S
 {
-    fn serialize(&self, record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error> {
+    fn serialize(&self,
+                 record: &Record,
+                 key: &'static str,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error> {
         (*self)(record).serialize(record, key, serializer)
     }
 }
@@ -341,9 +388,11 @@ impl<'a> Drop for ValueSerializer<'a> {
 }
 
 impl<F> Serialize for PushLazy<F>
-    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>) -> result::Result<(), Error>
+    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>)
+    -> result::Result<(), Error>
 {
-    fn serialize(&self, record: &Record, key: &'static str, serializer: &mut Serializer) -> result::Result<(), Error> {
+    fn serialize(&self, record: &Record, key: &'static str, serializer: &mut Serializer)
+        -> result::Result<(), Error> {
         let ser = ValueSerializer {
             record: record,
             key: key,
@@ -359,7 +408,7 @@ impl<F> SyncSerialize for PushLazy<F>
      -> result::Result<(), Error> {
 }
 
-impl<A : SyncSerialize> SyncMultiSerialize for (&'static str, A) {
+impl<A: SyncSerialize> SyncMultiSerialize for (&'static str, A) {
     fn tail(&self) -> Option<&SyncMultiSerialize> {
         None
     }
@@ -370,7 +419,7 @@ impl<A : SyncSerialize> SyncMultiSerialize for (&'static str, A) {
     }
 }
 
-impl<A : SyncSerialize, R : SyncMultiSerialize> SyncMultiSerialize for (&'static str, A, R) {
+impl<A: SyncSerialize, R: SyncMultiSerialize> SyncMultiSerialize for (&'static str, A, R) {
     fn tail(&self) -> Option<&SyncMultiSerialize> {
         let (_, _, ref tail) = *self;
         Some(tail)
