@@ -8,14 +8,6 @@ pub struct OwnedKVGroup(
     pub Box<ser::SyncMultiKV>,
 );
 
-/// Key value pair that can be part of a logging record
-pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Value);
-
-/// Key value pair that can be owned by `Logger`
-///
-/// See `o!(...)` macro.
-pub type OwnedKeyValue<'a> = (&'static str, &'a ser::SyncValue);
-
 struct OwnedKeyValueListNode {
     next_node: Option<Arc<OwnedKeyValueListNode>>,
     values: OwnedKVGroup,
@@ -165,7 +157,7 @@ impl OwnedKeyValueList {
 pub struct OwnedKeyValueListIterator<'a> {
     next_list: Option<&'a OwnedKeyValueList>,
     next_node: Option<&'a OwnedKeyValueListNode>,
-    cur: Option<&'a ser::SyncKV>,
+    cur: Option<&'a ser::KV>,
 }
 
 impl<'a> OwnedKeyValueListIterator<'a> {
@@ -179,13 +171,14 @@ impl<'a> OwnedKeyValueListIterator<'a> {
 }
 
 impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
-    type Item = &'a SyncKV;
+    type Item = &'a KV;
     fn next(&mut self) -> Option<Self::Item> {
         loop {
             if let Some(x) = self.cur.take() {
-                // TODO: Use custom `Serializer` to iterate element
-                // by element
-                return Some(x);
+                if let Some((head, tail)) = x.split_first() {
+                    self.cur = Some(tail);
+                    return Some(head);
+                }
             }
             if let Some(node) = self.next_node.take() {
                 self.cur = Some(&*node.values.0);
