@@ -31,14 +31,35 @@ pub struct OwnedKeyValueList {
 impl fmt::Debug for OwnedKeyValueList {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "("));
-        for (i, kv) in self.iter().enumerate() {
-            let key = kv.key();
-            if i != 0 {
-                try!(write!(f, ", "));
-            }
+        let mut i = 0;
 
-            try!(write!(f, "{}", key));
+        {
+            let mut as_str_ser = ser::AsStrSerializer(|key, val| {
+                if i != 0 {
+                    try!(write!(f, ", "));
+                }
+
+                try!(write!(f, "{}", key));
+                i += 1;
+                Ok(())
+            });
+            let record_static = RecordStatic {
+                level: Level::Trace,
+                file: "",
+                line: 0,
+                column: 0,
+                function: "",
+                module: "",
+                target: "",
+            };
+            let record = Record::new(&record_static, format_args!(""), &[]);
+
+            for i in self.iter() {
+                try!(i.serialize(&record, &mut as_str_ser)
+                     .map_err(|_| fmt::Error));
+            }
         }
+
         try!(write!(f, ")"));
         Ok(())
     }
@@ -144,7 +165,7 @@ impl OwnedKeyValueList {
 pub struct OwnedKeyValueListIterator<'a> {
     next_list: Option<&'a OwnedKeyValueList>,
     next_node: Option<&'a OwnedKeyValueListNode>,
-    cur: Option<&'a ser::SyncMultiKV>,
+    cur: Option<&'a ser::SyncKV>,
 }
 
 impl<'a> OwnedKeyValueListIterator<'a> {
@@ -162,10 +183,9 @@ impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         loop {
             if let Some(x) = self.cur.take() {
-                if let Some((head, tail)) = x.first_and_rest() {
-                    self.cur = Some(tail);
-                    return Some(head);
-                }
+                // TODO: Use custom `Serializer` to iterate element
+                // by element
+                return Some(x);
             }
             if let Some(node) = self.next_node.take() {
                 self.cur = Some(&*node.values.0);
