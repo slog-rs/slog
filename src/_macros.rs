@@ -56,7 +56,7 @@ macro_rules! o(
         $args_ready
     };
     ($($args:tt)*) => {
-        $crate::OwnedKVGroup(::alloc::Box::new(o!(@ (); $($args)*)))
+        $crate::OwnedKVGroup(::alloc::boxed::Box::new(o!(@ (); $($args)*)))
     };
 );
 
@@ -102,7 +102,7 @@ macro_rules! slog_o(
         $args_ready
     };
     ($($args:tt)*) => {
-        $crate::OwnedKVGroup(::alloc::Box::new(o!(@ (); $($args)*)))
+        $crate::OwnedKVGroup(::alloc::boxed::Box::new(o!(@ (); $($args)*)))
     };
 );
 

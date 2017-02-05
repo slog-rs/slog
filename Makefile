@@ -22,6 +22,10 @@ EXAMPLES = $(shell cd examples 2>/dev/null && ls *.rs 2>/dev/null | sed -e 's/.r
 CRATES = $(shell cd crates 2>/dev/null && ls 2>/dev/null)
 
 all: $(ALL_TARGETS)
+	# Build & test for ![no_std] just to make sure it's not borked
+	cargo build --no-default-features
+	# TODO: FIXME
+	# cargo test --no-default-features
 
 .PHONY: run test build doc clean clippy
 run test build clean:

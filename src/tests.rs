@@ -1,39 +1,40 @@
-#[cfg(test)]
-mod tests {
+#[cfg(std)]
+use std;
 
-    use std;
-    use super::super::*;
-
-    // Separate module to test lack of imports
-    mod no_imports {
-        use {Logger, Discard};
-        /// ensure o! macro expands without error inside a module
-        #[test]
-        fn test_o_macro_expansion() {
-            let _ = Logger::root(Discard, o!("a" => "aa"));
-        }
-        /// ensure o! macro expands without error inside a module
-        #[test]
-        fn test_slog_o_macro_expansion() {
-            let _ = Logger::root(Discard, slog_o!("a" => "aa"));
-        }
-    }
-
-    /*
-      TODO: Make it work
+// Separate module to test lack of imports
+mod no_imports {
+    use {Logger, Discard};
+    /// ensure o! macro expands without error inside a module
     #[test]
-    fn writer_closure() {
-        let _root = Logger::root(
-            Discard,
-            o!( ));
-            info!(_root, "foo"; "writer_closure" => Box::new(
-                    move |&Record, s : ValueSerializer| {
-                    let generated_string = format!("{}", 1);
-                    s.serialize(generated_string.as_str())
-                }
-                ))
+    fn test_o_macro_expansion() {
+        let _ = Logger::root(Discard, o!("a" => "aa"));
     }
-     */
+    /// ensure o! macro expands without error inside a module
+    #[test]
+    fn test_slog_o_macro_expansion() {
+        let _ = Logger::root(Discard, slog_o!("a" => "aa"));
+    }
+}
+
+/*
+   TODO: Make it work
+   #[test]
+   fn writer_closure() {
+   let _root = Logger::root(
+   Discard,
+   o!( ));
+   info!(_root, "foo"; "writer_closure" => Box::new(
+   move |&Record, s : ValueSerializer| {
+   let generated_string = format!("{}", 1);
+   s.serialize(generated_string.as_str())
+   }
+   ))
+   }
+   */
+
+#[cfg(feature = "std")]
+mod std_only {
+    use super::super::*;
 
     #[test]
     fn logger_fmt_debug_sanity() {
@@ -44,6 +45,7 @@ mod tests {
         assert_eq!(format!("{:?}", log), "Logger(c, b, a)");
     }
 
+
     #[test]
     fn multichain() {
         struct CheckOwned;
@@ -53,10 +55,10 @@ mod tests {
             fn log(&self,
                    record: &Record,
                    values: &OwnedKeyValueList)
-                   -> std::result::Result<(), Self::Error> {
-                assert_eq!(format!("{}", record.msg()), format!("{:?}", values));
-                Ok(())
-            }
+                -> std::result::Result<(), Self::Error> {
+                    assert_eq!(format!("{}", record.msg()), format!("{:?}", values));
+                    Ok(())
+                }
         }
 
         let root = Logger::root(CheckOwned, o!("a" => "aa"));
