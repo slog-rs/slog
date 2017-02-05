@@ -55,10 +55,10 @@ mod std_only {
             fn log(&self,
                    record: &Record,
                    values: &OwnedKeyValueList)
-                -> std::result::Result<(), Self::Error> {
-                    assert_eq!(format!("{}", record.msg()), format!("{:?}", values));
-                    Ok(())
-                }
+                   -> std::result::Result<(), Self::Error> {
+                assert_eq!(format!("{}", record.msg()), format!("{:?}", values));
+                Ok(())
+            }
         }
 
         let root = Logger::root(CheckOwned, o!("a" => "aa"));
