@@ -1,3 +1,7 @@
+/// Key value pair that can be part of a logging record
+type BorrowedKeyValue<'a> = (&'a str, &'a ser::Value);
+
+
 /// Group of key-value pairs
 ///
 /// The exact details of that function are not considered public
@@ -5,7 +9,7 @@
 /// to create `OwnedKVGroup` instances.
 pub struct OwnedKVGroup(
     #[doc(hidden)]
-    pub Box<ser::SyncMultiKV>,
+    pub Box<ser::KV + Send + Sync + 'static>,
 );
 
 struct OwnedKeyValueListNode {

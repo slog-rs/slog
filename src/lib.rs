@@ -136,8 +136,13 @@ pub type Never = ();
 /// Serialization
 pub mod ser;
 
-pub use ser::{ValueSerializer, Serializer, Value, SyncValue, KV, SyncKV};
+pub use ser::{ValueSerializer, Serializer, Value, KV};
 
+// One main namespace is enough, but for conveniance break
+// the code into parts.
+//
+// Use include so we don't have to deal with privacy between modules.
+include!("_record.rs");
 include!("_macros.rs");
 include!("_kv.rs");
 include!("_level.rs");
