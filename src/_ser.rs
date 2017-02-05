@@ -3,7 +3,7 @@
 #[cfg(feature = "std")]
 /// Serialization Error
 pub enum Error {
-    /// `io::Error`
+    /// `io::Error` (no available in ![no_std] mode)
     Io(std::io::Error),
     /// `fmt::Error`
     Fmt(std::fmt::Error),
@@ -15,6 +15,7 @@ pub enum Error {
 #[cfg(not(feature = "std"))]
 /// Serialization Error
 pub enum Error {
+    /// `fmt::Error`
     Fmt(core::fmt::Error),
     /// Other error
     Other,
