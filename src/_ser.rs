@@ -79,6 +79,7 @@ impl core::fmt::Display for Error {
 
 macro_rules! impl_default_as_fmt{
     ($t:ty, $f:ident) => {
+        /// Emit $t
         fn $f(&mut self, key : &str, val : $t)
             -> Result {
                 self.emit_arguments(key, &format_args!("{}", val))
@@ -92,42 +93,84 @@ macro_rules! impl_default_as_fmt{
 /// types implementing this trait.
 pub trait Serializer {
 
+    /// Emit usize
+    impl_default_as_fmt!(usize, emit_usize);
+    /// Emit isize
+    impl_default_as_fmt!(isize, emit_isize);
     /// Emit bool
     impl_default_as_fmt!(bool, emit_bool);
+    /// Emit char
+    impl_default_as_fmt!(char, emit_char);
+    /// Emit u8
+    impl_default_as_fmt!(u8, emit_u8);
+    /// Emit i8
+    impl_default_as_fmt!(i8, emit_i8);
+    /// Emit u16
+    impl_default_as_fmt!(u16, emit_u16);
+    /// Emit i16
+    impl_default_as_fmt!(i16, emit_i16);
+    /// Emit u32
+    impl_default_as_fmt!(u32, emit_u32);
+    /// Emit i32
+    impl_default_as_fmt!(i32, emit_i32);
+    /// Emit f32
+    impl_default_as_fmt!(f32, emit_f32);
+    /// Emit u64
+    impl_default_as_fmt!(u64, emit_u64);
+    /// Emit i64
+    impl_default_as_fmt!(i64, emit_i64);
+    /// Emit f64
+    impl_default_as_fmt!(f64, emit_f64);
+    /// Emit str
+    impl_default_as_fmt!(&str, emit_str);
 
     /// Emit `()`
-    fn emit_unit(&mut self, key: &str) -> Result;
+    fn emit_unit(&mut self, key: &str) -> Result {
+        self.emit_arguments(key, &format_args!("()"))
+    }
+
     /// Emit `None`
-    fn emit_none(&mut self, key: &str) -> Result;
-    /// Emit char
-    fn emit_char(&mut self, key: &str, val: char) -> Result;
-    /// Emit u8
-    fn emit_u8(&mut self, key: &str, val: u8) -> Result;
-    /// Emit i8
-    fn emit_i8(&mut self, key: &str, val: i8) -> Result;
-    /// Emit u16
-    fn emit_u16(&mut self, key: &str, val: u16) -> Result;
-    /// Emit i16
-    fn emit_i16(&mut self, key: &str, val: i16) -> Result;
-    /// Emit u32
-    fn emit_u32(&mut self, key: &str, val: u32) -> Result;
-    /// Emit i32
-    fn emit_i32(&mut self, key: &str, val: i32) -> Result;
-    /// Emit f32
-    fn emit_f32(&mut self, key: &str, val: f32) -> Result;
-    /// Emit u64
-    fn emit_u64(&mut self, key: &str, val: u64) -> Result;
-    /// Emit i64
-    fn emit_i64(&mut self, key: &str, val: i64) -> Result;
-    /// Emit f64
-    fn emit_f64(&mut self, key: &str, val: f64) -> Result;
-    /// Emit usize
-    fn emit_usize(&mut self, key: &str, val: usize) -> Result;
-    /// Emit isize
-    fn emit_isize(&mut self, key: &str, val: isize) -> Result;
-    /// Emit str
-    fn emit_str(&mut self, key: &str, val: &str) -> Result;
+    fn emit_none(&mut self, key: &str) -> Result {
+        self.emit_arguments(key, &format_args!(""))
+    }
+
+    /// Emit `Some`
+    fn emit_some(&mut self, record : &Record, key: &str, val : &Value) -> Result {
+        /// All this trickery is required because here
+        /// `self` is a concrete type, and not a trait object anymore.
+        ///
+        /// Simpler way would requre adding `Serialized : Sized`.
+        ///
+        /// If you know of any method to simplify it, PR would be very
+        /// welcome.
+        struct Wrap<F>(F)
+        where F : for<'c, 'd> FnMut(&'c str, &'c fmt::Arguments<'d>) -> Result ;
+
+        impl<F> Serializer for Wrap<F>
+        where F : for<'c, 'd> FnMut(&'c str, &'c fmt::Arguments<'d>) -> Result
+        {
+            fn emit_some(&mut self, record : &Record, key: &str, val : &Value) -> Result {
+                val.serialize(record, key, self)
+            }
+
+            fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> Result {
+                (self.0)(key, val)
+            }
+        }
+
+        let mut s = Wrap(|key, fmt| {
+            self.emit_arguments(key, fmt)
+        });
+
+        val.serialize(record, key, &mut s)
+    }
+
+
     /// Emit `fmt::Arguments`
+    ///
+    /// This is the only method that has to implemented, but for
+    /// performance and type-retaining reason most serious `Serializer`s
+    /// will want to implement all other methods as well.
     fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> Result;
 }
 
