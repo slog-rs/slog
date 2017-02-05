@@ -1,6 +1,5 @@
 /// Key value pair that can be part of a logging record
-type BorrowedKeyValue<'a> = (&'a str, &'a ser::Value);
-
+type BorrowedKeyValue<'a> = (&'a str, &'a Value);
 
 /// Group of key-value pairs
 ///
@@ -9,7 +8,7 @@ type BorrowedKeyValue<'a> = (&'a str, &'a ser::Value);
 /// to create `OwnedKVGroup` instances.
 pub struct OwnedKVGroup(
     #[doc(hidden)]
-    pub Box<ser::KV + Send + Sync + 'static>,
+    pub Box<KV + Send + Sync + 'static>,
 );
 
 struct OwnedKeyValueListNode {
@@ -30,7 +29,7 @@ impl fmt::Debug for OwnedKeyValueList {
         let mut i = 0;
 
         {
-            let mut as_str_ser = ser::AsStrSerializer(|key, val| {
+            let mut as_str_ser = AsStrSerializer(|key, val| {
                 if i != 0 {
                     try!(write!(f, ", "));
                 }
@@ -161,7 +160,7 @@ impl OwnedKeyValueList {
 pub struct OwnedKeyValueListIterator<'a> {
     next_list: Option<&'a OwnedKeyValueList>,
     next_node: Option<&'a OwnedKeyValueListNode>,
-    cur: Option<&'a ser::KV>,
+    cur: Option<&'a KV>,
 }
 
 impl<'a> OwnedKeyValueListIterator<'a> {

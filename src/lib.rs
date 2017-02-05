@@ -126,17 +126,23 @@ use std::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
 
+#[cfg(feature = "std")]
+use std::rc::Rc;
+#[cfg(not(feature = "std"))]
+use alloc::rc::Rc;
+
+
+#[cfg(feature = "std")]
+use std::string::String;
+#[cfg(not(feature = "std"))]
+use collections::string::String;
+
+
 /// This type is here just to abstract away lack of `!` type support in stable
 /// rust during time of 1.0 release. It will be switched to `!` at some point
 /// and `Never` should not be considered "stable" API.
 #[doc(hidden)]
 pub type Never = ();
-
-
-/// Serialization
-pub mod ser;
-
-pub use ser::{ValueSerializer, Serializer, Value, KV};
 
 // One main namespace is enough, but for conveniance break
 // the code into parts.
@@ -148,6 +154,7 @@ include!("_kv.rs");
 include!("_level.rs");
 include!("_logger.rs");
 include!("_drain.rs");
+include!("_ser.rs");
 
 #[cfg(test)]
 mod tests;
