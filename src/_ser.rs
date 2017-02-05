@@ -22,7 +22,7 @@ pub enum Error {
 }
 
 /// Serialization `Result`
-pub type Result = result::Result<(), Error>;
+pub type Result<T=()> = result::Result<T, Error>;
 
 #[cfg(feature = "std")]
 impl From<std::io::Error> for Error {
@@ -175,46 +175,14 @@ pub trait Serializer {
     fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> Result;
 }
 
-/// Serializer that formats all arguments as strings
-/// and passes them to given function.
-pub struct AsStrSerializer<F>(pub F)
+/// Serializer that formats all arguments as fmt::Arguments
+/// ans and passes them to a given closure.
+pub struct AsFmtSerializer<F>(pub F)
     where F : for <'a, 'b> FnMut(&'b str, fmt::Arguments<'a>) -> Result;
 
-macro_rules! impl_as_str_emit{
-    ($t:ty, $f:ident) => {
-        fn $f(&mut self, key : &str, val : $t)
-            -> result::Result<(), Error> {
-                (self.0)(key, format_args!("{}", val))
-            }
-    };
-}
-
-impl<F> Serializer for AsStrSerializer<F> 
+impl<F> Serializer for AsFmtSerializer<F>
     where F : for <'a, 'b> FnMut(&'b str, fmt::Arguments<'a>) -> Result
 {
-    impl_as_str_emit!(usize, emit_usize);
-    impl_as_str_emit!(isize, emit_isize);
-    impl_as_str_emit!(bool, emit_bool);
-    impl_as_str_emit!(char, emit_char);
-    impl_as_str_emit!(u8, emit_u8);
-    impl_as_str_emit!(i8, emit_i8);
-    impl_as_str_emit!(u16, emit_u16);
-    impl_as_str_emit!(i16, emit_i16);
-    impl_as_str_emit!(u32, emit_u32);
-    impl_as_str_emit!(i32, emit_i32);
-    impl_as_str_emit!(f32, emit_f32);
-    impl_as_str_emit!(u64, emit_u64);
-    impl_as_str_emit!(i64, emit_i64);
-    impl_as_str_emit!(f64, emit_f64);
-    impl_as_str_emit!(&str, emit_str);
-
-
-    fn emit_unit(&mut self, key: &str) -> Result {
-        (self.0)(key, format_args!("()"))
-    }
-    fn emit_none(&mut self, key: &str) -> Result {
-        (self.0)(key, format_args!(""))
-    }
     fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> Result {
         (self.0)(key, *val)
     }
@@ -230,7 +198,7 @@ pub trait Value {
                  record: &Record,
                  key: &str,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error>;
+                 -> Result;
 }
 
 /// Value that can be serialized
@@ -249,7 +217,7 @@ macro_rules! impl_value_for{
     ($t:ty, $f:ident) => {
         impl Value for $t {
             fn serialize(&self, _record : &Record, key : &str, serializer : &mut Serializer)
-                         -> result::Result<(), Error> {
+                         -> Result {
                 serializer.$f(key, *self)
             }
         }
@@ -276,7 +244,7 @@ impl Value for () {
                  _record: &Record,
                  key: &str,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error> {
+                 -> Result {
         serializer.emit_unit(key)
     }
 }
@@ -287,7 +255,7 @@ impl Value for str {
                  _record: &Record,
                  key: &str,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error> {
+                 -> Result {
         serializer.emit_str(key, self)
     }
 }
@@ -297,7 +265,7 @@ impl<'a> Value for &'a str {
                  _record: &Record,
                  key: &str,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error> {
+                 -> Result {
         serializer.emit_str(key, self)
     }
 }
@@ -307,7 +275,7 @@ impl<'a> Value for fmt::Arguments<'a> {
                  _record: &Record,
                  key: &str,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error> {
+                 -> Result {
         serializer.emit_arguments(key, self)
     }
 }
@@ -317,7 +285,7 @@ impl Value for String {
                  _record: &Record,
                  key: &str,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error> {
+                 -> Result {
         serializer.emit_str(key, self.as_str())
     }
 }
@@ -327,7 +295,7 @@ impl<T: Value> Value for Option<T> {
                  record: &Record,
                  key: &str,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error> {
+                 -> Result {
         match *self {
             Some(ref s) => s.serialize(record, key, serializer),
             None => serializer.emit_none(key),
@@ -340,7 +308,7 @@ impl Value for Box<Value + Send + 'static> {
                  record: &Record,
                  key: &str,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error> {
+                 -> Result {
         (**self).serialize(record, key, serializer)
     }
 }
@@ -352,7 +320,7 @@ impl<T> Value for Arc<T>
                  record: &Record,
                  key: &str,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error> {
+                 -> Result {
         (**self).serialize(record, key, serializer)
     }
 }
@@ -364,7 +332,7 @@ impl<T> Value for Rc<T>
                  record: &Record,
                  key: &str,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error> {
+                 -> Result {
         (**self).serialize(record, key, serializer)
     }
 }
@@ -376,53 +344,61 @@ impl<T> Value for core::num::Wrapping<T>
                  record: &Record,
                  key: &str,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error> {
+                 -> Result {
         self.0.serialize(record, key, serializer)
     }
 }
 
-impl<S: 'static + Value, F> Value for F
-    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> S
+impl<V: 'static + Value, F> Value for F
+    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> V
 {
     fn serialize(&self,
                  record: &Record,
                  key: &str,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error> {
-        (*self)(record).serialize(record, key, serializer)
+                 -> Result {
+        (self)(record).serialize(record, key, serializer)
     }
 }
 
-/// It's more natural for closures used as lazy values to return `Serialize`
-/// implementing type, but sometimes that forces an allocation (eg. Strings)
+/// Explicit lazy-closure `Value`
+pub struct FnValue<V: 'static + Value, F>(pub F)
+    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> V;
+
+impl<V: 'static + Value, F> Value for FnValue<V, F>
+    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> V
+{
+    fn serialize(&self,
+                 record: &Record,
+                 key: &str,
+                 serializer: &mut Serializer)
+                 -> Result {
+        (self.0)(record).serialize(record, key, serializer)
+    }
+}
+
+/// Handle passed to `PushFnValue` closure
 ///
-/// In some cases it might make sense for another closure form to be used - one
-/// taking a serializer as an argument, which avoids lifetimes / allocation issues.
-///
-/// Unfortunately to avoid closure traits ambiguity, as `&Fn` has to be used.
-///
-/// Generally this method should be used if it avoids a big allocation of
-/// `Serialize`-implementing type in performance-critical logging statement.
-///
-/// TODO: Move examples from tests
-pub struct ValueSerializer<'a> {
+/// It makes sure only one value is serialized, and will automatically emit
+/// `()` if nothing else was serialized.
+pub struct PushFnSerializer<'a> {
     record: &'a Record<'a>,
     key: &'a str,
     serializer: &'a mut Serializer,
     done: bool,
 }
 
-impl<'a> ValueSerializer<'a> {
+impl<'a> PushFnSerializer<'a> {
     /// Serialize a value
     ///
     /// This consumes `self` to prevent serializing one value multiple times
-    pub fn serialize<'b, S: 'b + Value>(mut self, s: S) -> result::Result<(), Error> {
+    pub fn serialize<'b, S: 'b + Value>(mut self, s: S) -> Result {
         self.done = true;
         s.serialize(self.record, self.key, self.serializer)
     }
 }
 
-impl<'a> Drop for ValueSerializer<'a> {
+impl<'a> Drop for PushFnSerializer<'a> {
     fn drop(&mut self) {
         if !self.done {
             // unfortunately this gives no change to return serialization errors
@@ -431,29 +407,45 @@ impl<'a> Drop for ValueSerializer<'a> {
     }
 }
 
-impl<'a> Value for &'a for <'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>) -> result::Result<(), Error> {
-    fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer)
-        -> result::Result<(), Error> {
-        let ser = ValueSerializer {
-            record: record,
-            key: key,
-            serializer: serializer,
-            done: false,
-        };
-        (self)(record, ser)
-    }
-}
+/// Lazy `Value` that writes to Serializer
+///
+/// It's more natural for closures used as lazy values to return `Serialize`
+/// implementing type, but sometimes that forces an allocation (eg. Strings)
+///
+/// In some cases it might make sense for another closure form to be used - one
+/// taking a serializer as an argument, which avoids lifetimes / allocation issues.
+///
+/// Generally this method should be used if it avoids a big allocation of
+/// `Serialize`-implementing type in performance-critical logging statement.
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+/// use slog::{PushFnValue, Logger, Discard};
+///
+/// fn main() {
+///     let _root = Logger::root(Discard, o!( ));
+///     info!(_root, "foo"; "writer_closure" => PushFnValue(|_ , s| {
+///                    let generated_string = format!("{}", 1);
+///                    s.serialize(generated_string.as_str())
+///             }));
+/// }
+/// ```
+pub struct PushFnValue<F>(pub F)
+    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnSerializer<'c>) -> Result;
 
-impl Value for Box<for <'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>) -> result::Result<(), Error>> {
+impl<F> Value for PushFnValue<F>
+    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnSerializer<'c>) -> Result
+{
     fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer)
-        -> result::Result<(), Error> {
-        let ser = ValueSerializer {
+        -> Result {
+        let ser = PushFnSerializer {
             record: record,
             key: key,
             serializer: serializer,
             done: false,
         };
-        (self)(record, ser)
+        (self.0)(record, ser)
     }
 }
 
@@ -468,7 +460,7 @@ pub trait KV {
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
-                 -> result::Result<(), Error>;
+                 -> Result;
 
     /// Split into tuple of `(first, rest)`
     fn split_first(&self) -> Option<(&KV, &KV)>;
@@ -487,7 +479,7 @@ impl<K, V> KV for SingleKV<K, V>
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
-        -> result::Result<(), Error> {
+        -> Result {
             self.1.serialize(record, self.0.as_str(), serializer)
         }
 
@@ -500,7 +492,7 @@ impl KV for () {
     fn serialize(&self,
                  _record: &Record,
                  _serializer: &mut Serializer)
-        -> result::Result<(), Error> {
+        -> Result {
             Ok(())
         }
 
@@ -513,7 +505,7 @@ impl<T: KV, R: KV> KV for (T, R) {
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
-        -> result::Result<(), Error> {
+        -> Result {
             try!(self.0.serialize(record, serializer));
             self.1.serialize(record, serializer)
         }

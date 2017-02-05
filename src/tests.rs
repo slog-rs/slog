@@ -1,5 +1,4 @@
-#[cfg(std)]
-use std;
+
 
 // Separate module to test lack of imports
 mod no_imports {
@@ -16,25 +15,12 @@ mod no_imports {
     }
 }
 
-/*
-   TODO: Make it work
-   #[test]
-   fn writer_closure() {
-   let _root = Logger::root(
-   Discard,
-   o!( ));
-   info!(_root, "foo"; "writer_closure" => Box::new(
-   move |&Record, s : ValueSerializer| {
-   let generated_string = format!("{}", 1);
-   s.serialize(generated_string.as_str())
-   }
-   ))
-   }
-   */
-
 #[cfg(feature = "std")]
 mod std_only {
     use super::super::*;
+
+    #[cfg(feature = "std")]
+    use std;
 
     #[test]
     fn logger_fmt_debug_sanity() {
