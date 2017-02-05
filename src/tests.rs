@@ -4,10 +4,32 @@ mod tests {
     use std;
     use super::super::*;
 
-    /// ensure o! macro expands without error inside a module
+    // Separate module to test lack of imports
+    mod no_imports {
+        use {Logger, Discard};
+        /// ensure o! macro expands without error inside a module
+        #[test]
+        fn test_o_macro_expansion() {
+            let _ = Logger::root(Discard, o!("a" => "aa"));
+        }
+        /// ensure o! macro expands without error inside a module
+        #[test]
+        fn test_slog_o_macro_expansion() {
+            let _ = Logger::root(Discard, slog_o!("a" => "aa"));
+        }
+    }
+
     #[test]
-    fn test_o_macro_expansion() {
-        let _ = Logger::root(Discard, o!("a" => "aa"));
+    fn writer_closure() {
+        let _root = Logger::root(
+            Discard,
+            o!( ));
+            info!(_root, "foo"; "writer_closure" => Box::new(
+                    move |&Record, s : ValueSerializer| {
+                    let generated_string = format!("{}", 1);
+                    s.serialize(generated_string.as_str())
+                }
+                ))
     }
 
     #[test]

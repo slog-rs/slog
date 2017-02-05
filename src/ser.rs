@@ -367,24 +367,18 @@ impl<S: 'static + Value, F> Value for F
     }
 }
 
-/// A newtype for non-return based lazy values
-///
 /// It's more natural for closures used as lazy values to return `Serialize`
 /// implementing type, but sometimes that forces an allocation (eg. Strings)
 ///
 /// In some cases it might make sense for another closure form to be used - one
 /// taking a serializer as an argument, which avoids lifetimes / allocation issues.
 ///
-/// Unfortunately, as one `struct` can implement many different closure traits,
-/// a newtype has to be used to prevent ambiguity.
+/// Unfortunately to avoid closure traits ambiguity, as `&Fn` has to be used.
 ///
-/// Generally this method should be used only if it avoids a big allocation of
+/// Generally this method should be used if it avoids a big allocation of
 /// `Serialize`-implementing type in performance-critical logging statement.
 ///
-/// TODO: Can `PushLazy` be avoided?
-pub struct PushLazy<F>(pub F);
-
-/// A handle to `Serializer` for `PushLazy` closure
+/// TODO: Move examples from tests
 pub struct ValueSerializer<'a> {
     record: &'a Record<'a>,
     key: &'a str,
@@ -411,10 +405,7 @@ impl<'a> Drop for ValueSerializer<'a> {
     }
 }
 
-impl<F> Value for PushLazy<F>
-    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>)
-    -> result::Result<(), Error>
-{
+impl<'a> Value for &'a for <'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>) -> result::Result<(), Error> {
     fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer)
         -> result::Result<(), Error> {
         let ser = ValueSerializer {
@@ -423,7 +414,20 @@ impl<F> Value for PushLazy<F>
             serializer: serializer,
             done: false,
         };
-        (self.0)(record, ser)
+        (self)(record, ser)
+    }
+}
+
+impl Value for Box<for <'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>) -> result::Result<(), Error>> {
+    fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer)
+        -> result::Result<(), Error> {
+        let ser = ValueSerializer {
+            record: record,
+            key: key,
+            serializer: serializer,
+            done: false,
+        };
+        (self)(record, ser)
     }
 }
 
