@@ -1,6 +1,6 @@
 [package]
 name = "slog"
-version = "1.4.1"
+version = "2.0.0-alpha1"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Structured, composable logging for Rust"
 keywords = ["log", "logging", "structured", "hierarchical"]
