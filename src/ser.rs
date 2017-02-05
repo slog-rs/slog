@@ -33,6 +33,8 @@ use super::Record;
 pub enum Error {
     /// `io::Error`
     Io(std::io::Error),
+    /// `fmt::Error`
+    Fmt(std::fmt::Error),
     /// Other error
     Other,
 }
@@ -41,6 +43,7 @@ pub enum Error {
 #[cfg(not(feature = "std"))]
 /// Serialization Error
 pub enum Error {
+    Fmt(core::fmt::Error),
     /// Other error
     Other,
 }
@@ -66,6 +69,7 @@ impl From<Error> for std::io::Error {
     fn from(e: Error) -> std::io::Error {
         match e {
             Error::Io(e) => e,
+            Error::Fmt(_) => std::io::Error::new(std::io::ErrorKind::Other, "formatting error"),
             Error::Other => std::io::Error::new(std::io::ErrorKind::Other, "other error"),
         }
     }
@@ -76,6 +80,7 @@ impl std::error::Error for Error {
     fn description(&self) -> &str {
         match *self {
             Error::Io(ref e) => e.description(),
+            Error::Fmt(_) => "formatting error",
             Error::Other => "serialization error",
         }
     }
@@ -83,6 +88,7 @@ impl std::error::Error for Error {
     fn cause(&self) -> Option<&std::error::Error> {
         match *self {
             Error::Io(ref e) => Some(e),
+            Error::Fmt(ref e) => Some(e),
             Error::Other => None,
         }
     }
@@ -93,6 +99,7 @@ impl core::fmt::Display for Error {
     fn fmt(&self, fmt: &mut core::fmt::Formatter) -> std::fmt::Result {
         match *self {
             Error::Io(ref e) => e.fmt(fmt),
+            Error::Fmt(ref e) => e.fmt(fmt),
             Error::Other => fmt.write_str("Other serialization error"),
         }
     }
@@ -141,6 +148,51 @@ pub trait Serializer {
     fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> Result;
 }
 
+/// Serializer that formats all arguments as strings
+/// and passes them to given function.
+pub struct AsStrSerializer<F>(pub F)
+    where F : for <'a, 'b> FnMut(&'b str, fmt::Arguments<'a>) -> Result;
+
+macro_rules! impl_as_str_emit{
+    ($t:ty, $f:ident) => {
+        fn $f(&mut self, key : &str, val : $t)
+            -> result::Result<(), Error> {
+                (self.0)(key, format_args!("{}", val))
+            }
+    };
+}
+
+impl<F> Serializer for AsStrSerializer<F> 
+    where F : for <'a, 'b> FnMut(&'b str, fmt::Arguments<'a>) -> Result
+{
+    impl_as_str_emit!(usize, emit_usize);
+    impl_as_str_emit!(isize, emit_isize);
+    impl_as_str_emit!(bool, emit_bool);
+    impl_as_str_emit!(char, emit_char);
+    impl_as_str_emit!(u8, emit_u8);
+    impl_as_str_emit!(i8, emit_i8);
+    impl_as_str_emit!(u16, emit_u16);
+    impl_as_str_emit!(i16, emit_i16);
+    impl_as_str_emit!(u32, emit_u32);
+    impl_as_str_emit!(i32, emit_i32);
+    impl_as_str_emit!(f32, emit_f32);
+    impl_as_str_emit!(u64, emit_u64);
+    impl_as_str_emit!(i64, emit_i64);
+    impl_as_str_emit!(f64, emit_f64);
+    impl_as_str_emit!(&str, emit_str);
+
+
+    fn emit_unit(&mut self, key: &str) -> Result {
+        (self.0)(key, format_args!("()"))
+    }
+    fn emit_none(&mut self, key: &str) -> Result {
+        (self.0)(key, format_args!(""))
+    }
+    fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> Result {
+        (self.0)(key, *val)
+    }
+}
+
 /// Value that can be serialized
 pub trait Value {
     /// Serialize self into `Serializer`
@@ -174,50 +226,6 @@ pub trait SyncValue: Send + Sync + 'static + Value {}
 impl<V> SyncValue for V
 where V : Value + Send + Sync + 'static {
 }
-
-/// Key-value pair that can be serialized
-pub trait KV {
-    /// Serialize self into `Serializer`
-    ///
-    /// Structs implementing this trait should generally
-    /// only call respective methods of `serializer`.
-    fn serialize(&self,
-                 record: &Record,
-                 serializer: &mut Serializer)
-                 -> result::Result<(), Error>;
-
-    /// Get the Key part
-    fn key(&self) -> &str;
-}
-
-impl<K, V> KV for (K, V)
-    where K : Key,
-          V : Value
-{
-    fn key(&self) -> &str {
-        self.0.as_str()
-    }
-
-    fn serialize(&self,
-                 record: &Record,
-                 serializer: &mut Serializer)
-        -> result::Result<(), Error> {
-            self.1.serialize(record, self.0.as_str(), serializer)
-        }
-}
-
-impl<T> SyncKV for T
-where T : KV+Sync+Send+'static {}
-
-/// Key-value pair that is `Sync` and `Send` and thus
-/// can stored as part of `Logger` itself.
-///
-/// As Loggers itself must be thread-safe, they can only
-/// store values implementing this trait.
-///
-/// TODO: Consider removing
-pub trait SyncKV: Send + Sync + 'static + KV {}
-
 
 macro_rules! impl_value_for{
     ($t:ty, $f:ident) => {
@@ -431,21 +439,66 @@ impl Value for Box<for <'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>) -> resul
     }
 }
 
-/// Multiple key-values pairs that can be serialized
-pub trait SyncMultiKV : Send + Sync + 'static {
-    /// Key and value of the first key-value pair
-    fn first_and_rest(&self) -> Option<(&SyncKV, &SyncMultiKV)>;
+/// Key-value pair(s) that can be serialized
+///
+/// Zero, one or more key value pairs chained together
+pub trait KV {
+    /// Serialize self into `Serializer`
+    ///
+    /// Structs implementing this trait should generally
+    /// only call respective methods of `serializer`.
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error>;
 }
 
-impl SyncMultiKV for () {
-    fn first_and_rest(&self) -> Option<(&SyncKV, &SyncMultiKV)> {
-        None
-    }
+/// Single pair `Key` and `Value`
+pub struct SingleKV<K, V>(pub K, pub V)
+    where K : Key, V : Value;
+
+impl<K, V> KV for SingleKV<K, V>
+    where K : Key,
+          V : Value
+{
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+        -> result::Result<(), Error> {
+            self.1.serialize(record, self.0.as_str(), serializer)
+        }
 }
 
-impl<T: SyncKV, R: SyncMultiKV> SyncMultiKV for (T, R) {
-    fn first_and_rest(&self) -> Option<(&SyncKV, &SyncMultiKV)> {
-        let (ref head, ref tail) = *self;
-        Some((head, tail))
-    }
+impl KV for () {
+    fn serialize(&self,
+                 _record: &Record,
+                 _serializer: &mut Serializer)
+        -> result::Result<(), Error> {
+            Ok(())
+        }
 }
+
+impl<T: KV, R: KV> KV for (T, R) {
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+        -> result::Result<(), Error> {
+            try!(self.0.serialize(record, serializer));
+            self.1.serialize(record, serializer)
+        }
+}
+
+impl<T> SyncKV for T
+where T : KV+Sync+Send+'static {}
+
+/// Key-value pair that is `Sync` and `Send` and thus
+/// can stored as part of `Logger` itself.
+///
+/// As Loggers itself must be thread-safe, they can only
+/// store values implementing this trait.
+///
+/// TODO: Consider removing
+pub trait SyncKV: Send + Sync + 'static + KV {}
+pub type SyncMultiKV = SyncKV;
+
+

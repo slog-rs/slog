@@ -13,10 +13,10 @@
 #[macro_export]
 macro_rules! o(
     (@ $args_ready:expr; $k:expr => $v:expr) => {
-        o!(@ (($k, $v), $args_ready); )
+        o!(@ ($crate::ser::SingleKV($k, $v), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        o!(@ (($k, $v), $args_ready); $($args)* )
+        o!(@ ($crate::ser::SingleKV($k, $v), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; ) => {
         $args_ready
@@ -44,10 +44,10 @@ macro_rules! o(
 #[macro_export]
 macro_rules! o(
     (@ $args_ready:expr; $k:expr => $v:expr) => {
-        o!(@ (($k, $v), $args_ready); )
+        o!(@ ($crate::ser::SingleKV($k, $v), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        o!(@ (($k, $v), $args_ready); $($args)* )
+        o!(@ ($crate::ser::SingleKV($k, $v), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; ) => {
         $args_ready
@@ -67,10 +67,10 @@ macro_rules! o(
 #[macro_export]
 macro_rules! slog_o(
     (@ $args_ready:expr; $k:expr => $v:expr) => {
-        o!(@ ($k, $v, $args_ready); )
+        o!(@ ($crate::ser::SingleKV($k, $v), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        o!(@ ($k, $v, $args_ready); $($args)* )
+        o!(@ ($crate::ser::SingleKV($k, $v), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; ) => {
         $args_ready
@@ -90,10 +90,10 @@ macro_rules! slog_o(
 #[macro_export]
 macro_rules! slog_o(
     (@ $args_ready:expr; $k:expr => $v:expr) => {
-        o!(@ (($k, $v), $args_ready); )
+        o!(@ ($crate::ser::SingleKV($k, $v), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        o!(@ (($k, $v), $args_ready); $($args)* )
+        o!(@ ($crate::ser::SingleKV($k, $v), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; ) => {
         $args_ready
