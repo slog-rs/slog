@@ -31,7 +31,8 @@ pub struct OwnedKeyValueList {
 impl fmt::Debug for OwnedKeyValueList {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "("));
-        for (i, (key, _)) in self.iter().enumerate() {
+        for (i, kv) in self.iter().enumerate() {
+            let key = kv.key();
             if i != 0 {
                 try!(write!(f, ", "));
             }
@@ -157,13 +158,14 @@ impl<'a> OwnedKeyValueListIterator<'a> {
 }
 
 impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
-    type Item = OwnedKeyValue<'a>;
+    type Item = &'a SyncKV;
     fn next(&mut self) -> Option<Self::Item> {
         loop {
             if let Some(x) = self.cur.take() {
-                let tail = x.tail();
-                self.cur = tail;
-                return Some(x.head());
+                if let Some((head, tail)) = x.first_and_rest() {
+                    self.cur = Some(tail);
+                    return Some(head);
+                }
             }
             if let Some(node) = self.next_node.take() {
                 self.cur = Some(&*node.values.0);
