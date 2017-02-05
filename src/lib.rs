@@ -136,7 +136,7 @@ pub type Never = ();
 /// Serialization
 pub mod ser;
 
-pub use ser::{PushLazy, ValueSerializer, Serializer, Serialize};
+pub use ser::{PushLazy, ValueSerializer, Serializer, Value, SyncValue, KV, SyncKV};
 
 include!("_macros.rs");
 include!("_kv.rs");

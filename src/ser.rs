@@ -99,11 +99,7 @@ impl core::fmt::Display for Error {
 }
 
 /// Value that can be serialized
-///
-/// Loggers require values in key-value pairs to
-/// implement this trait.
-///
-pub trait Serialize {
+pub trait Value {
     /// Serialize self into `Serializer`
     ///
     /// Structs implementing this trait should generally
@@ -115,20 +111,39 @@ pub trait Serialize {
                  -> result::Result<(), Error>;
 }
 
-/// Value that can be serialized and stored
-/// in `Logger` itself.
+/// `Value` that is also `Send+Sync`
+///
+/// TODO: Consider removing
+pub trait SyncValue: Send + Sync + 'static + Value {}
+
+/// Key-value pair that can be serialized
+pub trait KV {
+    /// Serialize self into `Serializer`
+    ///
+    /// Structs implementing this trait should generally
+    /// only call respective methods of `serializer`.
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+                 -> result::Result<(), Error>;
+}
+
+/// Key-value pair that is `Sync` and `Send` and thus
+/// can stored as part of `Logger` itself.
 ///
 /// As Loggers itself must be thread-safe, they can only
 /// store values implementing this trait.
-pub trait SyncSerialize: Send + Sync + 'static + Serialize {}
+///
+/// TODO: Consider removing
+pub trait SyncKV: Send + Sync + 'static + KV {}
 
 
 /// Multiple key-values pairs that can be serialized
-pub trait SyncMultiSerialize: Send + Sync + 'static {
+pub trait SyncMultiKV : Send + Sync + 'static {
     /// Key and value of the first key-value pair
-    fn head(&self) -> (&'static str, &SyncSerialize);
+    fn head(&self) -> (&'static str, &SyncValue);
     /// Next key-value pair (and all following ones)
-    fn tail(&self) -> Option<&SyncMultiSerialize>;
+    fn tail(&self) -> Option<&SyncMultiKV>;
 }
 
 /// Serializer
@@ -174,35 +189,35 @@ pub trait Serializer {
     fn emit_arguments(&mut self, key: &'static str, val: &fmt::Arguments) -> Result;
 }
 
-macro_rules! impl_serialize_for{
+macro_rules! impl_value_for{
     ($t:ty, $f:ident) => {
-        impl Serialize for $t {
+        impl Value for $t {
             fn serialize(&self, _record : &Record, key : &'static str, serializer : &mut Serializer)
                          -> result::Result<(), Error> {
                 serializer.$f(key, *self)
             }
         }
 
-        impl SyncSerialize for $t where $t : Send+Sync+'static { }
+        impl SyncValue for $t where $t : Send+Sync+'static { }
     };
 }
 
-impl_serialize_for!(usize, emit_usize);
-impl_serialize_for!(isize, emit_isize);
-impl_serialize_for!(bool, emit_bool);
-impl_serialize_for!(char, emit_char);
-impl_serialize_for!(u8, emit_u8);
-impl_serialize_for!(i8, emit_i8);
-impl_serialize_for!(u16, emit_u16);
-impl_serialize_for!(i16, emit_i16);
-impl_serialize_for!(u32, emit_u32);
-impl_serialize_for!(i32, emit_i32);
-impl_serialize_for!(f32, emit_f32);
-impl_serialize_for!(u64, emit_u64);
-impl_serialize_for!(i64, emit_i64);
-impl_serialize_for!(f64, emit_f64);
+impl_value_for!(usize, emit_usize);
+impl_value_for!(isize, emit_isize);
+impl_value_for!(bool, emit_bool);
+impl_value_for!(char, emit_char);
+impl_value_for!(u8, emit_u8);
+impl_value_for!(i8, emit_i8);
+impl_value_for!(u16, emit_u16);
+impl_value_for!(i16, emit_i16);
+impl_value_for!(u32, emit_u32);
+impl_value_for!(i32, emit_i32);
+impl_value_for!(f32, emit_f32);
+impl_value_for!(u64, emit_u64);
+impl_value_for!(i64, emit_i64);
+impl_value_for!(f64, emit_f64);
 
-impl Serialize for () {
+impl Value for () {
     fn serialize(&self,
                  _record: &Record,
                  key: &'static str,
@@ -212,9 +227,9 @@ impl Serialize for () {
     }
 }
 
-impl SyncSerialize for () {}
+impl SyncValue for () {}
 
-impl Serialize for str {
+impl Value for str {
     fn serialize(&self,
                  _record: &Record,
                  key: &'static str,
@@ -224,7 +239,7 @@ impl Serialize for str {
     }
 }
 
-impl<'a> Serialize for &'a str {
+impl<'a> Value for &'a str {
     fn serialize(&self,
                  _record: &Record,
                  key: &'static str,
@@ -234,7 +249,7 @@ impl<'a> Serialize for &'a str {
     }
 }
 
-impl<'a> Serialize for fmt::Arguments<'a> {
+impl<'a> Value for fmt::Arguments<'a> {
     fn serialize(&self,
                  _record: &Record,
                  key: &'static str,
@@ -244,11 +259,11 @@ impl<'a> Serialize for fmt::Arguments<'a> {
     }
 }
 
-impl SyncSerialize for fmt::Arguments<'static> {}
+impl SyncValue for fmt::Arguments<'static> {}
 
-impl SyncSerialize for &'static str {}
+impl SyncValue for &'static str {}
 
-impl Serialize for String {
+impl Value for String {
     fn serialize(&self,
                  _record: &Record,
                  key: &'static str,
@@ -258,9 +273,9 @@ impl Serialize for String {
     }
 }
 
-impl SyncSerialize for String {}
+impl SyncValue for String {}
 
-impl<T: Serialize> Serialize for Option<T> {
+impl<T: Value> Value for Option<T> {
     fn serialize(&self,
                  record: &Record,
                  key: &'static str,
@@ -273,10 +288,10 @@ impl<T: Serialize> Serialize for Option<T> {
     }
 }
 
-impl<T: Serialize + Send + Sync + 'static> SyncSerialize for Option<T> {}
+impl<T: Value + Send + Sync + 'static> SyncValue for Option<T> {}
 
 
-impl Serialize for Box<Serialize + Send + 'static> {
+impl Value for Box<Value + Send + 'static> {
     fn serialize(&self,
                  record: &Record,
                  key: &'static str,
@@ -286,8 +301,8 @@ impl Serialize for Box<Serialize + Send + 'static> {
     }
 }
 
-impl<T> Serialize for Arc<T>
-    where T: Serialize
+impl<T> Value for Arc<T>
+    where T: Value
 {
     fn serialize(&self,
                  record: &Record,
@@ -298,10 +313,10 @@ impl<T> Serialize for Arc<T>
     }
 }
 
-impl<T> SyncSerialize for Arc<T> where T: SyncSerialize {}
+impl<T> SyncValue for Arc<T> where T: SyncValue {}
 
-impl<T> Serialize for Rc<T>
-    where T: Serialize
+impl<T> Value for Rc<T>
+    where T: Value
 {
     fn serialize(&self,
                  record: &Record,
@@ -312,8 +327,8 @@ impl<T> Serialize for Rc<T>
     }
 }
 
-impl<T> Serialize for core::num::Wrapping<T>
-    where T: Serialize
+impl<T> Value for core::num::Wrapping<T>
+    where T: Value
 {
     fn serialize(&self,
                  record: &Record,
@@ -324,9 +339,9 @@ impl<T> Serialize for core::num::Wrapping<T>
     }
 }
 
-impl<T> SyncSerialize for core::num::Wrapping<T> where T: SyncSerialize {}
+impl<T> SyncValue for core::num::Wrapping<T> where T: SyncValue {}
 
-impl<S: 'static + Serialize, F> Serialize for F
+impl<S: 'static + Value, F> Value for F
     where F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> S
 {
     fn serialize(&self,
@@ -338,7 +353,7 @@ impl<S: 'static + Serialize, F> Serialize for F
     }
 }
 
-impl<S: 'static + Serialize, F> SyncSerialize for F
+impl<S: 'static + Value , F> SyncValue for F
     where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c Record<'d>) -> S
 {
 }
@@ -372,7 +387,7 @@ impl<'a> ValueSerializer<'a> {
     /// Serialize a value
     ///
     /// This consumes `self` to prevent serializing one value multiple times
-    pub fn serialize<'b, S: 'b + Serialize>(mut self, s: S) -> result::Result<(), Error> {
+    pub fn serialize<'b, S: 'b + Value>(mut self, s: S) -> result::Result<(), Error> {
         self.done = true;
         s.serialize(self.record, self.key, self.serializer)
     }
@@ -387,7 +402,7 @@ impl<'a> Drop for ValueSerializer<'a> {
     }
 }
 
-impl<F> Serialize for PushLazy<F>
+impl<F> Value for PushLazy<F>
     where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>)
     -> result::Result<(), Error>
 {
@@ -403,29 +418,29 @@ impl<F> Serialize for PushLazy<F>
     }
 }
 
-impl<F> SyncSerialize for PushLazy<F>
+impl<F> SyncValue for PushLazy<F>
      where F: 'static + Sync + Send + for<'c, 'd> Fn(&'c Record<'d>, ValueSerializer<'c>)
      -> result::Result<(), Error> {
 }
 
-impl<A: SyncSerialize> SyncMultiSerialize for (&'static str, A) {
-    fn tail(&self) -> Option<&SyncMultiSerialize> {
+impl<A: SyncValue> SyncMultiKV for (&'static str, A) {
+    fn tail(&self) -> Option<&SyncMultiKV> {
         None
     }
 
-    fn head(&self) -> (&'static str, &SyncSerialize) {
+    fn head(&self) -> (&'static str, &SyncValue) {
         let (ref key, ref val) = *self;
         (key, val)
     }
 }
 
-impl<A: SyncSerialize, R: SyncMultiSerialize> SyncMultiSerialize for (&'static str, A, R) {
-    fn tail(&self) -> Option<&SyncMultiSerialize> {
+impl<A: SyncValue, R: SyncMultiKV> SyncMultiKV for (&'static str, A, R) {
+    fn tail(&self) -> Option<&SyncMultiKV> {
         let (_, _, ref tail) = *self;
         Some(tail)
     }
 
-    fn head(&self) -> (&'static str, &SyncSerialize) {
+    fn head(&self) -> (&'static str, &SyncValue) {
         let (ref key, ref val, _) = *self;
         (key, val)
     }
