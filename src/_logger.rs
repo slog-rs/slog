@@ -102,15 +102,7 @@ impl Logger {
 
 impl fmt::Debug for Logger {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        try!(write!(f, "Logger("));
-        for (i, (key, _)) in self.list.iter().enumerate() {
-            if i != 0 {
-                try!(write!(f, ", "));
-            }
-
-            try!(write!(f, "{}", key));
-        }
-        try!(write!(f, ")"));
+        try!(write!(f, "Logger{:?}", self.list));
         Ok(())
     }
 }
