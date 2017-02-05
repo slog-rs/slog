@@ -105,13 +105,24 @@ impl core::fmt::Display for Error {
     }
 }
 
+macro_rules! impl_default_as_fmt{
+    ($t:ty, $f:ident) => {
+        fn $f(&mut self, key : &str, val : $t)
+            -> Result {
+                self.emit_arguments(key, &format_args!("{}", val))
+            }
+    };
+}
+
 /// Serializer
 ///
 /// Drains using `Format` will internally use
 /// types implementing this trait.
 pub trait Serializer {
+
     /// Emit bool
-    fn emit_bool(&mut self, key: &str, val: bool) -> Result;
+    impl_default_as_fmt!(bool, emit_bool);
+
     /// Emit `()`
     fn emit_unit(&mut self, key: &str) -> Result;
     /// Emit `None`
@@ -451,11 +462,16 @@ pub trait KV {
                  record: &Record,
                  serializer: &mut Serializer)
                  -> result::Result<(), Error>;
+
+    /// Split into tuple of `(first, rest)`
+    fn split_first(&self) -> Option<(&KV, &KV)>;
 }
 
 /// Single pair `Key` and `Value`
 pub struct SingleKV<K, V>(pub K, pub V)
     where K : Key, V : Value;
+
+static STATIC_TERMINATOR_UNIT : () = ();
 
 impl<K, V> KV for SingleKV<K, V>
     where K : Key,
@@ -467,6 +483,10 @@ impl<K, V> KV for SingleKV<K, V>
         -> result::Result<(), Error> {
             self.1.serialize(record, self.0.as_str(), serializer)
         }
+
+    fn split_first(&self) -> Option<(&KV, &KV)> {
+        Some((self, &STATIC_TERMINATOR_UNIT))
+    }
 }
 
 impl KV for () {
@@ -476,6 +496,10 @@ impl KV for () {
         -> result::Result<(), Error> {
             Ok(())
         }
+
+    fn split_first(&self) -> Option<(&KV, &KV)> {
+        None
+    }
 }
 
 impl<T: KV, R: KV> KV for (T, R) {
@@ -486,6 +510,11 @@ impl<T: KV, R: KV> KV for (T, R) {
             try!(self.0.serialize(record, serializer));
             self.1.serialize(record, serializer)
         }
+
+
+    fn split_first(&self) -> Option<(&KV, &KV)> {
+        Some((&self.0, &self.1))
+    }
 }
 
 impl<T> SyncKV for T
