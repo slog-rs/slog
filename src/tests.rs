@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod tests {
 
-    use *;
-    use Drain;
+    use std;
+    use super::super::*;
 
     /// ensure o! macro expands without error inside a module
     #[test]
@@ -28,7 +28,7 @@ mod tests {
             fn log(&self,
                    record: &Record,
                    values: &OwnedKeyValueList)
-                   -> result::Result<(), Self::Error> {
+                   -> std::result::Result<(), Self::Error> {
                 assert_eq!(format!("{}", record.msg()), format!("{:?}", values));
                 Ok(())
             }
