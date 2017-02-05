@@ -1,4 +1,4 @@
-/// Convenience macro for building `SyncMultiSerialize` trait object
+/// Macro for building group of key-value pairs
 ///
 /// ```
 /// #[macro_use]
@@ -29,7 +29,7 @@ macro_rules! o(
     };
 );
 
-/// Convenience macro for building `SyncMultiSerialize` trait object
+/// Macro for building group of key-value pairs
 ///
 /// ```
 /// #[macro_use]
@@ -111,6 +111,10 @@ macro_rules! slog_o(
 #[inline(always)]
 #[doc(hidden)]
 /// Not an API
+///
+/// Generally it's a bad idea to depend on static logging level
+/// in your code. Use closures to perform operations lazily
+/// only when logging actually takes place.
 pub fn __slog_static_max_level() -> FilterLevel {
     if !cfg!(debug_assertions) {
         if cfg!(feature = "release_max_level_off") {
