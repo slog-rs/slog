@@ -1,4 +1,3 @@
-
 #[cfg(feature = "std")]
 use std;
 use core;
@@ -227,15 +226,6 @@ impl<'a> Key for &'a str {
     fn as_str(&self) -> &str {
         &self
     }
-}
-
-/// `Value` that is also `Send+Sync`
-///
-/// TODO: Consider removing
-pub trait SyncValue: Send + Sync + 'static + Value {}
-
-impl<V> SyncValue for V
-where V : Value + Send + Sync + 'static {
 }
 
 macro_rules! impl_value_for{
@@ -516,18 +506,3 @@ impl<T: KV, R: KV> KV for (T, R) {
         Some((&self.0, &self.1))
     }
 }
-
-impl<T> SyncKV for T
-where T : KV+Sync+Send+'static {}
-
-/// Key-value pair that is `Sync` and `Send` and thus
-/// can stored as part of `Logger` itself.
-///
-/// As Loggers itself must be thread-safe, they can only
-/// store values implementing this trait.
-///
-/// TODO: Consider removing
-pub trait SyncKV: Send + Sync + 'static + KV {}
-pub type SyncMultiKV = SyncKV;
-
-
