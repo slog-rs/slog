@@ -29,7 +29,7 @@ impl fmt::Debug for OwnedKeyValueList {
         let mut i = 0;
 
         {
-            let mut as_str_ser = AsStrSerializer(|key, _val| {
+            let mut as_str_ser = AsFmtSerializer(|key, _val| {
                 if i != 0 {
                     try!(write!(f, ", "));
                 }
