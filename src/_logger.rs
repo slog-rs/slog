@@ -1,3 +1,5 @@
+
+
 /// Logging handle used to execute logging statements
 ///
 /// Logger handles logging context (key-value list) and handles logging
@@ -37,7 +39,7 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
-    pub fn root<D>(d: D, values: Option<Box<ser::SyncMultiSerialize>>) -> Logger
+    pub fn root<D>(d: D, values: OwnedKVGroup) -> Logger
     where D: 'static + Drain<Error=Never> + Sized+Send+Sync{
         Logger {
             drain: Arc::new(d),
@@ -70,22 +72,18 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"));
     ///     let _log = root.new(o!("key" => "value"));
     /// }
-    pub fn new(&self, values: Option<Box<ser::SyncMultiSerialize>>) -> Logger {
+    pub fn new(&self, values: OwnedKVGroup) -> Logger {
         Logger {
             drain: self.drain.clone(),
-            list: if let Some(v) = values {
-                OwnedKeyValueList {
-                    next_list: None,
-                    node: Arc::new(
-                        OwnedKeyValueListNode {
-                            next_node: Some(self.list.node.clone()),
-                            values: Some(v),
-                        }
-                        )
-                }
-            } else {
-                self.list.clone()
-            },
+            list: OwnedKeyValueList {
+                next_list: None,
+                node: Arc::new(
+                    OwnedKeyValueListNode {
+                        next_node: Some(self.list.node.clone()),
+                        values: values,
+                    }
+                    )
+            }
         }
     }
 
