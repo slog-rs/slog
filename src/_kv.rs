@@ -5,16 +5,16 @@
 /// to create `OwnedKVGroup` instances.
 pub struct OwnedKVGroup(
     #[doc(hidden)]
-    pub Box<ser::SyncMultiSerialize>,
+    pub Box<ser::SyncMultiKV>,
 );
 
 /// Key value pair that can be part of a logging record
-pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Serialize);
+pub type BorrowedKeyValue<'a> = (&'static str, &'a ser::Value);
 
 /// Key value pair that can be owned by `Logger`
 ///
 /// See `o!(...)` macro.
-pub type OwnedKeyValue<'a> = (&'static str, &'a ser::SyncSerialize);
+pub type OwnedKeyValue<'a> = (&'static str, &'a ser::SyncValue);
 
 struct OwnedKeyValueListNode {
     next_node: Option<Arc<OwnedKeyValueListNode>>,
@@ -143,7 +143,7 @@ impl OwnedKeyValueList {
 pub struct OwnedKeyValueListIterator<'a> {
     next_list: Option<&'a OwnedKeyValueList>,
     next_node: Option<&'a OwnedKeyValueListNode>,
-    cur: Option<&'a ser::SyncMultiSerialize>,
+    cur: Option<&'a ser::SyncMultiKV>,
 }
 
 impl<'a> OwnedKeyValueListIterator<'a> {
