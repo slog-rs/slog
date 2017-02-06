@@ -20,19 +20,19 @@ pub trait Drain {
     /// * pass this information (or not) to the sub-logger(s) (filters)
     /// * format and write the information the a destination (writers)
     /// * deal with the errors returned from the sub-logger(s)
-    fn log(&self, record: &Record, values : &OwnedKeyValueList) -> result::Result<(), Self::Error>;
+    fn log(&self, record: &Record, values : &OwnedKVList) -> result::Result<(), Self::Error>;
 }
 
 impl<D: Drain+?Sized> Drain for Box<D> {
     type Error = D::Error;
-    fn log(&self, info: &Record, o: &OwnedKeyValueList) -> result::Result<(), D::Error> {
+    fn log(&self, info: &Record, o: &OwnedKVList) -> result::Result<(), D::Error> {
         (**self).log(info, o)
     }
 }
 
 impl<D: Drain+?Sized> Drain for Arc<D> {
     type Error = D::Error;
-    fn log(&self, info: &Record, o: &OwnedKeyValueList) -> result::Result<(), D::Error> {
+    fn log(&self, info: &Record, o: &OwnedKVList) -> result::Result<(), D::Error> {
         (**self).log(info, o)
     }
 }
@@ -70,7 +70,7 @@ pub struct Discard;
 
 impl Drain for Discard {
     type Error = Never;
-    fn log(&self, _: &Record, _: &OwnedKeyValueList) -> result::Result<(), Never> {
+    fn log(&self, _: &Record, _: &OwnedKVList) -> result::Result<(), Never> {
         Ok(())
     }
 }
@@ -99,7 +99,7 @@ impl<D: Drain> Drain for Filter<D> {
     type Error = D::Error;
     fn log(&self,
            info: &Record,
-           logger_values: &OwnedKeyValueList)
+           logger_values: &OwnedKVList)
            -> result::Result<(), Self::Error> {
         if (self.cond)(&info) {
             self.drain.log(info, logger_values)
@@ -133,7 +133,7 @@ impl<D: Drain, E> Drain for MapError<D, E> {
     type Error = E;
     fn log(&self,
            info: &Record,
-           logger_values: &OwnedKeyValueList)
+           logger_values: &OwnedKVList)
            -> result::Result<(), Self::Error> {
             self.drain.log(info, logger_values).map_err(|e| (self.map_fn)(e))
     }
@@ -167,7 +167,7 @@ impl<D: Drain> Drain for LevelFilter<D> {
     type Error = D::Error;
     fn log(&self,
            info: &Record,
-           logger_values: &OwnedKeyValueList)
+           logger_values: &OwnedKVList)
            -> result::Result<(), Self::Error> {
         if info.level().is_at_least(self.level) {
             self.drain.log(info, logger_values)
@@ -220,7 +220,7 @@ impl<D1 : Drain, D2 : Drain> Drain for Duplicate<D1, D2> {
     type Error = DuplicateError<D1::Error, D2::Error>;
     fn log(&self,
            info: &Record,
-           logger_values: &OwnedKeyValueList)
+           logger_values: &OwnedKVList)
            -> result::Result<(), Self::Error> {
         let res1 = self.drain1.log(info, logger_values);
         let res2 = self.drain2.log(info, logger_values);
@@ -259,7 +259,7 @@ impl<D: Drain> Drain for Fuse<D> where D::Error : fmt::Display {
     type Error = Never;
     fn log(&self,
            info: &Record,
-           logger_values: &OwnedKeyValueList)
+           logger_values: &OwnedKVList)
         -> result::Result<(), Never> {
             Ok(
                 self.drain.log(info, logger_values).unwrap_or_else(
@@ -291,7 +291,7 @@ impl<D: Drain> Drain for IgnoreErr<D> {
     type Error = Never;
     fn log(&self,
            info: &Record,
-           logger_values: &OwnedKeyValueList)
+           logger_values: &OwnedKVList)
         -> result::Result<(), Never> {
             let _ = self.drain.log(info, logger_values);
             Ok(())

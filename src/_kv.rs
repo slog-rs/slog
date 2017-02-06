@@ -1,4 +1,4 @@
-/// Key value pair that can be part of a logging record
+/// Key-value pair that can be part of a logging record
 type BorrowedKeyValue<'a> = (&'a str, &'a Value);
 
 /// Group of key-value pairs
@@ -11,19 +11,19 @@ pub struct OwnedKVGroup(
     pub Box<KV + Send + Sync + 'static>,
 );
 
-struct OwnedKeyValueListNode {
-    next_node: Option<Arc<OwnedKeyValueListNode>>,
-    values: OwnedKVGroup,
+struct OwnedKVListNode {
+    next_node: Option<Arc<OwnedKVListNode>>,
+    kv: OwnedKVGroup,
 }
 
 /// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
 #[derive(Clone)]
-pub struct OwnedKeyValueList {
-    next_list: Option<Arc<OwnedKeyValueList>>,
-    node: Arc<OwnedKeyValueListNode>,
+pub struct OwnedKVList {
+    next_list: Option<Arc<OwnedKVList>>,
+    node: Arc<OwnedKVListNode>,
 }
 
-impl fmt::Debug for OwnedKeyValueList {
+impl fmt::Debug for OwnedKVList {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "("));
         let mut i = 0;
@@ -49,7 +49,7 @@ impl fmt::Debug for OwnedKeyValueList {
             };
             let record = Record::new(&record_static, format_args!(""), &[]);
 
-            for i in self.iter() {
+            for i in self.iter_groups() {
                 try!(i.serialize(&record, &mut as_str_ser)
                      .map_err(|_| fmt::Error));
             }
@@ -60,33 +60,31 @@ impl fmt::Debug for OwnedKeyValueList {
     }
 }
 
-impl OwnedKeyValueList {
-    /// New `OwnedKeyValueList` node with an existing parent
-    #[deprecated]
-    pub fn new(values: OwnedKVGroup, parent: OwnedKeyValueList) -> Self {
-        OwnedKeyValueList {
-            next_list: None,
-            node: Arc::new(OwnedKeyValueListNode {
-                next_node: Some(parent.node),
-                values: values,
-            }),
-        }
-    }
-
+impl OwnedKVList {
     /// New `OwnedKeyValue` node without a parent (root)
-    #[deprecated]
-    pub fn root(values: OwnedKVGroup) -> Self {
-        OwnedKeyValueList {
+    fn root(values: OwnedKVGroup) -> Self {
+        OwnedKVList {
             next_list: None,
-            node: Arc::new(OwnedKeyValueListNode {
+            node: Arc::new(OwnedKVListNode {
                 next_node: None,
-                values: values,
+                kv: values,
             }),
         }
     }
 
-    fn append(&self, other: &OwnedKeyValueList) -> OwnedKeyValueList {
-        OwnedKeyValueList {
+    /// New `OwnedKVList` node with an existing parent
+    fn new(values: OwnedKVGroup, parent: &OwnedKVList) -> Self {
+        OwnedKVList {
+            next_list: None,
+            node: Arc::new(OwnedKVListNode {
+                next_node: Some(parent.node.clone()),
+                kv: values,
+            }),
+        }
+    }
+
+    fn append(&self, other: &OwnedKVList) -> OwnedKVList {
+        OwnedKVList {
             next_list: Some(Arc::new(if let Some(ref next) = self.next_list {
                 next.append(other)
             } else {
@@ -96,37 +94,7 @@ impl OwnedKeyValueList {
         }
     }
 
-    /*
-    /// Get the parent node element on the chain of values
-    ///
-    /// Since `OwnedKeyValueList` is just a chain of `SyncMultiSerialize` instances: each
-    /// containing one more more `OwnedKeyValue`, it's possible to iterate through the whole list
-    /// group-by-group with `parent()` and `values()`.
-    pub fn parent(&self) -> Option<&OwnedKeyValueNode> {
-        if let Some(next) = self.node.next_node.as_ref() {
-            OwnedKeyValueList {
-                    next_list: self.next_list.clone(),
-                    node: next.clone(),
-                }
-                .into()
-        } else if let Some(next) = self.next_list.as_ref() {
-            OwnedKeyValueList {
-                    next_list: next.next_list.clone(),
-                    node: next.node.clone(),
-                }
-                .into()
-        } else {
-            None
-        }
-    }
-
-    /// Get the head node `SyncMultiSerialize` values
-    pub fn values(&self) -> Option<&ser::SyncMultiSerialize> {
-        self.node.values.as_ref().map(|b| &**b)
-    }
-    */
-
-    /// Iterator over all `OwnedKeyValue`-s in every `SyncMultiSerialize` of the list
+    /// Iterate over every single `KV` of `OwnedKVList`
     ///
     /// The order is reverse to how it was built. Eg.
     ///
@@ -141,31 +109,69 @@ impl OwnedKeyValueList {
     /// }
     /// ```
     ///
-    /// Will produce `OwnedKeyValueList.iter()` that returns `k4, k3, k2, k1`.
-    pub fn iter(&self) -> OwnedKeyValueListIterator {
-        OwnedKeyValueListIterator::new(self)
+    /// Will produce `OwnedKVList.iter()` that returns `k4, k3, k2, k1`.
+    pub fn iter_single(&self) -> OwnedKVIterator {
+        OwnedKVIterator::new(self)
     }
 
-    /// Get a unique stable identifier for this node
+    /// Iterate over every `OwnedKVGroup` of `OwnedKVList`
     ///
-    /// This function is buggy and will be removed at some point.
-    /// Please see https://github.com/slog-rs/slog/issues/90
-    #[deprecated]
-    pub fn id(&self) -> usize {
-        &*self.node as *const _ as usize
+    /// This is generally faster aproach
+    pub fn iter_groups(&self) -> OwnedKVGroupIterator {
+        OwnedKVGroupIterator::new(self)
     }
 }
 
 /// Iterator over `OwnedKeyValue`-s
-pub struct OwnedKeyValueListIterator<'a> {
-    next_list: Option<&'a OwnedKeyValueList>,
-    next_node: Option<&'a OwnedKeyValueListNode>,
+///
+/// The `&KV` returned corespond to `OwnedKVGroup`s,
+/// meaning they can serialize to multiple key-value
+/// pairs, and can be iterated further using
+/// `KV::split_first`.
+pub struct OwnedKVGroupIterator<'a> {
+    next_list: Option<&'a OwnedKVList>,
+    next_node: Option<&'a OwnedKVListNode>,
+}
+
+impl<'a> OwnedKVGroupIterator<'a> {
+    fn new(list: &'a OwnedKVList) -> Self {
+        OwnedKVGroupIterator {
+            next_list: Some(list),
+            next_node: None,
+        }
+    }
+}
+
+impl<'a> Iterator for OwnedKVGroupIterator<'a> {
+    type Item = &'a KV;
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            if let Some(node) = self.next_node.take() {
+                self.next_node = node.next_node.as_ref().map(|next| &**next);
+                return Some(&*node.kv.0);
+            }
+            if let Some(list) = self.next_list.take() {
+                self.next_node = Some(&*list.node);
+                self.next_list = list.next_list.as_ref().map(|next| &**next);
+                continue;
+            }
+            return None;
+        }
+    }
+}
+
+/// Iterator over `OwnedKeyValue`-s
+///
+/// The `&KV` returned are guaranteed to produce only single key-value
+pub struct OwnedKVIterator<'a> {
+    next_list: Option<&'a OwnedKVList>,
+    next_node: Option<&'a OwnedKVListNode>,
     cur: Option<&'a KV>,
 }
 
-impl<'a> OwnedKeyValueListIterator<'a> {
-    fn new(list: &'a OwnedKeyValueList) -> Self {
-        OwnedKeyValueListIterator {
+impl<'a> OwnedKVIterator<'a> {
+    fn new(list: &'a OwnedKVList) -> Self {
+        OwnedKVIterator {
             next_list: Some(list),
             next_node: None,
             cur: None,
@@ -173,7 +179,7 @@ impl<'a> OwnedKeyValueListIterator<'a> {
     }
 }
 
-impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
+impl<'a> Iterator for OwnedKVIterator<'a> {
     type Item = &'a KV;
     fn next(&mut self) -> Option<Self::Item> {
         loop {
@@ -184,7 +190,7 @@ impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
                 }
             }
             if let Some(node) = self.next_node.take() {
-                self.cur = Some(&*node.values.0);
+                self.cur = Some(&*node.kv.0);
                 self.next_node = node.next_node.as_ref().map(|next| &**next);
                 continue;
             }
@@ -197,4 +203,3 @@ impl<'a> Iterator for OwnedKeyValueListIterator<'a> {
         }
     }
 }
-

@@ -40,7 +40,7 @@ mod std_only {
             type Error = Never;
             fn log(&self,
                    record: &Record,
-                   values: &OwnedKeyValueList)
+                   values: &OwnedKVList)
                    -> std::result::Result<(), Self::Error> {
                 assert_eq!(format!("{}", record.msg()), format!("{:?}", values));
                 Ok(())
