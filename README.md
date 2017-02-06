@@ -161,6 +161,16 @@ In Cargo.toml:
 slog = "1.2"
 ```
 
+Enabling/restricting max log levels via features:
+
+```
+[dependencies]
+slog = "1.2"
+features = ["max_log_level_trace", "release_max_log_level_trace"]
+```
+
+Each level has an associated feature for both debug and release builds.
+
 In your `main.rs`:
 
 ```
