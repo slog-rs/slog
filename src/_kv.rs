@@ -58,7 +58,7 @@ impl fmt::Debug for OwnedKVList {
 }
 
 impl OwnedKVList {
-    /// New `OwnedKeyValue` node without a parent (root)
+    /// New `OwnedKVList` node without a parent (root)
     fn root(values: OwnedKVGroup) -> Self {
         OwnedKVList {
             next_list: None,
@@ -70,11 +70,11 @@ impl OwnedKVList {
     }
 
     /// New `OwnedKVList` node with an existing parent
-    fn new(values: OwnedKVGroup, parent: &OwnedKVList) -> Self {
+    fn new(values: OwnedKVGroup, next_node: Arc<OwnedKVListNode>) -> Self {
         OwnedKVList {
             next_list: None,
             node: Arc::new(OwnedKVListNode {
-                next_node: Some(parent.node.clone()),
+                next_node: Some(next_node),
                 kv: values,
             }),
         }
@@ -119,7 +119,7 @@ impl OwnedKVList {
     }
 }
 
-/// Iterator over `OwnedKeyValue`-s
+/// Iterator over `OwnedKVList`-s
 ///
 /// The `&KV` returned corespond to `OwnedKVGroup`s,
 /// meaning they can serialize to multiple key-value
@@ -157,7 +157,7 @@ impl<'a> Iterator for OwnedKVGroupIterator<'a> {
     }
 }
 
-/// Iterator over `OwnedKeyValue`-s
+/// Iterator over `OwnedKVList`-s
 ///
 /// The `&KV` returned are guaranteed to produce only single key-value
 pub struct OwnedKVIterator<'a> {

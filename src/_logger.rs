@@ -68,7 +68,7 @@ impl Logger {
     pub fn new(&self, values: OwnedKVGroup) -> Logger {
         Logger {
             drain: self.drain.clone(),
-            list: OwnedKVList::new(values, &self.list),
+            list: OwnedKVList::new(values, self.list.node.clone()),
         }
     }
 
