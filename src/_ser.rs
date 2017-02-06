@@ -181,6 +181,19 @@ impl<'a> Key for &'a str {
     }
 }
 
+
+impl Key for str {
+    fn as_str(&self) -> &str {
+        &self
+    }
+}
+
+impl Key for String {
+    fn as_str(&self) -> &str {
+        self.as_str()
+    }
+}
+
 macro_rules! impl_value_for{
     ($t:ty, $f:ident) => {
         impl Value for $t {

@@ -231,7 +231,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), &[$(($k, &$v)),+]))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), &[$(&$crate::SingleKV($k, $v)),+]))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr) => {
@@ -261,7 +261,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &[$(($k, &$v)),+]))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &[$(&$crate::SingleKV($k, $v)),+]))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
@@ -315,7 +315,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), &[$(($k, &$v)),+]))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), &[$(&$crate::SingleKV($k, $v)),+]))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr) => {
@@ -345,7 +345,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &[$(($k, &$v)),+]))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &[$(&$crate::SingleKV($k, $v)),+]))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
