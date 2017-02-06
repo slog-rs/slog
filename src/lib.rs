@@ -155,6 +155,7 @@ include!("_level.rs");
 include!("_logger.rs");
 include!("_drain.rs");
 include!("_ser.rs");
+include!("_compat.rs");
 
 #[cfg(test)]
 mod tests;
