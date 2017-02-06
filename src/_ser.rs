@@ -135,38 +135,6 @@ pub trait Serializer {
         self.emit_arguments(key, &format_args!(""))
     }
 
-    /// Emit `Some`
-    fn emit_some(&mut self, record : &Record, key: &str, val : &Value) -> Result {
-        /// All this trickery is required because here
-        /// `self` is a concrete type, and not a trait object anymore.
-        ///
-        /// Simpler way would requre adding `Serialized : Sized`.
-        ///
-        /// If you know of any method to simplify it, PR would be very
-        /// welcome.
-        struct Wrap<F>(F)
-        where F : for<'c, 'd> FnMut(&'c str, &'c fmt::Arguments<'d>) -> Result ;
-
-        impl<F> Serializer for Wrap<F>
-        where F : for<'c, 'd> FnMut(&'c str, &'c fmt::Arguments<'d>) -> Result
-        {
-            fn emit_some(&mut self, record : &Record, key: &str, val : &Value) -> Result {
-                val.serialize(record, key, self)
-            }
-
-            fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> Result {
-                (self.0)(key, val)
-            }
-        }
-
-        let mut s = Wrap(|key, fmt| {
-            self.emit_arguments(key, fmt)
-        });
-
-        val.serialize(record, key, &mut s)
-    }
-
-
     /// Emit `fmt::Arguments`
     ///
     /// This is the only method that has to implemented, but for
