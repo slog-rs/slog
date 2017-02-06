@@ -1,6 +1,3 @@
-/// Key-value pair that can be part of a logging record
-type BorrowedKeyValue<'a> = (&'a str, &'a Value);
-
 /// Group of key-value pairs
 ///
 /// The exact details of that function are not considered public
