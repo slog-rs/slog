@@ -14,7 +14,7 @@
 #[derive(Clone)]
 pub struct Logger {
     drain: Arc<Drain<Error=Never>+Send+Sync>,
-    list: OwnedKeyValueList,
+    list: OwnedKVList,
 }
 
 impl Logger {
@@ -43,14 +43,7 @@ impl Logger {
     where D: 'static + Drain<Error=Never> + Sized+Send+Sync{
         Logger {
             drain: Arc::new(d),
-            list: OwnedKeyValueList {
-                next_list: None,
-                node: Arc::new(OwnedKeyValueListNode {
-                    next_node: None,
-                    values: values,
-                })
-            }
-
+            list: OwnedKVList::root(values),
         }
     }
 
@@ -75,15 +68,7 @@ impl Logger {
     pub fn new(&self, values: OwnedKVGroup) -> Logger {
         Logger {
             drain: self.drain.clone(),
-            list: OwnedKeyValueList {
-                next_list: None,
-                node: Arc::new(
-                    OwnedKeyValueListNode {
-                        next_node: Some(self.list.node.clone()),
-                        values: values,
-                    }
-                    )
-            }
+            list: OwnedKVList::new(values, &self.list),
         }
     }
 
@@ -111,7 +96,7 @@ impl Drain for Logger {
 
     type Error = Never;
 
-    fn log(&self, record: &Record, values : &OwnedKeyValueList) -> result::Result<(), Self::Error> {
+    fn log(&self, record: &Record, values : &OwnedKVList) -> result::Result<(), Self::Error> {
         debug_assert!(self.list.next_list.is_none());
 
         let chained = values.append(&self.list);

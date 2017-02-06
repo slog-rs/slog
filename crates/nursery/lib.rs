@@ -32,12 +32,12 @@ impl<D1: Drain, D2: Drain> Failover<D1, D2> {
 impl<D1, D2, E1, E2> Drain for Failover<D1, D2>
     where
     D1 : Drain<Error = E1>,
-D2 : Drain<Error = E2>
+    D2 : Drain<Error = E2>
 {
     type Error = D2::Error;
     fn log(&self,
            info: &Record,
-           logger_values: &OwnedKeyValueList)
+           logger_values: &OwnedKVList)
            -> result::Result<(), Self::Error> {
         match self.drain1.log(info, logger_values) {
             Ok(_) => Ok(()),
