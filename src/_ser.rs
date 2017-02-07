@@ -169,7 +169,7 @@ pub trait Value {
                  -> Result;
 }
 
-/// Value that can be serialized
+/// Type that can be used as a key
 pub trait Key {
     /// To text representation
     fn as_str(&self) -> &str;
