@@ -1,6 +1,6 @@
 #[doc(hidden)]
 /// Information that can be static in the given record thus allowing to optimize record creation to
-/// be done mostly at comiple-time.
+/// be done mostly at compile-time.
 ///
 /// This is not cosidered a part of stable API, and macros should be used instead.
 pub struct RecordStatic<'a> {
@@ -35,6 +35,8 @@ pub struct Record<'a> {
 
 impl<'a> Record<'a> {
     /// Create a new `Record`
+    ///
+    /// This function is not considered a part of stable API
     #[inline]
     #[doc(hidden)]
     pub fn new(

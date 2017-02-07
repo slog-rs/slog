@@ -137,15 +137,15 @@ pub trait Serializer {
 
     /// Emit `fmt::Arguments`
     ///
-    /// This is the only method that has to implemented, but for
-    /// performance and type-retaining reason most serious `Serializer`s
-    /// will want to implement all other methods as well.
+    /// This is the only method that has to implemented, but for performance and to retain type
+    /// information most serious `Serializer`s will want to implement all other methods as well.
     fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> Result;
 }
 
-/// Serializer that formats all arguments as fmt::Arguments
-/// ans and passes them to a given closure.
-pub struct AsFmtSerializer<F>(pub F)
+/// Serializer to closure adapter.
+///
+/// Formats all arguments as fmt::Arguments and passes them to a given closure.
+struct AsFmtSerializer<F>(pub F)
     where F : for <'a, 'b> FnMut(&'b str, fmt::Arguments<'a>) -> Result;
 
 impl<F> Serializer for AsFmtSerializer<F>
