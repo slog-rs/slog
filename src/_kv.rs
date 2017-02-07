@@ -44,7 +44,7 @@ impl fmt::Debug for OwnedKVList {
                 module: "",
                 target: "",
             };
-            let record = Record::new(&record_static, format_args!(""), &[]);
+            let record = Record::new(&record_static, format_args!(""), &STATIC_TERMINATOR_UNIT);
 
             for i in self.iter_groups() {
                 try!(i.serialize(&record, &mut as_str_ser)
