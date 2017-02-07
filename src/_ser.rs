@@ -495,3 +495,31 @@ impl<T: KV, R: KV> KV for (T, R) {
         Some((&self.0, &self.1))
     }
 }
+
+impl<T> KV for Box<T>
+where T : KV+?Sized {
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+        -> Result {
+            (**self).serialize(record, serializer)
+        }
+
+    fn split_first(&self) -> Option<(&KV, &KV)> {
+        (**self).split_first()
+    }
+}
+
+impl<T> KV for Arc<T>
+where T : KV+?Sized {
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+        -> Result {
+            (**self).serialize(record, serializer)
+        }
+
+    fn split_first(&self) -> Option<(&KV, &KV)> {
+        (**self).split_first()
+    }
+}
