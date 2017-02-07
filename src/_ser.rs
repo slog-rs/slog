@@ -451,7 +451,6 @@ pub trait KV {
 pub struct SingleKV<K, V>(pub K, pub V)
     where K : Key, V : Value;
 
-static STATIC_TERMINATOR_UNIT : () = ();
 
 impl<K, V> KV for SingleKV<K, V>
     where K : Key,

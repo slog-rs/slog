@@ -139,10 +139,15 @@ use collections::string::String;
 
 
 /// This type is here just to abstract away lack of `!` type support in stable
-/// rust during time of 1.0 release. It will be switched to `!` at some point
+/// rust during time of the release. It will be switched to `!` at some point
 /// and `Never` should not be considered "stable" API.
 #[doc(hidden)]
 pub type Never = ();
+
+
+/// This is not part of "stable" API
+#[doc(hidden)]
+pub static STATIC_TERMINATOR_UNIT : () = ();
 
 // One main namespace is enough, but for conveniance break
 // the code into parts.

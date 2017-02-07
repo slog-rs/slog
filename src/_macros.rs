@@ -219,6 +219,18 @@ pub fn __slog_static_max_level() -> FilterLevel {
 /// ```
 #[macro_export]
 macro_rules! log(
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        log!(@ ($crate::SingleKV($k, $v), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        log!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
+    };
     ($lvl:expr, $l:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
@@ -231,7 +243,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), &[$(&$crate::SingleKV($k, $v)),+]))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), &log!(@ (); $($k => $v),+)))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr) => {
@@ -246,7 +258,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &[]))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &$crate::STATIC_TERMINATOR_UNIT))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+) => {
@@ -261,7 +273,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &[$(&$crate::SingleKV($k, $v)),+]))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &log!(@ (); $($k => $v),+)))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
@@ -279,7 +291,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), &[]))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+),  &$crate::STATIC_TERMINATOR_UNIT))
         }
     };
 );
@@ -303,6 +315,18 @@ macro_rules! log(
 /// ```
 #[macro_export]
 macro_rules! slog_log(
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        slog_log!(@ ($crate::SingleKV($k, $v), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        slog_log!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
+    };
     ($lvl:expr, $l:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
@@ -315,7 +339,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), &[$(&$crate::SingleKV($k, $v)),+]))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), &slog_log!(@ (); $($k => $v),+)))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr) => {
@@ -330,7 +354,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &[]))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &$crate::STATIC_TERMINATOR_UNIT))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+) => {
@@ -345,7 +369,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &[$(&$crate::SingleKV($k, $v)),+]))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &slog_log!(@ (); $($k => $v),+)))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
@@ -363,7 +387,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), &[]))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+),  &$crate::STATIC_TERMINATOR_UNIT))
         }
     };
 );
