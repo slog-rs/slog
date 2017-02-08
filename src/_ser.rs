@@ -444,6 +444,8 @@ pub trait KV {
                  -> Result;
 
     /// Split into tuple of `(first, rest)`
+    ///
+    /// None if `KV` contains no key-value pair
     fn split_first(&self) -> Option<(&KV, &KV)>;
 }
 
