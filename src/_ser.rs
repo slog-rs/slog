@@ -408,14 +408,17 @@ impl<F> Value for PushFnValue<F>
     }
 }
 
-/// Key-value pair(s) that can be serialized
+/// Key-value pair(s)
 ///
 /// Zero, one or more key value pairs chained together
+///
+/// Any logging data must implement this trait for
+/// slog to be able to use it.
 pub trait KV {
     /// Serialize self into `Serializer`
     ///
-    /// Structs implementing this trait should generally
-    /// only call respective methods of `serializer`.
+    /// `KV` should call respective `Serializer` methods
+    /// for each key-value pair it contains.
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
@@ -423,7 +426,9 @@ pub trait KV {
 
     /// Split into tuple of `(first, rest)`
     ///
-    /// None if `KV` contains no key-value pair
+    /// None if `KV` contains no key-value pair (is empty)
+    ///
+    /// The returned `head` must be a single key-value pair.
     fn split_first(&self) -> Option<(&KV, &KV)>;
 }
 

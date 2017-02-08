@@ -1,15 +1,20 @@
 /// Logging drain
 ///
-/// Drains generally mean destination for logs, but slog generalize the
-/// term. `Drain`s are responsible for filtering, modifying, formatting
-/// and writing the log records into given destination.
+/// `Drain`s typially mean destination for logs, but `slog` generalizes the
+/// term.
 ///
-/// Implementing this trait allows writing own Drains, that can be combined
-/// with other drains.
+/// `Drain`s are responsible for handling logging statements (`Record`s) from
+/// `Logger`s associated with them: filtering, modifying, formatting
+/// and writing the log records into given destination(s).
+///
+/// Implementing this trait allows writing custom `Drain`s.
+///
+/// It's a typical pattern to parametrize `Drain`s over `Drain` traits to allow
+/// combining them into one `Drain`. See `Duplicate` as an example.
 pub trait Drain {
-    /// Type of potential errors returned during logging
+    /// Type of potential errors that can be returned by this `Drain`
     type Error;
-    /// Log one logging record
+    /// Handle one logging statement (`Record`)
     ///
     /// Every logging `Record` built from a logging statement (eg.
     /// `info!(...)`), and key-value lists of a `Logger` it was executed on

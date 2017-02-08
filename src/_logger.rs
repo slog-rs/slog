@@ -2,15 +2,16 @@
 
 /// Logging handle used to execute logging statements
 ///
-/// Logger handles logging context (key-value list) and handles logging
-/// statements.
+/// `Logger` holds logging context (key-value pairs) and handles logging
+/// statements by delivering all logging statement information (`Record`)
+/// to it's `Drain`.
 ///
-/// Child loggers are build from existing loggers, and inherit existing
-/// key-value pairs from their parents, which can be supplemented with
-/// new ones.
+/// Child loggers are build from existing loggers, and inherit their existing
+/// key-value pairs, which can be supplemented with new ones.
 ///
 /// Cloning existing loggers and creating new ones is cheap. Loggers can be
-/// freely passed around the code.
+/// freely passed around the code and between threads. `Logger`s are also
+/// `Sync` - there's no need to synchronize accesses to them.
 #[derive(Clone)]
 pub struct Logger {
     drain: Arc<Drain<Error=Never>+Send+Sync>,
@@ -25,9 +26,9 @@ impl Logger {
     ///
     /// Root logger starts a new hierarchy associated with a given `Drain`. Root
     /// logger drain must return no errors. See `DrainExt::ignore_err()` and
-    ///
     /// `DrainExt::fuse()`.
-    /// Use `o!` macro to help build key-value pairs with a nicer syntax.
+    ///
+    /// Use `o!` macro to build `OwnedKV` object..
     ///
     /// ```
     /// #[macro_use]

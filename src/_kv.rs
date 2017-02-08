@@ -1,5 +1,8 @@
 /// Owned KV
 ///
+/// "Owned" means that the contained data (key-value pairs) it can belong
+/// to a `Logger` and thus must be thread-safe (`'static`, `Send`, `Sync`)
+///
 /// Zero, one or more owned key-value pairs.
 pub struct OwnedKV(
     #[doc(hidden)]
@@ -10,6 +13,9 @@ pub struct OwnedKV(
 );
 
 /// BorrowedKV
+///
+/// "Borrowed" means that the data is only a temporary
+/// referenced (`&T`) and can't be stored directly.
 ///
 /// Zero, one or more borrowed key-value pairs.
 pub struct BorrowedKV<'a> (

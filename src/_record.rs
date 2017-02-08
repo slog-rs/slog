@@ -23,9 +23,10 @@ pub struct RecordStatic<'a> {
 /// One logging record
 ///
 /// Corresponds to one logging statement like `info!(...)` and carries all it's
-/// data: eg. message, key-values, key-values of `Logger` used to execute it.
+/// data: eg. message, immediate key-value pairs and key-value pairs of `Logger` used to execute it.
 ///
-/// Record is passed to `Drain` associated with a given logger hierarchy.
+/// Record is passed to a `Logger`, which delivers it to it's own `Drain`,
+/// where actual logging processing is implemented.
 pub struct Record<'a> {
     meta: &'a RecordStatic<'a>,
     msg: fmt::Arguments<'a>,
