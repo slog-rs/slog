@@ -22,9 +22,9 @@
   </a>
   <br>
     <strong><a href="https://github.com/slog-rs/slog/wiki/Getting-started">Getting started</a></strong>
-  
+
   <a href="//github.com/slog-rs/slog/wiki/Introduction-to-structured-logging-with-slog">Introduction</a>
-  
+
   <a href="//github.com/slog-rs/slog/wiki/FAQ">FAQ</a>
   <br>
   <a href="https://crates.io/search?q=slog">Crate list</a>
@@ -47,76 +47,17 @@
 
 ### Status & news
 
-`slog` is an ecosystem of reusable components for structured, composable logging
-for [Rust][rust].
+`slog` is an ecosystem of reusable components for structured, extensible,
+composable logging for [Rust][rust].
 
 The ambition is to be The Logging Framework for Rust. `slog` should accommodate
 variety of logging features and requirements.
 
-## `slog` crate
+### Features & technical documentation
 
-### Features
+Most of interesting documentation is using rustdoc itself.
 
-* flexible & easy to use
-* great performance; see: [slog bench log](https://github.com/slog-rs/slog/wiki/Bench-log) and  [what makes slog fast](https://github.com/slog-rs/slog/wiki/What-makes-slog-fast)
-* `#![no_std]` support (with opt-out `std` cargo feature flag)
-* hierarchical loggers
-* lazily evaluated values
-* modular, lightweight and very extensible
-	* tiny core crate that does not pull any dependencies
-	* feature-crates for specific functionality
-* bidirectional compatibility with standard `log` crate (`slog-stdlog` crate)
-	* supports logging-scopes
-	* using slog in library does not force users of the library to use slog
-	  (but gives benefits); see `crates/example-lib`
-* drains & output formatting
-	* filtering
-		* compile-time log level filter using cargo features (same as in `log` crate)
-		* by level, msg, and any other meta-data
-		* [`slog-envlogger`](https://github.com/slog-rs/envlogger) - port of `env_logger`
-	* multiple outputs
-	* efficient asynchronous logging
-	* terminal output, with color support (`slog-term` crate)
-	* Json (`slog-json` crate)
-		* Bunyan (`slog-bunyan` crate)
-	* syslog (`slog-syslog` crate)
-	* first class custom drains
-
-### Advantages over `log` crate
-
-* **extensible** - `slog` provides core functionality, and some standard
-  feature-set. But using traits, anyone can easily implement as
-  powerful fully-custom features, publish separately and grow `slog` feature-set
-  for everyone.
-* **composable** - Wouldn't it be nice if you could use
-  [`env_logger`][env_logger], but output authentication messages to syslog,
-  while reporting errors over network in json format? With `slog` drains can
-  reuse other drains! You can combine them together, chain, wrap - you name it.
-* **context aware** - It's not just one global logger. Hierarchical
-  loggers carry information about context of logging. When logging an error
-  condition, you want to know which resource was being handled, on which
-  instance of your service, using which source code build, talking with what
-  peer, etc. In standard `log` you would have to repeat this information in
-  every log statement. In `slog` it will happen automatically. See
-  [slog-rs functional overview page][functional-overview] to understand better
-  logger and drain hierarchies and log record flow through them.
-* both **human and machine readable** - By keeping the key-value data format,
-  meaning of logging data is preserved. Dump your logging to a JSON file, and
-  send it to your data-mining system for further analysis. Don't parse it from
-  lines of text anymore!
-* **lazy evaluation** and **asynchronous IO** included. Waiting to
-  finish writing logging information to disk, or spending time calculating
-  data that will be thrown away at the current logging level, are sources of big
-  performance waste. Use `Async` drain, and closures
-  to make your logging fast.
-* **run-time configuration** - `AtomicSwitch` drain allows
-  changing logging behavior in the running program. You could use eg. signal
-  handlers to change logging level or logging destinations. See
-  [`signal` example][signal].
-
-[signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
-[env_logger]: https://crates.io/crates/env_logger
-[functional-overview]: https://github.com/slog-rs/slog/wiki/Functional-overview
+You can view on [docs.rs/slog](https://docs.rs/slog/1/)
 
 ### Terminal output example
 
@@ -130,7 +71,6 @@ Compact vs full mode:
 
 ![slog-rs terminal compact output](http://i.imgur.com/P9u2sWP.png)
 ![slog-rs terminal full output](http://i.imgur.com/ENiy5H9.png)
-
 
 
 ## Using & help
@@ -219,6 +159,6 @@ Any particular repositories under slog ecosystem might be created, controlled,
 maintained by other entities with various level of autonomy. Lets work together
 toward a common goal in respectful and welcoming atmosphere!
 
-## slog-related resources
+## slog-related articles
 
 * [24 days of Rust - structured logging](https://siciarz.net/24-days-rust-structured-logging/) - review and tutorial by Zbigniew Siciarz 2016-12-05
