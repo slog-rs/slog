@@ -81,7 +81,7 @@ impl core::fmt::Display for Error {
 macro_rules! impl_default_as_fmt{
     ($t:ty, $f:ident) => {
         /// Emit $t
-        fn $f(&mut self, key : &str, val : $t)
+        fn $f(&mut self, key : Key, val : $t)
             -> Result {
                 self.emit_arguments(key, &format_args!("{}", val))
             }
@@ -126,12 +126,12 @@ pub trait Serializer {
     impl_default_as_fmt!(&str, emit_str);
 
     /// Emit `()`
-    fn emit_unit(&mut self, key: &str) -> Result {
+    fn emit_unit(&mut self, key: Key) -> Result {
         self.emit_arguments(key, &format_args!("()"))
     }
 
     /// Emit `None`
-    fn emit_none(&mut self, key: &str) -> Result {
+    fn emit_none(&mut self, key: Key) -> Result {
         self.emit_arguments(key, &format_args!(""))
     }
 
@@ -139,22 +139,25 @@ pub trait Serializer {
     ///
     /// This is the only method that has to implemented, but for performance and to retain type
     /// information most serious `Serializer`s will want to implement all other methods as well.
-    fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> Result;
+    fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result;
 }
 
 /// Serializer to closure adapter.
 ///
 /// Formats all arguments as fmt::Arguments and passes them to a given closure.
 struct AsFmtSerializer<F>(pub F)
-    where F : for <'a, 'b> FnMut(&'b str, fmt::Arguments<'a>) -> Result;
+    where F : for <'a> FnMut(Key, fmt::Arguments<'a>) -> Result;
 
 impl<F> Serializer for AsFmtSerializer<F>
-    where F : for <'a, 'b> FnMut(&'b str, fmt::Arguments<'a>) -> Result
+    where F : for <'a> FnMut(Key, fmt::Arguments<'a>) -> Result
 {
-    fn emit_arguments(&mut self, key: &str, val: &fmt::Arguments) -> Result {
+    fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result {
         (self.0)(key, *val)
     }
 }
+
+/// Key type (alias for &'static str)
+pub type Key = &'static str;
 
 /// Value that can be serialized
 pub trait Value {
@@ -164,40 +167,15 @@ pub trait Value {
     /// only call respective methods of `serializer`.
     fn serialize(&self,
                  record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result;
-}
-
-/// Type that can be used as a key
-pub trait Key {
-    /// To text representation
-    fn as_str(&self) -> &str;
-}
-
-impl<'a> Key for &'a str {
-    fn as_str(&self) -> &str {
-        &self
-    }
-}
-
-
-impl Key for str {
-    fn as_str(&self) -> &str {
-        &self
-    }
-}
-
-impl Key for String {
-    fn as_str(&self) -> &str {
-        self.as_str()
-    }
 }
 
 macro_rules! impl_value_for{
     ($t:ty, $f:ident) => {
         impl Value for $t {
-            fn serialize(&self, _record : &Record, key : &str, serializer : &mut Serializer)
+            fn serialize(&self, _record : &Record, key : Key, serializer : &mut Serializer)
                          -> Result {
                 serializer.$f(key, *self)
             }
@@ -223,7 +201,7 @@ impl_value_for!(f64, emit_f64);
 impl Value for () {
     fn serialize(&self,
                  _record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result {
         serializer.emit_unit(key)
@@ -234,7 +212,7 @@ impl Value for () {
 impl Value for str {
     fn serialize(&self,
                  _record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result {
         serializer.emit_str(key, self)
@@ -244,7 +222,7 @@ impl Value for str {
 impl<'a> Value for &'a str {
     fn serialize(&self,
                  _record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result {
         serializer.emit_str(key, self)
@@ -254,7 +232,7 @@ impl<'a> Value for &'a str {
 impl<'a> Value for fmt::Arguments<'a> {
     fn serialize(&self,
                  _record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result {
         serializer.emit_arguments(key, self)
@@ -264,7 +242,7 @@ impl<'a> Value for fmt::Arguments<'a> {
 impl Value for String {
     fn serialize(&self,
                  _record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result {
         serializer.emit_str(key, self.as_str())
@@ -274,7 +252,7 @@ impl Value for String {
 impl<T: Value> Value for Option<T> {
     fn serialize(&self,
                  record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result {
         match *self {
@@ -287,7 +265,7 @@ impl<T: Value> Value for Option<T> {
 impl Value for Box<Value + Send + 'static> {
     fn serialize(&self,
                  record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result {
         (**self).serialize(record, key, serializer)
@@ -299,7 +277,7 @@ impl<T> Value for Arc<T>
 {
     fn serialize(&self,
                  record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result {
         (**self).serialize(record, key, serializer)
@@ -311,7 +289,7 @@ impl<T> Value for Rc<T>
 {
     fn serialize(&self,
                  record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result {
         (**self).serialize(record, key, serializer)
@@ -323,7 +301,7 @@ impl<T> Value for core::num::Wrapping<T>
 {
     fn serialize(&self,
                  record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result {
         self.0.serialize(record, key, serializer)
@@ -335,7 +313,7 @@ impl<V: 'static + Value, F> Value for F
 {
     fn serialize(&self,
                  record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result {
         (self)(record).serialize(record, key, serializer)
@@ -351,7 +329,7 @@ impl<V: 'static + Value, F> Value for FnValue<V, F>
 {
     fn serialize(&self,
                  record: &Record,
-                 key: &str,
+                 key: Key,
                  serializer: &mut Serializer)
                  -> Result {
         (self.0)(record).serialize(record, key, serializer)
@@ -364,7 +342,7 @@ impl<V: 'static + Value, F> Value for FnValue<V, F>
 /// `()` if nothing else was serialized.
 pub struct PushFnSerializer<'a> {
     record: &'a Record<'a>,
-    key: &'a str,
+    key: Key,
     serializer: &'a mut Serializer,
     done: bool,
 }
@@ -418,7 +396,7 @@ pub struct PushFnValue<F>(pub F)
 impl<F> Value for PushFnValue<F>
     where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnSerializer<'c>) -> Result
 {
-    fn serialize(&self, record: &Record, key: &str, serializer: &mut Serializer)
+    fn serialize(&self, record: &Record, key: Key, serializer: &mut Serializer)
         -> Result {
         let ser = PushFnSerializer {
             record: record,
@@ -450,19 +428,18 @@ pub trait KV {
 }
 
 /// Single pair `Key` and `Value`
-pub struct SingleKV<K, V>(pub K, pub V)
-    where K : Key, V : Value;
+pub struct SingleKV<V>(pub Key, pub V)
+    where V : Value;
 
 
-impl<K, V> KV for SingleKV<K, V>
-    where K : Key,
-          V : Value
+impl<V> KV for SingleKV<V>
+    where V : Value
 {
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
         -> Result {
-            self.1.serialize(record, self.0.as_str(), serializer)
+            self.1.serialize(record, self.0, serializer)
         }
 
     fn split_first(&self) -> Option<(&KV, &KV)> {
