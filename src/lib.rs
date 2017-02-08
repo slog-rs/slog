@@ -1,4 +1,4 @@
-//! # Slog -  Structured, composable logging for Rust
+//! # Slog -  Structured, extensible, composable logging for Rust
 //!
 //! ## Features
 //!
