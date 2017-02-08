@@ -25,7 +25,7 @@ macro_rules! o(
         $args_ready
     };
     ($($args:tt)*) => {
-        $crate::OwnedKVGroup(::std::boxed::Box::new(o!(@ (); $($args)*)))
+        $crate::OwnedKV(::std::boxed::Box::new(o!(@ (); $($args)*)))
     };
 );
 
@@ -56,7 +56,7 @@ macro_rules! o(
         $args_ready
     };
     ($($args:tt)*) => {
-        $crate::OwnedKVGroup(::alloc::boxed::Box::new(o!(@ (); $($args)*)))
+        $crate::OwnedKV(::alloc::boxed::Box::new(o!(@ (); $($args)*)))
     };
 );
 
@@ -79,7 +79,7 @@ macro_rules! slog_o(
         $args_ready
     };
     ($($args:tt)*) => {
-        $crate::OwnedKVGroup(::std::boxed::Box::new(o!(@ (); $($args)*)))
+        $crate::OwnedKV(::std::boxed::Box::new(o!(@ (); $($args)*)))
     };
 );
 
@@ -102,7 +102,7 @@ macro_rules! slog_o(
         $args_ready
     };
     ($($args:tt)*) => {
-        $crate::OwnedKVGroup(::alloc::boxed::Box::new(o!(@ (); $($args)*)))
+        $crate::OwnedKV(::alloc::boxed::Box::new(o!(@ (); $($args)*)))
     };
 );
 
@@ -243,7 +243,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), &log!(@ (); $($k => $v),+)))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), BorrowedKV(&log!(@ (); $($k => $v),+))))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr) => {
@@ -258,7 +258,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &$crate::STATIC_TERMINATOR_UNIT))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), BorrowedKV(&$crate::STATIC_TERMINATOR_UNIT)))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+) => {
@@ -273,7 +273,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &log!(@ (); $($k => $v),+)))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), BorrowedKV(&log!(@ (); $($k => $v),+))))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
@@ -291,7 +291,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+),  &$crate::STATIC_TERMINATOR_UNIT))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+),  BorrowedKV(&$crate::STATIC_TERMINATOR_UNIT)))
         }
     };
 );
@@ -339,7 +339,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), &slog_log!(@ (); $($k => $v),+)))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), BorrowedKV(&slog_log!(@ (); $($k => $v),+))))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr) => {
@@ -354,7 +354,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &$crate::STATIC_TERMINATOR_UNIT))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), BorrowedKV(&$crate::STATIC_TERMINATOR_UNIT)))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+) => {
@@ -369,7 +369,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), &slog_log!(@ (); $($k => $v),+)))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), BorrowedKV(&slog_log!(@ (); $($k => $v),+))))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
@@ -387,7 +387,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+),  &$crate::STATIC_TERMINATOR_UNIT))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+),  BorrowedKV(&$crate::STATIC_TERMINATOR_UNIT)))
         }
     };
 );

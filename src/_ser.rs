@@ -523,3 +523,28 @@ where T : KV+?Sized {
         (**self).split_first()
     }
 }
+
+impl KV for OwnedKV {
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+        -> Result {
+            self.0.serialize(record, serializer)
+        }
+
+    fn split_first(&self) -> Option<(&KV, &KV)> {
+        self.0.split_first()
+    }
+}
+impl<'a> KV for BorrowedKV<'a> {
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+        -> Result {
+            self.0.serialize(record, serializer)
+        }
+
+    fn split_first(&self) -> Option<(&KV, &KV)> {
+        self.0.split_first()
+    }
+}
