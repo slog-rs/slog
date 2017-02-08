@@ -58,38 +58,6 @@
 //!   handlers to change logging level or logging destinations. See
 //!   [`signal` example][signal].
 //!
-//! ### Advantages over `log` crate
-//!
-//! * **extensible** - `slog` provides core functionality, and some standard
-//!   feature-set. But using traits, anyone can easily implement as
-//!   powerful fully-custom features, publish separately and grow `slog` feature-set
-//!   for everyone.
-//! * **composable** - Wouldn't it be nice if you could use
-//!   [`env_logger`][env_logger], but output authentication messages to syslog,
-//!   while reporting errors over network in json format? With `slog` drains can
-//!   reuse other drains! You can combine them together, chain, wrap - you name it.
-//! * **context aware** - It's not just one global logger. Hierarchical
-//!   loggers carry information about context of logging. When logging an error
-//!   condition, you want to know which resource was being handled, on which
-//!   instance of your service, using which source code build, talking with what
-//!   peer, etc. In standard `log` you would have to repeat this information in
-//!   every log statement. In `slog` it will happen automatically. See
-//!   [slog-rs functional overview page][functional-overview] to understand better
-//!   logger and drain hierarchies and log record flow through them.
-//! * both **human and machine readable** - By keeping the key-value data format,
-//!   meaning of logging data is preserved. Dump your logging to a JSON file, and
-//!   send it to your data-mining system for further analysis. Don't parse it from
-//!   lines of text anymore!
-//! * **lazy evaluation** and **asynchronous IO** included. Waiting to
-//!   finish writing logging information to disk, or spending time calculating
-//!   data that will be thrown away at the current logging level, are sources of big
-//!   performance waste. Use `Async` drain, and closures
-//!   to make your logging fast.
-//! * **run-time configuration** - `AtomicSwitch` drain allows
-//!   changing logging behavior in the running program. You could use eg. signal
-//!   handlers to change logging level or logging destinations. See
-//!   [`signal` example][signal].
-//!
 //! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
 //! [env_logger]: https://crates.io/crates/env_logger
 //! [functional-overview]: https://github.com/slog-rs/slog/wiki/Functional-overview
