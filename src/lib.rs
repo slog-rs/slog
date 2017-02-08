@@ -1,102 +1,75 @@
 //! # Slog -  Structured, extensible, composable logging for Rust
 //!
-//! ## Features
+//! `slog-rs` is an ecosystem of reusable components for structured, extensible,
+//! composable logging for Rust.
 //!
-//! * easy to use
-//! * great performance; see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
+//! `slog` is `slog-rs`'s main crate providing core components shared between all other parts of
+//! `slog-rs` ecosystem.
+//!
+//! This is automatically generated technical documentation of `slog`. For information about
+//! project organization, development, help, etc. please see [slog github
+//! page](https://github.com/slog-rs/slog)
+//!
+//! ## Core advantages over `log` crate
+//!
+//! * **extensible** - `slog` crate provides core functionality: very basic
+//!   and portable standard feature-set based on open `trait`s that allow
+//!   implementing new features that can be independently published.
+//! * **composable** - `trait`s that `slog` exposes to provide extensibility
+//!   are designed to be easy to efficiently reuse and combine, using Rust type
+//!   system. Due to this it's possible to combine functions to allow every
+//!   application to carefully specify how, when and where to log information.
+//! * **structured** - Logging with `slog` is not based on just one global logger.
+//!   `slog`'s `Logger`s carry hierarchy of key-value data that contains the context
+//!   of logging - information that otherwise would have to be repeated in every
+//!   logging statement.
+//! * both **human and machine readable** - By keeping the key-value data format
+//!   and retaining it's type information, meaning of logging data is preserved.
+//!   Data can be serialized to machine readable formats like JSON and send it to
+//!   data-mining system for further analysis etc. On the other hand, when
+//!   presenting on screen, logging data can be shown in eastetically pleasing
+//!   and easy to understand way.
+//!
+//! ## `slog` features
+//!
+//! * performance oriented; read [what makes slog fast](https://github.com/slog-rs/slog/wiki/What-makes-slog-fast)
+//!   and see: [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
+//!   * lazily evaluation through closure values
+//!   * async IO support included: see [`slog-extra` crate](https://docs.rs/slog-extra)
 //! * `#![no_std]` support (with opt-out `std` cargo feature flag)
 //! * hierarchical loggers
-//! * lazily evaluated values
 //! * modular, lightweight and very extensible
-//! 	* tiny core crate that does not pull any dependencies
-//! 	* feature-crates for specific functionality
-//! * backward compatibility for standard `log` crate (`slog-stdlog` crate)
-//! 	* supports logging-scopes
-//! 	* using slog in library does not force users of the library to use slog
-//! 	  (but gives benefits); see `crates/example-lib`
-//! * drains & output formatting
-//! 	* filtering
-//! 		* compile-time log level filter using cargo features (same as in `log` crate)
-//! 		* by level, msg, and any other meta-data
-//! 		* [`slog-envlogger`](https://github.com/slog-rs/envlogger) - port of `env_logger`
-//! 	* multiple outputs
-//! 	* asynchronous IO writing
-//! 	* terminal output, with color support (`slog-term` crate)
-//! 	* Json (`slog-json` crate)
-//! 		* Bunyan (`slog-bunyan` crate)
-//! 	* syslog (`slog-syslog` crate)
-//! 	* first class custom drains
+//!   * tiny core crate that does not pull any dependencies
+//!   * feature-crates for specific functionality
+//!   * using `slog` in library does not force users of the library to use slog
+//!     (but provides additional functionality); see [example how to use `slog` in
+//!     library](https://github.com/slog-rs/example-lib)
+//! * backward and forward compatibility with `log` crate:
+//!   see [`slog-stdlog` crate](https://docs.rs/slog-stdlog)
+//! * convieniance crates:
+//!   * logging-scopes for implicit `Logger` passing: see
+//!     [slog-scope](https://docs.rs/slog-scope)
+//! * many existing core&community provided features:
+//!   * multiple outputs
+//!   * filtering control
+//!     * compile-time log level filter using cargo features (same as in `log` crate)
+//!     * by level, msg, and any other meta-data
+//!     * [`slog-envlogger`](https://github.com/slog-rs/envlogger) - port of `env_logger`
+//!  * terminal output, with color support: see [`slog-term` crate](docs.r/slog-term)
+//!  * [json](https://docs.rs/slog-json)
+//!    * [bunyan](https://docs.rs/slog-bunyan)
+//!  * [syslog](https://docs.rs/slog-syslog) and [journald](https://docs.rs/slog-journald) support
+//!  * run-time configuration:
+//!    * run-time behavior change; see [slog-atomic](https://docs.rs/slog-atomic)
+//!    * run-time configuration; see [slog-config](https://docs.rs/slog-config)
 //!
-//! ## Advantages over `log` crate
-//!
-//! * **extensible** - `slog` provides core functionality, and some standard
-//!   feature-set. But using traits, anyone can easily implement as
-//!   powerful fully-custom features, publish separately and grow `slog` feature-set
-//!   for everyone.
-//! * **composable** - Wouldn't it be nice if you could use
-//!   [`env_logger`][env_logger], but output authentication messages to syslog,
-//!   while reporting errors over network in json format? With `slog` drains can
-//!   reuse other drains! You can combine them together, chain, wrap - you name it.
-//! * **context aware** - It's not just one global logger. Hierarchical
-//!   loggers carry information about context of logging. When logging an error
-//!   condition, you want to know which resource was being handled, on which
-//!   instance of your service, using which source code build, talking with what
-//!   peer, etc. In standard `log` you would have to repeat this information in
-//!   every log statement. In `slog` it will happen automatically. See
-//!   [slog-rs functional overview page][functional-overview] to understand better
-//!   logger and drain hierarchies and log record flow through them.
-//! * both **human and machine readable** - By keeping the key-value data format,
-//!   meaning of logging data is preserved. Dump your logging to a JSON file, and
-//!   send it to your data-mining system for further analysis. Don't parse it from
-//!   lines of text anymore!
-//! * **lazy evaluation** and **asynchronous IO** included. Waiting to
-//!   finish writing logging information to disk, or spending time calculating
-//!   data that will be thrown away at the current logging level, are sources of big
-//!   performance waste. Use `AsyncStreamer` drain, and closures to make your logging fast.
-//! * **run-time configuration** - [`AtomicSwitch`][atomic-switch] drain allows
-//!   changing logging behavior in the running program. You could use eg. signal
-//!   handlers to change logging level or logging destinations. See
-//!   [`signal` example][signal].
-//!
-//! ### Advantages over `log` crate
-//!
-//! * **extensible** - `slog` provides core functionality, and some standard
-//!   feature-set. But using traits, anyone can easily implement as
-//!   powerful fully-custom features, publish separately and grow `slog` feature-set
-//!   for everyone.
-//! * **composable** - Wouldn't it be nice if you could use
-//!   [`env_logger`][env_logger], but output authentication messages to syslog,
-//!   while reporting errors over network in json format? With `slog` drains can
-//!   reuse other drains! You can combine them together, chain, wrap - you name it.
-//! * **context aware** - It's not just one global logger. Hierarchical
-//!   loggers carry information about context of logging. When logging an error
-//!   condition, you want to know which resource was being handled, on which
-//!   instance of your service, using which source code build, talking with what
-//!   peer, etc. In standard `log` you would have to repeat this information in
-//!   every log statement. In `slog` it will happen automatically. See
-//!   [slog-rs functional overview page][functional-overview] to understand better
-//!   logger and drain hierarchies and log record flow through them.
-//! * both **human and machine readable** - By keeping the key-value data format,
-//!   meaning of logging data is preserved. Dump your logging to a JSON file, and
-//!   send it to your data-mining system for further analysis. Don't parse it from
-//!   lines of text anymore!
-//! * **lazy evaluation** and **asynchronous IO** included. Waiting to
-//!   finish writing logging information to disk, or spending time calculating
-//!   data that will be thrown away at the current logging level, are sources of big
-//!   performance waste. Use `Async` drain, and closures
-//!   to make your logging fast.
-//! * **run-time configuration** - `AtomicSwitch` drain allows
-//!   changing logging behavior in the running program. You could use eg. signal
-//!   handlers to change logging level or logging destinations. See
-//!   [`signal` example][signal].
 //!
 //! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
 //! [env_logger]: https://crates.io/crates/env_logger
-//! [functional-overview]: https://github.com/slog-rs/slog/wiki/Functional-overview
 //!
 //! ## Notable details
 //!
-//! `slog` by default removes at compile time trace and debug level statements
+//! **Note:** `slog` by default removes at compile time trace and debug level statements
 //! in release builds, and trace level records in debug builds. This makes
 //! `trace` and `debug` level logging records practically free, which should
 //! encourage using them freely. If you want to enable trace/debug messages
@@ -104,7 +77,7 @@
 //! `Cargo.toml`:
 //!
 //! ```norust
-//! slog = { version = "1.2", features = ["max_level_trace", "release_max_level_warn"] }
+//! slog = { version = ... , features = ["max_level_trace", "release_max_level_warn"] }
 //! ```
 //!
 //! Due to the `macro_rules` limitation log macros syntax comes in several
@@ -113,13 +86,19 @@
 //!
 //! Root drain (passed to `Logger::root`) must be one that does not ever
 //! return errors, which forces user to pick error handing strategy. You
-//! can use `.fuse()` or `.ignore_err()` methods from `DrainExt` to do
-//! it conveniently.
+//! can use `DrainExt::fuse()` or `DrainExt::ignore_err()` methods from `DrainExt`
+//! to do it conveniently.
 //!
 //! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
 //! [env_logger]: https://crates.io/crates/env_logger
 //! [functional-overview]: https://github.com/dpc/slog-rs/wiki/Functional-overview
 //! [atomic-switch]: https://docs.rs/slog-atomic/0.4.3/slog_atomic/
+//!
+//! ## Where to start
+//!
+//! [`Drain`](trait.Drain.html), [`Logger`](struct.Logger.html) and
+//! [`log` macro](macro.log.html) are the most important elements of
+//! slog.
 //!
 //! ## Examples & help
 //!
