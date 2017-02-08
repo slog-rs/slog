@@ -29,7 +29,7 @@ pub struct RecordStatic<'a> {
 pub struct Record<'a> {
     meta: &'a RecordStatic<'a>,
     msg: fmt::Arguments<'a>,
-    kvs: &'a KV,
+    kv: BorrowedKV<'a>,
 }
 
 
@@ -42,12 +42,12 @@ impl<'a> Record<'a> {
     pub fn new(
         s : &'a RecordStatic<'a>,
         msg: fmt::Arguments<'a>,
-        kvs: &'a KV,
+        kv: BorrowedKV<'a>,
         ) -> Self {
         Record {
             meta: s,
             msg: msg,
-            kvs: kvs,
+            kv: kv,
         }
     }
 
@@ -93,8 +93,8 @@ impl<'a> Record<'a> {
         self.meta.function
     }
 
-    /// Get Record's key-value pairs
-    pub fn kv(&self) -> &'a KV {
-        self.kvs
+    /// Get key-value pairs
+    pub fn kv(&self) -> BorrowedKV {
+        BorrowedKV(self.kv.0)
     }
 }

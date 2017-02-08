@@ -39,7 +39,7 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
-    pub fn root<D>(d: D, values: OwnedKVGroup) -> Logger
+    pub fn root<D>(d: D, values: OwnedKV) -> Logger
     where D: 'static + Drain<Error=Never> + Sized+Send+Sync{
         Logger {
             drain: Arc::new(d),
@@ -65,7 +65,7 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"));
     ///     let _log = root.new(o!("key" => "value"));
     /// }
-    pub fn new(&self, values: OwnedKVGroup) -> Logger {
+    pub fn new(&self, values: OwnedKV) -> Logger {
         Logger {
             drain: self.drain.clone(),
             list: OwnedKVList::new(values, self.list.node.clone()),
