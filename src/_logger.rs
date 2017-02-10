@@ -10,8 +10,13 @@
 /// key-value pairs, which can be supplemented with new ones.
 ///
 /// Cloning existing loggers and creating new ones is cheap. Loggers can be
-/// freely passed around the code and between threads. `Logger`s are also
-/// `Sync` - there's no need to synchronize accesses to them.
+/// freely passed around the code and between threads.
+///
+/// `Logger`s are also `Sync` - there's no need to synchronize accesses to them,
+/// and they can accept logging records from multiple threads at once. Because of
+/// that they require the `Drain` to be `Sync+Sync` as well. Not all `Drain`s
+/// are `Sync` or `Send` but they can often be made so by wrapping in a `Mutex`
+/// and/or `Arc`.
 #[derive(Clone)]
 pub struct Logger {
     drain: Arc<Drain<Error=Never>+Send+Sync>,
