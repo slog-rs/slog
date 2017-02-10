@@ -30,15 +30,15 @@ pub trait Drain {
 
 impl<D: Drain+?Sized> Drain for Box<D> {
     type Error = D::Error;
-    fn log(&self, info: &Record, o: &OwnedKVList) -> result::Result<(), D::Error> {
-        (**self).log(info, o)
+    fn log(&self, record: &Record, o: &OwnedKVList) -> result::Result<(), D::Error> {
+        (**self).log(record, o)
     }
 }
 
 impl<D: Drain+?Sized> Drain for Arc<D> {
     type Error = D::Error;
-    fn log(&self, info: &Record, o: &OwnedKVList) -> result::Result<(), D::Error> {
-        (**self).log(info, o)
+    fn log(&self, record: &Record, o: &OwnedKVList) -> result::Result<(), D::Error> {
+        (**self).log(record, o)
     }
 }
 
@@ -103,11 +103,11 @@ impl<D: Drain> Filter<D> {
 impl<D: Drain> Drain for Filter<D> {
     type Error = D::Error;
     fn log(&self,
-           info: &Record,
+           record: &Record,
            logger_values: &OwnedKVList)
            -> result::Result<(), Self::Error> {
-        if (self.cond)(&info) {
-            self.drain.log(info, logger_values)
+        if (self.cond)(&record) {
+            self.drain.log(record, logger_values)
         } else {
             Ok(())
         }
@@ -137,10 +137,10 @@ impl<D: Drain, E> MapError<D, E> {
 impl<D: Drain, E> Drain for MapError<D, E> {
     type Error = E;
     fn log(&self,
-           info: &Record,
+           record: &Record,
            logger_values: &OwnedKVList)
            -> result::Result<(), Self::Error> {
-            self.drain.log(info, logger_values).map_err(|e| (self.map_fn)(e))
+            self.drain.log(record, logger_values).map_err(|e| (self.map_fn)(e))
     }
 }
 
@@ -171,11 +171,11 @@ impl<D: Drain> LevelFilter<D> {
 impl<D: Drain> Drain for LevelFilter<D> {
     type Error = D::Error;
     fn log(&self,
-           info: &Record,
+           record: &Record,
            logger_values: &OwnedKVList)
            -> result::Result<(), Self::Error> {
-        if info.level().is_at_least(self.level) {
-            self.drain.log(info, logger_values)
+        if record.level().is_at_least(self.level) {
+            self.drain.log(record, logger_values)
         } else {
             Ok(())
         }
@@ -224,11 +224,11 @@ impl<E1 : fmt::Display, E2 : fmt::Display> fmt::Display for DuplicateError<E1, E
 impl<D1 : Drain, D2 : Drain> Drain for Duplicate<D1, D2> {
     type Error = DuplicateError<D1::Error, D2::Error>;
     fn log(&self,
-           info: &Record,
+           record: &Record,
            logger_values: &OwnedKVList)
            -> result::Result<(), Self::Error> {
-        let res1 = self.drain1.log(info, logger_values);
-        let res2 = self.drain2.log(info, logger_values);
+        let res1 = self.drain1.log(record, logger_values);
+        let res2 = self.drain2.log(record, logger_values);
 
         match (res1, res2) {
             (Ok(_), Ok(_)) => Ok(()),
@@ -263,11 +263,11 @@ impl<D: Drain> Fuse<D> {
 impl<D: Drain> Drain for Fuse<D> where D::Error : fmt::Display {
     type Error = Never;
     fn log(&self,
-           info: &Record,
+           record: &Record,
            logger_values: &OwnedKVList)
         -> result::Result<(), Never> {
             Ok(
-                self.drain.log(info, logger_values).unwrap_or_else(
+                self.drain.log(record, logger_values).unwrap_or_else(
                     |e| panic!("Fuse: {}", e)
                     )
                 )
@@ -295,10 +295,10 @@ impl<D: Drain> IgnoreErr<D> {
 impl<D: Drain> Drain for IgnoreErr<D> {
     type Error = Never;
     fn log(&self,
-           info: &Record,
+           record: &Record,
            logger_values: &OwnedKVList)
         -> result::Result<(), Never> {
-            let _ = self.drain.log(info, logger_values);
+            let _ = self.drain.log(record, logger_values);
             Ok(())
         }
 }
@@ -337,7 +337,7 @@ pub enum MutexDrainError<D : Drain> {
 
 #[cfg(feature = "std")]
 impl<'a, D : Drain> From<std::sync::PoisonError<std::sync::MutexGuard<'a, D>>> for MutexDrainError<D> {
-    fn from(err : std::sync::PoisonError<std::sync::MutexGuard<'a, D>>) -> MutexDrainError<D> {
+    fn from(_ : std::sync::PoisonError<std::sync::MutexGuard<'a, D>>) -> MutexDrainError<D> {
         MutexDrainError::Mutex
     }
 }
@@ -356,10 +356,10 @@ where D::Error : fmt::Display {
 impl<D: Drain> Drain for std::sync::Mutex<D> {
     type Error = MutexDrainError<D>;
     fn log(&self,
-           info: &Record,
+           record: &Record,
            logger_values: &OwnedKVList)
         -> result::Result<(), Self::Error> {
             let d = self.lock()?;
-            d.log(info, logger_values).map_err(MutexDrainError::Drain)
+            d.log(record, logger_values).map_err(MutexDrainError::Drain)
         }
 }
