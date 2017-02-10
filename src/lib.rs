@@ -131,6 +131,9 @@ use core::fmt;
 use core::result;
 
 #[cfg(feature = "std")]
+use std::error::Error as StdErrorError;
+
+#[cfg(feature = "std")]
 use std::sync::Arc;
 #[cfg(not(feature = "std"))]
 use alloc::arc::Arc;

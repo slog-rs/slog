@@ -324,3 +324,42 @@ pub fn level_filter<D: Drain>(level: Level, d: D) -> LevelFilter<D> {
 pub fn duplicate<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Duplicate<D1, D2> {
     Duplicate::new(d1, d2)
 }
+
+#[cfg(feature = "std")]
+#[derive(Debug)]
+/// Error returned by `Mutex<D : Drain>`
+pub enum MutexDrainError<D : Drain> {
+    /// Error aquiring mutex
+    Mutex,
+    /// Error returned by drain
+    Drain(D::Error),
+}
+
+#[cfg(feature = "std")]
+impl<'a, D : Drain> From<std::sync::PoisonError<std::sync::MutexGuard<'a, D>>> for MutexDrainError<D> {
+    fn from(err : std::sync::PoisonError<std::sync::MutexGuard<'a, D>>) -> MutexDrainError<D> {
+        MutexDrainError::Mutex
+    }
+}
+#[cfg(feature = "std")]
+impl<D : Drain> fmt::Display for MutexDrainError<D>
+where D::Error : fmt::Display {
+    fn fmt(&self, f : &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
+        match *self {
+            MutexDrainError::Mutex => write!(f, "MutexError"),
+            MutexDrainError::Drain(ref e) => write!(f, "{}", e),
+        }
+    }
+}
+
+#[cfg(feature = "std")]
+impl<D: Drain> Drain for std::sync::Mutex<D> {
+    type Error = MutexDrainError<D>;
+    fn log(&self,
+           info: &Record,
+           logger_values: &OwnedKVList)
+        -> result::Result<(), Self::Error> {
+            let d = self.lock()?;
+            d.log(info, logger_values).map_err(MutexDrainError::Drain)
+        }
+}
