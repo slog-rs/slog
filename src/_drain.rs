@@ -163,6 +163,7 @@ impl<D: Drain, E> Drain for MapError<D, E> {
 /// TODO: Remove this type. This drain is a special case of `Filter`, but
 /// because `Filter` can not use static dispatch ATM due to Rust limitations
 /// that will be lifted in the future, it is a standalone type.
+/// Reference: https://github.com/rust-lang/rust/issues/34511
 pub struct LevelFilter<D: Drain> {
     level: Level,
     drain: D,
