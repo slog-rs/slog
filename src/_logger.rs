@@ -13,13 +13,13 @@
 /// freely passed around the code and between threads.
 ///
 /// `Logger`s are also `Sync` - there's no need to synchronize accesses to them,
-/// and they can accept logging records from multiple threads at once. Because of
-/// that they require the `Drain` to be `Sync+Sync` as well. Not all `Drain`s
+/// and they can accept logging records from multiple threads at once. Because
+/// of that they require the `Drain` to be `Sync+Sync` as well. Not all `Drain`s
 /// are `Sync` or `Send` but they can often be made so by wrapping in a `Mutex`
 /// and/or `Arc`.
 #[derive(Clone)]
 pub struct Logger {
-    drain: Arc<Drain<Error=Never>+Send+Sync>,
+    drain: Arc<Drain<Err=Never,Ok=()>+Send+Sync>,
     list: OwnedKVList,
 }
 
@@ -46,7 +46,7 @@ impl Logger {
     ///     );
     /// }
     pub fn root<D>(d: D, values: OwnedKV) -> Logger
-    where D: 'static + Drain<Error=Never> + Sized+Send+Sync{
+    where D: 'static + Drain<Err=Never, Ok=()> + Sized+Send+Sync{
         Logger {
             drain: Arc::new(d),
             list: OwnedKVList::root(values),
@@ -57,8 +57,8 @@ impl Logger {
     ///
     /// Child logger inherits all existing key-value pairs from it's parent.
     ///
-    /// All children, their children and so on, form one hierarchy sharing
-    /// a common drain.
+    /// All children, their children and so on, form one hierarchy sharing a
+    /// common drain.
     ///
     /// Use `o!` macro to help build key value pairs using nicer syntax.
     ///
@@ -100,9 +100,10 @@ impl fmt::Debug for Logger {
 
 impl Drain for Logger {
 
-    type Error = Never;
+    type Ok = ();
+    type Err = Never;
 
-    fn log(&self, record: &Record, values : &OwnedKVList) -> result::Result<(), Self::Error> {
+    fn log(&self, record: &Record, values : &OwnedKVList) -> result::Result<Self::Ok, Self::Err> {
         debug_assert!(self.list.next_list.is_none());
 
         let chained = values.append(&self.list);

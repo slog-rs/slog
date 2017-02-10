@@ -14,12 +14,17 @@ use std::result;
 /// Logs everything to drain `D1`, but in case of it reporting an error,
 /// switching to `D2`. If `D2` returns an error too, `Failover` will return
 /// an error.
-pub struct Failover<D1: Drain, D2: Drain> {
+pub struct Failover<D1: Drain, D2: Drain>
+{
     drain1: D1,
     drain2: D2,
 }
 
-impl<D1: Drain, D2: Drain> Failover<D1, D2> {
+impl<D1: Drain, D2: Drain, O, E2> Failover<D1, D2>
+    where
+    D1 : Drain<Ok = O>,
+    D2 : Drain<Err = E2, Ok = O>,
+{
     /// Create `Failover`
     pub fn new(drain1: D1, drain2: D2) -> Self {
         Failover {
@@ -29,18 +34,19 @@ impl<D1: Drain, D2: Drain> Failover<D1, D2> {
     }
 }
 
-impl<D1, D2, E1, E2> Drain for Failover<D1, D2>
+impl<D1, D2, E2, O> Drain for Failover<D1, D2>
     where
-    D1 : Drain<Error = E1>,
-    D2 : Drain<Error = E2>
+    D1 : Drain<Ok = O>,
+    D2 : Drain<Err = E2, Ok = O>,
 {
-    type Error = D2::Error;
+    type Ok = O;
+    type Err = D2::Err;
     fn log(&self,
            info: &Record,
            logger_values: &OwnedKVList)
-           -> result::Result<(), Self::Error> {
+           -> result::Result<Self::Ok, Self::Err> {
         match self.drain1.log(info, logger_values) {
-            Ok(_) => Ok(()),
+            Ok(ok) => Ok(ok),
             Err(_) => self.drain2.log(info, logger_values),
         }
     }
@@ -49,6 +55,10 @@ impl<D1, D2, E1, E2> Drain for Failover<D1, D2>
 /// Failover logging to secondary drain on primary's failure
 ///
 /// Create `Failover` drain
-pub fn failover<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Failover<D1, D2> {
+pub fn failover<D1: Drain, D2: Drain, O, E2>(d1: D1, d2: D2) -> Failover<D1, D2>
+    where
+    D1 : Drain<Ok = O>,
+    D2 : Drain<Err = E2, Ok = O>,
+{
     Failover::new(d1, d2)
 }

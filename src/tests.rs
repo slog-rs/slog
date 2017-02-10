@@ -37,11 +37,12 @@ mod std_only {
         struct CheckOwned;
 
         impl Drain for CheckOwned {
-            type Error = Never;
+            type Ok = ();
+            type Err = Never;
             fn log(&self,
                    record: &Record,
                    values: &OwnedKVList)
-                   -> std::result::Result<(), Self::Error> {
+                   -> std::result::Result<Self::Ok, Self::Err> {
                 assert_eq!(format!("{}", record.msg()), format!("{:?}", values));
                 Ok(())
             }

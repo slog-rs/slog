@@ -12,8 +12,13 @@
 /// It's a typical pattern to parametrize `Drain`s over `Drain` traits to allow
 /// combining them into one `Drain`. See `Duplicate` as an example.
 pub trait Drain {
+    /// Type returned by this drain
+    ///
+    /// It can be useful in some circumstances, but rarely. It will probably default to `()` once
+    /// https://github.com/rust-lang/rust/issues/29661 is stable.
+    type Ok;
     /// Type of potential errors that can be returned by this `Drain`
-    type Error;
+    type Err;
     /// Handle one logging statement (`Record`)
     ///
     /// Every logging `Record` built from a logging statement (eg.
@@ -25,19 +30,21 @@ pub trait Drain {
     /// * pass this information (or not) to the sub-logger(s) (filters)
     /// * format and write the information the a destination (writers)
     /// * deal with the errors returned from the sub-logger(s)
-    fn log(&self, record: &Record, values : &OwnedKVList) -> result::Result<(), Self::Error>;
+    fn log(&self, record: &Record, values : &OwnedKVList) -> result::Result<Self::Ok, Self::Err>;
 }
 
 impl<D: Drain+?Sized> Drain for Box<D> {
-    type Error = D::Error;
-    fn log(&self, record: &Record, o: &OwnedKVList) -> result::Result<(), D::Error> {
+    type Ok = D::Ok;
+    type Err = D::Err;
+    fn log(&self, record: &Record, o: &OwnedKVList) -> result::Result<Self::Ok, D::Err> {
         (**self).log(record, o)
     }
 }
 
 impl<D: Drain+?Sized> Drain for Arc<D> {
-    type Error = D::Error;
-    fn log(&self, record: &Record, o: &OwnedKVList) -> result::Result<(), D::Error> {
+    type Ok = D::Ok;
+    type Err = D::Err;
+    fn log(&self, record: &Record, o: &OwnedKVList) -> result::Result<Self::Ok, D::Err> {
         (**self).log(record, o)
     }
 }
@@ -49,19 +56,19 @@ impl<D: Drain+?Sized> Drain for Arc<D> {
 pub trait DrainExt: Sized + Drain {
     /// Map logging errors returned by this drain
     ///
-    /// `f` is a closure that takes `Drain::Error` returned by a given
+    /// `f` is a closure that takes `Drain::Err` returned by a given
     /// drain, and returns new error of potentially different type
-    fn map_err<F, E>(self, f : F) -> MapError<Self, E> where F : 'static + Sync + Send + Fn(<Self as Drain>::Error) -> E {
+    fn map_err<F, E>(self, f : F) -> MapError<Self, E> where F : 'static + Sync + Send + Fn(<Self as Drain>::Err) -> E {
         MapError::new(self, f)
     }
 
-    /// Make `Self` ignore and not report any error
-    fn ignore_err(self) -> IgnoreErr<Self> {
-        IgnoreErr::new(self)
+    /// Make `Self` ignore and result
+    fn ignore_res(self) -> IgnoreResult<Self> {
+        IgnoreResult::new(self)
     }
 
     /// Make `Self` panic when returning any errors
-    fn fuse(self) -> Fuse<Self> where <Self as Drain>::Error : fmt::Display {
+    fn fuse(self) -> Fuse<Self> where <Self as Drain>::Err : fmt::Display {
        Fuse::new(self)
     }
 }
@@ -74,7 +81,8 @@ impl<D : Drain> DrainExt for D {}
 pub struct Discard;
 
 impl Drain for Discard {
-    type Error = Never;
+    type Ok = ();
+    type Err = Never;
     fn log(&self, _: &Record, _: &OwnedKVList) -> result::Result<(), Never> {
         Ok(())
     }
@@ -101,15 +109,16 @@ impl<D: Drain> Filter<D> {
 }
 
 impl<D: Drain> Drain for Filter<D> {
-    type Error = D::Error;
+    type Ok = Option<D::Ok>;
+    type Err = D::Err;
     fn log(&self,
            record: &Record,
            logger_values: &OwnedKVList)
-           -> result::Result<(), Self::Error> {
+           -> result::Result<Self::Ok, Self::Err> {
         if (self.cond)(&record) {
-            self.drain.log(record, logger_values)
+            Ok(Some(self.drain.log(record, logger_values)?))
         } else {
-            Ok(())
+            Ok(None)
         }
     }
 }
@@ -121,12 +130,12 @@ impl<D: Drain> Drain for Filter<D> {
 pub struct MapError<D: Drain, E> {
     drain: D,
     // eliminated dynamic dispatch, after rust learns `-> impl Trait`
-    map_fn: Box<Fn(D::Error) -> E + 'static+ Send+Sync>,
+    map_fn: Box<Fn(D::Err) -> E + 'static+ Send+Sync>,
 }
 
 impl<D: Drain, E> MapError<D, E> {
     /// Create `Filter` wrapping given `drain`
-    pub fn new<F: 'static + Sync + Send + Fn(<D as Drain>::Error) -> E>(drain: D, map_fn: F) -> Self {
+    pub fn new<F: 'static + Sync + Send + Fn(<D as Drain>::Err) -> E>(drain: D, map_fn: F) -> Self {
         MapError {
             drain: drain,
             map_fn: Box::new(map_fn),
@@ -135,11 +144,12 @@ impl<D: Drain, E> MapError<D, E> {
 }
 
 impl<D: Drain, E> Drain for MapError<D, E> {
-    type Error = E;
+    type Ok = D::Ok;
+    type Err = E;
     fn log(&self,
            record: &Record,
            logger_values: &OwnedKVList)
-           -> result::Result<(), Self::Error> {
+           -> result::Result<Self::Ok, Self::Err> {
             self.drain.log(record, logger_values).map_err(|e| (self.map_fn)(e))
     }
 }
@@ -169,15 +179,16 @@ impl<D: Drain> LevelFilter<D> {
 }
 
 impl<D: Drain> Drain for LevelFilter<D> {
-    type Error = D::Error;
+    type Ok = Option<D::Ok>;
+    type Err = D::Err;
     fn log(&self,
            record: &Record,
            logger_values: &OwnedKVList)
-           -> result::Result<(), Self::Error> {
+           -> result::Result<Self::Ok, Self::Err> {
         if record.level().is_at_least(self.level) {
-            self.drain.log(record, logger_values)
+            Ok(Some(self.drain.log(record, logger_values)?))
         } else {
-            Ok(())
+            Ok(None)
         }
     }
 }
@@ -201,40 +212,19 @@ impl<D1: Drain, D2: Drain> Duplicate<D1, D2> {
     }
 }
 
-/// Logging error returned by `Duplicate` drain
-pub enum DuplicateError<E1, E2> {
-    /// First `Drain` has returned error
-    First(E1),
-    /// Second `Drain` has returned error
-    Second(E2),
-    /// Both `Drain`s have returned error
-    Both((E1, E2))
-}
-
-impl<E1 : fmt::Display, E2 : fmt::Display> fmt::Display for DuplicateError<E1, E2> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            &DuplicateError::First(ref e) => write!(f, "{})", *e),
-            &DuplicateError::Second(ref e) => write!(f, "{})", *e),
-            &DuplicateError::Both((ref e1, ref e2)) => write!(f, "({}, {})", *e1, *e2),
-        }
-    }
-}
-
 impl<D1 : Drain, D2 : Drain> Drain for Duplicate<D1, D2> {
-    type Error = DuplicateError<D1::Error, D2::Error>;
+    type Ok = (D1::Ok, D2::Ok);
+    type Err = (result::Result<D1::Ok, D1::Err>, result::Result<D2::Ok, D2::Err>);
     fn log(&self,
            record: &Record,
            logger_values: &OwnedKVList)
-           -> result::Result<(), Self::Error> {
+           -> result::Result<Self::Ok, Self::Err> {
         let res1 = self.drain1.log(record, logger_values);
         let res2 = self.drain2.log(record, logger_values);
 
         match (res1, res2) {
-            (Ok(_), Ok(_)) => Ok(()),
-            (Err(e), Ok(_)) => Err(DuplicateError::First(e)),
-            (Ok(_), Err(e)) => Err(DuplicateError::Second(e)),
-            (Err(e1), Err(e2)) => Err(DuplicateError::Both((e1, e2))),
+            (Ok(o1), Ok(o2)) => Ok((o1, o2)),
+            (r1, r2) => Err((r1, r2)),
         }
     }
 }
@@ -245,8 +235,8 @@ impl<D1 : Drain, D2 : Drain> Drain for Duplicate<D1, D2> {
 /// `Logger` requires a root drain to handle all errors (`Drain::Error == ()`),
 /// `Fuse` will wrap a `Drain` and panic if it returns any errors.
 ///
-/// Note: `Drain::Error` must implement `Display`. It's easy to create own
-/// `Fuse` drain if this requirement can't be fulfilled.
+/// Note: `Drain::Err` must implement `Display` (for displaying on panick). It's
+/// easy to create own `Fuse` drain if this requirement can't be fulfilled.
 pub struct Fuse<D: Drain> {
     drain: D,
 }
@@ -260,40 +250,42 @@ impl<D: Drain> Fuse<D> {
     }
 }
 
-impl<D: Drain> Drain for Fuse<D> where D::Error : fmt::Display {
-    type Error = Never;
+impl<D: Drain> Drain for Fuse<D> where D::Err : fmt::Display {
+    type Ok = ();
+    type Err = Never;
     fn log(&self,
            record: &Record,
            logger_values: &OwnedKVList)
-        -> result::Result<(), Never> {
-            Ok(
-                self.drain.log(record, logger_values).unwrap_or_else(
-                    |e| panic!("Fuse: {}", e)
-                    )
-                )
+        -> result::Result<Self::Ok, Never> {
+            let _ = self.drain.log(record, logger_values).unwrap_or_else(
+                |e| panic!("slog::Fuse Drain: {}", e)
+                );
+            Ok(())
         }
 }
 
 
-/// `Drain` ignoring errors
+/// `Drain` ignoring result
 ///
-/// `Logger` requires a root drain to handle all errors (`Drain::Error == ()`),
-/// `IgnoreErr` will ignore all errors of the drain it wraps.
-pub struct IgnoreErr<D: Drain> {
+/// `Logger` requires a root drain to handle all errors (`Drain::Err=()`), and
+/// returns nothing (`Drain::Ok=()`) `IgnoreResult` will ignore any result
+/// returned by the `Drain` it wraps.
+pub struct IgnoreResult<D: Drain> {
     drain: D,
 }
 
-impl<D: Drain> IgnoreErr<D> {
-    /// Create `IgnoreErr` wrapping `drain`
+impl<D: Drain> IgnoreResult<D> {
+    /// Create `IgnoreResult` wrapping `drain`
     pub fn new(drain: D) -> Self {
-        IgnoreErr {
+        IgnoreResult {
             drain: drain,
         }
     }
 }
 
-impl<D: Drain> Drain for IgnoreErr<D> {
-    type Error = Never;
+impl<D: Drain> Drain for IgnoreResult<D> {
+    type Ok = ();
+    type Err = Never;
     fn log(&self,
            record: &Record,
            logger_values: &OwnedKVList)
@@ -332,7 +324,7 @@ pub enum MutexDrainError<D : Drain> {
     /// Error aquiring mutex
     Mutex,
     /// Error returned by drain
-    Drain(D::Error),
+    Drain(D::Err),
 }
 
 #[cfg(feature = "std")]
@@ -343,7 +335,7 @@ impl<'a, D : Drain> From<std::sync::PoisonError<std::sync::MutexGuard<'a, D>>> f
 }
 #[cfg(feature = "std")]
 impl<D : Drain> fmt::Display for MutexDrainError<D>
-where D::Error : fmt::Display {
+where D::Err : fmt::Display {
     fn fmt(&self, f : &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
         match *self {
             MutexDrainError::Mutex => write!(f, "MutexError"),
@@ -354,11 +346,12 @@ where D::Error : fmt::Display {
 
 #[cfg(feature = "std")]
 impl<D: Drain> Drain for std::sync::Mutex<D> {
-    type Error = MutexDrainError<D>;
+    type Ok = D::Ok;
+    type Err = MutexDrainError<D>;
     fn log(&self,
            record: &Record,
            logger_values: &OwnedKVList)
-        -> result::Result<(), Self::Error> {
+        -> result::Result<Self::Ok, Self::Err> {
             let d = self.lock()?;
             d.log(record, logger_values).map_err(MutexDrainError::Drain)
         }
