@@ -22,7 +22,7 @@ pub enum Error {
 }
 
 /// Serialization `Result`
-pub type Result<T=()> = result::Result<T, Error>;
+pub type Result<T = ()> = result::Result<T, Error>;
 
 #[cfg(feature = "std")]
 impl From<std::io::Error> for Error {
@@ -42,8 +42,13 @@ impl From<Error> for std::io::Error {
     fn from(e: Error) -> std::io::Error {
         match e {
             Error::Io(e) => e,
-            Error::Fmt(_) => std::io::Error::new(std::io::ErrorKind::Other, "formatting error"),
-            Error::Other => std::io::Error::new(std::io::ErrorKind::Other, "other error"),
+            Error::Fmt(_) => {
+                std::io::Error::new(std::io::ErrorKind::Other,
+                                    "formatting error")
+            }
+            Error::Other => {
+                std::io::Error::new(std::io::ErrorKind::Other, "other error")
+            }
         }
     }
 }
@@ -93,7 +98,6 @@ macro_rules! impl_default_as_fmt{
 /// Drains using `Format` will internally use
 /// types implementing this trait.
 pub trait Serializer {
-
     /// Emit usize
     impl_default_as_fmt!(usize, emit_usize);
     /// Emit isize
@@ -137,8 +141,9 @@ pub trait Serializer {
 
     /// Emit `fmt::Arguments`
     ///
-    /// This is the only method that has to implemented, but for performance and to retain type
-    /// information most serious `Serializer`s will want to implement all other methods as well.
+    /// This is the only method that has to implemented, but for performance and
+    /// to retain type information most serious `Serializer`s will want to
+    /// implement all other methods as well.
     fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result;
 }
 
@@ -146,10 +151,10 @@ pub trait Serializer {
 ///
 /// Formats all arguments as fmt::Arguments and passes them to a given closure.
 struct AsFmtSerializer<F>(pub F)
-    where F : for <'a> FnMut(Key, fmt::Arguments<'a>) -> Result;
+    where F: for<'a> FnMut(Key, fmt::Arguments<'a>) -> Result;
 
 impl<F> Serializer for AsFmtSerializer<F>
-    where F : for <'a> FnMut(Key, fmt::Arguments<'a>) -> Result
+    where F: for<'a> FnMut(Key, fmt::Arguments<'a>) -> Result
 {
     fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result {
         (self.0)(key, *val)
@@ -360,7 +365,7 @@ impl<'a> PushFnSerializer<'a> {
 impl<'a> Drop for PushFnSerializer<'a> {
     fn drop(&mut self) {
         if !self.done {
-            // unfortunately this gives no change to return serialization errors
+        // unfortunately this gives no change to return serialization errors
             let _ = self.serializer.emit_unit(self.key);
         }
     }
@@ -433,19 +438,18 @@ pub trait KV {
 }
 
 /// Single pair `Key` and `Value`
-pub struct SingleKV<V>(pub Key, pub V)
-    where V : Value;
+pub struct SingleKV<V>(pub Key, pub V) where V: Value;
 
 
 impl<V> KV for SingleKV<V>
-    where V : Value
+    where V: Value
 {
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
-        -> Result {
-            self.1.serialize(record, self.0, serializer)
-        }
+                 -> Result {
+        self.1.serialize(record, self.0, serializer)
+    }
 
     fn split_first(&self) -> Option<(&KV, &KV)> {
         Some((self, &STATIC_TERMINATOR_UNIT))
@@ -456,9 +460,9 @@ impl KV for () {
     fn serialize(&self,
                  _record: &Record,
                  _serializer: &mut Serializer)
-        -> Result {
-            Ok(())
-        }
+                 -> Result {
+        Ok(())
+    }
 
     fn split_first(&self) -> Option<(&KV, &KV)> {
         None
@@ -469,10 +473,10 @@ impl<T: KV, R: KV> KV for (T, R) {
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
-        -> Result {
-            try!(self.0.serialize(record, serializer));
-            self.1.serialize(record, serializer)
-        }
+                 -> Result {
+        try!(self.0.serialize(record, serializer));
+        self.1.serialize(record, serializer)
+    }
 
 
     fn split_first(&self) -> Option<(&KV, &KV)> {
@@ -481,13 +485,14 @@ impl<T: KV, R: KV> KV for (T, R) {
 }
 
 impl<T> KV for Box<T>
-where T : KV+?Sized {
+    where T: KV + ?Sized
+{
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
-        -> Result {
-            (**self).serialize(record, serializer)
-        }
+                 -> Result {
+        (**self).serialize(record, serializer)
+    }
 
     fn split_first(&self) -> Option<(&KV, &KV)> {
         (**self).split_first()
@@ -495,13 +500,14 @@ where T : KV+?Sized {
 }
 
 impl<T> KV for Arc<T>
-where T : KV+?Sized {
+    where T: KV + ?Sized
+{
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
-        -> Result {
-            (**self).serialize(record, serializer)
-        }
+                 -> Result {
+        (**self).serialize(record, serializer)
+    }
 
     fn split_first(&self) -> Option<(&KV, &KV)> {
         (**self).split_first()
@@ -512,9 +518,9 @@ impl KV for OwnedKV {
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
-        -> Result {
-            self.0.serialize(record, serializer)
-        }
+                 -> Result {
+        self.0.serialize(record, serializer)
+    }
 
     fn split_first(&self) -> Option<(&KV, &KV)> {
         self.0.split_first()
@@ -524,9 +530,9 @@ impl<'a> KV for BorrowedKV<'a> {
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
-        -> Result {
-            self.0.serialize(record, serializer)
-        }
+                 -> Result {
+        self.0.serialize(record, serializer)
+    }
 
     fn split_first(&self) -> Option<(&KV, &KV)> {
         self.0.split_first()

@@ -43,7 +43,8 @@ mod std_only {
                    record: &Record,
                    values: &OwnedKVList)
                    -> std::result::Result<Self::Ok, Self::Err> {
-                assert_eq!(format!("{}", record.msg()), format!("{:?}", values));
+                assert_eq!(format!("{}", record.msg()),
+                           format!("{:?}", values));
                 Ok(())
             }
         }
