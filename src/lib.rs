@@ -21,7 +21,7 @@
 //!   different functionalities every application can specify when, where and
 //!   how exactly log data.
 //! * **structured** - Logging with `slog` is not based on just one global
-//!   logger. `slog`'s `Logger`s carry hierarchy of key-value data that contains
+//!   logger. `slog`'s `Logger`s carry chain of key-value data that contains
 //!   the context of logging - information that otherwise would have to be
 //!   repeated in every logging statement.
 //! * both **human and machine readable** - By keeping the key-value data format
@@ -40,7 +40,7 @@
 //!   * async IO support included: see [`slog-extra`
 //!     crate](https://docs.rs/slog-extra)
 //! * `#![no_std]` support (with opt-out `std` cargo feature flag)
-//! * hierarchical loggers
+//! * tree-structured loggers
 //! * modular, lightweight and very extensible
 //!   * tiny core crate that does not pull any dependencies
 //!   * feature-crates for specific functionality
@@ -188,7 +188,7 @@ use std::sync::Arc;
 /// By itself it's effectively very similiar to `Logger` being an ancestor
 /// of `Logger` that originated the logging `Record`. However, combined with
 /// other `Drain`s functionalities, allows custom processing logic for a
-/// part of `Logging` hierarchy.
+/// part of logging tree.
 #[derive(Clone)]
 pub struct Logger {
     drain: Arc<Drain<Err = Never, Ok = ()> + Send + Sync>,
@@ -198,14 +198,14 @@ pub struct Logger {
 impl Logger {
     /// Build a root `Logger`
     ///
-    /// All children and their children and so on form one hierarchy
+    /// All children and their children and so on form one logging tree
     /// sharing a common drain.
     ///
-    /// Root logger starts a new hierarchy associated with a given `Drain`. Root
+    /// Root logger starts a new tree associated with a given `Drain`. Root
     /// logger drain must return no errors. See `DrainExt::ignore_err()` and
     /// `DrainExt::fuse()`.
     ///
-    /// Use `o!` macro to build `OwnedKV` object..
+    /// Use `o!` macro to build `OwnedKV` object.
     ///
     /// ```
     /// #[macro_use]
@@ -230,7 +230,7 @@ impl Logger {
     ///
     /// Child logger inherits all existing key-value pairs from it's parent.
     ///
-    /// All children, their children and so on, form one hierarchy sharing a
+    /// All children, their children and so on, form one tree sharing a
     /// common drain.
     ///
     /// Use `o!` macro to help build key value pairs using nicer syntax.
