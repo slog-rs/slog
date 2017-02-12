@@ -181,7 +181,7 @@ use std::sync::Arc;
 /// and/or `Arc`.
 #[derive(Clone)]
 pub struct Logger {
-    drain: Arc<Drain<Err=Never,Ok=()>+Send+Sync>,
+    drain: Arc<Drain<Err = Never, Ok = ()> + Send + Sync>,
     list: OwnedKVList,
 }
 
@@ -208,7 +208,8 @@ impl Logger {
     ///     );
     /// }
     pub fn root<D>(d: D, values: OwnedKV) -> Logger
-    where D: 'static + Drain<Err=Never, Ok=()> + Sized+Send+Sync{
+        where D: 'static + Drain<Err = Never, Ok = ()> + Sized + Send + Sync
+    {
         Logger {
             drain: Arc::new(d),
             list: OwnedKVList::root(values),
@@ -246,10 +247,7 @@ impl Logger {
     /// documentation.
     #[inline]
     pub fn log(&self, record: &Record) {
-        let _ = self.drain.log(
-            &record,
-            &self.list,
-            );
+        let _ = self.drain.log(&record, &self.list);
     }
 }
 
@@ -261,18 +259,17 @@ impl fmt::Debug for Logger {
 }
 
 impl Drain for Logger {
-
     type Ok = ();
     type Err = Never;
 
-    fn log(&self, record: &Record, values : &OwnedKVList) -> result::Result<Self::Ok, Self::Err> {
+    fn log(&self,
+           record: &Record,
+           values: &OwnedKVList)
+           -> result::Result<Self::Ok, Self::Err> {
         debug_assert!(self.list.next_list.is_none());
 
         let chained = values.append(&self.list);
-        self.drain.log(
-            &record,
-            &chained,
-            )
+        self.drain.log(&record, &chained)
     }
 }
 // }}}
@@ -310,21 +307,30 @@ pub trait Drain {
     /// * pass this information (or not) to the sub-logger(s) (filters)
     /// * format and write the information the a destination (writers)
     /// * deal with the errors returned from the sub-logger(s)
-    fn log(&self, record: &Record, values : &OwnedKVList) -> result::Result<Self::Ok, Self::Err>;
+    fn log(&self,
+           record: &Record,
+           values: &OwnedKVList)
+           -> result::Result<Self::Ok, Self::Err>;
 }
 
-impl<D: Drain+?Sized> Drain for Box<D> {
+impl<D: Drain + ?Sized> Drain for Box<D> {
     type Ok = D::Ok;
     type Err = D::Err;
-    fn log(&self, record: &Record, o: &OwnedKVList) -> result::Result<Self::Ok, D::Err> {
+    fn log(&self,
+           record: &Record,
+           o: &OwnedKVList)
+           -> result::Result<Self::Ok, D::Err> {
         (**self).log(record, o)
     }
 }
 
-impl<D: Drain+?Sized> Drain for Arc<D> {
+impl<D: Drain + ?Sized> Drain for Arc<D> {
     type Ok = D::Ok;
     type Err = D::Err;
-    fn log(&self, record: &Record, o: &OwnedKVList) -> result::Result<Self::Ok, D::Err> {
+    fn log(&self,
+           record: &Record,
+           o: &OwnedKVList)
+           -> result::Result<Self::Ok, D::Err> {
         (**self).log(record, o)
     }
 }
@@ -338,7 +344,9 @@ pub trait DrainExt: Sized + Drain {
     ///
     /// `f` is a closure that takes `Drain::Err` returned by a given
     /// drain, and returns new error of potentially different type
-    fn map_err<F, E>(self, f : F) -> MapError<Self, E> where F : 'static + Sync + Send + Fn(<Self as Drain>::Err) -> E {
+    fn map_err<F, E>(self, f: F) -> MapError<Self, E>
+        where F: 'static + Sync + Send + Fn(<Self as Drain>::Err) -> E
+    {
         MapError::new(self, f)
     }
 
@@ -348,12 +356,14 @@ pub trait DrainExt: Sized + Drain {
     }
 
     /// Make `Self` panic when returning any errors
-    fn fuse(self) -> Fuse<Self> where <Self as Drain>::Err : fmt::Display {
-       Fuse::new(self)
+    fn fuse(self) -> Fuse<Self>
+        where <Self as Drain>::Err: fmt::Display
+    {
+        Fuse::new(self)
     }
 }
 
-impl<D : Drain> DrainExt for D {}
+impl<D: Drain> DrainExt for D {}
 
 /// `Drain` discarding everything
 ///
@@ -380,7 +390,9 @@ pub struct Filter<D: Drain> {
 
 impl<D: Drain> Filter<D> {
     /// Create `Filter` wrapping given `drain`
-    pub fn new<F: 'static + Sync + Send + Fn(&Record) -> bool>(drain: D, cond: F) -> Self {
+    pub fn new<F: 'static + Sync + Send + Fn(&Record) -> bool>(drain: D,
+                                                               cond: F)
+                                                               -> Self {
         Filter {
             drain: drain,
             cond: Box::new(cond),
@@ -410,12 +422,15 @@ impl<D: Drain> Drain for Filter<D> {
 pub struct MapError<D: Drain, E> {
     drain: D,
     // eliminated dynamic dispatch, after rust learns `-> impl Trait`
-    map_fn: Box<Fn(D::Err) -> E + 'static+ Send+Sync>,
+    map_fn: Box<Fn(D::Err) -> E + 'static + Send + Sync>,
 }
 
 impl<D: Drain, E> MapError<D, E> {
     /// Create `Filter` wrapping given `drain`
-    pub fn new<F: 'static + Sync + Send + Fn(<D as Drain>::Err) -> E>(drain: D, map_fn: F) -> Self {
+    pub fn new<F: 'static + Sync + Send + Fn(<D as Drain>::Err) -> E>
+        (drain: D,
+         map_fn: F)
+         -> Self {
         MapError {
             drain: drain,
             map_fn: Box::new(map_fn),
@@ -430,7 +445,7 @@ impl<D: Drain, E> Drain for MapError<D, E> {
            record: &Record,
            logger_values: &OwnedKVList)
            -> result::Result<Self::Ok, Self::Err> {
-            self.drain.log(record, logger_values).map_err(|e| (self.map_fn)(e))
+        self.drain.log(record, logger_values).map_err(|e| (self.map_fn)(e))
     }
 }
 
@@ -493,7 +508,7 @@ impl<D1: Drain, D2: Drain> Duplicate<D1, D2> {
     }
 }
 
-impl<D1 : Drain, D2 : Drain> Drain for Duplicate<D1, D2> {
+impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
     type Ok = (D1::Ok, D2::Ok);
     type Err = (result::Result<D1::Ok, D1::Err>, result::Result<D2::Ok, D2::Err>);
     fn log(&self,
@@ -525,24 +540,24 @@ pub struct Fuse<D: Drain> {
 impl<D: Drain> Fuse<D> {
     /// Create `Fuse` wrapping given `drain`
     pub fn new(drain: D) -> Self {
-        Fuse {
-            drain: drain,
-        }
+        Fuse { drain: drain }
     }
 }
 
-impl<D: Drain> Drain for Fuse<D> where D::Err : fmt::Display {
+impl<D: Drain> Drain for Fuse<D>
+    where D::Err: fmt::Display
+{
     type Ok = ();
     type Err = Never;
     fn log(&self,
            record: &Record,
            logger_values: &OwnedKVList)
-        -> result::Result<Self::Ok, Never> {
-            let _ = self.drain.log(record, logger_values).unwrap_or_else(
-                |e| panic!("slog::Fuse Drain: {}", e)
-                );
-            Ok(())
-        }
+           -> result::Result<Self::Ok, Never> {
+        let _ = self.drain
+            .log(record, logger_values)
+            .unwrap_or_else(|e| panic!("slog::Fuse Drain: {}", e));
+        Ok(())
+    }
 }
 
 
@@ -558,9 +573,7 @@ pub struct IgnoreResult<D: Drain> {
 impl<D: Drain> IgnoreResult<D> {
     /// Create `IgnoreResult` wrapping `drain`
     pub fn new(drain: D) -> Self {
-        IgnoreResult {
-            drain: drain,
-        }
+        IgnoreResult { drain: drain }
     }
 }
 
@@ -570,17 +583,17 @@ impl<D: Drain> Drain for IgnoreResult<D> {
     fn log(&self,
            record: &Record,
            logger_values: &OwnedKVList)
-        -> result::Result<(), Never> {
-            let _ = self.drain.log(record, logger_values);
-            Ok(())
-        }
+           -> result::Result<(), Never> {
+        let _ = self.drain.log(record, logger_values);
+        Ok(())
+    }
 }
 
 /// Filter by `cond` closure
-pub fn filter<D: Drain, F: 'static + Send + Sync + Fn(&Record) -> bool>(
-    cond: F,
-    d: D
-    ) -> Filter<D> {
+pub fn filter<D: Drain, F: 'static + Send + Sync + Fn(&Record) -> bool>
+    (cond: F,
+     d: D)
+     -> Filter<D> {
     Filter::new(d, cond)
 }
 
@@ -601,7 +614,7 @@ pub fn duplicate<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Duplicate<D1, D2> {
 #[cfg(feature = "std")]
 #[derive(Debug)]
 /// Error returned by `Mutex<D : Drain>`
-pub enum MutexDrainError<D : Drain> {
+pub enum MutexDrainError<D: Drain> {
     /// Error aquiring mutex
     Mutex,
     /// Error returned by drain
@@ -615,9 +628,10 @@ impl<'a, D : Drain> From<std::sync::PoisonError<std::sync::MutexGuard<'a, D>>> f
     }
 }
 #[cfg(feature = "std")]
-impl<D : Drain> fmt::Display for MutexDrainError<D>
-where D::Err : fmt::Display {
-    fn fmt(&self, f : &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
+impl<D: Drain> fmt::Display for MutexDrainError<D>
+    where D::Err: fmt::Display
+{
+    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
         match *self {
             MutexDrainError::Mutex => write!(f, "MutexError"),
             MutexDrainError::Drain(ref e) => write!(f, "{}", e),
@@ -632,10 +646,10 @@ impl<D: Drain> Drain for std::sync::Mutex<D> {
     fn log(&self,
            record: &Record,
            logger_values: &OwnedKVList)
-        -> result::Result<Self::Ok, Self::Err> {
-            let d = self.lock()?;
-            d.log(record, logger_values).map_err(MutexDrainError::Drain)
-        }
+           -> result::Result<Self::Ok, Self::Err> {
+        let d = self.lock()?;
+        d.log(record, logger_values).map_err(MutexDrainError::Drain)
+    }
 }
 // }}}
 
@@ -643,12 +657,14 @@ impl<D: Drain> Drain for std::sync::Mutex<D> {
 /// Official capitalized logging (and logging filtering) level names
 ///
 /// In order of `as_usize()`.
-pub static LOG_LEVEL_NAMES: [&'static str; 7] = ["OFF", "CRITICAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE"];
+pub static LOG_LEVEL_NAMES: [&'static str; 7] =
+    ["OFF", "CRITICAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE"];
 
 /// Official capitalized logging (and logging filtering) short level names
 ///
 /// In order of `as_usize()`.
-pub static LOG_LEVEL_SHORT_NAMES: [&'static str; 7] = ["OFF", "CRIT", "ERRO", "WARN", "INFO", "DEBG", "TRCE"];
+pub static LOG_LEVEL_SHORT_NAMES: [&'static str; 7] =
+    ["OFF", "CRIT", "ERRO", "WARN", "INFO", "DEBG", "TRCE"];
 
 
 /// Logging level associated with a logging `Record`
@@ -666,7 +682,7 @@ pub enum Level {
     /// Debug
     Debug,
     /// Trace
-    Trace
+    Trace,
 }
 
 /// Logging filtering level
@@ -700,7 +716,7 @@ impl Level {
         LOG_LEVEL_NAMES[self.as_usize()]
     }
 
-    /// Cast `Level` to ordering integer 
+    /// Cast `Level` to ordering integer
     ///
     /// `Critical` is the smallest and `Trace` the biggest value
     #[inline]
@@ -727,7 +743,7 @@ impl Level {
             4 => Some(Level::Info),
             5 => Some(Level::Debug),
             6 => Some(Level::Trace),
-            _ => None
+            _ => None,
         }
     }
 }
@@ -762,7 +778,7 @@ impl FilterLevel {
             4 => Some(FilterLevel::Info),
             5 => Some(FilterLevel::Debug),
             6 => Some(FilterLevel::Trace),
-            _ => None
+            _ => None,
         }
     }
 
@@ -780,53 +796,45 @@ impl FilterLevel {
     }
 }
 
-static ASCII_LOWERCASE_MAP: [u8; 256] = [
-    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-    0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
-    0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-    0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,
-    b' ', b'!', b'"', b'#', b'$', b'%', b'&', b'\'',
-    b'(', b')', b'*', b'+', b',', b'-', b'.', b'/',
-    b'0', b'1', b'2', b'3', b'4', b'5', b'6', b'7',
-    b'8', b'9', b':', b';', b'<', b'=', b'>', b'?',
-    b'@',
-
-    b'a', b'b', b'c', b'd', b'e', b'f', b'g',
-    b'h', b'i', b'j', b'k', b'l', b'm', b'n', b'o',
-    b'p', b'q', b'r', b's', b't', b'u', b'v', b'w',
-    b'x', b'y', b'z',
-
-    b'[', b'\\', b']', b'^', b'_',
-    b'`', b'a', b'b', b'c', b'd', b'e', b'f', b'g',
-    b'h', b'i', b'j', b'k', b'l', b'm', b'n', b'o',
-    b'p', b'q', b'r', b's', b't', b'u', b'v', b'w',
-    b'x', b'y', b'z', b'{', b'|', b'}', b'~', 0x7f,
-    0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87,
-    0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f,
-    0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97,
-    0x98, 0x99, 0x9a, 0x9b, 0x9c, 0x9d, 0x9e, 0x9f,
-    0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7,
-    0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf,
-    0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xb5, 0xb6, 0xb7,
-    0xb8, 0xb9, 0xba, 0xbb, 0xbc, 0xbd, 0xbe, 0xbf,
-    0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7,
-    0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf,
-    0xd0, 0xd1, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7,
-    0xd8, 0xd9, 0xda, 0xdb, 0xdc, 0xdd, 0xde, 0xdf,
-    0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7,
-    0xe8, 0xe9, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xef,
-    0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7,
-    0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff,
-    ];
+static ASCII_LOWERCASE_MAP: [u8; 256] =
+    [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,
+     0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+     0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, b' ', b'!', b'"', b'#',
+     b'$', b'%', b'&', b'\'', b'(', b')', b'*', b'+', b',', b'-', b'.', b'/',
+     b'0', b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8', b'9', b':', b';',
+     b'<', b'=', b'>', b'?', b'@', b'a', b'b', b'c', b'd', b'e', b'f', b'g',
+     b'h', b'i', b'j', b'k', b'l', b'm', b'n', b'o', b'p', b'q', b'r', b's',
+     b't', b'u', b'v', b'w', b'x', b'y', b'z', b'[', b'\\', b']', b'^', b'_',
+     b'`', b'a', b'b', b'c', b'd', b'e', b'f', b'g', b'h', b'i', b'j', b'k',
+     b'l', b'm', b'n', b'o', b'p', b'q', b'r', b's', b't', b'u', b'v', b'w',
+     b'x', b'y', b'z', b'{', b'|', b'}', b'~', 0x7f, 0x80, 0x81, 0x82, 0x83,
+     0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f,
+     0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9a, 0x9b,
+     0x9c, 0x9d, 0x9e, 0x9f, 0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7,
+     0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3,
+     0xb4, 0xb5, 0xb6, 0xb7, 0xb8, 0xb9, 0xba, 0xbb, 0xbc, 0xbd, 0xbe, 0xbf,
+     0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb,
+     0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7,
+     0xd8, 0xd9, 0xda, 0xdb, 0xdc, 0xdd, 0xde, 0xdf, 0xe0, 0xe1, 0xe2, 0xe3,
+     0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xef,
+     0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb,
+     0xfc, 0xfd, 0xfe, 0xff];
 
 impl FromStr for FilterLevel {
     type Err = ();
     fn from_str(level: &str) -> core::result::Result<FilterLevel, ()> {
         LOG_LEVEL_NAMES.iter()
-            .position(|&name| name.as_bytes().iter().zip(level.as_bytes().iter()).all(|(a, b)| {
-                ASCII_LOWERCASE_MAP[*a as usize] == ASCII_LOWERCASE_MAP[*b as usize]
-            }))
-            .map(|p| FilterLevel::from_usize(p).unwrap()).ok_or(())
+            .position(|&name| {
+                name.as_bytes()
+                    .iter()
+                    .zip(level.as_bytes().iter())
+                    .all(|(a, b)| {
+                        ASCII_LOWERCASE_MAP[*a as usize] ==
+                        ASCII_LOWERCASE_MAP[*b as usize]
+                    })
+            })
+            .map(|p| FilterLevel::from_usize(p).unwrap())
+            .ok_or(())
     }
 }
 
@@ -839,7 +847,7 @@ impl fmt::Display for Level {
 impl Level {
     /// Returns true if `self` is at least `level` logging level
     #[inline]
-    pub fn is_at_least(&self, level : Self) -> bool {
+    pub fn is_at_least(&self, level: Self) -> bool {
         self.as_usize() <= level.as_usize()
     }
 }
@@ -907,11 +915,10 @@ impl<'a> Record<'a> {
     /// This function is not considered a part of stable API
     #[inline]
     #[doc(hidden)]
-    pub fn new(
-        s : &'a RecordStatic<'a>,
-        msg: fmt::Arguments<'a>,
-        kv: BorrowedKV<'a>,
-        ) -> Self {
+    pub fn new(s: &'a RecordStatic<'a>,
+               msg: fmt::Arguments<'a>,
+               kv: BorrowedKV<'a>)
+               -> Self {
         Record {
             meta: s,
             msg: msg,
@@ -1255,7 +1262,7 @@ impl<'a> PushFnSerializer<'a> {
 impl<'a> Drop for PushFnSerializer<'a> {
     fn drop(&mut self) {
         if !self.done {
-        // unfortunately this gives no change to return serialization errors
+            // unfortunately this gives no change to return serialization errors
             let _ = self.serializer.emit_unit(self.key);
         }
     }
@@ -1439,13 +1446,11 @@ impl<'a> KV for BorrowedKV<'a> {
 /// to a `Logger` and thus must be thread-safe (`'static`, `Send`, `Sync`)
 ///
 /// Zero, one or more owned key-value pairs.
-pub struct OwnedKV(
-    #[doc(hidden)]
-    /// The exact details of that it are not considered public
-    /// and stable API. `slog_o` or `o` macro should be used instead
-    /// to create `OwnedKV` instances.
-    pub Box<KV + Send + Sync + 'static>,
-);
+pub struct OwnedKV(#[doc(hidden)]
+                   /// The exact details of that it are not considered public
+                   /// and stable API. `slog_o` or `o` macro should be used instead
+                   /// to create `OwnedKV` instances.
+                   pub Box<KV + Send + Sync + 'static>);
 // }}}
 
 // {{{ BorrowedKV
@@ -1455,26 +1460,22 @@ pub struct OwnedKV(
 /// referenced (`&T`) and can't be stored directly.
 ///
 /// Zero, one or more borrowed key-value pairs.
-pub struct BorrowedKV<'a> (
-    #[doc(hidden)]
-    /// The exact details of it function are not considered public
-    /// and stable API. `log` and other macros should be used instead
-    /// to create `BorrowedKV` instances.
-    pub &'a KV,
-);
+pub struct BorrowedKV<'a>(#[doc(hidden)]
+                          /// The exact details of it function are not considered public
+                          /// and stable API. `log` and other macros should be used instead
+                          /// to create `BorrowedKV` instances.
+                          pub &'a KV);
 
 impl<'a> BorrowedKV<'a> {
     /// Iterate over every single `KV` in the the group
     pub fn iter(&self) -> BorrowedKVIterator<'a> {
-        BorrowedKVIterator {
-            cur: self.0
-        }
+        BorrowedKVIterator { cur: self.0 }
     }
 }
 
 /// Iterato over `BorrowedKV`
 pub struct BorrowedKVIterator<'a> {
-    cur : &'a KV
+    cur: &'a KV,
 }
 
 
@@ -1529,11 +1530,13 @@ impl fmt::Debug for OwnedKVList {
                 module: "",
                 target: "",
             };
-            let record = Record::new(&record_static, format_args!(""), BorrowedKV(&STATIC_TERMINATOR_UNIT));
+            let record = Record::new(&record_static,
+                                     format_args!(""),
+                                     BorrowedKV(&STATIC_TERMINATOR_UNIT));
 
             for i in self.iter_groups() {
                 try!(i.serialize(&record, &mut as_str_ser)
-                     .map_err(|_| fmt::Error));
+                    .map_err(|_| fmt::Error));
             }
         }
 
