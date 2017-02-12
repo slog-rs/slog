@@ -14,12 +14,12 @@
 //! ## Core advantages over `log` crate
 //!
 //! * **extensible** - `slog` crate provides core functionality: very basic
-//!   and portable standard feature-set based on open `trait`s that allow
+//!   and portable standard feature-set based on open `trait`s. This allows
 //!   implementing new features that can be independently published.
 //! * **composable** - `trait`s that `slog` exposes to provide extensibility
-//!   are designed to be easy to efficiently reuse and combine, using Rust type
-//!   system. Due to this it's possible to combine functions to allow every
-//!   application to carefully specify how, when and where to log information.
+//!   are designed to be easy to efficiently reuse and combine. By combining
+//!   different functionalities every application can specify when, where and
+//!   how exactly log data.
 //! * **structured** - Logging with `slog` is not based on just one global
 //!   logger. `slog`'s `Logger`s carry hierarchy of key-value data that contains
 //!   the context of logging - information that otherwise would have to be
@@ -28,8 +28,8 @@
 //!   and retaining it's type information, meaning of logging data is preserved.
 //!   Data can be serialized to machine readable formats like JSON and send it
 //!   to data-mining system for further analysis etc. On the other hand, when
-//!   presenting on screen, logging data can be shown in eastetically pleasing
-//!   and easy to understand way.
+//!   presenting on screen, logging information can be presented in eastetically
+//!   pleasing and easy to understand way.
 //!
 //! ## `slog` features
 //!
@@ -38,8 +38,8 @@
 //!   [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
 //!   * lazily evaluation through closure values
 //!   * async IO support included: see [`slog-extra`
-//!     crate](https://docs.rs/slog-extra) * `#![no_std]` support (with opt-out
-//!     `std` cargo feature flag)
+//!     crate](https://docs.rs/slog-extra)
+//! * `#![no_std]` support (with opt-out `std` cargo feature flag)
 //! * hierarchical loggers
 //! * modular, lightweight and very extensible
 //!   * tiny core crate that does not pull any dependencies
@@ -55,20 +55,20 @@
 //! * many existing core&community provided features:
 //!   * multiple outputs
 //!   * filtering control
-//!     * compile-time log level filter using cargo features (same as in `log`
-//!       crate)
-//!     * by level, msg, and any other meta-data
-//!     * [`slog-envlogger`](https://github.com/slog-rs/envlogger) - port of
-//!       `env_logger` * terminal output, with color support: see [`slog-term`
-//!       crate](docs.r/slog-term)
+//!       * compile-time log level filter using cargo features (same as in `log`
+//!         crate)
+//!       * by level, msg, and any other meta-data
+//!       * [`slog-envlogger`](https://github.com/slog-rs/envlogger) - port of
+//!         `env_logger` * terminal output, with color support: see [`slog-term`
+//!         crate](docs.r/slog-term)
 //!  * [json](https://docs.rs/slog-json)
-//!    * [bunyan](https://docs.rs/slog-bunyan)
+//!      * [bunyan](https://docs.rs/slog-bunyan)
 //!  * [syslog](https://docs.rs/slog-syslog)
 //!    and [journald](https://docs.rs/slog-journald) support
 //!  * run-time configuration:
-//!    * run-time behavior change;
-//!      see [slog-atomic](https://docs.rs/slog-atomic)
-//!    * run-time configuration; see [slog-config](https://docs.rs/slog-config)
+//!      * run-time behavior change;
+//!        see [slog-atomic](https://docs.rs/slog-atomic)
+//!      * run-time configuration; see [slog-config](https://docs.rs/slog-config)
 //!
 //!
 //! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
@@ -76,7 +76,7 @@
 //!
 //! ## Notable details
 //!
-//! **Note:** `slog` by default removes at compile time trace and debug level
+//! **Note:** At compile time `slog` by default removes trace and debug level
 //! statements in release builds, and trace level records in debug builds. This
 //! makes `trace` and `debug` level logging records practically free, which
 //! should encourage using them freely. If you want to enable trace/debug
@@ -89,13 +89,13 @@
 //! ```
 //!
 //! Due to the `macro_rules` limitation log macros syntax comes in several
-//! versions. See `log!` macro, and pay attention to `;` and `,`
+//! variants. See `log!` macro, and pay attention to `;` and `,`
 //! details.
 //!
 //! Root drain (passed to `Logger::root`) must be one that does not ever return
-//! errors, which forces user to pick error handing strategy. You can use
-//! `DrainExt::fuse()` or `DrainExt::ignore_err()` methods from `DrainExt` to do
-//! it conveniently.
+//! errors. This forces user to pick error handing strategy.
+//! `DrainExt::fuse()` or `DrainExt::ignore_err()` methods from `DrainExt` are
+//! convenience functions for that purpose.
 //!
 //! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
 //! [env_logger]: https://crates.io/crates/env_logger
@@ -110,13 +110,15 @@
 //!
 //! ## Examples & help
 //!
-//! Look at [slog-rs examples in `slog-misc`
+//! [Some slog-rs examples are maintained in `slog-misc`
 //! repository](https://github.com/slog-rs/misc/tree/master/examples)
 //!
-//! Read [slog-rs wiki pages](https://github.com/slog-rs/slog/wiki)
+//! [slog-rs wiki pages](https://github.com/slog-rs/slog/wiki) contain
+//! some pages about `slog-rs` technical details.
 //!
-//! Check sources of other [software using
-//! slog-rs](https://crates.io/crates/slog/reverse_dependencies)
+//! Source code o other [software using
+//! slog-rs](https://crates.io/crates/slog/reverse_dependencies) can
+//! be an useful reference.
 //!
 //! Visit [slog-rs gitter channel](https://gitter.im/slog-rs/slog) for immediate
 //! help.
@@ -174,11 +176,19 @@ use std::sync::Arc;
 /// Cloning existing loggers and creating new ones is cheap. Loggers can be
 /// freely passed around the code and between threads.
 ///
-/// `Logger`s are also `Sync` - there's no need to synchronize accesses to them,
-/// and they can accept logging records from multiple threads at once. Because
-/// of that they require the `Drain` to be `Sync+Sync` as well. Not all `Drain`s
-/// are `Sync` or `Send` but they can often be made so by wrapping in a `Mutex`
-/// and/or `Arc`.
+/// `Logger`s are `Sync+Send` - there's no need to synchronize accesses to them,
+/// as they can accept logging records from multiple threads at once. They can
+/// be sent to any thread. Because of that they require the `Drain` to be
+/// `Sync+Sync` as well. Not all `Drain`s are `Sync` or `Send` but they can
+/// often be made so by wrapping in a `Mutex` and/or `Arc`.
+///
+/// `Logger` implements `Drain` trait. Any logging `Record` delivered to
+/// a `Logger` functioning as a `Drain`, will be delievere to it's `Drain`
+/// with existing key-value pairs appended to the `Logger`s key-value pairs.
+/// By itself it's effectively very similiar to `Logger` being an ancestor
+/// of `Logger` that originated the logging `Record`. However, combined with
+/// other `Drain`s functionalities, allows custom processing logic for a
+/// part of `Logging` hierarchy.
 #[derive(Clone)]
 pub struct Logger {
     drain: Arc<Drain<Err = Never, Ok = ()> + Send + Sync>,
