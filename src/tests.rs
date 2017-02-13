@@ -1,4 +1,4 @@
-
+use {Logger, Discard};
 
 // Separate module to test lack of imports
 mod no_imports {
@@ -19,7 +19,6 @@ mod no_imports {
 mod std_only {
     use super::super::*;
 
-    #[cfg(feature = "std")]
     use std;
 
     #[test]
@@ -59,4 +58,69 @@ mod std_only {
         let log = Logger::root(log, o!("d1" => "dd", "d2" => "dd"));
         info!(log, "(d2, d1, c, b2, b1, a)");
     }
+}
+
+#[test]
+fn expressions() {
+
+    struct Foo;
+
+    impl Foo {
+        fn bar(&self) -> u32 {
+            1
+        }
+    }
+
+    struct X {
+        foo: Foo,
+    }
+
+
+    let log = Logger::root(Discard, o!("version" => env!("CARGO_PKG_VERSION")));
+
+    let foo = Foo;
+    let r = X { foo: foo };
+
+    warn!(log, "logging message");
+    slog_warn!(log, "logging message");
+
+    info!(log, #"with tag", "logging message");
+    slog_info!(log, #"with tag", "logging message");
+
+    warn!(log, "logging message"; "a" => "b");
+    slog_warn!(log, "logging message"; "a" => "b");
+
+    warn!(log, "logging message bar={}", r.foo.bar());
+    slog_warn!(log, "logging message bar={}", r.foo.bar());
+
+    warn!(log,
+          "logging message bar={} foo={}",
+          r.foo.bar(),
+          r.foo.bar());
+    slog_warn!(log,
+               "logging message bar={} foo={}",
+               r.foo.bar(),
+               r.foo.bar());
+
+    warn!(log, "logging message bar={} foo={}", r.foo.bar(), r.foo.bar(), );
+    slog_warn!(log, "logging message bar={} foo={}", r.foo.bar(), r.foo.bar(), );
+
+    warn!(log, "x" => 1; "logging message bar={}", r.foo.bar());
+    slog_warn!(log, "x" => 1; "logging message bar={}", r.foo.bar());
+
+    warn!(log, "x" => 1; "logging message bar={}", r.foo.bar(),);
+    slog_warn!(log, "x" => 1; "logging message bar={}", r.foo.bar(),);
+
+    warn!(log, "x" => 1, "y" => r.foo.bar(); "logging message bar={}", r.foo.bar());
+    slog_warn!(log, "x" => 1, "y" => r.foo.bar(); "logging message bar={}", r.foo.bar());
+
+    warn!(log, "x" => r.foo.bar(); "logging message bar={}", r.foo.bar());
+    slog_warn!(log, "x" => r.foo.bar(); "logging message bar={}", r.foo.bar());
+
+    warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar(); "logging message bar={}", r.foo.bar());
+    slog_warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar(); "logging message bar={}", r.foo.bar());
+
+    warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar(); "logging message bar={}", r.foo.bar(),);
+    slog_warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar(); "logging message bar={}", r.foo.bar(),);
+
 }

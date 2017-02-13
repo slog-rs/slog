@@ -889,13 +889,7 @@ fn level_from_str() {
 
 // {{{ Record
 #[doc(hidden)]
-/// Information that can be static in the given record thus allowing to optimize record creation to
-/// be done mostly at compile-time.
-///
-/// This is not cosidered a part of stable API, and macros should be used instead.
-pub struct RecordStatic<'a> {
-    /// Logging level
-    pub level: Level,
+pub struct RecordLocation {
     /// File
     pub file: &'static str,
     /// Line
@@ -906,8 +900,20 @@ pub struct RecordStatic<'a> {
     pub function: &'static str,
     /// Module
     pub module: &'static str,
-    /// Target - for backward compatibility with `log`
-    pub target: &'a str,
+}
+#[doc(hidden)]
+/// Information that can be static in the given record thus allowing to optimize
+/// record creation to be done mostly at compile-time.
+///
+/// This is not cosidered a part of stable API, and macros should be used
+/// instead.
+pub struct RecordStatic<'a> {
+    /// Code location
+    pub location: &'a RecordLocation,
+    /// Logging level
+    pub level: Level,
+    /// Tag
+    pub tag: &'a str,
 }
 
 /// One logging record
@@ -953,34 +959,38 @@ impl<'a> Record<'a> {
 
     /// Get line number
     pub fn line(&self) -> u32 {
-        self.rstatic.line
+        self.rstatic.location.line
     }
 
     /// Get error column
     pub fn column(&self) -> u32 {
-        self.rstatic.column
+        self.rstatic.location.column
     }
 
     /// Get file path
     pub fn file(&self) -> &'static str {
-        self.rstatic.file
+        self.rstatic.location.file
     }
 
-    /// Get target
+    /// Get tag
     ///
-    /// Mostly for backward compatibility with `log`
-    pub fn target(&self) -> &str {
-        self.rstatic.target
+    /// Tag is information that can be attached to `Record` that is not meant
+    /// to be part of the data, but only as an ad-hoc control flag
+    /// for quick lookup in the `Drain`s. As such should be used
+    /// carefully and mostly in application code (as opposed to libraries) -
+    /// where tag used acros the system can be coordinated.
+    pub fn tag(&self) -> &str {
+        self.rstatic.tag
     }
 
     /// Get module
     pub fn module(&self) -> &'static str {
-        self.rstatic.module
+        self.rstatic.location.module
     }
 
     /// Get function
     pub fn function(&self) -> &'static str {
-        self.rstatic.function
+        self.rstatic.location.function
     }
 
     /// Get key-value pairs
@@ -1542,12 +1552,14 @@ impl fmt::Debug for OwnedKVList {
             });
             let record_static = RecordStatic {
                 level: Level::Trace,
-                file: "",
-                line: 0,
-                column: 0,
-                function: "",
-                module: "",
-                target: "",
+                location: &RecordLocation {
+                    file: "",
+                    line: 0,
+                    column: 0,
+                    function: "",
+                    module: "",
+                },
+                tag: "",
             };
             let record = Record::new(&record_static,
                                      format_args!(""),
@@ -2019,40 +2031,46 @@ macro_rules! slog_b(
 #[macro_export]
 /// Create `RecordStatic` at the given code location
 macro_rules! record_static(
-    ($lvl:expr) => {
-        $crate::RecordStatic {
-            level: $lvl,
+    ($lvl:expr, $tag:expr) => {{
+        static LOC : $crate::RecordLocation = $crate::RecordLocation {
             file: file!(),
             line: line!(),
             column: column!(),
             function: "",
             module: module_path!(),
-            target: "",
+        };
+        $crate::RecordStatic {
+            location : &LOC,
+            level: $lvl,
+            tag : $tag,
         }
-    };
+    }};
 );
 
 #[macro_export]
 /// Alias of `record_static`
 macro_rules! slog_record_static(
-    ($lvl:expr) => {
-        $crate::RecordStatic {
-            level: $lvl,
+    ($lvl:expr, $tag:expr) => {{
+        static LOC : $crate::RecordLocation = $crate::RecordLocation {
             file: file!(),
             line: line!(),
             column: column!(),
             function: "",
             module: module_path!(),
-            target: "",
+        };
+        $crate::RecordStatic {
+            location : &LOC,
+            level: $lvl,
+            tag: $tag,
         }
-    };
+    }};
 );
 
 #[macro_export]
 /// Create `Record` at the given code location
 macro_rules! record(
-    ($lvl:expr, $args:expr, $b:expr) => {{
-        static RS : $crate::RecordStatic<'static> = record_static!($lvl);
+    ($lvl:expr, $tag:expr, $args:expr, $b:expr) => {{
+        static RS : $crate::RecordStatic<'static> = record_static!($lvl, $tag);
         $crate::Record::new(&RS, $args, $b)
     }};
 );
@@ -2060,8 +2078,9 @@ macro_rules! record(
 #[macro_export]
 /// Alias of `record`
 macro_rules! slog_record(
-    ($lvl:expr, $args:expr, $b:expr) => {{
-        static RS : $crate::RecordStatic<'static> = slog_record_static!($lvl);
+    ($lvl:expr, $tag:expr, $args:expr, $b:expr) => {{
+        static RS : $crate::RecordStatic<'static> = slog_record_static!($lvl,
+                                                                        $tag);
         $crate::Record::new(&RS, $args, $b)
     }};
 );
@@ -2132,24 +2151,24 @@ macro_rules! slog_record(
 /// ```
 #[macro_export]
 macro_rules! log(
-    ($lvl:expr, $l:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
+    ($l:expr, $lvl:expr,  $tag:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, format_args!($($args)+), b!($($k => $v),+)))
+            $l.log(&record!($lvl, $tag, format_args!($($args)+), b!($($k => $v),+)))
         }
     };
-    ($lvl:expr, $l:expr, $msg:expr) => {
+    ($l:expr,  $lvl:expr, $tag:expr, $msg:expr) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, format_args!("{}", $msg), b!()))
+            $l.log(&record!($lvl, $tag, format_args!("{}", $msg), b!()))
         }
     };
-    ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+) => {
+    ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, format_args!("{}", $msg), b!($($k => $v),+)))
+            $l.log(&record!($lvl, $tag, format_args!("{}", $msg), b!($($k => $v),+)))
         }
     };
-    ($lvl:expr, $l:expr, $($args:tt)+) => {
+    ($l:expr, $lvl:expr, $tag:expr, $($args:tt)+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, format_args!($($args)+),  b!()))
+            $l.log(&record!($lvl, $tag, format_args!($($args)+),  b!()))
         }
     };
 );
@@ -2173,24 +2192,24 @@ macro_rules! log(
 /// ```
 #[macro_export]
 macro_rules! slog_log(
-    ($lvl:expr, $l:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
+    ($l:expr, $lvl:expr, $tag:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, format_args!($($args)+), slog_b!($($k => $v),+)))
+            $l.log(&slog_record!($lvl, $tag, format_args!($($args)+), slog_b!($($k => $v),+)))
         }
     };
-    ($lvl:expr, $l:expr, $msg:expr) => {
+    ($l:expr,  $lvl:expr, $tag:expr, $msg:expr) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, format_args!("{}", $msg), slog_b!()))
+            $l.log(&slog_record!($lvl, $tag, format_args!("{}", $msg), slog_b!()))
         }
     };
-    ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+) => {
+    ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, format_args!("{}", $msg), slog_b!($($k => $v),+)))
+            $l.log(&slog_record!($lvl, $tag, format_args!("{}", $msg), slog_b!($($k => $v),+)))
         }
     };
-    ($lvl:expr, $l:expr, $($args:tt)+) => {
+    ($l:expr, $lvl:expr, $tag:expr, $($args:tt)+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, format_args!($($args)+),  slog_b!()))
+            $l.log(&slog_record!($lvl, $tag, format_args!($($args)+),  slog_b!()))
         }
     };
 );
@@ -2200,8 +2219,11 @@ macro_rules! slog_log(
 /// See `log` for documentation.
 #[macro_export]
 macro_rules! crit(
-    ($($args:tt)+) => {
-        log!($crate::Level::Critical, $($args)+)
+    ($l:expr, #$tag:expr, $($args:tt)+) => {
+        log!($l, $crate::Level::Critical, $tag, $($args)+)
+    };
+    ($l:expr, $($args:tt)+) => {
+        log!($l, $crate::Level::Critical, "", $($args)+)
     };
 );
 
@@ -2213,8 +2235,11 @@ macro_rules! crit(
 /// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! slog_crit(
-    ($($args:tt)+) => {
-        slog_log!($crate::Level::Critical, $($args)+)
+    ($l:expr, #$tag:expr, $($args:tt)+) => {
+        slog_log!($l, $crate::Level::Critical, $tag, $($args)+)
+    };
+    ($l:expr, $($args:tt)+) => {
+        slog_log!($l, $crate::Level::Critical, "", $($args)+)
     };
 );
 
@@ -2223,8 +2248,11 @@ macro_rules! slog_crit(
 /// See `log` for documentation.
 #[macro_export]
 macro_rules! error(
-    ($($args:tt)+) => {
-        log!($crate::Level::Error, $($args)+)
+    ($l:expr, #$tag:expr, $($args:tt)+) => {
+        log!($l, $crate::Level::Error, $tag, $($args)+)
+    };
+    ($l:expr, $($args:tt)+) => {
+        log!($l, $crate::Level::Error, "", $($args)+)
     };
 );
 
@@ -2236,8 +2264,11 @@ macro_rules! error(
 /// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! slog_error(
-    ($($args:tt)+) => {
-        slog_log!($crate::Level::Error, $($args)+)
+    ($l:expr, #$tag:expr, $($args:tt)+) => {
+        slog_log!($l, $crate::Level::Error, $tag, $($args)+)
+    };
+    ($l:expr, $($args:tt)+) => {
+        slog_log!($l, $crate::Level::Error, "", $($args)+)
     };
 );
 
@@ -2247,8 +2278,11 @@ macro_rules! slog_error(
 /// See `log` for documentation.
 #[macro_export]
 macro_rules! warn(
-    ($($args:tt)+) => {
-        log!($crate::Level::Warning, $($args)+)
+    ($l:expr, #$tag:expr, $($args:tt)+) => {
+        log!($l, $crate::Level::Warning, $tag, $($args)+)
+    };
+    ($l:expr, $($args:tt)+) => {
+        log!($l, $crate::Level::Warning, "", $($args)+)
     };
 );
 
@@ -2260,8 +2294,11 @@ macro_rules! warn(
 /// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! slog_warn(
-    ($($args:tt)+) => {
-        slog_log!($crate::Level::Warning, $($args)+)
+    ($l:expr, #$tag:expr, $($args:tt)+) => {
+        slog_log!($l, $crate::Level::Warning, $tag, $($args)+)
+    };
+    ($l:expr, $($args:tt)+) => {
+        slog_log!($l, $crate::Level::Warning, "", $($args)+)
     };
 );
 
@@ -2270,8 +2307,11 @@ macro_rules! slog_warn(
 /// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! info(
-    ($($args:tt)+) => {
-        log!($crate::Level::Info, $($args)+)
+    ($l:expr, #$tag:expr, $($args:tt)+) => {
+        log!($l, $crate::Level::Info, $tag, $($args)+)
+    };
+    ($l:expr, $($args:tt)+) => {
+        log!($l, $crate::Level::Info, "", $($args)+)
     };
 );
 
@@ -2283,8 +2323,11 @@ macro_rules! info(
 /// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! slog_info(
-    ($($args:tt)+) => {
-        slog_log!($crate::Level::Info, $($args)+)
+    ($l:expr, #$tag:expr, $($args:tt)+) => {
+        slog_log!($l, $crate::Level::Info, $tag, $($args)+)
+    };
+    ($l:expr, $($args:tt)+) => {
+        slog_log!($l, $crate::Level::Info, "", $($args)+)
     };
 );
 
@@ -2293,8 +2336,11 @@ macro_rules! slog_info(
 /// See `log` for documentation.
 #[macro_export]
 macro_rules! debug(
-    ($($args:tt)+) => {
-        log!($crate::Level::Debug, $($args)+)
+    ($l:expr, #$tag:expr, $($args:tt)+) => {
+        log!($l, $crate::Level::Debug, $tag, $($args)+)
+    };
+    ($l:expr, $($args:tt)+) => {
+        log!($l, $crate::Level::Debug, "", $($args)+)
     };
 );
 
@@ -2306,8 +2352,11 @@ macro_rules! debug(
 /// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! slog_debug(
-    ($($args:tt)+) => {
-        slog_log!($crate::Level::Debug, $($args)+)
+    ($l:expr, #$tag:expr, $($args:tt)+) => {
+        slog_log!($l, $crate::Level::Debug, $tag, $($args)+)
+    };
+    ($l:expr, $($args:tt)+) => {
+        slog_log!($l, $crate::Level::Debug, "", $($args)+)
     };
 );
 
@@ -2317,8 +2366,11 @@ macro_rules! slog_debug(
 /// See `log` for documentation.
 #[macro_export]
 macro_rules! trace(
-    ($($args:tt)+) => {
-        log!($crate::Level::Trace, $($args)+)
+    ($l:expr, #$tag:expr, $($args:tt)+) => {
+        log!($l, $crate::Level::Trace, $tag, $($args)+)
+    };
+    ($l:expr, $($args:tt)+) => {
+        log!($l, $crate::Level::Trace, "", $($args)+)
     };
 );
 
@@ -2330,6 +2382,12 @@ macro_rules! trace(
 /// See `slog_log` for documentation.
 #[macro_export]
 macro_rules! slog_trace(
+    ($l:expr, #$tag:expr, $($args:tt)+) => {
+        slog_log!($l, $crate::Level::Trace, $tag, $($args)+)
+    };
+    ($l:expr, $($args:tt)+) => {
+        slog_log!($l, $crate::Level::Trace, "", $($args)+)
+    };
     ($($args:tt)+) => {
         slog_log!($crate::Level::Trace, $($args)+)
     };
