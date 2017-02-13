@@ -1461,6 +1461,8 @@ impl<'a> KV for BorrowedKV<'a> {
 /// to a `Logger` and thus must be thread-safe (`'static`, `Send`, `Sync`)
 ///
 /// Zero, one or more owned key-value pairs.
+///
+/// Can be constructed with `o!` macro
 pub struct OwnedKV(#[doc(hidden)]
                    /// The exact details of that it are not considered public
                    /// and stable API. `slog_o` or `o` macro should be used instead
@@ -1475,6 +1477,8 @@ pub struct OwnedKV(#[doc(hidden)]
 /// referenced (`&T`) and can't be stored directly.
 ///
 /// Zero, one or more borrowed key-value pairs.
+///
+/// Can be constructed with `b!` macro
 pub struct BorrowedKV<'a>(#[doc(hidden)]
                           /// The exact details of it function are not considered public
                           /// and stable API. `log` and other macros should be used instead
@@ -1808,116 +1812,6 @@ pub type Never = ();
 /// This is not part of "stable" API
 #[doc(hidden)]
 pub static STATIC_TERMINATOR_UNIT: () = ();
-// }}}
-
-// {{{ Macros
-/// Macro for building group of key-value pairs
-///
-/// ```
-/// #[macro_use]
-/// extern crate slog;
-///
-/// fn main() {
-///     let drain = slog::Discard;
-///     let _root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
-/// }
-/// ```
-#[cfg(feature = "std")]
-#[macro_export]
-macro_rules! o(
-    (@ $args_ready:expr; $k:expr => $v:expr) => {
-        o!(@ ($crate::SingleKV($k, $v), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; ) => {
-        $args_ready
-    };
-    (@ $args_ready:expr;, ) => {
-        $args_ready
-    };
-    ($($args:tt)*) => {
-        $crate::OwnedKV(::std::boxed::Box::new(o!(@ (); $($args)*)))
-    };
-);
-
-/// Macro for building group of key-value pairs
-///
-/// ```
-/// #[macro_use]
-/// extern crate slog;
-///
-/// fn main() {
-///     let drain = slog::Discard;
-///     let _root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
-/// }
-/// ```
-#[cfg(not(feature = "std"))]
-#[macro_export]
-macro_rules! o(
-    (@ $args_ready:expr; $k:expr => $v:expr) => {
-        o!(@ ($crate::SingleKV($k, $v), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; ) => {
-        $args_ready
-    };
-    (@ $args_ready:expr;, ) => {
-        $args_ready
-    };
-    ($($args:tt)*) => {
-        $crate::OwnedKV(::alloc::boxed::Box::new(o!(@ (); $($args)*)))
-    };
-);
-
-/// An alternative, longer-name version of `o` macro
-///
-/// Use in case of macro name collisions
-#[cfg(feature = "std")]
-#[macro_export]
-macro_rules! slog_o(
-    (@ $args_ready:expr; $k:expr => $v:expr) => {
-        o!(@ ($crate::SingleKV($k, $v), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; ) => {
-        $args_ready
-    };
-    (@ $args_ready:expr;, ) => {
-        $args_ready
-    };
-    ($($args:tt)*) => {
-        $crate::OwnedKV(::std::boxed::Box::new(o!(@ (); $($args)*)))
-    };
-);
-
-/// An alternative, longer-name version of `o` macro
-///
-/// Use in case of macro name collisions
-#[cfg(not(feature = "std"))]
-#[macro_export]
-macro_rules! slog_o(
-    (@ $args_ready:expr; $k:expr => $v:expr) => {
-        o!(@ ($crate::SingleKV($k, $v), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; ) => {
-        $args_ready
-    };
-    (@ $args_ready:expr;, ) => {
-        $args_ready
-    };
-    ($($args:tt)*) => {
-        $crate::OwnedKV(::alloc::boxed::Box::new(o!(@ (); $($args)*)))
-    };
-);
 
 #[allow(unknown_lints)]
 #[allow(inline_always)]
@@ -1966,6 +1860,161 @@ pub fn __slog_static_max_level() -> FilterLevel {
 }
 
 
+
+// }}}
+
+// {{{ Macros
+/// Macro for building group of key-value pairs in `OwnedKV`
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+///
+/// fn main() {
+///     let drain = slog::Discard;
+///     let _root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+/// }
+/// ```
+#[cfg(feature = "std")]
+#[macro_export]
+macro_rules! o(
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        o!(@ ($crate::SingleKV($k, $v), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
+    };
+    ($($args:tt)*) => {
+        $crate::OwnedKV(::std::boxed::Box::new(o!(@ (); $($args)*)))
+    };
+);
+
+/// Macro for building group of key-value pairs
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+///
+/// fn main() {
+///     let drain = slog::Discard;
+///     let _root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+/// }
+/// ```
+#[cfg(not(feature = "std"))]
+#[macro_export]
+macro_rules! o(
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        o!(@ ($crate::SingleKV($k, $v), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
+    };
+    ($($args:tt)*) => {
+        $crate::OwnedKV(::alloc::boxed::Box::new(o!(@ (); $($args)*)))
+    };
+);
+
+/// An alternative, longer-name version of `o` macro
+///
+/// Use in case of macro name collisions
+#[cfg(feature = "std")]
+#[macro_export]
+macro_rules! slog_o(
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        slog_o!(@ ($crate::SingleKV($k, $v), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        slog_o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
+    };
+    ($($args:tt)*) => {
+        $crate::OwnedKV(::std::boxed::Box::new(slog_o!(@ (); $($args)*)))
+    };
+);
+
+/// An alternative, longer-name version of `o` macro
+///
+/// Use in case of macro name collisions
+#[cfg(not(feature = "std"))]
+#[macro_export]
+macro_rules! slog_o(
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        slog_o!(@ ($crate::SingleKV($k, $v), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        slog_o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
+    };
+    ($($args:tt)*) => {
+        $crate::OwnedKV(::alloc::boxed::Box::new(slog_o!(@ (); $($args)*)))
+    };
+);
+
+/// Macro for building group of key-value pairs in `BorrowedKV`
+///
+/// In most circumstances using this macro directly is unecessary and `info!`
+/// and other wrappers over `log!` should be used instead.
+#[macro_export]
+macro_rules! b(
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        b!(@ ($crate::SingleKV($k, $v), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        b!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
+    };
+    ($($k:expr => $v:expr),* ) => {
+        $crate::BorrowedKV(&b!(@ (); $($k => $v),*))
+    };
+);
+
+
+/// Alias of `b`
+#[macro_export]
+macro_rules! slog_b(
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        slog_b!(@ ($crate::SingleKV($k, $v), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        slog_b!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
+    };
+    ($($k:expr => $v:expr),* ) => {
+        $crate::BorrowedKV(&slog_b!(@ (); $($k => $v),*))
+    };
+);
 
 /// Log message of a given level
 ///
@@ -2032,18 +2081,6 @@ pub fn __slog_static_max_level() -> FilterLevel {
 /// ```
 #[macro_export]
 macro_rules! log(
-    (@ $args_ready:expr; $k:expr => $v:expr) => {
-        log!(@ ($crate::SingleKV($k, $v), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        log!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; ) => {
-        $args_ready
-    };
-    (@ $args_ready:expr;, ) => {
-        $args_ready
-    };
     ($lvl:expr, $l:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
@@ -2056,7 +2093,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), $crate::BorrowedKV(&log!(@ (); $($k => $v),+))))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), b!($($k => $v),+)))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr) => {
@@ -2071,7 +2108,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), $crate::BorrowedKV(&$crate::STATIC_TERMINATOR_UNIT)))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), b!()))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+) => {
@@ -2086,11 +2123,8 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), $crate::BorrowedKV(&log!(@ (); $($k => $v),+))))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), b!($($k => $v),+)))
         }
-    };
-    ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
-        log!($lvl, $l, $msg; $($k => $v),+)
     };
     ($lvl:expr, $l:expr, $($args:tt)+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
@@ -2104,7 +2138,7 @@ macro_rules! log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), $crate::BorrowedKV(&$crate::STATIC_TERMINATOR_UNIT)))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+),  b!()))
         }
     };
 );
@@ -2117,29 +2151,17 @@ macro_rules! log(
 /// See `log` for format documentation.
 ///
 /// ```
-/// #[macro_use(o,slog_log,slog_info)]
+/// #[macro_use(slog_o,slog_b,slog_log,slog_info)]
 /// extern crate slog;
 ///
 /// fn main() {
-///     let log = slog::Logger::root(slog::Discard, o!());
+///     let log = slog::Logger::root(slog::Discard, slog_o!());
 ///
 ///     slog_info!(log, "some interesting info"; "where" => "right here");
 /// }
 /// ```
 #[macro_export]
 macro_rules! slog_log(
-    (@ $args_ready:expr; $k:expr => $v:expr) => {
-        slog_log!(@ ($crate::SingleKV($k, $v), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        slog_log!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; ) => {
-        $args_ready
-    };
-    (@ $args_ready:expr;, ) => {
-        $args_ready
-    };
     ($lvl:expr, $l:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
             // prevent generating big `Record` over and over
@@ -2152,7 +2174,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), $crate::BorrowedKV(&slog_log!(@ (); $($k => $v),+))))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), slog_b!($($k => $v),+)))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr) => {
@@ -2167,7 +2189,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), $crate::BorrowedKV(&$crate::STATIC_TERMINATOR_UNIT)))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), slog_b!()))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+) => {
@@ -2182,11 +2204,8 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), $crate::BorrowedKV(&slog_log!(@ (); $($k => $v),+))))
+            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), slog_b!($($k => $v),+)))
         }
-    };
-    ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
-        log!($lvl, $l, $msg; $($k => $v),+)
     };
     ($lvl:expr, $l:expr, $($args:tt)+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
@@ -2200,7 +2219,7 @@ macro_rules! slog_log(
                 module: module_path!(),
                 target: module_path!(),
             };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), $crate::BorrowedKV(&$crate::STATIC_TERMINATOR_UNIT)))
+            $l.log(&$crate::Record::new(&RS, format_args!($($args)+),  slog_b!()))
         }
     };
 );
