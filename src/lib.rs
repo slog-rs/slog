@@ -148,9 +148,9 @@ use alloc::rc::Rc;
 #[cfg(not(feature = "std"))]
 use collections::string::String;
 
-use core::fmt;
 
-use core::result;
+use core::{convert, fmt, result};
+
 use core::str::FromStr;
 
 #[cfg(feature = "std")]
@@ -251,13 +251,18 @@ impl Logger {
         }
     }
 
-    /// Log one logging record
+    /// Log one logging `Record`
     ///
     /// Use specific logging functions instead. See `log!` macro
     /// documentation.
     #[inline]
     pub fn log(&self, record: &Record) {
         let _ = self.drain.log(&record, &self.list);
+    }
+
+    /// Get list of key-value pairs assigned to this `Logger`
+    pub fn list(&self) -> &OwnedKVList {
+        &self.list
     }
 }
 
@@ -1614,6 +1619,12 @@ impl OwnedKVList {
     /// This is generally faster aproach
     pub fn iter_groups(&self) -> OwnedKVListGroupIterator {
         OwnedKVListGroupIterator::new(self)
+    }
+}
+
+impl convert::From<OwnedKV> for OwnedKVList {
+    fn from(from: OwnedKV) -> Self {
+        OwnedKVList::root(from)
     }
 }
 
