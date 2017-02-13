@@ -918,7 +918,7 @@ pub struct RecordStatic<'a> {
 /// Record is passed to a `Logger`, which delivers it to it's own `Drain`,
 /// where actual logging processing is implemented.
 pub struct Record<'a> {
-    meta: &'a RecordStatic<'a>,
+    rstatic: &'a RecordStatic<'a>,
     msg: fmt::Arguments<'a>,
     kv: BorrowedKV<'a>,
 }
@@ -935,7 +935,7 @@ impl<'a> Record<'a> {
                kv: BorrowedKV<'a>)
                -> Self {
         Record {
-            meta: s,
+            rstatic: s,
             msg: msg,
             kv: kv,
         }
@@ -948,39 +948,39 @@ impl<'a> Record<'a> {
 
     /// Get record logging level
     pub fn level(&self) -> Level {
-        self.meta.level
+        self.rstatic.level
     }
 
     /// Get line number
     pub fn line(&self) -> u32 {
-        self.meta.line
+        self.rstatic.line
     }
 
     /// Get error column
     pub fn column(&self) -> u32 {
-        self.meta.column
+        self.rstatic.column
     }
 
     /// Get file path
     pub fn file(&self) -> &'static str {
-        self.meta.file
+        self.rstatic.file
     }
 
     /// Get target
     ///
     /// Mostly for backward compatibility with `log`
     pub fn target(&self) -> &str {
-        self.meta.target
+        self.rstatic.target
     }
 
     /// Get module
     pub fn module(&self) -> &'static str {
-        self.meta.module
+        self.rstatic.module
     }
 
     /// Get function
     pub fn function(&self) -> &'static str {
-        self.meta.function
+        self.rstatic.function
     }
 
     /// Get key-value pairs
@@ -2016,6 +2016,57 @@ macro_rules! slog_b(
     };
 );
 
+#[macro_export]
+/// Create `RecordStatic` at the given code location
+macro_rules! record_static(
+    ($lvl:expr) => {
+        $crate::RecordStatic {
+            level: $lvl,
+            file: file!(),
+            line: line!(),
+            column: column!(),
+            function: "",
+            module: module_path!(),
+            target: "",
+        }
+    };
+);
+
+#[macro_export]
+/// Alias of `record_static`
+macro_rules! slog_record_static(
+    ($lvl:expr) => {
+        $crate::RecordStatic {
+            level: $lvl,
+            file: file!(),
+            line: line!(),
+            column: column!(),
+            function: "",
+            module: module_path!(),
+            target: "",
+        }
+    };
+);
+
+#[macro_export]
+/// Create `Record` at the given code location
+macro_rules! record(
+    ($lvl:expr, $args:expr, $b:expr) => {{
+        static RS : $crate::RecordStatic<'static> = record_static!($lvl);
+        $crate::Record::new(&RS, $args, $b)
+    }};
+);
+
+#[macro_export]
+/// Alias of `record`
+macro_rules! slog_record(
+    ($lvl:expr, $args:expr, $b:expr) => {{
+        static RS : $crate::RecordStatic<'static> = slog_record_static!($lvl);
+        $crate::Record::new(&RS, $args, $b)
+    }};
+);
+
+
 /// Log message of a given level
 ///
 /// Use wrappers `error!`, `warn!` etc. instead
@@ -2083,62 +2134,22 @@ macro_rules! slog_b(
 macro_rules! log(
     ($lvl:expr, $l:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
-                level: $lvl,
-                file: file!(),
-                line: line!(),
-                column: column!(),
-                function: "",
-                module: module_path!(),
-                target: module_path!(),
-            };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), b!($($k => $v),+)))
+            $l.log(&record!($lvl, format_args!($($args)+), b!($($k => $v),+)))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
-                level: $lvl,
-                file: file!(),
-                line: line!(),
-                column: column!(),
-                function: "",
-                module: module_path!(),
-                target: module_path!(),
-            };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), b!()))
+            $l.log(&record!($lvl, format_args!("{}", $msg), b!()))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
-                level: $lvl,
-                file: file!(),
-                line: line!(),
-                column: column!(),
-                function: "",
-                module: module_path!(),
-                target: module_path!(),
-            };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), b!($($k => $v),+)))
+            $l.log(&record!($lvl, format_args!("{}", $msg), b!($($k => $v),+)))
         }
     };
     ($lvl:expr, $l:expr, $($args:tt)+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
-                level: $lvl,
-                file: file!(),
-                line: line!(),
-                column: column!(),
-                function: "",
-                module: module_path!(),
-                target: module_path!(),
-            };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+),  b!()))
+            $l.log(&record!($lvl, format_args!($($args)+),  b!()))
         }
     };
 );
@@ -2151,7 +2162,7 @@ macro_rules! log(
 /// See `log` for format documentation.
 ///
 /// ```
-/// #[macro_use(slog_o,slog_b,slog_log,slog_info)]
+/// #[macro_use(slog_o,slog_b,slog_record,slog_record_static,slog_log,slog_info)]
 /// extern crate slog;
 ///
 /// fn main() {
@@ -2164,62 +2175,22 @@ macro_rules! log(
 macro_rules! slog_log(
     ($lvl:expr, $l:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
-                level: $lvl,
-                file: file!(),
-                line: line!(),
-                column: column!(),
-                function: "",
-                module: module_path!(),
-                target: module_path!(),
-            };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+), slog_b!($($k => $v),+)))
+            $l.log(&slog_record!($lvl, format_args!($($args)+), slog_b!($($k => $v),+)))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
-                level: $lvl,
-                file: file!(),
-                line: line!(),
-                column: column!(),
-                function: "",
-                module: module_path!(),
-                target: module_path!(),
-            };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), slog_b!()))
+            $l.log(&slog_record!($lvl, format_args!("{}", $msg), slog_b!()))
         }
     };
     ($lvl:expr, $l:expr, $msg:expr; $($k:expr => $v:expr),+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
-                level: $lvl,
-                file: file!(),
-                line: line!(),
-                column: column!(),
-                function: "",
-                module: module_path!(),
-                target: module_path!(),
-            };
-            $l.log(&$crate::Record::new(&RS, format_args!("{}", $msg), slog_b!($($k => $v),+)))
+            $l.log(&slog_record!($lvl, format_args!("{}", $msg), slog_b!($($k => $v),+)))
         }
     };
     ($lvl:expr, $l:expr, $($args:tt)+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            // prevent generating big `Record` over and over
-            static RS : $crate::RecordStatic<'static> = $crate::RecordStatic {
-                level: $lvl,
-                file: file!(),
-                line: line!(),
-                column: column!(),
-                function: "",
-                module: module_path!(),
-                target: module_path!(),
-            };
-            $l.log(&$crate::Record::new(&RS, format_args!($($args)+),  slog_b!()))
+            $l.log(&slog_record!($lvl, format_args!($($args)+),  slog_b!()))
         }
     };
 );
