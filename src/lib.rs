@@ -892,35 +892,77 @@ impl<D: Drain + ?Sized> Drain for Arc<D> {
     }
 }
 
-/// Convenience methods for building drains
+
+
+/// Convenience operations on `Drain`
 ///
 /// `DrainExt` is implemented for every `Drain` and contains
 /// convenience methods.
-pub trait DrainExt: Sized + Drain {
+pub trait DrainExt: Drain {
+    /// Pass `Drain` through a closure, eg. to wrap
+    /// into another `Drain`.
+    ///
+    /// ```
+    /// #[macro_use]
+    /// extern crate slog;
+    /// use slog::*;
+    ///
+    /// fn main() {
+    ///     let _drain = Discard.map(Fuse);
+    /// }
+    /// ```
+
+    fn map<F, R>(self, f: F) -> R
+        where Self: Sized,
+              F: FnOnce(Self) -> R
+    {
+        f(self)
+    }
+
+
+    /// Convert `Drain` to one handling only some `Records`
+    ///
+    /// Wrap `Self` in `Filter`
+    fn filter<F>(self, f: F) -> Filter<Self, F>
+        where Self: Sized,
+              F: Fn(&Record) -> bool + 'static + Send + Sync
+    {
+        Filter::new(self, f)
+    }
+
+    /// Convert `Drain` to one handling only `Records` of certain logging level
+    /// (or higher)
+    ///
+    /// Wrap `Self` in `LevelFilter`
+    fn filter_level(self, level: Level) -> LevelFilter<Self>
+        where Self: Sized
+    {
+        LevelFilter(self, level)
+    }
+
     /// Map logging errors returned by this drain
     ///
     /// `f` is a closure that takes `Drain::Err` returned by a given
     /// drain, and returns new error of potentially different type
     fn map_err<F, E>(self, f: F) -> MapError<Self, E>
-        where F: 'static + Sync + Send + Fn(<Self as Drain>::Err) -> E
+        where Self: Sized,
+              F: 'static + Sync + Send + Fn(<Self as Drain>::Err) -> E
     {
         MapError::new(self, f)
     }
 
-    /// Make `Self` ignore and result
-    fn ignore_res(self) -> IgnoreResult<Self> {
-        IgnoreResult::new(self)
-    }
-
-    /// Make `Self` panic when returning any errors
-    fn fuse(self) -> Fuse<Self>
-        where <Self as Drain>::Err: fmt::Display
+    /// Ignore results returned by this drain
+    ///
+    /// Wrap `Self` in `IgnoreResult`
+    fn ignore_res(self) -> IgnoreResult<Self>
+        where Self: Sized
     {
-        Fuse::new(self)
+        IgnoreResult::new(self)
     }
 }
 
 impl<D: Drain> DrainExt for D {}
+
 
 /// `Drain` discarding everything
 ///
@@ -939,38 +981,68 @@ impl Drain for Discard {
 ///
 /// Wraps another `Drain` and passes `Record`s to it, only if they satisfy a
 /// given condition.
-pub struct Filter<D: Drain> {
-    drain: D,
-    // eliminated dynamic dispatch, after rust learns `-> impl Trait`
-    cond: Box<Fn(&Record) -> bool + 'static + Send + Sync>,
-}
+pub struct Filter<D: Drain, F>(pub D, pub F)
+    where F: Fn(&Record) -> bool + 'static + Send + Sync;
 
-impl<D: Drain> Filter<D> {
+impl<D: Drain, F> Filter<D, F>
+    where F: 'static + Sync + Send + Fn(&Record) -> bool
+{
     /// Create `Filter` wrapping given `drain`
-    pub fn new<F: 'static + Sync + Send + Fn(&Record) -> bool>(drain: D,
-                                                               cond: F)
-                                                               -> Self {
-        Filter {
-            drain: drain,
-            cond: Box::new(cond),
-        }
+    pub fn new(drain: D, cond: F) -> Self {
+        Filter(drain, cond)
     }
 }
 
-impl<D: Drain> Drain for Filter<D> {
+impl<D: Drain, F> Drain for Filter<D, F>
+    where F: 'static + Sync + Send + Fn(&Record) -> bool
+{
     type Ok = Option<D::Ok>;
     type Err = D::Err;
     fn log(&self,
            record: &Record,
            logger_values: &OwnedKVList)
            -> result::Result<Self::Ok, Self::Err> {
-        if (self.cond)(&record) {
-            Ok(Some(self.drain.log(record, logger_values)?))
+        if (self.1)(&record) {
+            Ok(Some(self.0.log(record, logger_values)?))
         } else {
             Ok(None)
         }
     }
 }
+
+/// `Drain` filtering records by `Record` logging level
+///
+/// Wraps a drain and passes records to it, only
+/// if their level is at least given level.
+///
+/// TODO: Remove this type. This drain is a special case of `Filter`, but
+/// because `Filter` can not use static dispatch ATM due to Rust limitations
+/// that will be lifted in the future, it is a standalone type.
+/// Reference: https://github.com/rust-lang/rust/issues/34511
+pub struct LevelFilter<D: Drain>(pub D, pub Level);
+
+impl<D: Drain> LevelFilter<D> {
+    /// Create `LevelFilter`
+    pub fn new(drain: D, level: Level) -> Self {
+        LevelFilter(drain, level)
+    }
+}
+
+impl<D: Drain> Drain for LevelFilter<D> {
+    type Ok = Option<D::Ok>;
+    type Err = D::Err;
+    fn log(&self,
+           record: &Record,
+           logger_values: &OwnedKVList)
+           -> result::Result<Self::Ok, Self::Err> {
+        if record.level().is_at_least(self.1) {
+            Ok(Some(self.0.log(record, logger_values)?))
+        } else {
+            Ok(None)
+        }
+    }
+}
+
 
 
 /// `Drain` mapping error returned by another `Drain`
@@ -1006,62 +1078,16 @@ impl<D: Drain, E> Drain for MapError<D, E> {
     }
 }
 
-
-/// `Drain` filtering records by `Record` logging level
-///
-/// Wraps a drain and passes records to it, only
-/// if their level is at least given level.
-///
-/// TODO: Remove this type. This drain is a special case of `Filter`, but
-/// because `Filter` can not use static dispatch ATM due to Rust limitations
-/// that will be lifted in the future, it is a standalone type.
-/// Reference: https://github.com/rust-lang/rust/issues/34511
-pub struct LevelFilter<D: Drain> {
-    level: Level,
-    drain: D,
-}
-
-impl<D: Drain> LevelFilter<D> {
-    /// Create `LevelFilter`
-    pub fn new(drain: D, level: Level) -> Self {
-        LevelFilter {
-            level: level,
-            drain: drain,
-        }
-    }
-}
-
-impl<D: Drain> Drain for LevelFilter<D> {
-    type Ok = Option<D::Ok>;
-    type Err = D::Err;
-    fn log(&self,
-           record: &Record,
-           logger_values: &OwnedKVList)
-           -> result::Result<Self::Ok, Self::Err> {
-        if record.level().is_at_least(self.level) {
-            Ok(Some(self.drain.log(record, logger_values)?))
-        } else {
-            Ok(None)
-        }
-    }
-}
-
 /// `Drain` duplicating records into two other `Drain`s
 ///
 /// Can be nested for more than two outputs.
-pub struct Duplicate<D1: Drain, D2: Drain> {
-    drain1: D1,
-    drain2: D2,
-}
+pub struct Duplicate<D1: Drain, D2: Drain>(pub D1, pub D2);
 
 
 impl<D1: Drain, D2: Drain> Duplicate<D1, D2> {
     /// Create `Duplicate`
     pub fn new(drain1: D1, drain2: D2) -> Self {
-        Duplicate {
-            drain1: drain1,
-            drain2: drain2,
-        }
+        Duplicate(drain1, drain2)
     }
 }
 
@@ -1072,8 +1098,8 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
            record: &Record,
            logger_values: &OwnedKVList)
            -> result::Result<Self::Ok, Self::Err> {
-        let res1 = self.drain1.log(record, logger_values);
-        let res2 = self.drain2.log(record, logger_values);
+        let res1 = self.0.log(record, logger_values);
+        let res2 = self.1.log(record, logger_values);
 
         match (res1, res2) {
             (Ok(o1), Ok(o2)) => Ok((o1, o2)),
@@ -1090,19 +1116,17 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
 ///
 /// Note: `Drain::Err` must implement `Display` (for displaying on panick). It's
 /// easy to create own `Fuse` drain if this requirement can't be fulfilled.
-pub struct Fuse<D: Drain> {
-    drain: D,
-}
+pub struct Fuse<D: Drain>(pub D);
 
 impl<D: Drain> Fuse<D> {
     /// Create `Fuse` wrapping given `drain`
     pub fn new(drain: D) -> Self {
-        Fuse { drain: drain }
+        Fuse(drain)
     }
 }
 
 impl<D: Drain> Drain for Fuse<D>
-    where D::Err: fmt::Display
+    where D::Err: fmt::Debug
 {
     type Ok = ();
     type Err = Never;
@@ -1110,9 +1134,9 @@ impl<D: Drain> Drain for Fuse<D>
            record: &Record,
            logger_values: &OwnedKVList)
            -> result::Result<Self::Ok, Never> {
-        let _ = self.drain
+        let _ = self.0
             .log(record, logger_values)
-            .unwrap_or_else(|e| panic!("slog::Fuse Drain: {}", e));
+            .unwrap_or_else(|e| panic!("slog::Fuse Drain: {:?}", e));
         Ok(())
     }
 }
@@ -1146,27 +1170,6 @@ impl<D: Drain> Drain for IgnoreResult<D> {
     }
 }
 
-/// Filter by `cond` closure
-pub fn filter<D: Drain, F: 'static + Send + Sync + Fn(&Record) -> bool>
-    (cond: F,
-     d: D)
-     -> Filter<D> {
-    Filter::new(d, cond)
-}
-
-/// Filter by log level
-pub fn level_filter<D: Drain>(level: Level, d: D) -> LevelFilter<D> {
-    LevelFilter::new(d, level)
-}
-
-/// Duplicate records to two drains
-///
-/// Create `Duplicate` drain.
-///
-/// Can be nested for multiple outputs.
-pub fn duplicate<D1: Drain, D2: Drain>(d1: D1, d2: D2) -> Duplicate<D1, D2> {
-    Duplicate::new(d1, d2)
-}
 
 #[cfg(feature = "std")]
 #[derive(Debug)]
@@ -2355,8 +2358,12 @@ impl core::fmt::Display for Error {
 /// rust during time of the release. It will be switched to `!` at some point
 /// and `Never` should not be considered "stable" API.
 #[doc(hidden)]
-pub type Never = ();
+pub type Never = NeverStruct;
 
+#[doc(hidden)]
+#[derive(Debug)]
+#[allow(private_in_public)]
+struct NeverStruct(());
 
 /// This is not part of "stable" API
 #[doc(hidden)]

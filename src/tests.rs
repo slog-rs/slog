@@ -124,3 +124,14 @@ fn expressions() {
     slog_warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar(); "logging message bar={}", r.foo.bar(),);
 
 }
+
+
+#[test]
+fn makers() {
+    use *;
+    let drain =
+        Duplicate(Discard.filter(|r| r.level().is_at_least(Level::Info)),
+                  Discard.filter_level(Level::Warning))
+            .map(Fuse);
+    let _log = Logger::root(drain, o!("version" => env!("CARGO_PKG_VERSION")));
+}
