@@ -2098,12 +2098,12 @@ impl fmt::Debug for OwnedKVList {
                 Ok(())
             });
             let record_static = record_static!(Level::Trace, "");
-            let record = Record::new(&record_static,
-                                     format_args!(""),
-                                     BorrowedKV(&STATIC_TERMINATOR_UNIT));
 
             for i in self.iter_groups() {
-                try!(i.serialize(&record, &mut as_str_ser)
+                try!(i.serialize(&Record::new(&record_static,
+                                              format_args!(""),
+                                              BorrowedKV(&STATIC_TERMINATOR_UNIT)),
+                                 &mut as_str_ser)
                     .map_err(|_| fmt::Error));
             }
         }
