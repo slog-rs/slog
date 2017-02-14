@@ -7,12 +7,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 1.5.0 - Unreleased
 
+## 2.0.0 - Unreleased
+
+## 2.0.0-alpha1
 ### Changed
 
-* **BREAKING**: `OwnedKeyValueList::parent()` will return `Option` instead
-  of `&Option`. Very unlikely that anyone is affected.
+* Refactored key-value pairs traits and structures
+* Renamed some types
+* Support chaining of `OwnedKVList`s
+* Added associated `Ok` type to `Drain`
+* Refactored `Record` to optimize performance on async
+  operations
+
+### Added
+
+* Macros to create `OwnedKV` and `BorrowedKV`
+* `Logger` implements `Drain`
+
+## 1.5.0 - 2017-01-19
+### Changed
+
 * Order of key-value pairs is now strictly defined
 
 ### Added
