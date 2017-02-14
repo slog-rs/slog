@@ -11,6 +11,9 @@
 //! information about project organization, development, help, etc. please see
 //! [slog github page](https://github.com/slog-rs/slog)
 //!
+//! ** This is documentation for development release of slog v2.** See [slog
+//! v1 documentation](https://docs.rs/slog/1) for previous stable release.
+//!
 //! ## Core advantages over `log` crate
 //!
 //! * **extensible** - `slog` crate provides core functionality: very basic
