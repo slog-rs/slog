@@ -452,7 +452,7 @@ macro_rules! slog_record(
 macro_rules! log(
     ($l:expr, $lvl:expr,  $tag:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, $tag, format_args!($($args)+), b!($($k => $v),+)))
+            $l.log(&record!($lvl, $tag, &format_args!($($args)+), b!($($k => $v),+)))
         }
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr,) => {
@@ -460,7 +460,7 @@ macro_rules! log(
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, $tag, format_args!("{}", $msg), b!()))
+            $l.log(&record!($lvl, $tag, &format_args!("{}", $msg), b!()))
         }
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
@@ -468,12 +468,12 @@ macro_rules! log(
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, $tag, format_args!("{}", $msg), b!($($k => $v),+)))
+            $l.log(&record!($lvl, $tag, &format_args!("{}", $msg), b!($($k => $v),+)))
         }
     };
     ($l:expr, $lvl:expr, $tag:expr, $($args:tt)+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, $tag, format_args!($($args)+),  b!()))
+            $l.log(&record!($lvl, $tag, &format_args!($($args)+),  b!()))
         }
     };
 );
@@ -499,7 +499,7 @@ macro_rules! log(
 macro_rules! slog_log(
     ($l:expr, $lvl:expr, $tag:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, $tag, format_args!($($args)+), slog_b!($($k => $v),+)))
+            $l.log(&slog_record!($lvl, $tag, &format_args!($($args)+), slog_b!($($k => $v),+)))
         }
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr,) => {
@@ -507,7 +507,7 @@ macro_rules! slog_log(
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, $tag, format_args!("{}", $msg), slog_b!()))
+            $l.log(&slog_record!($lvl, $tag, &format_args!("{}", $msg), slog_b!()))
         }
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
@@ -515,12 +515,12 @@ macro_rules! slog_log(
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, $tag, format_args!("{}", $msg), slog_b!($($k => $v),+)))
+            $l.log(&slog_record!($lvl, $tag, &format_args!("{}", $msg), slog_b!($($k => $v),+)))
         }
     };
     ($l:expr, $lvl:expr, $tag:expr, $($args:tt)+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, $tag, format_args!($($args)+),  slog_b!()))
+            $l.log(&slog_record!($lvl, $tag, &format_args!($($args)+),  slog_b!()))
         }
     };
 );
@@ -1470,7 +1470,7 @@ pub struct RecordStatic<'a> {
 /// where actual logging processing is implemented.
 pub struct Record<'a> {
     rstatic: &'a RecordStatic<'a>,
-    msg: fmt::Arguments<'a>,
+    msg: &'a fmt::Arguments<'a>,
     kv: BorrowedKV<'a>,
 }
 
@@ -1482,7 +1482,7 @@ impl<'a> Record<'a> {
     #[inline]
     #[doc(hidden)]
     pub fn new(s: &'a RecordStatic<'a>,
-               msg: fmt::Arguments<'a>,
+               msg: &'a fmt::Arguments<'a>,
                kv: BorrowedKV<'a>)
                -> Self {
         Record {
@@ -1493,7 +1493,7 @@ impl<'a> Record<'a> {
     }
 
     /// Get a log record message
-    pub fn msg(&self) -> fmt::Arguments {
+    pub fn msg(&self) -> &fmt::Arguments {
         self.msg
     }
 
@@ -1706,7 +1706,7 @@ impl<'a> Value for &'a str {
     }
 }
 
-impl<'a> Value for fmt::Arguments<'a> {
+impl<'a> Value for &'a fmt::Arguments<'a> {
     fn serialize(&self,
                  _record: &Record,
                  key: Key,
@@ -2104,7 +2104,7 @@ impl fmt::Debug for OwnedKVList {
 
             for i in self.iter_groups() {
                 try!(i.serialize(&Record::new(&record_static,
-                                              format_args!(""),
+                                              &format_args!(""),
                                               BorrowedKV(&STATIC_TERMINATOR_UNIT)),
                                  &mut as_str_ser)
                     .map_err(|_| fmt::Error));
