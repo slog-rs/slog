@@ -1434,6 +1434,7 @@ fn level_from_str() {
 
 // {{{ Record
 #[doc(hidden)]
+#[derive(Clone, Copy)]
 pub struct RecordLocation {
     /// File
     pub file: &'static str,
@@ -1454,7 +1455,7 @@ pub struct RecordLocation {
 /// instead.
 pub struct RecordStatic<'a> {
     /// Code location
-    pub location: &'static RecordLocation,
+    pub location: &'a RecordLocation,
     /// Logging level
     pub level: Level,
     /// Tag
@@ -1508,7 +1509,7 @@ impl<'a> Record<'a> {
     }
 
     /// Get line number
-    pub fn location(&self) -> &'static RecordLocation {
+    pub fn location(&self) -> &RecordLocation {
         self.rstatic.location
     }
 
