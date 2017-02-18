@@ -712,7 +712,7 @@ macro_rules! slog_trace(
 /// statements by delivering all logging statement information (`Record`)
 /// to it's `Drain`.
 ///
-/// Child loggers are build from existing loggers, and inherit their existing
+/// Child loggers are built from existing loggers, and inherit their existing
 /// key-value pairs, which can be supplemented with new ones.
 ///
 /// Cloning existing loggers and creating new ones is cheap. Loggers can be
