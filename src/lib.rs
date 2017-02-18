@@ -1903,13 +1903,6 @@ pub trait KV {
                  record: &Record,
                  serializer: &mut Serializer)
                  -> Result;
-
-    /// Split into tuple of `(first, rest)`
-    ///
-    /// None if `KV` contains no key-value pair (is empty)
-    ///
-    /// The returned `head` must be a single key-value pair.
-    fn split_first(&self) -> Option<(&KV, &KV)>;
 }
 
 /// Single pair `Key` and `Value`
@@ -1925,10 +1918,6 @@ impl<V> KV for SingleKV<V>
                  -> Result {
         self.1.serialize(record, self.0, serializer)
     }
-
-    fn split_first(&self) -> Option<(&KV, &KV)> {
-        Some((self, &STATIC_TERMINATOR_UNIT))
-    }
 }
 
 impl KV for () {
@@ -1937,10 +1926,6 @@ impl KV for () {
                  _serializer: &mut Serializer)
                  -> Result {
         Ok(())
-    }
-
-    fn split_first(&self) -> Option<(&KV, &KV)> {
-        None
     }
 }
 
@@ -1951,11 +1936,6 @@ impl<T: KV, R: KV> KV for (T, R) {
                  -> Result {
         try!(self.0.serialize(record, serializer));
         self.1.serialize(record, serializer)
-    }
-
-
-    fn split_first(&self) -> Option<(&KV, &KV)> {
-        Some((&self.0, &self.1))
     }
 }
 
@@ -1968,10 +1948,6 @@ impl<T> KV for Box<T>
                  -> Result {
         (**self).serialize(record, serializer)
     }
-
-    fn split_first(&self) -> Option<(&KV, &KV)> {
-        (**self).split_first()
-    }
 }
 
 impl<T> KV for Arc<T>
@@ -1983,10 +1959,6 @@ impl<T> KV for Arc<T>
                  -> Result {
         (**self).serialize(record, serializer)
     }
-
-    fn split_first(&self) -> Option<(&KV, &KV)> {
-        (**self).split_first()
-    }
 }
 
 impl KV for OwnedKV {
@@ -1996,21 +1968,14 @@ impl KV for OwnedKV {
                  -> Result {
         self.0.serialize(record, serializer)
     }
-
-    fn split_first(&self) -> Option<(&KV, &KV)> {
-        self.0.split_first()
-    }
 }
+
 impl<'a> KV for BorrowedKV<'a> {
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
                  -> Result {
         self.0.serialize(record, serializer)
-    }
-
-    fn split_first(&self) -> Option<(&KV, &KV)> {
-        self.0.split_first()
     }
 }
 // }}}
@@ -2046,31 +2011,6 @@ pub struct BorrowedKV<'a>(#[doc(hidden)]
                           /// to create `BorrowedKV` instances.
                           pub &'a KV);
 
-impl<'a> BorrowedKV<'a> {
-    /// Iterate over every single `KV` in the the group
-    pub fn iter(&self) -> BorrowedKVIterator<'a> {
-        BorrowedKVIterator { cur: self.0 }
-    }
-}
-
-/// Iterato over `BorrowedKV`
-pub struct BorrowedKVIterator<'a> {
-    cur: &'a KV,
-}
-
-
-impl<'a> Iterator for BorrowedKVIterator<'a> {
-    type Item = &'a KV;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        if let Some((head, tail)) = self.cur.split_first() {
-            self.cur = tail;
-            return Some(head);
-        } else {
-            None
-        }
-    }
-}
 // }}}
 
 // {{{ OwnedKVList
@@ -2079,11 +2019,41 @@ struct OwnedKVListNode {
     kv: OwnedKV,
 }
 
+impl KV for OwnedKVListNode {
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+                 -> Result {
+
+        try!(self.kv.serialize(record, serializer));
+
+        if let Some(ref node) = self.next_node {
+            try!(node.serialize(record, serializer))
+        }
+
+        Ok(())
+    }
+}
 /// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
 #[derive(Clone)]
 pub struct OwnedKVList {
     next_list: Option<Arc<OwnedKVList>>,
     node: Arc<OwnedKVListNode>,
+}
+
+impl KV for OwnedKVList {
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+                 -> Result {
+
+        if let Some(ref list) = self.next_list {
+            try!(list.serialize(record, serializer))
+        }
+
+        try!(self.node.serialize(record, serializer));
+        Ok(())
+    }
 }
 
 impl fmt::Debug for OwnedKVList {
@@ -2103,13 +2073,11 @@ impl fmt::Debug for OwnedKVList {
             });
             let record_static = record_static!(Level::Trace, "");
 
-            for i in self.iter_groups() {
-                try!(i.serialize(&Record::new(&record_static,
-                                              &format_args!(""),
-                                              BorrowedKV(&STATIC_TERMINATOR_UNIT)),
-                                 &mut as_str_ser)
-                    .map_err(|_| fmt::Error));
-            }
+            try!(self.serialize(&Record::new(&record_static,
+                                        &format_args!(""),
+                                        BorrowedKV(&STATIC_TERMINATOR_UNIT)),
+                           &mut as_str_ser)
+                .map_err(|_| fmt::Error));
         }
 
         try!(write!(f, ")"));
@@ -2150,120 +2118,11 @@ impl OwnedKVList {
             node: self.node.clone(),
         }
     }
-
-    /// Iterate over every single `KV` of `OwnedKVList`
-    ///
-    /// The order is reverse to how it was built. Eg.
-    ///
-    /// ```
-    /// #[macro_use]
-    /// extern crate slog;
-    ///
-    /// fn main() {
-    ///     let drain = slog::Discard;
-    ///     let root = slog::Logger::root(drain, o!("k1" => "v1", "k2" => "k2"));
-    ///     let _log = root.new(o!("k3" => "v3", "k4" => "v4"));
-    /// }
-    /// ```
-    ///
-    /// Will produce `OwnedKVList.iter()` that returns `k4, k3, k2, k1`.
-    pub fn iter_single(&self) -> OwnedKVListIterator {
-        OwnedKVListIterator::new(self)
-    }
-
-    /// Iterate over every `OwnedKV` of `OwnedKVList`
-    ///
-    /// This is generally faster aproach
-    pub fn iter_groups(&self) -> OwnedKVListGroupIterator {
-        OwnedKVListGroupIterator::new(self)
-    }
 }
 
 impl convert::From<OwnedKV> for OwnedKVList {
     fn from(from: OwnedKV) -> Self {
         OwnedKVList::root(from)
-    }
-}
-
-/// Iterator over `OwnedKVList`-s
-///
-/// The `&KV` returned corespond to `OwnedKV`s,
-/// meaning they can serialize to multiple key-value
-/// pairs, and can be iterated further using
-/// `KV::split_first`.
-pub struct OwnedKVListGroupIterator<'a> {
-    next_list: Option<&'a OwnedKVList>,
-    next_node: Option<&'a OwnedKVListNode>,
-}
-
-impl<'a> OwnedKVListGroupIterator<'a> {
-    fn new(list: &'a OwnedKVList) -> Self {
-        OwnedKVListGroupIterator {
-            next_list: Some(list),
-            next_node: None,
-        }
-    }
-}
-
-impl<'a> Iterator for OwnedKVListGroupIterator<'a> {
-    type Item = &'a OwnedKV;
-    fn next(&mut self) -> Option<Self::Item> {
-        loop {
-            if let Some(node) = self.next_node.take() {
-                self.next_node = node.next_node.as_ref().map(|next| &**next);
-                return Some(&node.kv);
-            }
-            if let Some(list) = self.next_list.take() {
-                self.next_node = Some(&*list.node);
-                self.next_list = list.next_list.as_ref().map(|next| &**next);
-                continue;
-            }
-            return None;
-        }
-    }
-}
-
-/// Iterator over `OwnedKVList`-s
-///
-/// The `&KV` returned are guaranteed to produce only single key-value
-pub struct OwnedKVListIterator<'a> {
-    next_list: Option<&'a OwnedKVList>,
-    next_node: Option<&'a OwnedKVListNode>,
-    cur: Option<&'a KV>,
-}
-
-impl<'a> OwnedKVListIterator<'a> {
-    fn new(list: &'a OwnedKVList) -> Self {
-        OwnedKVListIterator {
-            next_list: Some(list),
-            next_node: None,
-            cur: None,
-        }
-    }
-}
-
-impl<'a> Iterator for OwnedKVListIterator<'a> {
-    type Item = &'a KV;
-    fn next(&mut self) -> Option<Self::Item> {
-        loop {
-            if let Some(x) = self.cur.take() {
-                if let Some((head, tail)) = x.split_first() {
-                    self.cur = Some(tail);
-                    return Some(head);
-                }
-            }
-            if let Some(node) = self.next_node.take() {
-                self.cur = Some(&*node.kv.0);
-                self.next_node = node.next_node.as_ref().map(|next| &**next);
-                continue;
-            }
-            if let Some(list) = self.next_list.take() {
-                self.next_node = Some(&*list.node);
-                self.next_list = list.next_list.as_ref().map(|next| &**next);
-                continue;
-            }
-            return None;
-        }
     }
 }
 // }}}
