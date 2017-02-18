@@ -787,6 +787,7 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"));
     ///     let _log = root.new(o!("key" => "value"));
     /// }
+    #[cfg_attr(feature = "cargo-clippy", allow(wrong_self_convention))]
     pub fn new<T>(&self, values: OwnedKV<T>) -> Logger
         where T: KV + Send + Sync + 'static
     {
@@ -802,7 +803,7 @@ impl Logger {
     /// documentation.
     #[inline]
     pub fn log(&self, record: &Record) {
-        let _ = self.drain.log(&record, &self.list);
+        let _ = self.drain.log(record, &self.list);
     }
 
     /// Get list of key-value pairs assigned to this `Logger`
@@ -833,7 +834,7 @@ impl Drain for Logger {
                 node: self.list.node.clone(),
             }),
         };
-        self.drain.log(&record, &chained)
+        self.drain.log(record, &chained)
     }
 }
 // }}}
@@ -1009,7 +1010,7 @@ impl<D: Drain, F> Drain for Filter<D, F>
            record: &Record,
            logger_values: &OwnedKVList)
            -> result::Result<Self::Ok, Self::Err> {
-        if (self.1)(&record) {
+        if (self.1)(record) {
             Ok(Some(self.0.log(record, logger_values)?))
         } else {
             Ok(None)
@@ -1641,7 +1642,7 @@ pub trait Serializer {
 
 /// Serializer to closure adapter.
 ///
-/// Formats all arguments as fmt::Arguments and passes them to a given closure.
+/// Formats all arguments as `fmt::Arguments` and passes them to a given closure.
 struct AsFmtSerializer<F>(pub F)
     where F: for<'a> FnMut(Key, fmt::Arguments<'a>) -> Result;
 
@@ -2023,7 +2024,7 @@ pub struct OwnedKV<T>(#[doc(hidden)]
 // }}}
 
 // {{{ BorrowedKV
-/// BorrowedKV
+/// Borrowed `KV`
 ///
 /// "Borrowed" means that the data is only a temporary
 /// referenced (`&T`) and can't be stored directly.
