@@ -1315,6 +1315,22 @@ impl Level {
     }
 }
 
+impl FromStr for Level {
+    type Err = ();
+    fn from_str(s: &str) -> core::result::Result<Level, ()> {
+        let result = match &s.to_lowercase()[..] {
+            "critical" => Level::Critical,
+            "error" => Level::Error,
+            "warning" => Level::Warning,
+            "info" => Level::Info,
+            "debug" => Level::Debug,
+            "trace" => Level::Trace,
+            _ => return Err(())
+        };
+        Ok(result)
+    }
+}
+
 impl FilterLevel {
     /// Convert to `usize` value
     ///
