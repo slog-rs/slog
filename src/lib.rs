@@ -825,7 +825,10 @@ impl Drain for Logger {
            -> result::Result<Self::Ok, Self::Err> {
         debug_assert!(self.list.next_list.is_none());
 
-        let chained = values.append(&self.list);
+        let chained = OwnedKVList {
+            next_list: Some(Arc::new(values.clone())),
+            node: self.list.node.clone(),
+        };
         self.drain.log(&record, &chained)
     }
 }
@@ -2105,17 +2108,6 @@ impl OwnedKVList {
                 next_node: Some(next_node),
                 kv: values,
             }),
-        }
-    }
-
-    fn append(&self, other: &OwnedKVList) -> OwnedKVList {
-        OwnedKVList {
-            next_list: Some(Arc::new(if let Some(ref next) = self.next_list {
-                next.append(other)
-            } else {
-                other.clone()
-            })),
-            node: self.node.clone(),
         }
     }
 }
