@@ -194,7 +194,7 @@ macro_rules! o(
         $args_ready
     };
     ($($args:tt)*) => {
-        $crate::OwnedKV(::std::boxed::Box::new(o!(@ (); $($args)*)))
+        $crate::OwnedKV(o!(@ (); $($args)*))
     };
 );
 
@@ -225,7 +225,7 @@ macro_rules! o(
         $args_ready
     };
     ($($args:tt)*) => {
-        $crate::OwnedKV(::alloc::boxed::Box::new(o!(@ (); $($args)*)))
+        $crate::OwnedKV(o!(@ (); $($args)*))
     };
 );
 
@@ -248,7 +248,7 @@ macro_rules! slog_o(
         $args_ready
     };
     ($($args:tt)*) => {
-        $crate::OwnedKV(::std::boxed::Box::new(slog_o!(@ (); $($args)*)))
+        $crate::OwnedKV(slog_o!(@ (); $($args)*))
     };
 );
 
@@ -271,7 +271,7 @@ macro_rules! slog_o(
         $args_ready
     };
     ($($args:tt)*) => {
-        $crate::OwnedKV(::alloc::boxed::Box::new(slog_o!(@ (); $($args)*)))
+        $crate::OwnedKV(slog_o!(@ (); $($args)*))
     };
 );
 
@@ -759,8 +759,9 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
-    pub fn root<D>(d: D, values: OwnedKV) -> Logger
-        where D: 'static + Drain<Err = Never, Ok = ()> + Sized + Send + Sync
+    pub fn root<D, T>(d: D, values: OwnedKV<T>) -> Logger
+        where D: 'static + Drain<Err = Never, Ok = ()> + Sized + Send + Sync,
+              T: KV + Send + Sync + 'static
     {
         Logger {
             drain: Arc::new(d),
@@ -786,7 +787,9 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"));
     ///     let _log = root.new(o!("key" => "value"));
     /// }
-    pub fn new(&self, values: OwnedKV) -> Logger {
+    pub fn new<T>(&self, values: OwnedKV<T>) -> Logger
+        where T: KV + Send + Sync + 'static
+    {
         Logger {
             drain: self.drain.clone(),
             list: OwnedKVList::new(values, self.list.node.clone()),
@@ -823,11 +826,12 @@ impl Drain for Logger {
            record: &Record,
            values: &OwnedKVList)
            -> result::Result<Self::Ok, Self::Err> {
-        debug_assert!(self.list.next_list.is_none());
 
         let chained = OwnedKVList {
-            next_list: Some(Arc::new(values.clone())),
-            node: self.list.node.clone(),
+            node: Arc::new(MultiListNode {
+                next_node: values.node.clone(),
+                node: self.list.node.clone(),
+            }),
         };
         self.drain.log(&record, &chained)
     }
@@ -1964,7 +1968,9 @@ impl<T> KV for Arc<T>
     }
 }
 
-impl KV for OwnedKV {
+impl<T> KV for OwnedKV<T>
+    where T: KV + Send + Sync + 'static
+{
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
@@ -1992,11 +1998,12 @@ impl<'a> KV for BorrowedKV<'a> {
 /// Zero, one or more owned key-value pairs.
 ///
 /// Can be constructed with `o!` macro
-pub struct OwnedKV(#[doc(hidden)]
-                   /// The exact details of that it are not considered public
-                   /// and stable API. `slog_o` or `o` macro should be used instead
-                   /// to create `OwnedKV` instances.
-                   pub Box<KV + Send + Sync + 'static>);
+pub struct OwnedKV<T>(#[doc(hidden)]
+                      /// The exact details of that it are not considered public
+                      /// and stable API. `slog_o` or `o` macro should be used instead
+                      /// to create `OwnedKV` instances.
+                      pub T)
+    where T: KV + Send + Sync + 'static;
 // }}}
 
 // {{{ BorrowedKV
@@ -2017,31 +2024,52 @@ pub struct BorrowedKV<'a>(#[doc(hidden)]
 // }}}
 
 // {{{ OwnedKVList
-struct OwnedKVListNode {
-    next_node: Option<Arc<OwnedKVListNode>>,
-    kv: OwnedKV,
+struct OwnedKVListNode<T>
+    where T: KV + Send + Sync + 'static
+{
+    next_node: Arc<KV + Send + Sync + 'static>,
+    kv: T,
 }
 
-impl KV for OwnedKVListNode {
+struct MultiListNode {
+    next_node: Arc<KV + Send + Sync + 'static>,
+    node: Arc<KV + Send + Sync + 'static>,
+}
+
+
+/// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
+#[derive(Clone)]
+pub struct OwnedKVList {
+    node: Arc<KV + Send + Sync + 'static>,
+}
+
+
+impl<T> KV for OwnedKVListNode<T>
+    where T: KV + Send + Sync + 'static
+{
     fn serialize(&self,
                  record: &Record,
                  serializer: &mut Serializer)
                  -> Result {
 
         try!(self.kv.serialize(record, serializer));
-
-        if let Some(ref node) = self.next_node {
-            try!(node.serialize(record, serializer))
-        }
+        try!(self.next_node.serialize(record, serializer));
 
         Ok(())
     }
 }
-/// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
-#[derive(Clone)]
-pub struct OwnedKVList {
-    next_list: Option<Arc<OwnedKVList>>,
-    node: Arc<OwnedKVListNode>,
+
+impl KV for MultiListNode {
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+                 -> Result {
+
+        try!(self.next_node.serialize(record, serializer));
+        try!(self.node.serialize(record, serializer));
+
+        Ok(())
+    }
 }
 
 impl KV for OwnedKVList {
@@ -2050,14 +2078,12 @@ impl KV for OwnedKVList {
                  serializer: &mut Serializer)
                  -> Result {
 
-        if let Some(ref list) = self.next_list {
-            try!(list.serialize(record, serializer))
-        }
-
         try!(self.node.serialize(record, serializer));
+
         Ok(())
     }
 }
+
 
 impl fmt::Debug for OwnedKVList {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -2076,7 +2102,8 @@ impl fmt::Debug for OwnedKVList {
             });
             let record_static = record_static!(Level::Trace, "");
 
-            try!(self.serialize(&Record::new(&record_static,
+            try!(self.node
+                .serialize(&Record::new(&record_static,
                                         &format_args!(""),
                                         BorrowedKV(&STATIC_TERMINATOR_UNIT)),
                            &mut as_str_ser)
@@ -2090,30 +2117,36 @@ impl fmt::Debug for OwnedKVList {
 
 impl OwnedKVList {
     /// New `OwnedKVList` node without a parent (root)
-    fn root(values: OwnedKV) -> Self {
+    fn root<T>(values: OwnedKV<T>) -> Self
+        where T: KV + Send + Sync + 'static
+    {
         OwnedKVList {
-            next_list: None,
             node: Arc::new(OwnedKVListNode {
-                next_node: None,
-                kv: values,
+                next_node: Arc::new(()),
+                kv: values.0,
             }),
         }
     }
 
     /// New `OwnedKVList` node with an existing parent
-    fn new(values: OwnedKV, next_node: Arc<OwnedKVListNode>) -> Self {
+    fn new<T>(values: OwnedKV<T>,
+              next_node: Arc<KV + Send + Sync + 'static>)
+              -> Self
+        where T: KV + Send + Sync + 'static
+    {
         OwnedKVList {
-            next_list: None,
             node: Arc::new(OwnedKVListNode {
-                next_node: Some(next_node),
-                kv: values,
+                next_node: next_node,
+                kv: values.0,
             }),
         }
     }
 }
 
-impl convert::From<OwnedKV> for OwnedKVList {
-    fn from(from: OwnedKV) -> Self {
+impl<T> convert::From<OwnedKV<T>> for OwnedKVList
+    where T: KV + Send + Sync + 'static
+{
+    fn from(from: OwnedKV<T>) -> Self {
         OwnedKVList::root(from)
     }
 }
