@@ -1326,7 +1326,7 @@ impl FromStr for Level {
             "info" => Level::Info,
             "debug" => Level::Debug,
             "trace" => Level::Trace,
-            _ => return Err(())
+            _ => return Err(()),
         };
         Ok(result)
     }
@@ -1986,7 +1986,7 @@ impl<T> KV for Arc<T>
 }
 
 impl<T> KV for OwnedKV<T>
-    where T: KV + Send + Sync + 'static
+    where T: KV + Send + Sync + 'static + ?Sized
 {
     fn serialize(&self,
                  record: &Record,
@@ -2020,7 +2020,7 @@ pub struct OwnedKV<T>(#[doc(hidden)]
                       /// and stable API. `slog_o` or `o` macro should be used instead
                       /// to create `OwnedKV` instances.
                       pub T)
-    where T: KV + Send + Sync + 'static;
+    where T: KV + Send + Sync + 'static + ?Sized;
 // }}}
 
 // {{{ BorrowedKV
