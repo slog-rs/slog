@@ -159,6 +159,8 @@ use core::str::FromStr;
 #[cfg(feature = "std")]
 use std::boxed::Box;
 #[cfg(feature = "std")]
+use std::panic::{UnwindSafe, RefUnwindSafe};
+#[cfg(feature = "std")]
 use std::rc::Rc;
 #[cfg(feature = "std")]
 use std::string::String;
@@ -729,15 +731,15 @@ macro_rules! slog_trace(
 /// often be made so by wrapping in a `Mutex` and/or `Arc`.
 ///
 /// `Logger` implements `Drain` trait. Any logging `Record` delivered to
-/// a `Logger` functioning as a `Drain`, will be delievere to it's `Drain`
+/// a `Logger` functioning as a `Drain`, will be delivered to it's `Drain`
 /// with existing key-value pairs appended to the `Logger`s key-value pairs.
-/// By itself it's effectively very similiar to `Logger` being an ancestor
+/// By itself it's effectively very similar to `Logger` being an ancestor
 /// of `Logger` that originated the logging `Record`. However, combined with
 /// other `Drain`s functionalities, allows custom processing logic for a
 /// part of logging tree.
 #[derive(Clone)]
 pub struct Logger {
-    drain: Arc<Drain<Err = Never, Ok = ()> + Send + Sync>,
+    drain: Arc<ThreadSafeDrain<Ok = (), Err = Never>>,
     list: OwnedKVList,
 }
 
@@ -764,8 +766,8 @@ impl Logger {
     ///     );
     /// }
     pub fn root<D, T>(d: D, values: OwnedKV<T>) -> Logger
-        where D: 'static + Drain<Err = Never, Ok = ()> + Sized + Send + Sync,
-              T: KV + Send + Sync + 'static
+        where D: 'static + ThreadSafeDrain<Err = Never, Ok = ()> + Sized,
+              T: ThreadSafeKV + 'static
     {
         Logger {
             drain: Arc::new(d),
@@ -793,7 +795,7 @@ impl Logger {
     /// }
     #[cfg_attr(feature = "cargo-clippy", allow(wrong_self_convention))]
     pub fn new<T>(&self, values: OwnedKV<T>) -> Logger
-        where T: KV + Send + Sync + 'static
+        where T: ThreadSafeKV + 'static
     {
         Logger {
             drain: self.drain.clone(),
@@ -957,6 +959,32 @@ pub trait Drain {
     }
 }
 
+#[cfg(feature = "std")]
+/// Thread-local safety bound for `Drain`
+///
+/// This type is used to enforce `Drain`s associated with `Logger`s
+/// are thread-safe.
+pub trait ThreadSafeDrain: Drain + Send + Sync + UnwindSafe + RefUnwindSafe {}
+
+#[cfg(feature = "std")]
+impl<T> ThreadSafeDrain for T
+    where T: Drain + Send + Sync + UnwindSafe + RefUnwindSafe
+{
+}
+
+#[cfg(not(feature = "std"))]
+/// Thread-local safety bound for `Drain`
+///
+/// This type is used to enforce `Drain`s associated with `Logger`s
+/// are thread-safe.
+
+pub trait ThreadSafeDrain: Drain + Send + Sync {}
+
+#[cfg(not(feature = "std"))]
+impl<T> ThreadSafeDrain for T where T: Drain + Send + Sync {}
+
+
+#[cfg(not(feature = "std"))]
 impl<D: Drain + ?Sized> Drain for Box<D> {
     type Ok = D::Ok;
     type Err = D::Err;
@@ -1784,7 +1812,7 @@ impl<T: Value> Value for Option<T> {
     }
 }
 
-impl Value for Box<Value + Send + 'static> {
+impl Value for Box<Value + 'static> {
     fn serialize(&self,
                  record: &Record,
                  key: Key,
@@ -1950,6 +1978,26 @@ pub trait KV {
                  -> Result;
 }
 
+#[cfg(feature = "std")]
+/// Thread-local safety bound for `KV`
+///
+/// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
+pub trait ThreadSafeKV: KV + Send + Sync + UnwindSafe + RefUnwindSafe {}
+
+#[cfg(feature = "std")]
+impl<T> ThreadSafeKV for T
+    where T: KV + Send + Sync + UnwindSafe + RefUnwindSafe
+{
+}
+
+#[cfg(not(feature = "std"))]
+/// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
+pub trait ThreadSafeKV: KV + Send + Sync {}
+
+#[cfg(not(feature = "std"))]
+impl<T> ThreadSafeKV for T where T: KV + Send + Sync {}
+
+
 /// Single pair `Key` and `Value`
 pub struct SingleKV<V>(pub Key, pub V) where V: Value;
 
@@ -2007,7 +2055,7 @@ impl<T> KV for Arc<T>
 }
 
 impl<T> KV for OwnedKV<T>
-    where T: KV + Send + Sync + 'static + ?Sized
+    where T: ThreadSafeKV + ?Sized
 {
     fn serialize(&self,
                  record: &Record,
@@ -2041,7 +2089,7 @@ pub struct OwnedKV<T>(#[doc(hidden)]
                       /// and stable API. `slog_o` or `o` macro should be used instead
                       /// to create `OwnedKV` instances.
                       pub T)
-    where T: KV + Send + Sync + 'static + ?Sized;
+    where T: ThreadSafeKV + ?Sized;
 // }}}
 
 // {{{ BorrowedKV
@@ -2063,27 +2111,27 @@ pub struct BorrowedKV<'a>(#[doc(hidden)]
 
 // {{{ OwnedKVList
 struct OwnedKVListNode<T>
-    where T: KV + Send + Sync + 'static
+    where T: ThreadSafeKV + 'static
 {
-    next_node: Arc<KV + Send + Sync + 'static>,
+    next_node: Arc<ThreadSafeKV + 'static>,
     kv: T,
 }
 
 struct MultiListNode {
-    next_node: Arc<KV + Send + Sync + 'static>,
-    node: Arc<KV + Send + Sync + 'static>,
+    next_node: Arc<ThreadSafeKV + 'static>,
+    node: Arc<ThreadSafeKV + 'static>,
 }
 
 
 /// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
 #[derive(Clone)]
 pub struct OwnedKVList {
-    node: Arc<KV + Send + Sync + 'static>,
+    node: Arc<ThreadSafeKV + 'static>,
 }
 
 
 impl<T> KV for OwnedKVListNode<T>
-    where T: KV + Send + Sync + 'static
+    where T: ThreadSafeKV + 'static
 {
     fn serialize(&self,
                  record: &Record,
@@ -2156,7 +2204,7 @@ impl fmt::Debug for OwnedKVList {
 impl OwnedKVList {
     /// New `OwnedKVList` node without a parent (root)
     fn root<T>(values: OwnedKV<T>) -> Self
-        where T: KV + Send + Sync + 'static
+        where T: ThreadSafeKV + 'static
     {
         OwnedKVList {
             node: Arc::new(OwnedKVListNode {
@@ -2168,9 +2216,9 @@ impl OwnedKVList {
 
     /// New `OwnedKVList` node with an existing parent
     fn new<T>(values: OwnedKV<T>,
-              next_node: Arc<KV + Send + Sync + 'static>)
+              next_node: Arc<ThreadSafeKV + 'static>)
               -> Self
-        where T: KV + Send + Sync + 'static
+        where T: ThreadSafeKV + 'static
     {
         OwnedKVList {
             node: Arc::new(OwnedKVListNode {
@@ -2182,7 +2230,7 @@ impl OwnedKVList {
 }
 
 impl<T> convert::From<OwnedKV<T>> for OwnedKVList
-    where T: KV + Send + Sync + 'static
+    where T: ThreadSafeKV + 'static
 {
     fn from(from: OwnedKV<T>) -> Self {
         OwnedKVList::root(from)
