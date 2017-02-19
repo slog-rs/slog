@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 2.0.0 - Unreleased
 
-## 2.0.0-alpha1
+## 2.0.0-alpha1 - 2017-02-18
 ### Changed
 
 * Refactored key-value pairs traits and structures
@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Added associated `Ok` type to `Drain`
 * Refactored `Record` to optimize performance on async
   operations
+* Minimal rustc version required: `1.15.0`
 
 ### Added
 
