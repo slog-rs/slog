@@ -1,6 +1,6 @@
 [package]
 name = "slog-nursery"
-version = "0.1.0"
+version = "0.2.0-alpha1"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Staging area for slog-rs"
 keywords = ["log", "logging", "structured", "hierarchical"]
