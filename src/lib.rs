@@ -1188,14 +1188,25 @@ impl<D: Drain> Drain for IgnoreResult<D> {
 }
 
 
-#[cfg(feature = "std")]
-#[derive(Debug)]
 /// Error returned by `Mutex<D : Drain>`
+#[cfg(feature = "std")]
 pub enum MutexDrainError<D: Drain> {
     /// Error aquiring mutex
     Mutex,
     /// Error returned by drain
     Drain(D::Err),
+}
+
+impl<D> fmt::Debug for MutexDrainError<D>
+    where D: Drain,
+          D::Err: fmt::Debug
+{
+    fn fmt(&self, f: &mut fmt::Formatter) -> result::Result<(), fmt::Error> {
+        match *self {
+            MutexDrainError::Mutex => write!(f, "MutexDrainError::Mutex"),
+            MutexDrainError::Drain(ref e) => e.fmt(f),
+        }
+    }
 }
 
 #[cfg(feature = "std")]
