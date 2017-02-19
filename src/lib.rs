@@ -748,7 +748,7 @@ impl Logger {
     /// sharing a common drain.
     ///
     /// Root logger starts a new tree associated with a given `Drain`. Root
-    /// logger drain must return no errors. See `DrainExt::ignore_err()` and
+    /// logger drain must return no errors. See `Drain::ignore_res()` and
     /// `DrainExt::fuse()`.
     ///
     /// Use `o!` macro to build `OwnedKV` object.
@@ -880,37 +880,7 @@ pub trait Drain {
            record: &Record,
            values: &OwnedKVList)
            -> result::Result<Self::Ok, Self::Err>;
-}
 
-impl<D: Drain + ?Sized> Drain for Box<D> {
-    type Ok = D::Ok;
-    type Err = D::Err;
-    fn log(&self,
-           record: &Record,
-           o: &OwnedKVList)
-           -> result::Result<Self::Ok, D::Err> {
-        (**self).log(record, o)
-    }
-}
-
-impl<D: Drain + ?Sized> Drain for Arc<D> {
-    type Ok = D::Ok;
-    type Err = D::Err;
-    fn log(&self,
-           record: &Record,
-           o: &OwnedKVList)
-           -> result::Result<Self::Ok, D::Err> {
-        (**self).log(record, o)
-    }
-}
-
-
-
-/// Convenience operations on `Drain`
-///
-/// `DrainExt` is implemented for every `Drain` and contains
-/// convenience methods.
-pub trait DrainExt: Drain {
     /// Pass `Drain` through a closure, eg. to wrap
     /// into another `Drain`.
     ///
@@ -923,7 +893,6 @@ pub trait DrainExt: Drain {
     ///     let _drain = Discard.map(Fuse);
     /// }
     /// ```
-
     fn map<F, R>(self, f: F) -> R
         where Self: Sized,
               F: FnOnce(Self) -> R
@@ -932,9 +901,12 @@ pub trait DrainExt: Drain {
     }
 
 
-    /// Convert `Drain` to one handling only some `Records`
+    /// Filter logging records passed to `Drain`
     ///
     /// Wrap `Self` in `Filter`
+    ///
+    /// This will convert `self` to a `Drain that ignores `Record`s
+    /// for which `f` returns false.
     fn filter<F>(self, f: F) -> Filter<Self, F>
         where Self: Sized,
               F: Fn(&Record) -> bool + 'static + Send + Sync
@@ -942,10 +914,12 @@ pub trait DrainExt: Drain {
         Filter::new(self, f)
     }
 
-    /// Convert `Drain` to one handling only `Records` of certain logging level
-    /// (or higher)
+    /// Filter logging records passed to `Drain` (by level)
     ///
     /// Wrap `Self` in `LevelFilter`
+    ///
+    /// This will convert `self` to a `Drain that ignores `Record`s of
+    /// logging lever smaller than `level`.
     fn filter_level(self, level: Level) -> LevelFilter<Self>
         where Self: Sized
     {
@@ -973,8 +947,27 @@ pub trait DrainExt: Drain {
     }
 }
 
-impl<D: Drain> DrainExt for D {}
+impl<D: Drain + ?Sized> Drain for Box<D> {
+    type Ok = D::Ok;
+    type Err = D::Err;
+    fn log(&self,
+           record: &Record,
+           o: &OwnedKVList)
+           -> result::Result<Self::Ok, D::Err> {
+        (**self).log(record, o)
+    }
+}
 
+impl<D: Drain + ?Sized> Drain for Arc<D> {
+    type Ok = D::Ok;
+    type Err = D::Err;
+    fn log(&self,
+           record: &Record,
+           o: &OwnedKVList)
+           -> result::Result<Self::Ok, D::Err> {
+        (**self).log(record, o)
+    }
+}
 
 /// `Drain` discarding everything
 ///
@@ -1059,7 +1052,7 @@ impl<D: Drain> Drain for LevelFilter<D> {
 
 /// `Drain` mapping error returned by another `Drain`
 ///
-/// See `DrainExt::map_err` for convenience function.
+/// See `Drain::map_err` for convenience function.
 pub struct MapError<D: Drain, E> {
     drain: D,
     // eliminated dynamic dispatch, after rust learns `-> impl Trait`
