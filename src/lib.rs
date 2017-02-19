@@ -1313,22 +1313,6 @@ impl Level {
     }
 }
 
-impl FromStr for Level {
-    type Err = ();
-    fn from_str(s: &str) -> core::result::Result<Level, ()> {
-        let result = match &s.to_lowercase()[..] {
-            "critical" => Level::Critical,
-            "error" => Level::Error,
-            "warning" => Level::Warning,
-            "info" => Level::Info,
-            "debug" => Level::Debug,
-            "trace" => Level::Trace,
-            _ => return Err(()),
-        };
-        Ok(result)
-    }
-}
-
 impl FilterLevel {
     /// Convert to `usize` value
     ///
@@ -1400,6 +1384,24 @@ static ASCII_LOWERCASE_MAP: [u8; 256] =
      0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xef,
      0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb,
      0xfc, 0xfd, 0xfe, 0xff];
+
+impl FromStr for Level {
+    type Err = ();
+    fn from_str(level: &str) -> core::result::Result<Level, ()> {
+        LOG_LEVEL_NAMES.iter()
+            .position(|&name| {
+                name.as_bytes()
+                    .iter()
+                    .zip(level.as_bytes().iter())
+                    .all(|(a, b)| {
+                        ASCII_LOWERCASE_MAP[*a as usize] ==
+                        ASCII_LOWERCASE_MAP[*b as usize]
+                    })
+            })
+            .map(|p| Level::from_usize(p).unwrap())
+            .ok_or(())
+    }
+}
 
 impl FromStr for FilterLevel {
     type Err = ();
