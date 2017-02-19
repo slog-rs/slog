@@ -13,7 +13,7 @@ script:
   - make all
   - make travistest
   - if [ "$TRAVIS_RUST_VERSION" == "nightly" ]; then make bench ; fi
-  - if [ "$TRAVIS_RUST_VERSION" == "nightly" ]; then cargo build --no-default-features; fi
+  - if [ "$TRAVIS_RUST_VERSION" == "nightly" ]; then cargo build --no-default-features; cargo test --no-default-features; fi
 
 env:
   global:
