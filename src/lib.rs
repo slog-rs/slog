@@ -11,7 +11,7 @@
 //! information about project organization, development, help, etc. please see
 //! [slog github page](https://github.com/slog-rs/slog)
 //!
-//! ** This is documentation for development release of slog v2.** See [slog
+//! **This is documentation for development release of slog v2.** See [slog
 //! v1 documentation](https://docs.rs/slog/1) for previous stable release.
 //!
 //! ## Core advantages over `log` crate
@@ -31,8 +31,8 @@
 //!   and retaining it's type information, meaning of logging data is preserved.
 //!   Data can be serialized to machine readable formats like JSON and send it
 //!   to data-mining system for further analysis etc. On the other hand, when
-//!   presenting on screen, logging information can be presented in eastetically
-//!   pleasing and easy to understand way.
+//!   presenting on screen, logging information can be presented in
+//!   aesthetically pleasing and easy to understand way.
 //!
 //! ## `slog` features
 //!
@@ -40,8 +40,8 @@
 //!   fast](https://github.com/slog-rs/slog/wiki/What-makes-slog-fast) and see:
 //!   [slog bench log](https://github.com/dpc/slog-rs/wiki/Bench-log)
 //!   * lazily evaluation through closure values
-//!   * async IO support included: see [`slog-extra`
-//!     crate](https://docs.rs/slog-extra)
+//!   * async IO support included: see [`slog-async`
+//!     crate](https://docs.rs/slog-async)
 //! * `#![no_std]` support (with opt-out `std` cargo feature flag)
 //! * tree-structured loggers
 //! * modular, lightweight and very extensible
@@ -52,7 +52,7 @@
 //!     `slog` in library](https://github.com/slog-rs/example-lib)
 //! * backward and forward compatibility with `log` crate:
 //!   see [`slog-stdlog` crate](https://docs.rs/slog-stdlog)
-//! * convieniance crates:
+//! * convenience crates:
 //!   * logging-scopes for implicit `Logger` passing: see
 //!     [slog-scope](https://docs.rs/slog-scope)
 //! * many existing core&community provided features:
@@ -62,7 +62,8 @@
 //!         crate)
 //!       * by level, msg, and any other meta-data
 //!       * [`slog-envlogger`](https://github.com/slog-rs/envlogger) - port of
-//!         `env_logger` * terminal output, with color support: see [`slog-term`
+//!         `env_logger`
+//!       * terminal output, with color support: see [`slog-term`
 //!         crate](docs.r/slog-term)
 //!  * [json](https://docs.rs/slog-json)
 //!      * [bunyan](https://docs.rs/slog-bunyan)
@@ -97,8 +98,7 @@
 //!
 //! Root drain (passed to `Logger::root`) must be one that does not ever return
 //! errors. This forces user to pick error handing strategy.
-//! `DrainExt::fuse()` or `DrainExt::ignore_err()` methods from `DrainExt` are
-//! convenience functions for that purpose.
+//! `Drain::fuse()` or `Drain::ignore_err()`.
 //!
 //! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
 //! [env_logger]: https://crates.io/crates/env_logger
@@ -229,7 +229,7 @@ macro_rules! o(
     };
 );
 
-/// An alternative, longer-name version of `o` macro
+/// Macro for building group of key-value pairs (alias)
 ///
 /// Use in case of macro name collisions
 #[cfg(feature = "std")]
@@ -340,7 +340,7 @@ macro_rules! record_static(
 );
 
 #[macro_export]
-/// Alias of `record_static`
+/// Create `RecordStatic` at the given code location (alias)
 macro_rules! slog_record_static(
     ($lvl:expr, $tag:expr,) => { slog_record_static!($lvl, $tag) };
     ($lvl:expr, $tag:expr) => {{
@@ -372,7 +372,7 @@ macro_rules! record(
 );
 
 #[macro_export]
-/// Alias of `record`
+/// Create `Record` at the given code location (alias)
 macro_rules! slog_record(
     ($lvl:expr, $tag:expr, $args:expr, $b:expr,) => {
         slog_record!($lvl, $tag, $args, $b)
@@ -385,19 +385,20 @@ macro_rules! slog_record(
 );
 
 
-/// Log message of a given level
+/// Log message a logging record
 ///
 /// Use wrappers `error!`, `warn!` etc. instead
 ///
-/// The `max_level_*` features can be used to statically disable logging at
-/// various levels.
+/// The `max_level_*` and `release_max_level*` cargo features can be used to
+/// statically disable logging at various levels. See [slog notable
+/// details](index.html#notable-details)
 ///
-/// Use longer name version macros if you want to prevent clash with legacy `log`
-/// crate macro names (see `examples/alternative_names.rs`).
+/// Use [version with longer name](macro.slog_log.html) if you want to prevent clash
+/// with legacy `log` crate macro names.
 ///
-/// The following invocations are supported.
+/// ## Supported invocations
 ///
-/// Simple:
+/// ### Simple
 ///
 /// ```
 /// #[macro_use]
@@ -410,7 +411,7 @@ macro_rules! slog_record(
 /// }
 /// ```
 ///
-/// Note that `"key" => value` part is optional.
+/// Note that `"key" => value` part is optional:
 ///
 /// ```
 /// #[macro_use]
@@ -423,7 +424,7 @@ macro_rules! slog_record(
 /// }
 /// ```
 ///
-/// Formatting support:
+/// ### `fmt::Arguments` support:
 ///
 /// ```
 /// #[macro_use]
@@ -436,7 +437,10 @@ macro_rules! slog_record(
 /// }
 /// ```
 ///
-/// Again, `"key" => value` is optional.
+/// Note that due to macro parsing limitation, the message was moved after the
+/// key-value pairs.
+///
+/// Again, `"key" => value` part is optional:
 ///
 /// ```
 /// #[macro_use]
@@ -478,12 +482,12 @@ macro_rules! log(
     };
 );
 
-/// Log message of a given level (alias)
+/// Log message a logging record (alias)
 ///
-/// Prefer shorter version, unless it clashes with
+/// Prefer [shorter version](macro.log.html), unless it clashes with
 /// existing `log` crate macro.
 ///
-/// See `log` for format documentation.
+/// See [`log`](macro.log.html) for documentation.
 ///
 /// ```
 /// #[macro_use(slog_o,slog_b,slog_record,slog_record_static,slog_log,slog_info)]
