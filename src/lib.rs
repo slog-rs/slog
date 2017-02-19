@@ -54,7 +54,7 @@
 //!   see [`slog-stdlog` crate](https://docs.rs/slog-stdlog)
 //! * convenience crates:
 //!   * logging-scopes for implicit `Logger` passing: see
-//!     [slog-scope](https://docs.rs/slog-scope)
+//!     [slog-scope crate](https://docs.rs/slog-scope)
 //! * many existing core&community provided features:
 //!   * multiple outputs
 //!   * filtering control
@@ -72,7 +72,7 @@
 //!  * run-time configuration:
 //!      * run-time behavior change;
 //!        see [slog-atomic](https://docs.rs/slog-atomic)
-//!      * run-time configuration; see [slog-config](https://docs.rs/slog-config)
+//!      * run-time configuration; see [slog-config crate](https://docs.rs/slog-config)
 //!
 //!
 //! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
@@ -167,7 +167,7 @@ use std::sync::Arc;
 // }}}
 
 // {{{ Macros
-/// Macro for building group of key-value pairs in `OwnedKV`
+/// Macro for building group of key-value pairs: [`OwnedKV`](struct.OwnedKV.html)
 ///
 /// ```
 /// #[macro_use]
@@ -275,7 +275,7 @@ macro_rules! slog_o(
     };
 );
 
-/// Macro for building group of key-value pairs in `BorrowedKV`
+/// Macro for building group of key-value pairs in [`BorrowedKV`](struct.BorrowedKV.html)
 ///
 /// In most circumstances using this macro directly is unecessary and `info!`
 /// and other wrappers over `log!` should be used instead.
@@ -749,7 +749,7 @@ impl Logger {
     ///
     /// Root logger starts a new tree associated with a given `Drain`. Root
     /// logger drain must return no errors. See `Drain::ignore_res()` and
-    /// `DrainExt::fuse()`.
+    /// `Drain::fuse()`.
     ///
     /// Use `o!` macro to build `OwnedKV` object.
     ///
@@ -1867,8 +1867,9 @@ impl<'a> Drop for PushFnSerializer<'a> {
 
 /// Lazy `Value` that writes to Serializer
 ///
-/// It's more natural for closures used as lazy values to return `Serialize`
-/// implementing type, but sometimes that forces an allocation (eg. Strings)
+/// It's more natural for closures used as lazy values to return type
+/// implementing `Serialize` , but sometimes that forces an allocation (eg.
+/// Strings)
 ///
 /// In some cases it might make sense for another closure form to be used - one
 /// taking a serializer as an argument, which avoids lifetimes / allocation issues.
@@ -2006,12 +2007,12 @@ impl<'a> KV for BorrowedKV<'a> {
 // {{{ OwnedKV
 /// Owned KV
 ///
-/// "Owned" means that the contained data (key-value pairs) it can belong
+/// "Owned" means that the contained data (key-value pairs) can belong
 /// to a `Logger` and thus must be thread-safe (`'static`, `Send`, `Sync`)
 ///
 /// Zero, one or more owned key-value pairs.
 ///
-/// Can be constructed with `o!` macro
+/// Can be constructed with [`o!` macro](macro.o.html).
 pub struct OwnedKV<T>(#[doc(hidden)]
                       /// The exact details of that it are not considered public
                       /// and stable API. `slog_o` or `o` macro should be used instead
@@ -2028,7 +2029,7 @@ pub struct OwnedKV<T>(#[doc(hidden)]
 ///
 /// Zero, one or more borrowed key-value pairs.
 ///
-/// Can be constructed with `b!` macro
+/// Can be constructed with [`b!` macro](macro.b.html).
 pub struct BorrowedKV<'a>(#[doc(hidden)]
                           /// The exact details of it function are not considered public
                           /// and stable API. `log` and other macros should be used instead
@@ -2320,25 +2321,27 @@ pub fn __slog_static_max_level() -> FilterLevel {
 
 // {{{ Slog v1 Compat
 #[deprecated(note = "Renamed to Value")]
-/// Compatibility name to ease the pain of upgrading
+/// Compatibility name to ease upgrading from `slog v1`
 pub type Serialize = Value;
 
 #[deprecated(note = "Renamed to PushFnValue")]
-/// Compatibility name to ease the pain of upgrading
+/// Compatibility name to ease upgrading from `slog v1`
 pub type PushLazy<T> = PushFnValue<T>;
 
 #[deprecated(note = "Renamed to PushFnSerializer")]
-/// Compatibility name to ease the pain of upgrading
+/// Compatibility name to ease upgrading from `slog v1`
 pub type ValueSerializer<'a> = PushFnSerializer<'a>;
 
 #[deprecated(note = "Renamed to OwnedKVList")]
-/// Compatibility name to ease the pain of upgrading
+/// Compatibility name to ease upgrading from `slog v1`
 pub type OwnedKeyValueList = OwnedKVList;
 
 #[deprecated(note = "Content of ser module moved to main namespace")]
-/// Compatibility name to ease the pain of upgrading
+/// Compatibility name to ease upgrading from `slog v1`
 pub mod ser {
-    pub use super::*;
+    #[allow(deprecated)]
+    pub use super::{Serialize, Serializer, ValueSerializer, OwnedKeyValueList,
+                    PushLazy};
 }
 // }}}
 
