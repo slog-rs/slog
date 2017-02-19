@@ -45,7 +45,7 @@
   * [Overview](#overview)
 * [Slog related resources](#slog-related-resources)
 
-### Status & news
+### Introduction
 
 `slog` is an ecosystem of reusable components for structured, extensible,
 composable logging for [Rust][rust].
@@ -53,11 +53,21 @@ composable logging for [Rust][rust].
 The ambition is to be The Logging Framework for Rust. `slog` should accommodate
 variety of logging features and requirements.
 
+### Status & news
+
+`slog v1` (versions `1.x.y`) is a current stable release. `slog v2` (versions
+`2.x.y`) is a work in progress. API of `slog v2` is very similar to `slog v1`
+and most changes are under the hood. Porting should be relatively easy. See
+[changes in `slog v2`](https://github.com/slog-rs/slog/wiki/Changes-in-slog-v2)
+for details.
+
+
 ### Features & technical documentation
 
 Most of interesting documentation is using rustdoc itself.
 
-You can view on [docs.rs/slog](https://docs.rs/slog/1/)
+You can view on [docs.rs/slog for v1](https://docs.rs/slog/1/) or [docs.rs/slog
+for v2](https://docs.rs/slog/2/).
 
 ### Terminal output example
 
