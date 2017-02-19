@@ -1256,7 +1256,6 @@ pub static LOG_LEVEL_SHORT_NAMES: [&'static str; 7] =
 
 
 /// Logging level associated with a logging `Record`
-#[repr(usize)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Level {
     /// Critical
@@ -1274,7 +1273,6 @@ pub enum Level {
 }
 
 /// Logging filtering level
-#[repr(usize)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub enum FilterLevel {
     /// Log nothing
@@ -1502,10 +1500,10 @@ pub struct RecordLocation {
 pub struct RecordStatic<'a> {
     /// Code location
     pub location: &'a RecordLocation,
-    /// Logging level
-    pub level: Level,
     /// Tag
     pub tag: &'a str,
+    /// Logging level
+    pub level: Level,
 }
 
 /// One logging record
