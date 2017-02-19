@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Refactored `Record` to optimize performance on async
   operations
 * Minimal rustc version required: `1.15.0`
+* `DrainExt` has been removed and utility methods moved directly to `Drain`
 
 ### Added
 
