@@ -98,7 +98,7 @@
 //!
 //! Root drain (passed to `Logger::root`) must be one that does not ever return
 //! errors. This forces user to pick error handing strategy.
-//! `Drain::fuse()` or `Drain::ignore_err()`.
+//! `Drain::fuse()` or `Drain::ignore_res()`.
 //!
 //! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
 //! [env_logger]: https://crates.io/crates/env_logger
@@ -945,6 +945,16 @@ pub trait Drain {
     {
         IgnoreResult::new(self)
     }
+
+    /// Make `Self` panic when returning any errors
+    ///
+    /// Wrap `Self` in `Map`
+    fn fuse(self) -> Fuse<Self>
+        where Self::Err: fmt::Debug,
+              Self: Sized
+    {
+        self.map(Fuse)
+    }
 }
 
 impl<D: Drain + ?Sized> Drain for Box<D> {
@@ -1121,9 +1131,11 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
 ///
 /// Note: `Drain::Err` must implement `Display` (for displaying on panick). It's
 /// easy to create own `Fuse` drain if this requirement can't be fulfilled.
-pub struct Fuse<D: Drain>(pub D);
+pub struct Fuse<D: Drain>(pub D) where D::Err: fmt::Debug;
 
-impl<D: Drain> Fuse<D> {
+impl<D: Drain> Fuse<D>
+    where D::Err: fmt::Debug
+{
     /// Create `Fuse` wrapping given `drain`
     pub fn new(drain: D) -> Self {
         Fuse(drain)
