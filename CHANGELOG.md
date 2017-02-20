@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 2.0.0-alpha2 - Unreleased
 ### Changed
 
+* Parametrize `Logger` over the `Drain` it holds
 * Enforcing `UnwindSafe` `Drain`s for `Logger`s
 
 ### Fixed

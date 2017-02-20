@@ -738,12 +738,16 @@ macro_rules! slog_trace(
 /// other `Drain`s functionalities, allows custom processing logic for a
 /// part of logging tree.
 #[derive(Clone)]
-pub struct Logger {
-    drain: Arc<ThreadSafeDrain<Ok = (), Err = Never>>,
+pub struct Logger<D = Arc<ThreadSafeDrain<Ok = (), Err = Never>>>
+    where D: ThreadSafeDrain<Ok = (), Err = Never>
+{
+    drain: D,
     list: OwnedKVList,
 }
 
-impl Logger {
+impl<D> Logger<D>
+    where D: ThreadSafeDrain<Ok = (), Err = Never>
+{
     /// Build a root `Logger`
     ///
     /// All children and their children and so on form one logging tree
@@ -765,24 +769,41 @@ impl Logger {
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
-    pub fn root<D, T>(d: D, values: OwnedKV<T>) -> Logger
+    pub fn root<T>(drain: D, values: OwnedKV<T>) -> Logger<D>
         where D: 'static + ThreadSafeDrain<Err = Never, Ok = ()> + Sized,
               T: ThreadSafeKV + 'static
     {
         Logger {
-            drain: Arc::new(d),
+            drain: drain,
             list: OwnedKVList::root(values),
         }
     }
 
     /// Build a child logger
     ///
-    /// Child logger inherits all existing key-value pairs from it's parent.
+    /// Child logger inherits all existing key-value pairs from its parent and
+    /// supplements them with additional ones.
+    ///
+    /// Use `o!` macro to build `OwnedKV` object.
+    ///
+    /// ### Drain cloning (`D : Clone` requirement)
     ///
     /// All children, their children and so on, form one tree sharing a
-    /// common drain.
+    /// common drain. This drain, will be `Clone`d when this method is called.
+    /// That is why `Clone` must be implemented for `D` in `Logger<D>::new`.
     ///
-    /// Use `o!` macro to help build key value pairs using nicer syntax.
+    /// For some `Drain` types `Clone` is cheap or even free (a no-op). For
+    /// others cloning might be expensive (as they contain a lot of data), or
+    /// even impossible. In situations like that wrapping `Drain` in a
+    /// `std::sync::Arc` makes it `Clone`able. Another way is calling
+    /// `Logger::to_arc`.
+    ///
+    /// The reason why wrapping in an `Arc` is not done internally, and exposed
+    /// to the user is performance. Calling `Drain::log` through an `Arc` is
+    /// tiny bit slower than doing it directly. By deferring `Arc` as late as
+    /// possible,
+    ///
+    ///
     ///
     /// ```
     /// #[macro_use]
@@ -794,8 +815,9 @@ impl Logger {
     ///     let _log = root.new(o!("key" => "value"));
     /// }
     #[cfg_attr(feature = "cargo-clippy", allow(wrong_self_convention))]
-    pub fn new<T>(&self, values: OwnedKV<T>) -> Logger
-        where T: ThreadSafeKV + 'static
+    pub fn new<T>(&self, values: OwnedKV<T>) -> Logger<D>
+        where T: ThreadSafeKV + 'static,
+              D: Clone
     {
         Logger {
             drain: self.drain.clone(),
@@ -816,16 +838,38 @@ impl Logger {
     pub fn list(&self) -> &OwnedKVList {
         &self.list
     }
+
+    /// Convert to `Logger<Arc<ThreadSafeDrain>>`
+    ///
+    /// Useful to adapt `Logger<D : Clone>` to an interface expecting
+    /// `Logger<Arc<...>>`.
+    ///
+    /// Note that calling on a `Logger<Arc<...>>` will convert it to
+    /// `Logger<Arc<Arc<...>>>` which is not optimal. This might be fixed Rust
+    /// implements trait implementation specialization.
+    pub fn to_arc(self) -> Logger<Arc<ThreadSafeDrain<Ok = (), Err = Never>>>
+        where D: 'static
+    {
+        Logger {
+            drain: Arc::new(self.drain) as
+                   Arc<ThreadSafeDrain<Ok = (), Err = Never>>,
+            list: self.list,
+        }
+    }
 }
 
-impl fmt::Debug for Logger {
+impl<D> fmt::Debug for Logger<D>
+    where D: ThreadSafeDrain<Ok = (), Err = Never>
+{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "Logger{:?}", self.list));
         Ok(())
     }
 }
 
-impl Drain for Logger {
+impl<D> Drain for Logger<D>
+    where D: ThreadSafeDrain<Ok = (), Err = Never>
+{
     type Ok = ();
     type Err = Never;
 
@@ -1010,6 +1054,7 @@ impl<D: Drain + ?Sized> Drain for Arc<D> {
 /// `Drain` discarding everything
 ///
 /// `/dev/null` of `Drain`s
+#[derive(Debug, Copy, Clone)]
 pub struct Discard;
 
 impl Drain for Discard {
@@ -1024,6 +1069,7 @@ impl Drain for Discard {
 ///
 /// Wraps another `Drain` and passes `Record`s to it, only if they satisfy a
 /// given condition.
+#[derive(Debug, Clone)]
 pub struct Filter<D: Drain, F>(pub D, pub F)
     where F: Fn(&Record) -> bool + 'static + Send + Sync;
 
@@ -1062,6 +1108,7 @@ impl<D: Drain, F> Drain for Filter<D, F>
 /// because `Filter` can not use static dispatch ATM due to Rust limitations
 /// that will be lifted in the future, it is a standalone type.
 /// Reference: https://github.com/rust-lang/rust/issues/34511
+#[derive(Debug, Clone)]
 pub struct LevelFilter<D: Drain>(pub D, pub Level);
 
 impl<D: Drain> LevelFilter<D> {
@@ -1124,6 +1171,7 @@ impl<D: Drain, E> Drain for MapError<D, E> {
 /// `Drain` duplicating records into two other `Drain`s
 ///
 /// Can be nested for more than two outputs.
+#[derive(Debug, Clone)]
 pub struct Duplicate<D1: Drain, D2: Drain>(pub D1, pub D2);
 
 
@@ -1159,6 +1207,7 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
 ///
 /// Note: `Drain::Err` must implement `Display` (for displaying on panick). It's
 /// easy to create own `Fuse` drain if this requirement can't be fulfilled.
+#[derive(Debug, Clone)]
 pub struct Fuse<D: Drain>(pub D) where D::Err: fmt::Debug;
 
 impl<D: Drain> Fuse<D>
@@ -1192,6 +1241,7 @@ impl<D: Drain> Drain for Fuse<D>
 /// `Logger` requires a root drain to handle all errors (`Drain::Err=()`), and
 /// returns nothing (`Drain::Ok=()`) `IgnoreResult` will ignore any result
 /// returned by the `Drain` it wraps.
+#[derive(Clone)]
 pub struct IgnoreResult<D: Drain> {
     drain: D,
 }
@@ -1218,6 +1268,7 @@ impl<D: Drain> Drain for IgnoreResult<D> {
 
 /// Error returned by `Mutex<D : Drain>`
 #[cfg(feature = "std")]
+#[derive(Clone)]
 pub enum MutexDrainError<D: Drain> {
     /// Error aquiring mutex
     Mutex,

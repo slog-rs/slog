@@ -33,6 +33,7 @@ mod std_only {
 
     #[test]
     fn multichain() {
+        #[derive(Clone)]
         struct CheckOwned;
 
         impl Drain for CheckOwned {
@@ -133,5 +134,22 @@ fn makers() {
         Duplicate(Discard.filter(|r| r.level().is_at_least(Level::Info)),
                   Discard.filter_level(Level::Warning))
             .map(Fuse);
-    let _log = Logger::root(drain, o!("version" => env!("CARGO_PKG_VERSION")));
+    let _log = Logger::root(Arc::new(drain),
+                            o!("version" => env!("CARGO_PKG_VERSION")));
+}
+
+#[test]
+fn logger_to_arc() {
+    use *;
+
+    fn takes_arced_drain(_l: Logger) {}
+
+    let drain =
+        Duplicate(Discard.filter(|r| r.level().is_at_least(Level::Info)),
+                  Discard.filter_level(Level::Warning))
+            .map(Fuse);
+    let log = Logger::root(Arc::new(drain),
+                           o!("version" => env!("CARGO_PKG_VERSION")));
+
+    takes_arced_drain(log.to_arc());
 }
