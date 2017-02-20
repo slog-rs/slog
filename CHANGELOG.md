@@ -11,8 +11,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 2.0.0 - Unreleased
 
 ## 2.0.0-alpha2 - Unreleased
+### Changed
 
-* Fixed `fmt::Debug` for `MutexDrainError`
+* Enforcing `UnwindSafe` `Drain`s for `Logger`s
+
+### Fixed
+
+* `fmt::Debug` for `MutexDrainError`
 
 ## 2.0.0-alpha1 - 2017-02-18
 ### Changed
