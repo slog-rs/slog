@@ -738,7 +738,7 @@ macro_rules! slog_trace(
 /// other `Drain`s functionalities, allows custom processing logic for a
 /// part of logging tree.
 #[derive(Clone)]
-pub struct Logger<D = Arc<ThreadSafeDrain<Ok = (), Err = Never>>>
+pub struct Logger<D = Arc<RefThreadSafeDrain<Ok = (), Err = Never>>>
     where D: ThreadSafeDrain<Ok = (), Err = Never>
 {
     drain: D,
@@ -847,12 +847,12 @@ impl<D> Logger<D>
     /// Note that calling on a `Logger<Arc<...>>` will convert it to
     /// `Logger<Arc<Arc<...>>>` which is not optimal. This might be fixed Rust
     /// implements trait implementation specialization.
-    pub fn to_arc(self) -> Logger<Arc<ThreadSafeDrain<Ok = (), Err = Never>>>
-        where D: 'static
+    pub fn to_arc(self) -> Logger<Arc<RefThreadSafeDrain<Ok = (), Err = Never>>>
+        where D: RefUnwindSafe + Sized + 'static
     {
         Logger {
             drain: Arc::new(self.drain) as
-                   Arc<ThreadSafeDrain<Ok = (), Err = Never>>,
+                   Arc<RefThreadSafeDrain<Ok = (), Err = Never>>,
             list: self.list,
         }
     }
@@ -1008,24 +1008,42 @@ pub trait Drain {
 ///
 /// This type is used to enforce `Drain`s associated with `Logger`s
 /// are thread-safe.
-pub trait ThreadSafeDrain: Drain + Send + Sync + UnwindSafe + RefUnwindSafe {}
+pub trait ThreadSafeDrain: Drain + Send + Sync + UnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> ThreadSafeDrain for T
-    where T: Drain + Send + Sync + UnwindSafe + RefUnwindSafe
-{
-}
+impl<T> ThreadSafeDrain for T where T: Drain + Send + Sync + UnwindSafe {}
+
+#[cfg(feature = "std")]
+/// Thread-local safety bound for `Drain`
+///
+/// This type is used to enforce `Drain`s associated with `Logger`s
+/// are thread-safe.
+pub trait RefThreadSafeDrain: Drain + Send + Sync + RefUnwindSafe {}
+
+#[cfg(feature = "std")]
+impl<T> RefThreadSafeDrain for T where T: Drain + Send + Sync + RefUnwindSafe {}
+
 
 #[cfg(not(feature = "std"))]
 /// Thread-local safety bound for `Drain`
 ///
 /// This type is used to enforce `Drain`s associated with `Logger`s
 /// are thread-safe.
-
 pub trait ThreadSafeDrain: Drain + Send + Sync {}
 
 #[cfg(not(feature = "std"))]
 impl<T> ThreadSafeDrain for T where T: Drain + Send + Sync {}
+
+#[cfg(not(feature = "std"))]
+/// Thread-local safety bound for `Drain`
+///
+/// This type is used to enforce `Drain`s associated with `Logger`s
+/// are thread-safe.
+pub trait RefThreadSafeDrain: Drain + Send + Sync {}
+
+#[cfg(not(feature = "std"))]
+impl<T> RefThreadSafeDrain for T where T: Drain + Send + Sync {}
+
 
 
 #[cfg(not(feature = "std"))]
@@ -2033,13 +2051,10 @@ pub trait KV {
 /// Thread-local safety bound for `KV`
 ///
 /// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
-pub trait ThreadSafeKV: KV + Send + Sync + UnwindSafe + RefUnwindSafe {}
+pub trait ThreadSafeKV: KV + Send + Sync + RefUnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> ThreadSafeKV for T
-    where T: KV + Send + Sync + UnwindSafe + RefUnwindSafe
-{
-}
+impl<T> ThreadSafeKV for T where T: KV + Send + Sync + RefUnwindSafe {}
 
 #[cfg(not(feature = "std"))]
 /// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.

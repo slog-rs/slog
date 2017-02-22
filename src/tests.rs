@@ -139,6 +139,18 @@ fn makers() {
 }
 
 #[test]
+fn simple_logger_to_arc() {
+    use *;
+
+    fn takes_arced_drain(_l: Logger) {}
+
+    let drain = Discard.filter_level(Level::Warning).map(Fuse);
+    let log = Logger::root(drain, o!("version" => env!("CARGO_PKG_VERSION")));
+
+    takes_arced_drain(log.to_arc());
+}
+
+#[test]
 fn logger_to_arc() {
     use *;
 
@@ -148,8 +160,7 @@ fn logger_to_arc() {
         Duplicate(Discard.filter(|r| r.level().is_at_least(Level::Info)),
                   Discard.filter_level(Level::Warning))
             .map(Fuse);
-    let log = Logger::root(Arc::new(drain),
-                           o!("version" => env!("CARGO_PKG_VERSION")));
+    let log = Logger::root(drain, o!("version" => env!("CARGO_PKG_VERSION")));
 
     takes_arced_drain(log.to_arc());
 }
