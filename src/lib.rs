@@ -714,12 +714,17 @@ macro_rules! slog_trace(
 // {{{ Logger
 /// Logging handle used to execute logging statements
 ///
-/// `Logger` holds logging context (key-value pairs) and handles logging
-/// statements by delivering all logging statement information (`Record`)
-/// to it's `Drain`.
+/// In an essence `Logger` instance holds two pieces of information:
 ///
-/// Child loggers are built from existing loggers, and inherit their existing
-/// key-value pairs, which can be supplemented with new ones.
+/// * `Drain` - destination where to forward logging `Record`s for
+/// processing.
+/// * Context - list of key-value pairs associated with it.
+///
+/// Root `Logger` is created with a `Drain` that will be cloned to every
+/// member of it's hierarchy.
+///
+/// Child `Logger` are built from existing ones, and inherit their key-value
+/// pairs, which can be supplemented with additional ones.
 ///
 /// Cloning existing loggers and creating new ones is cheap. Loggers can be
 /// freely passed around the code and between threads.
@@ -734,9 +739,16 @@ macro_rules! slog_trace(
 /// a `Logger` functioning as a `Drain`, will be delivered to it's `Drain`
 /// with existing key-value pairs appended to the `Logger`s key-value pairs.
 /// By itself it's effectively very similar to `Logger` being an ancestor
-/// of `Logger` that originated the logging `Record`. However, combined with
-/// other `Drain`s functionalities, allows custom processing logic for a
-/// part of logging tree.
+/// of `Logger` that originated the logging `Record`. Combined with other
+/// `Drain`s, allows custom processing logic for a sub-tree of a whole logging
+/// tree.
+///
+/// Logger is parametrized over type of a `Drain` associated with it (`D`). It
+/// default to type-erased version so `Logger` without any type annotation
+/// means `Logger<Arc<RefThreadSafeDrain<Ok = (), Err = Never>>>`. See
+/// `Logger::to_erased` for more information.
+///
+///
 #[derive(Clone)]
 pub struct Logger<D = Arc<RefThreadSafeDrain<Ok = (), Err = Never>>>
     where D: ThreadSafeDrain<Ok = (), Err = Never>
@@ -796,14 +808,11 @@ impl<D> Logger<D>
     /// others cloning might be expensive (as they contain a lot of data), or
     /// even impossible. In situations like that wrapping `Drain` in a
     /// `std::sync::Arc` makes it `Clone`able. Another way is calling
-    /// `Logger::to_arc`.
+    /// `Logger::to_erased`.
     ///
     /// The reason why wrapping in an `Arc` is not done internally, and exposed
     /// to the user is performance. Calling `Drain::log` through an `Arc` is
-    /// tiny bit slower than doing it directly. By deferring `Arc` as late as
-    /// possible,
-    ///
-    ///
+    /// tiny bit slower than doing it directly.
     ///
     /// ```
     /// #[macro_use]
@@ -839,15 +848,16 @@ impl<D> Logger<D>
         &self.list
     }
 
-    /// Convert to `Logger<Arc<ThreadSafeDrain>>`
+    /// Convert to default, "erased" type: `Logger<Arc<ThreadSafeDrain>>`
     ///
     /// Useful to adapt `Logger<D : Clone>` to an interface expecting
     /// `Logger<Arc<...>>`.
     ///
     /// Note that calling on a `Logger<Arc<...>>` will convert it to
-    /// `Logger<Arc<Arc<...>>>` which is not optimal. This might be fixed Rust
-    /// implements trait implementation specialization.
-    pub fn to_arc(self) -> Logger<Arc<RefThreadSafeDrain<Ok = (), Err = Never>>>
+    /// `Logger<Arc<Arc<...>>>` which is not optimal. This might be fixed when
+    /// Rust gains trait implementation specialization.
+    pub fn to_erased(self)
+                     -> Logger<Arc<RefThreadSafeDrain<Ok = (), Err = Never>>>
         where D: RefUnwindSafe + Sized + 'static
     {
         Logger {
