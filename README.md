@@ -61,6 +61,8 @@ and most changes are under the hood. Porting should be relatively easy. See
 [changes in `slog v2`](https://github.com/slog-rs/slog/wiki/Changes-in-slog-v2)
 for details.
 
+**I encourage you to try slog v2 and give feedback**. See
+[`slog v2` status page](https://github.com/slog-rs/slog/wiki/slog-v2-status).
 
 ### Features & technical documentation
 
