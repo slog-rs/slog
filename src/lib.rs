@@ -454,6 +454,31 @@ macro_rules! slog_record(
 ///     info!(root, "formatted: {}", 1);
 /// }
 /// ```
+///
+/// Note: use formatting support only when it really makes sense. Eg. logging message
+/// like `"found {} keys"` is against structured logging. It should be `"found
+/// keys", "count" => keys_num` instead, so that data is clearly named, typed
+/// and separated from the message.
+///
+/// ### Tags
+///
+/// All above versions can be supplemented with a tag - string literal prefixed
+/// with `#`.
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+///
+/// fn main() {
+///     let drain = slog::Discard;
+///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     let ops = 3;
+///     info!(root, #"performance-metric", "thread speed"; "ops_per_sec" => ops);
+/// }
+/// ```
+///
+/// See `Record::tag()` for more infromation about tags.
+///
 #[macro_export]
 macro_rules! log(
     ($l:expr, $lvl:expr,  $tag:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
