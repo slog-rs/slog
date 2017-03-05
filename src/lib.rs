@@ -745,20 +745,20 @@ macro_rules! slog_trace(
 ///
 /// Logger is parametrized over type of a `Drain` associated with it (`D`). It
 /// default to type-erased version so `Logger` without any type annotation
-/// means `Logger<Arc<RefThreadSafeDrain<Ok = (), Err = Never>>>`. See
+/// means `Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>`. See
 /// `Logger::to_erased` for more information.
 ///
 ///
 #[derive(Clone)]
-pub struct Logger<D = Arc<RefThreadSafeDrain<Ok = (), Err = Never>>>
-    where D: ThreadSafeDrain<Ok = (), Err = Never>
+pub struct Logger<D = Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
+    where D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>
 {
     drain: D,
     list: OwnedKVList,
 }
 
 impl<D> Logger<D>
-    where D: ThreadSafeDrain<Ok = (), Err = Never>
+    where D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>
 {
     /// Build a root `Logger`
     ///
@@ -782,7 +782,7 @@ impl<D> Logger<D>
     ///     );
     /// }
     pub fn root<T>(drain: D, values: OwnedKV<T>) -> Logger<D>
-        where D: 'static + ThreadSafeDrain<Err = Never, Ok = ()> + Sized,
+        where D: 'static + SendSyncUnwindSafeDrain<Err = Never, Ok = ()> + Sized,
               T: ThreadSafeKV + 'static
     {
         Logger {
@@ -848,7 +848,7 @@ impl<D> Logger<D>
         &self.list
     }
 
-    /// Convert to default, "erased" type: `Logger<Arc<ThreadSafeDrain>>`
+    /// Convert to default, "erased" type: `Logger<Arc<SendSyncUnwindSafeDrain>>`
     ///
     /// Useful to adapt `Logger<D : Clone>` to an interface expecting
     /// `Logger<Arc<...>>`.
@@ -856,20 +856,21 @@ impl<D> Logger<D>
     /// Note that calling on a `Logger<Arc<...>>` will convert it to
     /// `Logger<Arc<Arc<...>>>` which is not optimal. This might be fixed when
     /// Rust gains trait implementation specialization.
-    pub fn to_erased(self)
-                     -> Logger<Arc<RefThreadSafeDrain<Ok = (), Err = Never>>>
-        where D: RefUnwindSafe + Sized + 'static
+    pub fn to_erased
+        (self)
+         -> Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
+        where D: SendRefUnwindSafeDrain + 'static
     {
         Logger {
             drain: Arc::new(self.drain) as
-                   Arc<RefThreadSafeDrain<Ok = (), Err = Never>>,
+                   Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
             list: self.list,
         }
     }
 }
 
 impl<D> fmt::Debug for Logger<D>
-    where D: ThreadSafeDrain<Ok = (), Err = Never>
+    where D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "Logger{:?}", self.list));
@@ -878,7 +879,7 @@ impl<D> fmt::Debug for Logger<D>
 }
 
 impl<D> Drain for Logger<D>
-    where D: ThreadSafeDrain<Ok = (), Err = Never>
+    where D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>
 {
     type Ok = ();
     type Err = Never;
@@ -1018,20 +1019,23 @@ pub trait Drain {
 ///
 /// This type is used to enforce `Drain`s associated with `Logger`s
 /// are thread-safe.
-pub trait ThreadSafeDrain: Drain + Send + Sync + UnwindSafe {}
+pub trait SendSyncUnwindSafeDrain: Drain + Send + Sync + UnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> ThreadSafeDrain for T where T: Drain + Send + Sync + UnwindSafe {}
+impl<T> SendSyncUnwindSafeDrain for T where T: Drain + Send + Sync + UnwindSafe {}
 
 #[cfg(feature = "std")]
 /// Thread-local safety bound for `Drain`
 ///
 /// This type is used to enforce `Drain`s associated with `Logger`s
 /// are thread-safe.
-pub trait RefThreadSafeDrain: Drain + Send + Sync + RefUnwindSafe {}
+pub trait SendSyncRefUnwindSafeDrain: Drain + Send + Sync + RefUnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> RefThreadSafeDrain for T where T: Drain + Send + Sync + RefUnwindSafe {}
+impl<T> SendSyncRefUnwindSafeDrain for T
+    where T: Drain + Send + Sync + RefUnwindSafe
+{
+}
 
 
 #[cfg(not(feature = "std"))]
@@ -1039,20 +1043,36 @@ impl<T> RefThreadSafeDrain for T where T: Drain + Send + Sync + RefUnwindSafe {}
 ///
 /// This type is used to enforce `Drain`s associated with `Logger`s
 /// are thread-safe.
-pub trait ThreadSafeDrain: Drain + Send + Sync {}
+pub trait SendSyncUnwindSafeDrain: Drain + Send + Sync {}
 
 #[cfg(not(feature = "std"))]
-impl<T> ThreadSafeDrain for T where T: Drain + Send + Sync {}
+impl<T> SendSyncUnwindSafeDrain for T where T: Drain + Send + Sync {}
 
 #[cfg(not(feature = "std"))]
 /// Thread-local safety bound for `Drain`
 ///
 /// This type is used to enforce `Drain`s associated with `Logger`s
 /// are thread-safe.
-pub trait RefThreadSafeDrain: Drain + Send + Sync {}
+pub trait SendSyncRefUnwindSafeDrain: Drain + Send + Sync {}
 
 #[cfg(not(feature = "std"))]
-impl<T> RefThreadSafeDrain for T where T: Drain + Send + Sync {}
+impl<T> SendSyncRefUnwindSafeDrain for T where T: Drain + Send + Sync {}
+
+
+#[cfg(feature = "std")]
+/// `Drain` that can be sent between threads
+pub trait SendRefUnwindSafeDrain: Drain + Send + RefUnwindSafe {}
+
+#[cfg(feature = "std")]
+impl<T> SendRefUnwindSafeDrain for T where T: Drain + Send + RefUnwindSafe {}
+
+
+#[cfg(not(feature = "std"))]
+/// `Drain` that can be sent between threads
+pub trait SendRefUnwindSafeDrain: Drain + Send {}
+
+#[cfg(not(feature = "std"))]
+impl<T> SendRefUnwindSafeDrain for T where T: Drain + Send {}
 
 
 
@@ -1304,6 +1324,7 @@ pub enum MutexDrainError<D: Drain> {
     Drain(D::Err),
 }
 
+#[cfg(feature = "std")]
 impl<D> fmt::Debug for MutexDrainError<D>
     where D: Drain,
           D::Err: fmt::Debug
@@ -1322,6 +1343,7 @@ impl<'a, D : Drain> From<std::sync::PoisonError<std::sync::MutexGuard<'a, D>>> f
         MutexDrainError::Mutex
     }
 }
+
 #[cfg(feature = "std")]
 impl<D: Drain> fmt::Display for MutexDrainError<D>
     where D::Err: fmt::Display
