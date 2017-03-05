@@ -1,4 +1,6 @@
 language: rust
+cache:
+  - cargo
 rust:
   - stable
   - 1.15.0
