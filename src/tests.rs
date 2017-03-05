@@ -162,5 +162,5 @@ fn logger_to_erased() {
             .map(Fuse);
     let log = Logger::root(drain, o!("version" => env!("CARGO_PKG_VERSION")));
 
-    takes_arced_drain(log.to_erased());
+    takes_arced_drain(log.into_erased());
 }

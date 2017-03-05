@@ -856,7 +856,7 @@ impl<D> Logger<D>
     /// Note that calling on a `Logger<Arc<...>>` will convert it to
     /// `Logger<Arc<Arc<...>>>` which is not optimal. This might be fixed when
     /// Rust gains trait implementation specialization.
-    pub fn to_erased
+    pub fn into_erased
         (self)
          -> Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
         where D: SendRefUnwindSafeDrain + 'static
@@ -866,6 +866,17 @@ impl<D> Logger<D>
                    Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
             list: self.list,
         }
+    }
+
+    /// Create a copy with "erased" type
+    ///
+    /// See `into_erased`
+    pub fn to_erased
+        (self)
+         -> Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
+        where D: SendRefUnwindSafeDrain + 'static + Clone
+    {
+        self.clone().into_erased()
     }
 }
 
