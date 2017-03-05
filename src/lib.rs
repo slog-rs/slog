@@ -1735,10 +1735,12 @@ impl<'a> Record<'a> {
     /// Get tag
     ///
     /// Tag is information that can be attached to `Record` that is not meant
-    /// to be part of the data, but only as an ad-hoc control flag
-    /// for quick lookup in the `Drain`s. As such should be used
-    /// carefully and mostly in application code (as opposed to libraries) -
-    /// where tag used acros the system can be coordinated.
+    /// to be part of the norma key-value pairs, but only as an ad-hoc control
+    /// flag for quick lookup in the `Drain`s. As such should be used carefully
+    /// and mostly in application code (as opposed to libraries) - where tag
+    /// meaning across the system can be coordinated. When used in libraries,
+    /// make sure to prefix is with something reasonably distinct, like create
+    /// name.
     pub fn tag(&self) -> &str {
         self.rstatic.tag
     }
