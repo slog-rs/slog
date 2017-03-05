@@ -10,7 +10,7 @@ default: $(DEFAULT_TARGET)
 
 CARGO_FLAGS += -v
 
-ALL_TARGETS += build $(EXAMPLES) test doc crates
+ALL_TARGETS += build $(EXAMPLES) test doc
 ifneq ($(RELEASE),)
 $(info RELEASE BUILD: $(PKG_NAME))
 CARGO_FLAGS += --release
@@ -19,7 +19,6 @@ $(info DEBUG BUILD: $(PKG_NAME); use `RELEASE=true make [args]` for release buil
 endif
 
 EXAMPLES = $(shell cd examples 2>/dev/null && ls *.rs 2>/dev/null | sed -e 's/.rs$$//g' )
-CRATES = $(shell cd crates 2>/dev/null && ls 2>/dev/null)
 
 all: $(ALL_TARGETS)
 
@@ -51,14 +50,6 @@ longtest:
 .PHONY: $(EXAMPLES)
 $(EXAMPLES):
 	cargo build --example $@ $(CARGO_FLAGS)
-
-.PHONY: crates
-crates: $(CRATES)
-
-.PHONY: $(CRATES)
-$(CRATES):
-	cd "crates/$@"; cargo build $(CARGO_FLAGS)
-	cd "crates/$@"; cargo test $(CARGO_FLAGS)
 
 .PHONY: doc
 doc: FORCE
