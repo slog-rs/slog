@@ -55,14 +55,16 @@ variety of logging features and requirements.
 
 ### Status & news
 
-`slog v1` (versions `1.x.y`) is a current stable release. `slog v2` (versions
+`slog v1` (versions `1.x.y`) is a current stable release.
+
+`slog v2` (versions
 `2.x.y`) is a work in progress. API of `slog v2` is very similar to `slog v1`
 and most changes are under the hood. Porting should be relatively easy. See
-[changes in `slog v2`](https://github.com/slog-rs/slog/wiki/Changes-in-slog-v2)
+[changes in `slog v2`](https://github.com/slog-rs/slog/wiki/slog-v2)
 for details.
 
 **I encourage you to try slog v2 and give feedback**. See
-[`slog v2` status page](https://github.com/slog-rs/slog/wiki/slog-v2-status).
+[`slog v2` status page](https://github.com/slog-rs/slog/wiki/slog-v2).
 
 ### Features & technical documentation
 
