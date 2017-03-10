@@ -135,6 +135,9 @@
 #![no_std]
 
 #[macro_use]
+#[cfg(feature = "slogv1")]
+extern crate slog as slogv1;
+
 #[cfg(feature = "std")]
 extern crate std;
 #[cfg(not(feature = "std"))]
@@ -903,6 +906,13 @@ impl<D> Logger<D>
     {
         self.clone().into_erased()
     }
+
+    #[cfg(feature = "slogv1")]
+    pub fn into_slogv1(self) -> slogv1::Logger
+        where D: SendRefUnwindSafeDrain + 'static
+    {
+        slogv1::Logger::root(self, None)
+    }
 }
 
 impl<D> fmt::Debug for Logger<D>
@@ -911,6 +921,53 @@ impl<D> fmt::Debug for Logger<D>
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "Logger{:?}", self.list));
         Ok(())
+    }
+}
+
+#[cfg(feature = "slogv1")]
+impl<D> slogv1::Drain for Logger<D>
+    where D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>
+{
+    type Error = slogv1::Never;
+
+    fn log(&self,
+           record: &slogv1::Record,
+           values: &slogv1::OwnedKeyValueList)
+           -> result::Result<(), Self::Error> {
+
+        let chained = OwnedKVList {
+            node: Arc::new(MultiListNode {
+                next_node:
+                    Arc::new(std::panic::AssertUnwindSafe(values.clone())),
+                node: self.list.node.clone(),
+            }),
+        };
+        let level = match record.level() {
+            slogv1::Level::Critical => Level::Critical,
+        };
+
+        let record_location = RecordLocation {
+            file: record.file(),
+            line: record.line(),
+            column: record.column(),
+            module: record.module(),
+            function: record.function(),
+        };
+        let record_static = RecordStatic {
+            location: &record_location,
+            tag: record.target(),
+            level: level,
+        };
+
+        let record = Record {
+            rstatic: &record_static,
+            msg: &record.msg(),
+            kv: BorrowedKV(&record.values()),
+        };
+
+        self.drain
+            .log(&record, &chained)
+            .map_err(|e| panic!("Unexpected error returned by slogv1 drain"))
     }
 }
 
@@ -927,9 +984,9 @@ impl<D> Drain for Logger<D>
 
         let chained = OwnedKVList {
             node: Arc::new(MultiListNode {
-                next_node: values.node.clone(),
-                node: self.list.node.clone(),
-            }),
+                               next_node: values.node.clone(),
+                               node: self.list.node.clone(),
+                           }),
         };
         self.drain.log(record, &chained)
     }
@@ -1580,9 +1637,9 @@ impl FromStr for Level {
                     .iter()
                     .zip(level.as_bytes().iter())
                     .all(|(a, b)| {
-                        ASCII_LOWERCASE_MAP[*a as usize] ==
-                        ASCII_LOWERCASE_MAP[*b as usize]
-                    })
+                             ASCII_LOWERCASE_MAP[*a as usize] ==
+                             ASCII_LOWERCASE_MAP[*b as usize]
+                         })
             })
             .map(|p| Level::from_usize(p).unwrap())
             .ok_or(())
@@ -1598,9 +1655,9 @@ impl FromStr for FilterLevel {
                     .iter()
                     .zip(level.as_bytes().iter())
                     .all(|(a, b)| {
-                        ASCII_LOWERCASE_MAP[*a as usize] ==
-                        ASCII_LOWERCASE_MAP[*b as usize]
-                    })
+                             ASCII_LOWERCASE_MAP[*a as usize] ==
+                             ASCII_LOWERCASE_MAP[*b as usize]
+                         })
             })
             .map(|p| FilterLevel::from_usize(p).unwrap())
             .ok_or(())
@@ -1758,6 +1815,14 @@ impl<'a> Record<'a> {
     /// Get key-value pairs
     pub fn kv(&self) -> BorrowedKV {
         BorrowedKV(self.kv.0)
+    }
+
+    pub to_slogv1(&self) -> slogv1::Record {
+        slogv1::Record::new(
+            record_static,
+            self.msg,
+            self.values
+            )
     }
 }
 // }}}
@@ -2209,6 +2274,126 @@ impl<'a> KV for BorrowedKV<'a> {
         self.0.serialize(record, serializer)
     }
 }
+
+#[cfg(feature = "slogv1")]
+impl KV for std::panic::AssertUnwindSafe<slogv1::OwnedKeyValueList> {
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+                 -> Result {
+        let mut serializer = Slogv1SerializerAdapter(serializer);
+        for i in self.iter() {
+            i.1.serialize(record.to_slogv1, i.0, &mut serializer)?
+        }
+        Ok(())
+    }
+}
+
+
+#[cfg(feature = "slogv1")]
+struct Slogv1SerializerAdapter<'a>(&'a mut Serializer);
+
+#[cfg(feature = "slogv1")]
+impl<'a> slogv1::ser::Serializer for Slogv1SerializerAdapter<'a> {
+    fn emit_bool(&mut self,
+                 key: &'static str,
+                 val: bool)
+                 -> slogv1::ser::Result {
+        self.0.emit_bool(key, val)
+    }
+
+    fn emit_unit(&mut self, key: &'static str) -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_none(&mut self, key: &'static str) -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_char(&mut self,
+                 key: &'static str,
+                 val: char)
+                 -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_u8(&mut self, key: &'static str, val: u8) -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_i8(&mut self, key: &'static str, val: i8) -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_u16(&mut self, key: &'static str, val: u16) -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_i16(&mut self, key: &'static str, val: i16) -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_u32(&mut self, key: &'static str, val: u32) -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_i32(&mut self, key: &'static str, val: i32) -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_f32(&mut self, key: &'static str, val: f32) -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_u64(&mut self, key: &'static str, val: u64) -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_i64(&mut self, key: &'static str, val: i64) -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_f64(&mut self, key: &'static str, val: f64) -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_usize(&mut self,
+                  key: &'static str,
+                  val: usize)
+                  -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_isize(&mut self,
+                  key: &'static str,
+                  val: isize)
+                  -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_str(&mut self,
+                key: &'static str,
+                val: &str)
+                -> slogv1::ser::Result {
+        Ok(())
+    }
+    fn emit_arguments(&mut self,
+                      key: &'static str,
+                      val: &fmt::Arguments)
+                      -> slogv1::ser::Result {
+        Ok(())
+    }
+}
+
+#[cfg(feature = "slogv1")]
+impl<'a> KV for &'a [(&'static str, &'a slogv1::Serialize)] {
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+                 -> Result {
+        for i in self.iter() {
+            i.serialize(record, serializer)?
+        }
+        Ok(())
+    }
+}
+
+#[cfg(feature = "slogv1")]
+impl<'a> KV for (&'static str, &'a slogv1::Serialize) {
+    fn serialize(&self,
+                 record: &Record,
+                 serializer: &mut Serializer)
+                 -> Result {
+        let mut serializer = Slogv1SerializerAdapter(serializer);
+        self.1.serialize(record, 0.1, &mut serializer)?;
+        Ok(())
+    }
+}
 // }}}
 
 // {{{ OwnedKV
@@ -2344,9 +2529,9 @@ impl OwnedKVList {
     {
         OwnedKVList {
             node: Arc::new(OwnedKVListNode {
-                next_node: Arc::new(()),
-                kv: values.0,
-            }),
+                               next_node: Arc::new(()),
+                               kv: values.0,
+                           }),
         }
     }
 
@@ -2358,9 +2543,9 @@ impl OwnedKVList {
     {
         OwnedKVList {
             node: Arc::new(OwnedKVListNode {
-                next_node: next_node,
-                kv: values.0,
-            }),
+                               next_node: next_node,
+                               kv: values.0,
+                           }),
         }
     }
 }

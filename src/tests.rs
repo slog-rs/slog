@@ -129,18 +129,18 @@ fn expressions() {
 
 #[test]
 fn makers() {
-    use *;
+    use ::*;
     let drain =
         Duplicate(Discard.filter(|r| r.level().is_at_least(Level::Info)),
                   Discard.filter_level(Level::Warning))
-            .map(Fuse);
+                .map(Fuse);
     let _log = Logger::root(Arc::new(drain),
                             o!("version" => env!("CARGO_PKG_VERSION")));
 }
 
 #[test]
 fn simple_logger_erased() {
-    use *;
+    use ::*;
 
     fn takes_arced_drain(_l: Logger) {}
 
@@ -152,14 +152,14 @@ fn simple_logger_erased() {
 
 #[test]
 fn logger_to_erased() {
-    use *;
+    use ::*;
 
     fn takes_arced_drain(_l: Logger) {}
 
     let drain =
         Duplicate(Discard.filter(|r| r.level().is_at_least(Level::Info)),
                   Discard.filter_level(Level::Warning))
-            .map(Fuse);
+                .map(Fuse);
     let log = Logger::root(drain, o!("version" => env!("CARGO_PKG_VERSION")));
 
     takes_arced_drain(log.into_erased());

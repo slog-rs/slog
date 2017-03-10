@@ -25,8 +25,10 @@ debug-assertions = false
 
 [features]
 
-std = []
 default = ["std"]
+
+slogv1 = [ "slog" ]
+std = []
 
 max_level_off   = []
 max_level_error = []
@@ -41,3 +43,7 @@ release_max_level_warn  = []
 release_max_level_info  = []
 release_max_level_debug = []
 release_max_level_trace = []
+
+
+[dependencies]
+slog = { version = "1.2", optional = true }
