@@ -113,17 +113,23 @@ fn expressions() {
     warn!(log, "x" => 1; "logging message bar={}", r.foo.bar(),);
     slog_warn!(log, "x" => 1; "logging message bar={}", r.foo.bar(),);
 
-    warn!(log, "x" => 1, "y" => r.foo.bar(); "logging message bar={}", r.foo.bar());
-    slog_warn!(log, "x" => 1, "y" => r.foo.bar(); "logging message bar={}", r.foo.bar());
+    warn!(log, "x" => 1, "y" => r.foo.bar();
+          "logging message bar={}", r.foo.bar());
+    slog_warn!(log, "x" => 1, "y" => r.foo.bar();
+               "logging message bar={}", r.foo.bar());
 
     warn!(log, "x" => r.foo.bar(); "logging message bar={}", r.foo.bar());
     slog_warn!(log, "x" => r.foo.bar(); "logging message bar={}", r.foo.bar());
 
-    warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar(); "logging message bar={}", r.foo.bar());
-    slog_warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar(); "logging message bar={}", r.foo.bar());
+    warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar();
+          "logging message bar={}", r.foo.bar());
+    slog_warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar();
+               "logging message bar={}", r.foo.bar());
 
-    warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar(); "logging message bar={}", r.foo.bar(),);
-    slog_warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar(); "logging message bar={}", r.foo.bar(),);
+    warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar();
+          "logging message bar={}", r.foo.bar(),);
+    slog_warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar();
+               "logging message bar={}", r.foo.bar(),);
 
 }
 

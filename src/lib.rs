@@ -285,7 +285,8 @@ macro_rules! slog_o(
     };
 );
 
-/// Macro for building group of key-value pairs in [`BorrowedKV`](struct.BorrowedKV.html)
+/// Macro for building group of key-value pairs in
+/// [`BorrowedKV`](struct.BorrowedKV.html)
 ///
 /// In most circumstances using this macro directly is unecessary and `info!`
 /// and other wrappers over `log!` should be used instead.
@@ -403,8 +404,8 @@ macro_rules! slog_record(
 /// statically disable logging at various levels. See [slog notable
 /// details](index.html#notable-details)
 ///
-/// Use [version with longer name](macro.slog_log.html) if you want to prevent clash
-/// with legacy `log` crate macro names.
+/// Use [version with longer name](macro.slog_log.html) if you want to prevent
+/// clash with legacy `log` crate macro names.
 ///
 /// ## Supported invocations
 ///
@@ -416,7 +417,10 @@ macro_rules! slog_record(
 ///
 /// fn main() {
 ///     let drain = slog::Discard;
-///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     let root = slog::Logger::root(
+///         drain,
+///         o!("key1" => "value1", "key2" => "value2")
+///     );
 ///     info!(root, "test info log"; "log-key" => true);
 /// }
 /// ```
@@ -429,7 +433,9 @@ macro_rules! slog_record(
 ///
 /// fn main() {
 ///     let drain = slog::Discard;
-///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     let root = slog::Logger::root(
+///         drain, o!("key1" => "value1", "key2" => "value2")
+///     );
 ///     info!(root, "test info log");
 /// }
 /// ```
@@ -442,7 +448,9 @@ macro_rules! slog_record(
 ///
 /// fn main() {
 ///     let drain = slog::Discard;
-///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     let root = slog::Logger::root(drain,
+///         o!("key1" => "value1", "key2" => "value2")
+///     );
 ///     info!(root, "log-key" => true; "formatted: {}", 1);
 /// }
 /// ```
@@ -458,15 +466,17 @@ macro_rules! slog_record(
 ///
 /// fn main() {
 ///     let drain = slog::Discard;
-///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     let root = slog::Logger::root(
+///         drain, o!("key1" => "value1", "key2" => "value2")
+///     );
 ///     info!(root, "formatted: {}", 1);
 /// }
 /// ```
 ///
-/// Note: use formatting support only when it really makes sense. Eg. logging message
-/// like `"found {} keys"` is against structured logging. It should be `"found
-/// keys", "count" => keys_num` instead, so that data is clearly named, typed
-/// and separated from the message.
+/// Note: use formatting support only when it really makes sense. Eg. logging
+/// message like `"found {} keys"` is against structured logging. It should be
+/// `"found keys", "count" => keys_num` instead, so that data is clearly named,
+/// typed and separated from the message.
 ///
 /// ### Tags
 ///
@@ -479,13 +489,18 @@ macro_rules! slog_record(
 ///
 /// fn main() {
 ///     let drain = slog::Discard;
-///     let root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     let root = slog::Logger::root(drain,
+///         o!("key1" => "value1", "key2" => "value2")
+///     );
 ///     let ops = 3;
-///     info!(root, #"performance-metric", "thread speed"; "ops_per_sec" => ops);
+///     info!(
+///         root,
+///         #"performance-metric", "thread speed"; "ops_per_sec" => ops
+///     );
 /// }
 /// ```
 ///
-/// See `Record::tag()` for more infromation about tags.
+/// See `Record::tag()` for more information about tags.
 ///
 #[macro_export]
 macro_rules! log(
@@ -819,7 +834,8 @@ impl<D> Logger<D>
     ///     );
     /// }
     pub fn root<T>(drain: D, values: OwnedKV<T>) -> Logger
-        where D: 'static + SendSyncRefUnwindSafeDrain<Err = Never, Ok = ()> + Sized,
+        where D: 'static + SendSyncRefUnwindSafeDrain<Err = Never, Ok = ()>
+        + Sized,
               T: ThreadSafeKV + 'static
     {
         Logger {
@@ -1905,8 +1921,11 @@ pub trait Value {
 macro_rules! impl_value_for{
     ($t:ty, $f:ident) => {
         impl Value for $t {
-            fn serialize(&self, _record : &Record, key : Key, serializer : &mut Serializer)
-                         -> Result {
+            fn serialize(&self,
+                         _record : &Record,
+                         key : Key,
+                         serializer : &mut Serializer
+                         ) -> Result {
                 serializer.$f(key, *self)
             }
         }
@@ -2127,7 +2146,8 @@ pub struct PushFnValue<F>(pub F)
     Result;
 
 impl<F> Value for PushFnValue<F>
-    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnSerializer<'c>) -> Result
+    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnSerializer<'c>)
+    -> Result
 {
     fn serialize(&self, record: &Record, key: Key, serializer: &mut Serializer)
         -> Result {
@@ -2265,8 +2285,8 @@ impl<'a> KV for BorrowedKV<'a> {
 /// Can be constructed with [`o!` macro](macro.o.html).
 pub struct OwnedKV<T>(#[doc(hidden)]
                       /// The exact details of that it are not considered public
-                      /// and stable API. `slog_o` or `o` macro should be used instead
-                      /// to create `OwnedKV` instances.
+                      /// and stable API. `slog_o` or `o` macro should be used
+                      /// instead to create `OwnedKV` instances.
                       pub T)
     where T: ThreadSafeKV + ?Sized;
 // }}}
@@ -2280,9 +2300,10 @@ pub struct OwnedKV<T>(#[doc(hidden)]
 /// Zero, one or more borrowed key-value pairs.
 ///
 /// Can be constructed with [`b!` macro](macro.b.html).
-pub struct BorrowedKV<'a>(/// The exact details of it function are not considered public
-                          /// and stable API. `log` and other macros should be used instead
-                          /// to create `BorrowedKV` instances.
+pub struct BorrowedKV<'a>(/// The exact details of it function are not
+                          /// considered public and stable API. `log` and other
+                          /// macros should be used instead to create
+                          /// `BorrowedKV` instances.
                           #[doc(hidden)]
                           pub &'a KV);
 
