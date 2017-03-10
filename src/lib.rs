@@ -72,7 +72,8 @@
 //!  * run-time configuration:
 //!      * run-time behavior change;
 //!        see [slog-atomic](https://docs.rs/slog-atomic)
-//!      * run-time configuration; see [slog-config crate](https://docs.rs/slog-config)
+//!      * run-time configuration; see
+//!        [slog-config crate](https://docs.rs/slog-config)
 //!
 //!
 //! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
@@ -169,7 +170,8 @@ use std::sync::Arc;
 // }}}
 
 // {{{ Macros
-/// Macro for building group of key-value pairs: [`OwnedKV`](struct.OwnedKV.html)
+/// Macro for building group of key-value pairs:
+/// [`OwnedKV`](struct.OwnedKV.html)
 ///
 /// ```
 /// #[macro_use]
@@ -177,7 +179,10 @@ use std::sync::Arc;
 ///
 /// fn main() {
 ///     let drain = slog::Discard;
-///     let _root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     let _root = slog::Logger::root(
+///         drain,
+///         o!("key1" => "value1", "key2" => "value2")
+///     );
 /// }
 /// ```
 #[cfg(feature = "std")]
@@ -208,7 +213,10 @@ macro_rules! o(
 ///
 /// fn main() {
 ///     let drain = slog::Discard;
-///     let _root = slog::Logger::root(drain, o!("key1" => "value1", "key2" => "value2"));
+///     let _root = slog::Logger::root(
+///         drain,
+///         o!("key1" => "value1", "key2" => "value2")
+///     );
 /// }
 /// ```
 #[cfg(not(feature = "std"))]
@@ -481,9 +489,10 @@ macro_rules! slog_record(
 ///
 #[macro_export]
 macro_rules! log(
-    ($l:expr, $lvl:expr,  $tag:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
-        if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, $tag, &format_args!($($args)+), b!($($k => $v),+)))
+    ($l:expr, $lvl:expr,  $tag:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) =>
+    { if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
+            $l.log(&record!($lvl, $tag, &format_args!($($args)+), b!($($k =>
+                                                                       $v),+)))
         }
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr,) => {
@@ -499,7 +508,8 @@ macro_rules! log(
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, $tag, &format_args!("{}", $msg), b!($($k => $v),+)))
+            $l.log(&record!($lvl, $tag, &format_args!("{}", $msg), b!($($k =>
+                                                                        $v),+)))
         }
     };
     ($l:expr, $lvl:expr, $tag:expr, $($args:tt)+) => {
@@ -530,29 +540,29 @@ macro_rules! log(
 macro_rules! slog_log(
     ($l:expr, $lvl:expr, $tag:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, $tag, &format_args!($($args)+), slog_b!($($k => $v),+)))
-        }
+            $l.log(&slog_record!($lvl, $tag, &format_args!($($args)+),
+                                 slog_b!($($k => $v),+))) }
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr,) => {
         slog_log!($l, $lvl, $tag, $msg)
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, $tag, &format_args!("{}", $msg), slog_b!()))
-        }
+            $l.log(&slog_record!($lvl, $tag, &format_args!("{}", $msg),
+            slog_b!())) }
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
         slog_log!($l, $lvl, $tag, $msg; $($k => $v),+)
     };
     ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, $tag, &format_args!("{}", $msg), slog_b!($($k => $v),+)))
-        }
+            $l.log(&slog_record!($lvl, $tag, &format_args!("{}", $msg),
+                                 slog_b!($($k => $v),+))) }
     };
     ($l:expr, $lvl:expr, $tag:expr, $($args:tt)+) => {
         if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, $tag, &format_args!($($args)+),  slog_b!()))
-        }
+            $l.log(&slog_record!($lvl, $tag, &format_args!($($args)+),
+            slog_b!())) }
     };
 );
 
@@ -741,9 +751,9 @@ macro_rules! slog_trace(
 ///
 /// In an essence `Logger` instance holds two pieces of information:
 ///
-/// * `Drain` - destination where to forward logging `Record`s for
+/// * drain - destination where to forward logging `Record`s for
 /// processing.
-/// * Context - list of key-value pairs associated with it.
+/// * context - list of key-value pairs associated with it.
 ///
 /// Root `Logger` is created with a `Drain` that will be cloned to every
 /// member of it's hierarchy.
@@ -771,9 +781,7 @@ macro_rules! slog_trace(
 /// Logger is parametrized over type of a `Drain` associated with it (`D`). It
 /// default to type-erased version so `Logger` without any type annotation
 /// means `Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>`. See
-/// `Logger::to_erased` for more information.
-///
-///
+/// `Logger::root_typed` and `Logger::to_erased` for more information.
 #[derive(Clone)]
 pub struct Logger<D = Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
     where D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>
@@ -787,12 +795,16 @@ impl<D> Logger<D>
 {
     /// Build a root `Logger`
     ///
-    /// All children and their children and so on form one logging tree
-    /// sharing a common drain.
-    ///
     /// Root logger starts a new tree associated with a given `Drain`. Root
     /// logger drain must return no errors. See `Drain::ignore_res()` and
     /// `Drain::fuse()`.
+    ///
+    /// All children and their children (and so on), form one logging tree
+    /// sharing a common drain. See `Logger::new`.
+    ///
+    /// This version (as opposed to `Logger:root_typed`) will take `drain` and
+    /// made it into `Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>`.
+    /// This is typically the most convenient way to work with `Logger`s.
     ///
     /// Use `o!` macro to build `OwnedKV` object.
     ///
@@ -806,7 +818,31 @@ impl<D> Logger<D>
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
-    pub fn root<T>(drain: D, values: OwnedKV<T>) -> Logger<D>
+    pub fn root<T>(drain: D, values: OwnedKV<T>) -> Logger
+        where D: 'static + SendSyncRefUnwindSafeDrain<Err = Never, Ok = ()> + Sized,
+              T: ThreadSafeKV + 'static
+    {
+        Logger {
+                drain: drain,
+                list: OwnedKVList::root(values),
+            }
+            .into_erased()
+    }
+
+    /// Build a root `Logger` that retains `drain` type
+    ///
+    /// Unlike `Logger::root`, this constructor retains the type of a `drain`,
+    /// which allows highest performance possible by eliminating indirect call
+    /// on `Drain::log`, and allowing monomorphization of `Logger` and `Drain`
+    /// objects.
+    ///
+    /// If you don't understand the implications, you should probably just
+    /// ignore it.
+    ///
+    /// See `Logger:into_erased` and `Logger::to_erased` for conversion from
+    /// type returned by this function to version that would be returned by
+    /// `Logger::root`.
+    pub fn root_typed<T>(drain: D, values: OwnedKV<T>) -> Logger<D>
         where D: 'static + SendSyncUnwindSafeDrain<Err = Never, Ok = ()> + Sized,
               T: ThreadSafeKV + 'static
     {
@@ -829,11 +865,11 @@ impl<D> Logger<D>
     /// common drain. This drain, will be `Clone`d when this method is called.
     /// That is why `Clone` must be implemented for `D` in `Logger<D>::new`.
     ///
-    /// For some `Drain` types `Clone` is cheap or even free (a no-op). For
-    /// others cloning might be expensive (as they contain a lot of data), or
-    /// even impossible. In situations like that wrapping `Drain` in a
-    /// `std::sync::Arc` makes it `Clone`able. Another way is calling
-    /// `Logger::to_erased`.
+    /// For some `Drain` types `Clone` is cheap or even free (a no-op). This is
+    /// the case for any `Logger` returned by `Logger::root` and it's children.
+    ///
+    /// When using `Logger::root_typed`, it's possible that cloning might be
+    /// expensive, or even impossible.
     ///
     /// The reason why wrapping in an `Arc` is not done internally, and exposed
     /// to the user is performance. Calling `Drain::log` through an `Arc` is
@@ -873,7 +909,8 @@ impl<D> Logger<D>
         &self.list
     }
 
-    /// Convert to default, "erased" type: `Logger<Arc<SendSyncUnwindSafeDrain>>`
+    /// Convert to default, "erased" type:
+    /// `Logger<Arc<SendSyncUnwindSafeDrain>>`
     ///
     /// Useful to adapt `Logger<D : Clone>` to an interface expecting
     /// `Logger<Arc<...>>`.
@@ -927,9 +964,9 @@ impl<D> Drain for Logger<D>
 
         let chained = OwnedKVList {
             node: Arc::new(MultiListNode {
-                next_node: values.node.clone(),
-                node: self.list.node.clone(),
-            }),
+                               next_node: values.node.clone(),
+                               node: self.list.node.clone(),
+                           }),
         };
         self.drain.log(record, &chained)
     }
@@ -953,8 +990,9 @@ impl<D> Drain for Logger<D>
 pub trait Drain {
     /// Type returned by this drain
     ///
-    /// It can be useful in some circumstances, but rarely. It will probably default to `()` once
-    /// https://github.com/rust-lang/rust/issues/29661 is stable.
+    /// It can be useful in some circumstances, but rarely. It will probably
+    /// default to `()` once https://github.com/rust-lang/rust/issues/29661 is
+    /// stable.
     type Ok;
     /// Type of potential errors that can be returned by this `Drain`
     type Err;
@@ -1374,8 +1412,10 @@ impl<D> fmt::Debug for MutexDrainError<D>
 }
 
 #[cfg(feature = "std")]
-impl<'a, D : Drain> From<std::sync::PoisonError<std::sync::MutexGuard<'a, D>>> for MutexDrainError<D> {
-    fn from(_ : std::sync::PoisonError<std::sync::MutexGuard<'a, D>>) -> MutexDrainError<D> {
+impl<'a, D : Drain> From<std::sync::PoisonError<std::sync::MutexGuard<'a, D>>>
+for MutexDrainError<D> {
+    fn from(_ : std::sync::PoisonError<std::sync::MutexGuard<'a, D>>)
+        -> MutexDrainError<D> {
         MutexDrainError::Mutex
     }
 }
@@ -1580,9 +1620,9 @@ impl FromStr for Level {
                     .iter()
                     .zip(level.as_bytes().iter())
                     .all(|(a, b)| {
-                        ASCII_LOWERCASE_MAP[*a as usize] ==
-                        ASCII_LOWERCASE_MAP[*b as usize]
-                    })
+                             ASCII_LOWERCASE_MAP[*a as usize] ==
+                             ASCII_LOWERCASE_MAP[*b as usize]
+                         })
             })
             .map(|p| Level::from_usize(p).unwrap())
             .ok_or(())
@@ -1598,9 +1638,9 @@ impl FromStr for FilterLevel {
                     .iter()
                     .zip(level.as_bytes().iter())
                     .all(|(a, b)| {
-                        ASCII_LOWERCASE_MAP[*a as usize] ==
-                        ASCII_LOWERCASE_MAP[*b as usize]
-                    })
+                             ASCII_LOWERCASE_MAP[*a as usize] ==
+                             ASCII_LOWERCASE_MAP[*b as usize]
+                         })
             })
             .map(|p| FilterLevel::from_usize(p).unwrap())
             .ok_or(())
@@ -1674,7 +1714,8 @@ pub struct RecordStatic<'a> {
 /// One logging record
 ///
 /// Corresponds to one logging statement like `info!(...)` and carries all it's
-/// data: eg. message, immediate key-value pairs and key-value pairs of `Logger` used to execute it.
+/// data: eg. message, immediate key-value pairs and key-value pairs of `Logger`
+/// used to execute it.
 ///
 /// Record is passed to a `Logger`, which delivers it to it's own `Drain`,
 /// where actual logging processing is implemented.
@@ -2062,7 +2103,8 @@ impl<'a> Drop for PushFnSerializer<'a> {
 /// Strings)
 ///
 /// In some cases it might make sense for another closure form to be used - one
-/// taking a serializer as an argument, which avoids lifetimes / allocation issues.
+/// taking a serializer as an argument, which avoids lifetimes / allocation
+/// issues.
 ///
 /// Generally this method should be used if it avoids a big allocation of
 /// `Serialize`-implementing type in performance-critical logging statement.
@@ -2081,7 +2123,8 @@ impl<'a> Drop for PushFnSerializer<'a> {
 /// }
 /// ```
 pub struct PushFnValue<F>(pub F)
-    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnSerializer<'c>) -> Result;
+    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnSerializer<'c>) ->
+    Result;
 
 impl<F> Value for PushFnValue<F>
     where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnSerializer<'c>) -> Result
@@ -2237,10 +2280,10 @@ pub struct OwnedKV<T>(#[doc(hidden)]
 /// Zero, one or more borrowed key-value pairs.
 ///
 /// Can be constructed with [`b!` macro](macro.b.html).
-pub struct BorrowedKV<'a>(#[doc(hidden)]
-                          /// The exact details of it function are not considered public
+pub struct BorrowedKV<'a>(/// The exact details of it function are not considered public
                           /// and stable API. `log` and other macros should be used instead
                           /// to create `BorrowedKV` instances.
+                          #[doc(hidden)]
                           pub &'a KV);
 
 // }}}
@@ -2344,9 +2387,9 @@ impl OwnedKVList {
     {
         OwnedKVList {
             node: Arc::new(OwnedKVListNode {
-                next_node: Arc::new(()),
-                kv: values.0,
-            }),
+                               next_node: Arc::new(()),
+                               kv: values.0,
+                           }),
         }
     }
 
@@ -2358,9 +2401,9 @@ impl OwnedKVList {
     {
         OwnedKVList {
             node: Arc::new(OwnedKVListNode {
-                next_node: next_node,
-                kv: values.0,
-            }),
+                               next_node: next_node,
+                               kv: values.0,
+                           }),
         }
     }
 }

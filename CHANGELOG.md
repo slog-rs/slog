@@ -1,26 +1,24 @@
-**Note:** `slog-*` sub-crates have their own ChangeLog files under
-corresponding `crates/*/` directory.
-
 # Change Log
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-
-## 2.0.0-alpha2 - 2017-02-23
+## 2.0.0-2.0 - Unreleased
 ### Changed
 
-* Parametrize `Logger` over the `Drain` it holds and introduce "erased" version
-* Enforcing `UnwindSafe` `Drain`s for `Logger`s
+* Make `Logger::root` return "erased" version
+* Introduce `Logger::root_typed` for "non-erased" `Logger` creation
+
+## 2.0.0-1.0 - 2017-02-23
 
 ### Fixed
 
 * `fmt::Debug` for `MutexDrainError`
 
-## 2.0.0-alpha1 - 2017-02-18
 ### Changed
-
+* Parametrize `Logger` over the `Drain` it holds and introduce "erased" version
+* Enforcing `UnwindSafe` `Drain`s for `Logger`s
 * Refactored key-value pairs traits and structures
 * Renamed some types
 * Support chaining of `OwnedKVList`s
