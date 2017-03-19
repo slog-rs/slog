@@ -1056,7 +1056,7 @@ pub trait Drain {
     /// for which `f` returns false.
     fn filter<F>(self, f: F) -> Filter<Self, F>
         where Self: Sized,
-              F: Fn(&Record) -> bool + 'static + Send + Sync
+              F: FilterFn
     {
         Filter::new(self, f)
     }
@@ -1079,7 +1079,7 @@ pub trait Drain {
     /// drain, and returns new error of potentially different type
     fn map_err<F, E>(self, f: F) -> MapError<Self, E>
         where Self: Sized,
-              F: 'static + Sync + Send + Fn(<Self as Drain>::Err) -> E
+              F: MapErrFn<Self::Err, E>
     {
         MapError::new(self, f)
     }
@@ -1109,6 +1109,17 @@ pub trait Drain {
 ///
 /// This type is used to enforce `Drain`s associated with `Logger`s
 /// are thread-safe.
+pub trait SendSyncUnwindSafe: Send + Sync + UnwindSafe {}
+
+#[cfg(feature = "std")]
+impl<T> SendSyncUnwindSafe for T where T: Send + Sync + UnwindSafe {}
+
+
+#[cfg(feature = "std")]
+/// Thread-local safety bound for `Drain`
+///
+/// This type is used to enforce `Drain`s associated with `Logger`s
+/// are thread-safe.
 pub trait SendSyncUnwindSafeDrain: Drain + Send + Sync + UnwindSafe {}
 
 #[cfg(feature = "std")]
@@ -1127,6 +1138,29 @@ impl<T> SendSyncRefUnwindSafeDrain for T
 {
 }
 
+#[cfg(feature = "std")]
+/// Function that can be used in `MapErr` drain
+pub trait MapErrFn<EI, EO>
+    : 'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(EI) -> EO {
+}
+
+#[cfg(feature = "std")]
+impl<T, EI, EO> MapErrFn<EI, EO> for T
+    where T: 'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(EI) -> EO
+{
+}
+
+#[cfg(feature = "std")]
+/// Function that can be used in `Filter` drain
+pub trait FilterFn
+    : 'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(&Record) -> bool {
+}
+
+#[cfg(feature = "std")]
+impl<T> FilterFn for T
+    where T: 'static + Sync + Send + UnwindSafe+ RefUnwindSafe  + Fn(&Record) -> bool
+{
+}
 
 #[cfg(not(feature = "std"))]
 /// Thread-local safety bound for `Drain`
@@ -1164,6 +1198,22 @@ pub trait SendRefUnwindSafeDrain: Drain + Send {}
 #[cfg(not(feature = "std"))]
 impl<T> SendRefUnwindSafeDrain for T where T: Drain + Send {}
 
+#[cfg(not(feature = "std"))]
+/// Function that can be used in `MapErr` drain
+pub trait MapErrFn<EI, EO>: 'static + Sync + Send + Fn(EI) -> EO {}
+
+#[cfg(not(feature = "std"))]
+impl<T, EI, EO> MapErrFn<EI, EO> for T
+    where T: 'static + Sync + Send + Fn(EI) -> EO
+{
+}
+
+#[cfg(not(feature = "std"))]
+/// Function that can be used in `Filter` drain
+pub trait FilterFn: 'static + Sync + Send + Fn(&Record) -> bool {}
+
+#[cfg(not(feature = "std"))]
+impl<T> FilterFn for T where T: 'static + Sync + Send + Fn(&Record) -> bool {}
 
 
 #[cfg(not(feature = "std"))]
@@ -1212,7 +1262,7 @@ pub struct Filter<D: Drain, F>(pub D, pub F)
     where F: Fn(&Record) -> bool + 'static + Send + Sync;
 
 impl<D: Drain, F> Filter<D, F>
-    where F: 'static + Sync + Send + Fn(&Record) -> bool
+    where F: FilterFn
 {
     /// Create `Filter` wrapping given `drain`
     pub fn new(drain: D, cond: F) -> Self {
@@ -1221,7 +1271,7 @@ impl<D: Drain, F> Filter<D, F>
 }
 
 impl<D: Drain, F> Drain for Filter<D, F>
-    where F: 'static + Sync + Send + Fn(&Record) -> bool
+    where F: FilterFn
 {
     type Ok = Option<D::Ok>;
     type Err = D::Err;
@@ -1279,15 +1329,14 @@ impl<D: Drain> Drain for LevelFilter<D> {
 pub struct MapError<D: Drain, E> {
     drain: D,
     // eliminated dynamic dispatch, after rust learns `-> impl Trait`
-    map_fn: Box<Fn(D::Err) -> E + 'static + Send + Sync>,
+    map_fn: Box<MapErrFn<D::Err, E, Output = E>>,
 }
 
 impl<D: Drain, E> MapError<D, E> {
     /// Create `Filter` wrapping given `drain`
-    pub fn new<F: 'static + Sync + Send + Fn(<D as Drain>::Err) -> E>
-        (drain: D,
-         map_fn: F)
-         -> Self {
+    pub fn new<F>(drain: D, map_fn: F) -> Self
+        where F: MapErrFn<<D as Drain>::Err, E>
+    {
         MapError {
             drain: drain,
             map_fn: Box::new(map_fn),
