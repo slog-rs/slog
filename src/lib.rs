@@ -834,15 +834,14 @@ impl<D> Logger<D>
     ///     );
     /// }
     pub fn root<T>(drain: D, values: OwnedKV<T>) -> Logger
-        where D: 'static + SendSyncRefUnwindSafeDrain<Err = Never, Ok = ()>
-        + Sized,
+        where D: 'static + SendSyncRefUnwindSafeDrain<Err = Never, Ok = ()>,
               T: ThreadSafeKV + 'static
     {
         Logger {
-                drain: drain,
-                list: OwnedKVList::root(values),
-            }
-            .into_erased()
+            drain: Arc::new(drain) as
+                   Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
+            list: OwnedKVList::root(values),
+        }
     }
 
     /// Build a root `Logger` that retains `drain` type
@@ -1112,7 +1111,7 @@ pub trait Drain {
 pub trait SendSyncUnwindSafe: Send + Sync + UnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> SendSyncUnwindSafe for T where T: Send + Sync + UnwindSafe {}
+impl<T> SendSyncUnwindSafe for T where T: Send + Sync + UnwindSafe + ?Sized {}
 
 
 #[cfg(feature = "std")]
@@ -1123,7 +1122,10 @@ impl<T> SendSyncUnwindSafe for T where T: Send + Sync + UnwindSafe {}
 pub trait SendSyncUnwindSafeDrain: Drain + Send + Sync + UnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> SendSyncUnwindSafeDrain for T where T: Drain + Send + Sync + UnwindSafe {}
+impl<T> SendSyncUnwindSafeDrain for T
+    where T: Drain + Send + Sync + UnwindSafe + ?Sized
+{
+}
 
 #[cfg(feature = "std")]
 /// Thread-local safety bound for `Drain`
@@ -1134,7 +1136,7 @@ pub trait SendSyncRefUnwindSafeDrain: Drain + Send + Sync + RefUnwindSafe {}
 
 #[cfg(feature = "std")]
 impl<T> SendSyncRefUnwindSafeDrain for T
-    where T: Drain + Send + Sync + RefUnwindSafe
+    where T: Drain + Send + Sync + RefUnwindSafe + ?Sized
 {
 }
 
@@ -1146,7 +1148,7 @@ pub trait MapErrFn<EI, EO>
 
 #[cfg(feature = "std")]
 impl<T, EI, EO> MapErrFn<EI, EO> for T
-    where T: 'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(EI) -> EO
+    where T: 'static + Sync + Send + ?Sized + UnwindSafe + RefUnwindSafe + Fn(EI) -> EO
 {
 }
 
@@ -1158,7 +1160,7 @@ pub trait FilterFn
 
 #[cfg(feature = "std")]
 impl<T> FilterFn for T
-    where T: 'static + Sync + Send + UnwindSafe+ RefUnwindSafe  + Fn(&Record) -> bool
+    where T: 'static + Sync + Send + ?Sized + UnwindSafe+ RefUnwindSafe  + Fn(&Record) -> bool
 {
 }
 
@@ -1170,7 +1172,7 @@ impl<T> FilterFn for T
 pub trait SendSyncUnwindSafeDrain: Drain + Send + Sync {}
 
 #[cfg(not(feature = "std"))]
-impl<T> SendSyncUnwindSafeDrain for T where T: Drain + Send + Sync {}
+impl<T> SendSyncUnwindSafeDrain for T where T: Drain + Send + Sync + ?Sized {}
 
 #[cfg(not(feature = "std"))]
 /// Thread-local safety bound for `Drain`
@@ -1180,7 +1182,7 @@ impl<T> SendSyncUnwindSafeDrain for T where T: Drain + Send + Sync {}
 pub trait SendSyncRefUnwindSafeDrain: Drain + Send + Sync {}
 
 #[cfg(not(feature = "std"))]
-impl<T> SendSyncRefUnwindSafeDrain for T where T: Drain + Send + Sync {}
+impl<T> SendSyncRefUnwindSafeDrain for T where T: Drain + Send + Sync + ?Sized {}
 
 
 #[cfg(feature = "std")]
@@ -1188,7 +1190,10 @@ impl<T> SendSyncRefUnwindSafeDrain for T where T: Drain + Send + Sync {}
 pub trait SendRefUnwindSafeDrain: Drain + Send + RefUnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> SendRefUnwindSafeDrain for T where T: Drain + Send + RefUnwindSafe {}
+impl<T> SendRefUnwindSafeDrain for T
+    where T: Drain + Send + RefUnwindSafe + ?Sized
+{
+}
 
 
 #[cfg(not(feature = "std"))]
@@ -1196,7 +1201,7 @@ impl<T> SendRefUnwindSafeDrain for T where T: Drain + Send + RefUnwindSafe {}
 pub trait SendRefUnwindSafeDrain: Drain + Send {}
 
 #[cfg(not(feature = "std"))]
-impl<T> SendRefUnwindSafeDrain for T where T: Drain + Send {}
+impl<T> SendRefUnwindSafeDrain for T where T: Drain + Send + ?Sized {}
 
 #[cfg(not(feature = "std"))]
 /// Function that can be used in `MapErr` drain
@@ -1204,7 +1209,7 @@ pub trait MapErrFn<EI, EO>: 'static + Sync + Send + Fn(EI) -> EO {}
 
 #[cfg(not(feature = "std"))]
 impl<T, EI, EO> MapErrFn<EI, EO> for T
-    where T: 'static + Sync + Send + Fn(EI) -> EO
+    where T: 'static + Sync + Send + ?Sized + Fn(EI) -> EO
 {
 }
 
@@ -1213,10 +1218,11 @@ impl<T, EI, EO> MapErrFn<EI, EO> for T
 pub trait FilterFn: 'static + Sync + Send + Fn(&Record) -> bool {}
 
 #[cfg(not(feature = "std"))]
-impl<T> FilterFn for T where T: 'static + Sync + Send + Fn(&Record) -> bool {}
+impl<T> FilterFn for T
+    where T: 'static + Sync + Send + ?Sized + Fn(&Record) -> bool
+{
+}
 
-
-#[cfg(not(feature = "std"))]
 impl<D: Drain + ?Sized> Drain for Box<D> {
     type Ok = D::Ok;
     type Err = D::Err;
@@ -1457,7 +1463,7 @@ impl<D: Drain> Drain for IgnoreResult<D> {
 #[cfg(feature = "std")]
 #[derive(Clone)]
 pub enum MutexDrainError<D: Drain> {
-    /// Error aquiring mutex
+    /// Error acquiring mutex
     Mutex,
     /// Error returned by drain
     Drain(D::Err),
@@ -1472,6 +1478,26 @@ impl<D> fmt::Debug for MutexDrainError<D>
         match *self {
             MutexDrainError::Mutex => write!(f, "MutexDrainError::Mutex"),
             MutexDrainError::Drain(ref e) => e.fmt(f),
+        }
+    }
+}
+
+#[cfg(feature = "std")]
+impl<D> std::error::Error for MutexDrainError<D>
+    where D: Drain,
+          D::Err: fmt::Debug + fmt::Display + std::error::Error
+{
+    fn description(&self) -> &str {
+        match *self {
+            MutexDrainError::Mutex => "Mutex acquire failed",
+            MutexDrainError::Drain(ref e) => e.description(),
+        }
+    }
+
+    fn cause(&self) -> Option<&std::error::Error> {
+        match *self {
+            MutexDrainError::Mutex => None,
+            MutexDrainError::Drain(ref e) => Some(e),
         }
     }
 }
@@ -2071,7 +2097,7 @@ impl Value for Box<Value + 'static> {
 }
 
 impl<T> Value for Arc<T>
-    where T: Value
+    where T: Value + ?Sized
 {
     fn serialize(&self,
                  record: &Record,
@@ -2236,14 +2262,14 @@ pub trait KV {
 pub trait ThreadSafeKV: KV + Send + Sync + RefUnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> ThreadSafeKV for T where T: KV + Send + Sync + RefUnwindSafe {}
+impl<T> ThreadSafeKV for T where T: KV + Send + Sync + RefUnwindSafe + ?Sized {}
 
 #[cfg(not(feature = "std"))]
 /// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
 pub trait ThreadSafeKV: KV + Send + Sync {}
 
 #[cfg(not(feature = "std"))]
-impl<T> ThreadSafeKV for T where T: KV + Send + Sync {}
+impl<T> ThreadSafeKV for T where T: KV + Send + Sync + ?Sized {}
 
 
 /// Single pair `Key` and `Value`
