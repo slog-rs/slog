@@ -64,6 +64,8 @@ mod std_only {
 #[test]
 fn expressions() {
 
+    use super::{KV, Record, Serializer, Result};
+
     struct Foo;
 
     impl Foo {
@@ -76,6 +78,17 @@ fn expressions() {
         foo: Foo,
     }
 
+    #[derive(Clone)]
+    struct K;
+
+    impl KV for K {
+        fn serialize(&self,
+                     _record: &Record,
+                     _serializer: &mut Serializer)
+                     -> Result {
+            Ok(())
+        }
+    }
 
     let log = Logger::root(Discard, o!("version" => env!("CARGO_PKG_VERSION")));
 
@@ -103,34 +116,50 @@ fn expressions() {
                r.foo.bar(),
                r.foo.bar());
 
+    // trailing comma check
     warn!(log, "logging message bar={} foo={}", r.foo.bar(), r.foo.bar(), );
     slog_warn!(log, "logging message bar={} foo={}",
                r.foo.bar(), r.foo.bar(), );
 
-    warn!(log, "x" => 1; "logging message bar={}", r.foo.bar());
-    slog_warn!(log, "x" => 1; "logging message bar={}", r.foo.bar());
+    warn!(log, "logging message bar={}", r.foo.bar(); "x" => 1);
+    slog_warn!(log, "logging message bar={}", r.foo.bar(); "x" => 1);
 
-    warn!(log, "x" => 1; "logging message bar={}", r.foo.bar(),);
-    slog_warn!(log, "x" => 1; "logging message bar={}", r.foo.bar(),);
+    // trailing comma check
+    warn!(log, "logging message bar={}", r.foo.bar(); "x" => 1,);
+    slog_warn!(log, "logging message bar={}", r.foo.bar(); "x" => 1,);
 
-    warn!(log, "x" => 1, "y" => r.foo.bar();
-          "logging message bar={}", r.foo.bar());
-    slog_warn!(log, "x" => 1, "y" => r.foo.bar();
-               "logging message bar={}", r.foo.bar());
+    warn!(log,
+          "logging message bar={}", r.foo.bar(); "x" => 1, "y" => r.foo.bar());
+    slog_warn!(log,
+               "logging message bar={}", r.foo.bar();
+               "x" => 1, "y" => r.foo.bar());
 
-    warn!(log, "x" => r.foo.bar(); "logging message bar={}", r.foo.bar());
-    slog_warn!(log, "x" => r.foo.bar(); "logging message bar={}", r.foo.bar());
+    warn!(log, "logging message bar={}", r.foo.bar(); "x" => r.foo.bar());
+    slog_warn!(log, "logging message bar={}", r.foo.bar(); "x" => r.foo.bar());
 
-    warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar();
-          "logging message bar={}", r.foo.bar());
-    slog_warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar();
-               "logging message bar={}", r.foo.bar());
+    warn!(log, "logging message bar={}", r.foo.bar();
+          "x" => r.foo.bar(), "y" => r.foo.bar());
+    slog_warn!(log,
+               "logging message bar={}", r.foo.bar();
+               "x" => r.foo.bar(), "y" => r.foo.bar());
 
-    warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar();
-          "logging message bar={}", r.foo.bar(),);
-    slog_warn!(log, "x" => r.foo.bar(), "y" => r.foo.bar();
-               "logging message bar={}", r.foo.bar(),);
+    // trailing comma check
+    warn!(log,
+          "logging message bar={}", r.foo.bar();
+          "x" => r.foo.bar(), "y" => r.foo.bar(),);
+    slog_warn!(log,
+               "logging message bar={}", r.foo.bar();
+               "x" => r.foo.bar(), "y" => r.foo.bar(),);
 
+    let x = K;
+
+    let _log = log.new(o!(x.clone()));
+    let _log = log.new(o!("foo" => "bar", x.clone()));
+    let _log = log.new(o!("foo" => "bar", x.clone(), x.clone()));
+    let _log =
+        log.new(slog_o!("foo" => "bar", x.clone(), x.clone(), "aaa" => "bbb"));
+
+    info!(log, "message"; "foo" => "bar", &x, &x, "aaa" => "bbb");
 }
 
 

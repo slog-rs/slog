@@ -93,10 +93,6 @@
 //!          features = ["max_level_trace", "release_max_level_warn"] }
 //! ```
 //!
-//! Due to the `macro_rules` limitation log macros syntax comes in several
-//! variants. See `log!` macro, and pay attention to `;` and `,`
-//! details.
-//!
 //! Root drain (passed to `Logger::root`) must be one that does not ever return
 //! errors. This forces user to pick error handing strategy.
 //! `Drain::fuse()` or `Drain::ignore_res()`.
@@ -194,6 +190,12 @@ macro_rules! o(
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
         o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
     };
+    (@ $args_ready:expr; $kv:expr) => {
+        o!(@ ($kv, $args_ready); )
+    };
+    (@ $args_ready:expr; $kv:expr, $($args:tt)* ) => {
+        o!(@ ($kv, $args_ready); $($args)* )
+    };
     (@ $args_ready:expr; ) => {
         $args_ready
     };
@@ -251,6 +253,12 @@ macro_rules! slog_o(
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
         slog_o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
     };
+    (@ $args_ready:expr; $kv:expr) => {
+        o!(@ ($kv, $args_ready); )
+    };
+    (@ $args_ready:expr; $kv:expr, $($args:tt)* ) => {
+        o!(@ ($kv, $args_ready); $($args)* )
+    };
     (@ $args_ready:expr; ) => {
         $args_ready
     };
@@ -274,6 +282,12 @@ macro_rules! slog_o(
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
         slog_o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
     };
+    (@ $args_ready:expr; $kv:expr) => {
+        o!(@ ($kv, $args_ready); )
+    };
+    (@ $args_ready:expr; $kv:expr, $($args:tt)* ) => {
+        o!(@ ($kv, $args_ready); $($args)* )
+    };
     (@ $args_ready:expr; ) => {
         $args_ready
     };
@@ -288,7 +302,7 @@ macro_rules! slog_o(
 /// Macro for building group of key-value pairs in
 /// [`BorrowedKV`](struct.BorrowedKV.html)
 ///
-/// In most circumstances using this macro directly is unecessary and `info!`
+/// In most circumstances using this macro directly is unnecessary and `info!`
 /// and other wrappers over `log!` should be used instead.
 #[macro_export]
 macro_rules! b(
@@ -298,14 +312,20 @@ macro_rules! b(
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
         b!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
     };
+    (@ $args_ready:expr; $kv:expr) => {
+        b!(@ ($kv, $args_ready); )
+    };
+    (@ $args_ready:expr; $kv:expr, $($args:tt)* ) => {
+        b!(@ ($kv, $args_ready); $($args)* )
+    };
     (@ $args_ready:expr; ) => {
         $args_ready
     };
     (@ $args_ready:expr;, ) => {
         $args_ready
     };
-    ($($k:expr => $v:expr),* ) => {
-        $crate::BorrowedKV(&b!(@ (); $($k => $v),*))
+    ($($args:tt)*) => {
+        $crate::BorrowedKV(&b!(@ (); $($args)*))
     };
 );
 
@@ -319,14 +339,20 @@ macro_rules! slog_b(
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
         slog_b!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
     };
+    (@ $args_ready:expr; $kv:expr) => {
+        slog_b!(@ ($kv, $args_ready); )
+    };
+    (@ $args_ready:expr; $kv:expr, $($args:tt)* ) => {
+        slog_b!(@ ($kv, $args_ready); $($args)* )
+    };
     (@ $args_ready:expr; ) => {
         $args_ready
     };
     (@ $args_ready:expr;, ) => {
         $args_ready
     };
-    ($($k:expr => $v:expr),* ) => {
-        $crate::BorrowedKV(&slog_b!(@ (); $($k => $v),*))
+    ($($args:tt)*) => {
+        $crate::BorrowedKV(&slog_b!(@ (); $($args)*))
     };
 );
 
@@ -451,12 +477,11 @@ macro_rules! slog_record(
 ///     let root = slog::Logger::root(drain,
 ///         o!("key1" => "value1", "key2" => "value2")
 ///     );
-///     info!(root, "log-key" => true; "formatted: {}", 1);
+///     info!(root, "formatted: {}", 1; "log-key" => true);
 /// }
 /// ```
 ///
-/// Note that due to macro parsing limitation, the message was moved after the
-/// key-value pairs.
+/// Note that that `;` separates formatting string from key value pairs.
 ///
 /// Again, `"key" => value` part is optional:
 ///
@@ -502,36 +527,77 @@ macro_rules! slog_record(
 ///
 /// See `Record::tag()` for more information about tags.
 ///
+/// ### Own implementations of `KV` and `Value`
+///
+/// List of key value pairs is a comma separated list of key-values. Typically,
+/// a designed syntax is used in form of `k => v` where `k` can be any type
+/// that implements `Value` type.
+///
+/// It's possible to directly specify type that implements `KV` trait without
+/// `=>` syntax.
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+///
+/// use slog::*;
+///
+/// fn main() {
+///     struct MyKV;
+///     struct MyV;
+///
+///     impl KV for MyKV {
+///        fn serialize(&self,
+///                     _record: &Record,
+///                     serializer: &mut Serializer)
+///                    -> Result {
+///            serializer.emit_u32("MyK", 16)
+///        }
+///     }
+///
+///     impl Value for MyV {
+///        fn serialize(&self,
+///                     _record: &Record,
+///                     key : Key,
+///                     serializer: &mut Serializer)
+///                    -> Result {
+///            serializer.emit_u32("MyKV", 16)
+///        }
+///     }
+///
+///     let drain = slog::Discard;
+///
+///     let root = slog::Logger::root(drain, o!(MyKV));
+///
+///     info!(
+///         root,
+///         "testing MyV"; "MyV" => MyV
+///     );
+/// }
+/// ```
 #[macro_export]
 macro_rules! log(
-    ($l:expr, $lvl:expr,  $tag:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) =>
-    { if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, $tag, &format_args!($($args)+), b!($($k =>
-                                                                       $v),+)))
-        }
-    };
-    ($l:expr, $lvl:expr, $tag:expr, $msg:expr,) => {
-        log!($l, $lvl, $tag, $msg)
-    };
-    ($l:expr, $lvl:expr, $tag:expr, $msg:expr) => {
-        if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, $tag, &format_args!("{}", $msg), b!()))
-        }
-    };
-    ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
-        log!($l, $lvl, $tag, $msg; $($k => $v),+)
-    };
-    ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+) => {
-        if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, $tag, &format_args!("{}", $msg), b!($($k =>
-                                                                        $v),+)))
-        }
-    };
-    ($l:expr, $lvl:expr, $tag:expr, $($args:tt)+) => {
-        if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&record!($lvl, $tag, &format_args!($($args)+),  b!()))
-        }
-    };
+   (2 @ { $($fmt:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $($args:tt)*) => {
+      $l.log(&record!($lvl, $tag, &format_args!($msg_fmt, $($fmt)*), b!($($args)*)))
+   };
+   (1 @ { $($fmt:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, ; $($args:tt)*) => {
+       log!(2 @ { $($fmt)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+   };
+   (1 @ { $($fmt:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $f:tt $($args:tt)*) => {
+       log!(1 @ { $($fmt)* $f }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+   };
+   (1 @ { $($fmt:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; $($args:tt)*) => {
+       log!(2 @ { $($fmt)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+   };
+   (1 @ { $($fmt:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
+       log!(2 @ { $($fmt)* }, $l, $lvl, $tag, $msg_fmt,)
+   };
+   (1 @ { $($fmt:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
+       log!(2 @ { $($fmt)* }, $l, $lvl, $tag, $msg_fmt,)
+   };
+   ($l:expr, $lvl:expr, $tag:expr, $($args:tt)*) => {
+       log!(1 @ { }, $l, $lvl, $tag, $($args)*)
+   };
 );
 
 /// Log message a logging record (alias)
@@ -553,32 +619,27 @@ macro_rules! log(
 /// ```
 #[macro_export]
 macro_rules! slog_log(
-    ($l:expr, $lvl:expr, $tag:expr, $($k:expr => $v:expr),+; $($args:tt)+ ) => {
-        if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, $tag, &format_args!($($args)+),
-                                 slog_b!($($k => $v),+))) }
-    };
-    ($l:expr, $lvl:expr, $tag:expr, $msg:expr,) => {
-        slog_log!($l, $lvl, $tag, $msg)
-    };
-    ($l:expr, $lvl:expr, $tag:expr, $msg:expr) => {
-        if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, $tag, &format_args!("{}", $msg),
-            slog_b!())) }
-    };
-    ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+,) => {
-        slog_log!($l, $lvl, $tag, $msg; $($k => $v),+)
-    };
-    ($l:expr, $lvl:expr, $tag:expr, $msg:expr; $($k:expr => $v:expr),+) => {
-        if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, $tag, &format_args!("{}", $msg),
-                                 slog_b!($($k => $v),+))) }
-    };
-    ($l:expr, $lvl:expr, $tag:expr, $($args:tt)+) => {
-        if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-            $l.log(&slog_record!($lvl, $tag, &format_args!($($args)+),
-            slog_b!())) }
-    };
+   (2 @ { $($fmt:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $($args:tt)*) => {
+      $l.log(&slog_record!($lvl, $tag, &format_args!($msg_fmt, $($fmt)*), slog_b!($($args)*)))
+   };
+   (1 @ { $($fmt:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, ; $($args:tt)*) => {
+       slog_log!(2 @ { $($fmt)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+   };
+   (1 @ { $($fmt:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $f:tt $($args:tt)*) => {
+       slog_log!(1 @ { $($fmt)* $f }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+   };
+   (1 @ { $($fmt:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; $($args:tt)*) => {
+       slog_log!(2 @ { $($fmt)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+   };
+   (1 @ { $($fmt:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
+       slog_log!(2 @ { $($fmt)* }, $l, $lvl, $tag, $msg_fmt,)
+   };
+   (1 @ { $($fmt:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
+       slog_log!(2 @ { $($fmt)* }, $l, $lvl, $tag, $msg_fmt,)
+   };
+   ($l:expr, $lvl:expr, $tag:expr, $($args:tt)*) => {
+       slog_log!(1 @ { }, $l, $lvl, $tag, $($args)*)
+   };
 );
 
 /// Log critical level record
@@ -1993,6 +2054,18 @@ pub trait Value {
                  -> Result;
 }
 
+impl<'a, V> Value for &'a V
+    where V: Value + ?Sized
+{
+    fn serialize(&self,
+                 record: &Record,
+                 key: Key,
+                 serializer: &mut Serializer)
+                 -> Result {
+        (*self).serialize(record, key, serializer)
+    }
+}
+
 macro_rules! impl_value_for{
     ($t:ty, $f:ident) => {
         impl Value for $t {
@@ -2043,17 +2116,7 @@ impl Value for str {
     }
 }
 
-impl<'a> Value for &'a str {
-    fn serialize(&self,
-                 _record: &Record,
-                 key: Key,
-                 serializer: &mut Serializer)
-                 -> Result {
-        serializer.emit_str(key, self)
-    }
-}
-
-impl<'a> Value for &'a fmt::Arguments<'a> {
+impl<'a> Value for fmt::Arguments<'a> {
     fn serialize(&self,
                  _record: &Record,
                  key: Key,
@@ -2086,7 +2149,9 @@ impl<T: Value> Value for Option<T> {
     }
 }
 
-impl Value for Box<Value + 'static> {
+impl<T> Value for Box<T>
+    where T: Value + ?Sized
+{
     fn serialize(&self,
                  record: &Record,
                  key: Key,
@@ -2095,7 +2160,6 @@ impl Value for Box<Value + 'static> {
         (**self).serialize(record, key, serializer)
     }
 }
-
 impl<T> Value for Arc<T>
     where T: Value + ?Sized
 {
@@ -2129,18 +2193,6 @@ impl<T> Value for core::num::Wrapping<T>
                  serializer: &mut Serializer)
                  -> Result {
         self.0.serialize(record, key, serializer)
-    }
-}
-
-impl<V: 'static + Value, F> Value for F
-    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> V
-{
-    fn serialize(&self,
-                 record: &Record,
-                 key: Key,
-                 serializer: &mut Serializer)
-                 -> Result {
-        (self)(record).serialize(record, key, serializer)
     }
 }
 
@@ -2255,6 +2307,17 @@ pub trait KV {
                  -> Result;
 }
 
+impl<'a, T> KV for &'a T
+    where T: KV
+{
+    fn serialize(&self,
+                 _record: &Record,
+                 _serializer: &mut Serializer)
+                 -> Result {
+        Ok(())
+    }
+}
+
 #[cfg(feature = "std")]
 /// Thread-local safety bound for `KV`
 ///
@@ -2286,6 +2349,7 @@ impl<V> KV for SingleKV<V>
         self.1.serialize(record, self.0, serializer)
     }
 }
+
 
 impl KV for () {
     fn serialize(&self,
