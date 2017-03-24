@@ -181,7 +181,6 @@ use std::sync::Arc;
 ///     );
 /// }
 /// ```
-#[cfg(feature = "std")]
 #[macro_export]
 macro_rules! o(
     (@ $args_ready:expr; $k:expr => $v:expr) => {
@@ -195,40 +194,6 @@ macro_rules! o(
     };
     (@ $args_ready:expr; $kv:expr, $($args:tt)* ) => {
         o!(@ ($kv, $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; ) => {
-        $args_ready
-    };
-    (@ $args_ready:expr;, ) => {
-        $args_ready
-    };
-    ($($args:tt)*) => {
-        $crate::OwnedKV(o!(@ (); $($args)*))
-    };
-);
-
-/// Macro for building group of key-value pairs
-///
-/// ```
-/// #[macro_use]
-/// extern crate slog;
-///
-/// fn main() {
-///     let drain = slog::Discard;
-///     let _root = slog::Logger::root(
-///         drain,
-///         o!("key1" => "value1", "key2" => "value2")
-///     );
-/// }
-/// ```
-#[cfg(not(feature = "std"))]
-#[macro_export]
-macro_rules! o(
-    (@ $args_ready:expr; $k:expr => $v:expr) => {
-        o!(@ ($crate::SingleKV($k, $v), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; ) => {
         $args_ready
@@ -244,36 +209,6 @@ macro_rules! o(
 /// Macro for building group of key-value pairs (alias)
 ///
 /// Use in case of macro name collisions
-#[cfg(feature = "std")]
-#[macro_export]
-macro_rules! slog_o(
-    (@ $args_ready:expr; $k:expr => $v:expr) => {
-        slog_o!(@ ($crate::SingleKV($k, $v), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        slog_o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; $kv:expr) => {
-        o!(@ ($kv, $args_ready); )
-    };
-    (@ $args_ready:expr; $kv:expr, $($args:tt)* ) => {
-        o!(@ ($kv, $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; ) => {
-        $args_ready
-    };
-    (@ $args_ready:expr;, ) => {
-        $args_ready
-    };
-    ($($args:tt)*) => {
-        $crate::OwnedKV(slog_o!(@ (); $($args)*))
-    };
-);
-
-/// An alternative, longer-name version of `o` macro
-///
-/// Use in case of macro name collisions
-#[cfg(not(feature = "std"))]
 #[macro_export]
 macro_rules! slog_o(
     (@ $args_ready:expr; $k:expr => $v:expr) => {

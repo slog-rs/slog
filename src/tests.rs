@@ -78,17 +78,6 @@ fn expressions() {
         foo: Foo,
     }
 
-    #[derive(Clone)]
-    struct K;
-
-    impl KV for K {
-        fn serialize(&self,
-                     _record: &Record,
-                     _serializer: &mut Serializer)
-                     -> Result {
-            Ok(())
-        }
-    }
 
     let log = Logger::root(Discard, o!("version" => env!("CARGO_PKG_VERSION")));
 
@@ -151,15 +140,37 @@ fn expressions() {
                "logging message bar={}", r.foo.bar();
                "x" => r.foo.bar(), "y" => r.foo.bar(),);
 
-    let x = K;
+    {
+        #[derive(Clone)]
+        struct K;
 
-    let _log = log.new(o!(x.clone()));
-    let _log = log.new(o!("foo" => "bar", x.clone()));
-    let _log = log.new(o!("foo" => "bar", x.clone(), x.clone()));
-    let _log =
-        log.new(slog_o!("foo" => "bar", x.clone(), x.clone(), "aaa" => "bbb"));
+        impl KV for K {
+            fn serialize(&self,
+                         _record: &Record,
+                         _serializer: &mut Serializer)
+                         -> Result {
+                Ok(())
+            }
+        }
 
-    info!(log, "message"; "foo" => "bar", &x, &x, "aaa" => "bbb");
+        let x = K;
+
+        let _log = log.new(o!(x.clone()));
+        let _log = log.new(o!("foo" => "bar", x.clone()));
+        let _log = log.new(o!("foo" => "bar", x.clone(), x.clone()));
+        let _log =
+            log.new(slog_o!("foo" => "bar", x.clone(), x.clone(), "aaa" => "bbb"));
+
+        info!(log, "message"; "foo" => "bar", &x, &x, "aaa" => "bbb");
+    }
+
+    info!(
+        log,
+        "message {}",
+          { 3 + 3; 2};
+          "foo" => "bar",
+          "foo" => { 3 + 3; 2},
+          "aaa" => "bbb");
 }
 
 
