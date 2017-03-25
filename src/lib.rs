@@ -829,6 +829,7 @@ impl<D> Logger<D>
     ///         o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
+    /// ```
     pub fn root<T>(drain: D, values: OwnedKV<T>) -> Logger
         where D: 'static + SendSyncRefUnwindSafeDrain<Err = Never, Ok = ()>,
               T: SendSyncRefUnwindSafeKV + 'static
@@ -2231,6 +2232,11 @@ impl<F> Value for PushFnValue<F>
 ///
 /// Any logging data must implement this trait for
 /// slog to be able to use it.
+///
+/// Types implementing this trait can emit multiple key-value pairs. The order
+/// of emitting them should be consistent with the way key-value pair hierarchy
+/// is traversed: from data most specific to the logging context to the most
+/// general one. Or in other words: from newest to oldest.
 pub trait KV {
     /// Serialize self into `Serializer`
     ///
@@ -2246,10 +2252,10 @@ impl<'a, T> KV for &'a T
     where T: KV
 {
     fn serialize(&self,
-                 _record: &Record,
-                 _serializer: &mut Serializer)
+                 record: &Record,
+                 serializer: &mut Serializer)
                  -> Result {
-        Ok(())
+        (**self).serialize(record, serializer)
     }
 }
 
