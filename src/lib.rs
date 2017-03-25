@@ -946,7 +946,7 @@ impl<D> Logger<D>
     ///
     /// See `into_erased`
     pub fn to_erased
-        (self)
+        (&self)
          -> Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
         where D: SendRefUnwindSafeDrain + 'static + Clone
     {
