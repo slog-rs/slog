@@ -183,26 +183,8 @@ use std::sync::Arc;
 /// ```
 #[macro_export]
 macro_rules! o(
-    (@ $args_ready:expr; $k:expr => $v:expr) => {
-        o!(@ ($crate::SingleKV($k, $v), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; $kv:expr) => {
-        o!(@ ($kv, $args_ready); )
-    };
-    (@ $args_ready:expr; $kv:expr, $($args:tt)* ) => {
-        o!(@ ($kv, $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; ) => {
-        $args_ready
-    };
-    (@ $args_ready:expr;, ) => {
-        $args_ready
-    };
     ($($args:tt)*) => {
-        $crate::OwnedKV(o!(@ (); $($args)*))
+        $crate::OwnedKV(kv!($($args)*))
     };
 );
 
@@ -211,26 +193,8 @@ macro_rules! o(
 /// Use in case of macro name collisions
 #[macro_export]
 macro_rules! slog_o(
-    (@ $args_ready:expr; $k:expr => $v:expr) => {
-        slog_o!(@ ($crate::SingleKV($k, $v), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        slog_o!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; $kv:expr) => {
-        o!(@ ($kv, $args_ready); )
-    };
-    (@ $args_ready:expr; $kv:expr, $($args:tt)* ) => {
-        o!(@ ($kv, $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; ) => {
-        $args_ready
-    };
-    (@ $args_ready:expr;, ) => {
-        $args_ready
-    };
     ($($args:tt)*) => {
-        $crate::OwnedKV(slog_o!(@ (); $($args)*))
+        $crate::OwnedKV(slog_kv!($($args)*))
     };
 );
 
@@ -241,26 +205,8 @@ macro_rules! slog_o(
 /// and other wrappers over `log!` should be used instead.
 #[macro_export]
 macro_rules! b(
-    (@ $args_ready:expr; $k:expr => $v:expr) => {
-        b!(@ ($crate::SingleKV($k, $v), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        b!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; $kv:expr) => {
-        b!(@ ($kv, $args_ready); )
-    };
-    (@ $args_ready:expr; $kv:expr, $($args:tt)* ) => {
-        b!(@ ($kv, $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; ) => {
-        $args_ready
-    };
-    (@ $args_ready:expr;, ) => {
-        $args_ready
-    };
     ($($args:tt)*) => {
-        $crate::BorrowedKV(&b!(@ (); $($args)*))
+        $crate::BorrowedKV(&kv!($($args)*))
     };
 );
 
@@ -268,17 +214,27 @@ macro_rules! b(
 /// Alias of `b`
 #[macro_export]
 macro_rules! slog_b(
+    ($($args:tt)*) => {
+        $crate::BorrowedKV(&slog_kv!($($args)*))
+    };
+);
+
+/// Macro for build `KV` implementing type
+///
+/// You probably want to use `o!` or `b!` instead.
+#[macro_export]
+macro_rules! kv(
     (@ $args_ready:expr; $k:expr => $v:expr) => {
-        slog_b!(@ ($crate::SingleKV($k, $v), $args_ready); )
+        kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        slog_b!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $kv:expr) => {
-        slog_b!(@ ($kv, $args_ready); )
+        kv!(@ ($kv, $args_ready); )
     };
     (@ $args_ready:expr; $kv:expr, $($args:tt)* ) => {
-        slog_b!(@ ($kv, $args_ready); $($args)* )
+        kv!(@ ($kv, $args_ready); $($args)* )
     };
     (@ $args_ready:expr; ) => {
         $args_ready
@@ -287,7 +243,33 @@ macro_rules! slog_b(
         $args_ready
     };
     ($($args:tt)*) => {
-        $crate::BorrowedKV(&slog_b!(@ (); $($args)*))
+        kv!(@ (); $($args)*)
+    };
+);
+
+/// Alias of `kv`
+#[macro_export]
+macro_rules! slog_kv(
+    (@ $args_ready:expr; $k:expr => $v:expr) => {
+        slog_kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
+        slog_kv!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; $slog_kv:expr) => {
+        slog_kv!(@ ($slog_kv, $args_ready); )
+    };
+    (@ $args_ready:expr; $slog_kv:expr, $($args:tt)* ) => {
+        slog_kv!(@ ($slog_kv, $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; ) => {
+        $args_ready
+    };
+    (@ $args_ready:expr;, ) => {
+        $args_ready
+    };
+    ($($args:tt)*) => {
+        slog_kv!(@ (); $($args)*)
     };
 );
 
@@ -543,7 +525,7 @@ macro_rules! log(
 /// See [`log`](macro.log.html) for documentation.
 ///
 /// ```
-/// #[macro_use(slog_o,slog_b,slog_record,slog_record_static,slog_log,slog_info)]
+/// #[macro_use(slog_o,slog_b,slog_record,slog_record_static,slog_log,slog_info,slog_kv)]
 /// extern crate slog;
 ///
 /// fn main() {
