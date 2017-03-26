@@ -22,9 +22,7 @@
   </a>
   <br>
     <strong><a href="https://github.com/slog-rs/slog/wiki/Getting-started">Getting started</a></strong>
-
   <a href="//github.com/slog-rs/slog/wiki/Introduction-to-structured-logging-with-slog">Introduction</a>
-
   <a href="//github.com/slog-rs/slog/wiki/FAQ">FAQ</a>
   <br>
   <a href="https://crates.io/search?q=slog">Crate list</a>
