@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Added support for own `KV` and `Value` implementations
 * Streamlined the formatting syntax for `log!` and friends; **BREAKING**
-* Lazy values need explicit `FnValue` wrapper
+* Lazy values need explicit `FnValue` wrapper; **BREKING**
+
+### Added
+
+* `kv!` macro
 
 ## 2.0.0-2.2 - 2017-03-19
 ### Fixes
