@@ -224,6 +224,12 @@ macro_rules! slog_b(
 /// You probably want to use `o!` or `b!` instead.
 #[macro_export]
 macro_rules! kv(
+    (@ $args_ready:expr; $k:expr => %$v:expr) => {
+        kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
+        kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); $($args)* )
+    };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
     };
@@ -250,6 +256,12 @@ macro_rules! kv(
 /// Alias of `kv`
 #[macro_export]
 macro_rules! slog_kv(
+    (@ $args_ready:expr; $k:expr => %$v:expr) => {
+        slog_kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
+        slog_kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); $($args)* )
+    };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         slog_kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
     };
@@ -490,6 +502,30 @@ macro_rules! slog_record(
 ///         root,
 ///         "testing MyV"; "MyV" => MyV
 ///     );
+/// }
+/// ```
+///
+/// ### Values implementing `fmt::Display`
+///
+/// Value of any type that implements `std::fmt::Display` can be prefixed with
+/// `%` in `k => v` expression to use it's text representation returned by
+/// `format_args!("{}", v)`. This is especially useful for errors. Not that
+/// this does not allocate any `String` since it operates on `fmt::Arguments`.
+///
+/// ```
+/// #[macro_use]
+/// extern crate slog;
+/// use std::fmt::Write;
+///
+/// fn main() {
+///     let drain = slog::Discard;
+///     let log  = slog::Logger::root(drain, o!());
+///
+///     let mut output = String::new();
+///
+///     if let Err(e) = write!(&mut output, "write to string") {
+///         error!( log, "write failed"; "err" => %e);
+///     }
 /// }
 /// ```
 #[macro_export]
@@ -2113,6 +2149,18 @@ impl<T> Value for core::num::Wrapping<T>
         self.0.serialize(record, key, serializer)
     }
 }
+
+/*impl<T> Value for T
+    where T: fmt::Display
+{
+    fn serialize(&self,
+                 _record: &Record,
+                 key: Key,
+                 serializer: &mut Serializer)
+                 -> Result {
+        serializer.emit_arguments(key, format_args!("{}", *self))
+    }
+}*/
 
 /// Explicit lazy-closure `Value`
 pub struct FnValue<V: 'static + Value, F>(pub F)
