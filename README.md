@@ -78,7 +78,7 @@ featuring eg. automatic TTY detection and colors.
 
 See following screenshot: same output in both compact and full output mode.
 
-![slog-rs terminal example output](http://i.imgur.com/2JWDXpj.png)
+![slog-rs terminal example output](http://i.imgur.com/mqrG8yL.png)
 
 
 ## Using & help
