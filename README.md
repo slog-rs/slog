@@ -73,16 +73,12 @@ for v2](https://docs.rs/slog/2/).
 
 ### Terminal output example
 
-`slog-term` is only one of many `slog` features - useful showcase.
+`slog-term` is only one of many `slog` features - useful showcase,
+featuring eg. automatic TTY detection and colors.
 
-Automatic TTY detection and colors:
+See following screenshot: same output in both compact and full output mode.
 
-![slog-rs terminal full-format output](http://i.imgur.com/IUe80gU.png)
-
-Compact vs full mode:
-
-![slog-rs terminal compact output](http://i.imgur.com/P9u2sWP.png)
-![slog-rs terminal full output](http://i.imgur.com/ENiy5H9.png)
+![slog-rs terminal example output](http://i.imgur.com/2JWDXpj.png)
 
 
 ## Using & help
