@@ -2195,10 +2195,16 @@ pub struct PushFnSerializer<'a> {
 }
 
 impl<'a> PushFnSerializer<'a> {
-    /// Serialize a value
+    #[deprecated(note = "Renamed to `emit`")]
+    /// Emit a value
+    pub fn serialize<'b, S: 'b + Value>(self, s: S) -> Result {
+        self.emit(s)
+    }
+
+    /// Emit a value
     ///
     /// This consumes `self` to prevent serializing one value multiple times
-    pub fn serialize<'b, S: 'b + Value>(mut self, s: S) -> Result {
+    pub fn emit<'b, S: 'b + Value>(mut self, s: S) -> Result {
         self.done = true;
         s.serialize(self.record, self.key, self.serializer)
     }
@@ -2718,19 +2724,19 @@ pub fn __slog_static_max_level() -> FilterLevel {
 // }}}
 
 // {{{ Slog v1 Compat
-#[deprecated(note = "Renamed to Value")]
+#[deprecated(note = "Renamed to `Value`")]
 /// Compatibility name to ease upgrading from `slog v1`
 pub type Serialize = Value;
 
-#[deprecated(note = "Renamed to PushFnValue")]
+#[deprecated(note = "Renamed to `PushFnValue`")]
 /// Compatibility name to ease upgrading from `slog v1`
 pub type PushLazy<T> = PushFnValue<T>;
 
-#[deprecated(note = "Renamed to PushFnSerializer")]
+#[deprecated(note = "Renamed to `PushFnSerializer`")]
 /// Compatibility name to ease upgrading from `slog v1`
 pub type ValueSerializer<'a> = PushFnSerializer<'a>;
 
-#[deprecated(note = "Renamed to OwnedKVList")]
+#[deprecated(note = "Renamed to `OwnedKVList`")]
 /// Compatibility name to ease upgrading from `slog v1`
 pub type OwnedKeyValueList = OwnedKVList;
 
