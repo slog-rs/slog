@@ -100,7 +100,7 @@
 //! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
 //! [env_logger]: https://crates.io/crates/env_logger
 //! [fn-overv]: https://github.com/dpc/slog-rs/wiki/Functional-overview
-//! [atomic-switch]: https://docs.rs/slog-atomic/0.4.3/slog_atomic/
+//! [atomic-switch]: https://docs.rs/slog-atomic/
 //!
 //! ## Where to start
 //!
@@ -1372,7 +1372,9 @@ impl<D: Drain, E> Drain for MapError<D, E> {
            record: &Record,
            logger_values: &OwnedKVList)
            -> result::Result<Self::Ok, Self::Err> {
-        self.drain.log(record, logger_values).map_err(|e| (self.map_fn)(e))
+        self.drain
+            .log(record, logger_values)
+            .map_err(|e| (self.map_fn)(e))
     }
 }
 
@@ -1547,7 +1549,8 @@ impl<D: Drain> Drain for std::sync::Mutex<D> {
            logger_values: &OwnedKVList)
            -> result::Result<Self::Ok, Self::Err> {
         let d = self.lock()?;
-        d.log(record, logger_values).map_err(MutexDrainError::Drain)
+        d.log(record, logger_values)
+            .map_err(MutexDrainError::Drain)
     }
 }
 // }}}
@@ -1720,7 +1723,8 @@ static ASCII_LOWERCASE_MAP: [u8; 256] =
 impl FromStr for Level {
     type Err = ();
     fn from_str(level: &str) -> core::result::Result<Level, ()> {
-        LOG_LEVEL_NAMES.iter()
+        LOG_LEVEL_NAMES
+            .iter()
             .position(|&name| {
                 name.as_bytes()
                     .iter()
@@ -1738,7 +1742,8 @@ impl FromStr for Level {
 impl FromStr for FilterLevel {
     type Err = ();
     fn from_str(level: &str) -> core::result::Result<FilterLevel, ()> {
-        LOG_LEVEL_NAMES.iter()
+        LOG_LEVEL_NAMES
+            .iter()
             .position(|&name| {
                 name.as_bytes()
                     .iter()
@@ -2210,9 +2215,9 @@ impl<'a> Drop for PushFnSerializer<'a> {
 
 /// Lazy `Value` that writes to Serializer
 ///
-/// It's more natural for closures used as lazy values to return type
-/// implementing `Serialize` , but sometimes that forces an allocation (eg.
-/// Strings)
+/// It's more ergonomic for closures used as lazy values to return type
+/// implementing `Serialize`, but sometimes that forces an allocation (eg.
+/// `String`s)
 ///
 /// In some cases it might make sense for another closure form to be used - one
 /// taking a serializer as an argument, which avoids lifetimes / allocation
@@ -2227,11 +2232,20 @@ impl<'a> Drop for PushFnSerializer<'a> {
 /// use slog::{PushFnValue, Logger, Discard};
 ///
 /// fn main() {
-///     let _root = Logger::root(Discard, o!( ));
-///     info!(_root, "foo"; "writer_closure" => PushFnValue(|_ , s| {
-///                    let generated_string = format!("{}", 1);
-///                    s.serialize(generated_string.as_str())
-///             }));
+///     // Create a logger with a key-value printing
+///     // `file:line` string value for every logging statement.
+///     // `Discard` `Drain` used for brevity.
+///     let root = Logger::root(Discard, o!(
+///         "source_location" => PushFnValue(|record , s| {
+///              s.serialize(
+///                   format_args!(
+///                        "{}:{}",
+///                        record.file(),
+///                        record.line(),
+///                   )
+///              )
+///         })
+///     ));
 /// }
 /// ```
 pub struct PushFnValue<F>(pub F)
