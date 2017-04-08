@@ -2183,18 +2183,22 @@ impl<V: 'static + Value, F> Value for FnValue<V, F>
     }
 }
 
+#[deprecated(note = "Renamed to `PushFnValueSerializer`")]
+/// Old name of `PushFnValueSerializer`
+pub type PushFnSerializer<'a> = PushFnValueSerializer<'a>;
+
 /// Handle passed to `PushFnValue` closure
 ///
 /// It makes sure only one value is serialized, and will automatically emit
 /// `()` if nothing else was serialized.
-pub struct PushFnSerializer<'a> {
+pub struct PushFnValueSerializer<'a> {
     record: &'a Record<'a>,
     key: Key,
     serializer: &'a mut Serializer,
     done: bool,
 }
 
-impl<'a> PushFnSerializer<'a> {
+impl<'a> PushFnValueSerializer<'a> {
     #[deprecated(note = "Renamed to `emit`")]
     /// Emit a value
     pub fn serialize<'b, S: 'b + Value>(self, s: S) -> Result {
@@ -2210,7 +2214,7 @@ impl<'a> PushFnSerializer<'a> {
     }
 }
 
-impl<'a> Drop for PushFnSerializer<'a> {
+impl<'a> Drop for PushFnValueSerializer<'a> {
     fn drop(&mut self) {
         if !self.done {
             // unfortunately this gives no change to return serialization errors
@@ -2255,16 +2259,16 @@ impl<'a> Drop for PushFnSerializer<'a> {
 /// }
 /// ```
 pub struct PushFnValue<F>(pub F)
-    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnSerializer<'c>) ->
+    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnValueSerializer<'c>) ->
     Result;
 
 impl<F> Value for PushFnValue<F>
-    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnSerializer<'c>)
+    where F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnValueSerializer<'c>)
     -> Result
 {
     fn serialize(&self, record: &Record, key: Key, serializer: &mut Serializer)
         -> Result {
-        let ser = PushFnSerializer {
+        let ser = PushFnValueSerializer {
             record: record,
             key: key,
             serializer: serializer,
@@ -2732,9 +2736,9 @@ pub type Serialize = Value;
 /// Compatibility name to ease upgrading from `slog v1`
 pub type PushLazy<T> = PushFnValue<T>;
 
-#[deprecated(note = "Renamed to `PushFnSerializer`")]
+#[deprecated(note = "Renamed to `PushFnValueSerializer`")]
 /// Compatibility name to ease upgrading from `slog v1`
-pub type ValueSerializer<'a> = PushFnSerializer<'a>;
+pub type ValueSerializer<'a> = PushFnValueSerializer<'a>;
 
 #[deprecated(note = "Renamed to `OwnedKVList`")]
 /// Compatibility name to ease upgrading from `slog v1`
