@@ -230,6 +230,12 @@ macro_rules! kv(
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
         kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); $($args)* )
     };
+    (@ $args_ready:expr; $k:expr => ?$v:expr) => {
+        kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
+        kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); $($args)* )
+    };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
     };
@@ -261,6 +267,12 @@ macro_rules! slog_kv(
     };
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
         slog_kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; $k:expr => ?$v:expr) => {
+        kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
+        kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         slog_kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
@@ -505,12 +517,14 @@ macro_rules! slog_record(
 /// }
 /// ```
 ///
-/// ### Values implementing `fmt::Display`
+/// ### `fmt::Display` and `fmt::Debug` values
 ///
 /// Value of any type that implements `std::fmt::Display` can be prefixed with
 /// `%` in `k => v` expression to use it's text representation returned by
 /// `format_args!("{}", v)`. This is especially useful for errors. Not that
 /// this does not allocate any `String` since it operates on `fmt::Arguments`.
+///
+/// Similarly to use `std::fmt::Debug` value can be prefixed with `?`.
 ///
 /// ```
 /// #[macro_use]
@@ -524,7 +538,7 @@ macro_rules! slog_record(
 ///     let mut output = String::new();
 ///
 ///     if let Err(e) = write!(&mut output, "write to string") {
-///         error!( log, "write failed"; "err" => %e);
+///         error!(log, "write failed"; "err" => %e);
 ///     }
 /// }
 /// ```

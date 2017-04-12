@@ -173,6 +173,18 @@ fn expressions() {
           "aaa" => "bbb");
 }
 
+#[test]
+fn expressions_fmt() {
+
+    use super::{KV, Record, Serializer, Result};
+
+    let log = Logger::root(Discard, o!("version" => env!("CARGO_PKG_VERSION")));
+
+    let x = (1, 2);
+    let d = ["f"];
+
+    info!(log, "message"; "f" => %x, "d" => ?d);
+}
 
 #[test]
 fn makers() {
