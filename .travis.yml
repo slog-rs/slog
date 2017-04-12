@@ -6,10 +6,6 @@ rust:
   - 1.15.0
   - beta
   - nightly
-  
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq graphviz
 
 script:
   - make all
