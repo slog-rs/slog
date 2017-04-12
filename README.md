@@ -53,16 +53,23 @@ variety of logging features and requirements.
 
 ### Status & news
 
-`slog v1` (versions `1.x.y`) is a current stable release.
+`slog v2` (versions `2.x.y`) is the latest stable major release. API of `slog
+v2` is very similar to `slog v1` and most changes are under the hood, unleashing
+more power. Porting should be relatively easy.
 
-`slog v2` (versions
-`2.x.y`) is a work in progress. API of `slog v2` is very similar to `slog v1`
-and most changes are under the hood. Porting should be relatively easy. See
-[changes in `slog v2`](https://github.com/slog-rs/slog/wiki/slog-v2)
-for details.
+See [`slog v2` wiki page](https://github.com/slog-rs/slog/wiki/slog-v2)
+for more information.
 
-**I encourage you to try slog v2 and give feedback**. See
-[`slog v2` status page](https://github.com/slog-rs/slog/wiki/slog-v2).
+Note: at the time of writing, many important `slog` ecosystem crates might
+still not have a stable release for `slog v2` and you might need to point
+to their pre-release versions. Eg. (`Cargo.toml` excerpt):
+
+```
+slog-term = "~2.0.0-3"
+```
+
+`slog v1` (versions `1.x.y`) is a previous stable major release. No new development
+is planed, but bugfixes and PRs are always welcome.
 
 ### Features & technical documentation
 
@@ -106,7 +113,7 @@ In Cargo.toml:
 
 ```
 [dependencies]
-slog = "1.2"
+slog = "2"
 ```
 
 In your `main.rs`:
@@ -115,41 +122,6 @@ In your `main.rs`:
 #[macro_use]
 extern crate slog;
 ```
-
-### Compatibility Policy
-
-`slog` follows SemVer: this is the official policy regarding breaking changes
-and minimum required versions of Rust.
-
-Slog crates should pin minimum required version of Rust to the CI builds.
-Bumping the minimum version of Rust is considered a minor breaking change,
-meaning *at a minimum* the minor version will be bumped.
-
-In order to keep from being surprised of breaking changes, it is **highly**
-recommended to use the `~major.minor.patch` style in your `Cargo.toml` if you
-wish to target a version of Rust that is *older* than current stable minus two
-releases:
-
-```toml
-[dependencies]
-slog = "~1.3.0"
-```
-
-This will cause *only* the patch version to be updated upon a `cargo update`
-call, and therefore cannot break due to new features, or bumped minimum
-versions of Rust.
-
-#### Minimum Version of Rust
-
-`slog` and it's ecosystem officially supports current stable Rust, minus
-two releases, but may work with prior releases as well. For example, current
-stable Rust at the time of this writing is 1.13.0, meaning `slog` is guaranteed
-to compile with 1.11.0 and beyond.  At the 1.14.0 release, `slog` will be
-guaranteed to compile with 1.12.0 and beyond, etc.
-
-Upon bumping the minimum version of Rust (assuming it's within the stable-2
-range), it *must* be clearly annotated in the `CHANGELOG.md`
-
 
 ## Slog community
 
