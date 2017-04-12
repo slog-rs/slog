@@ -176,14 +176,12 @@ fn expressions() {
 #[test]
 fn expressions_fmt() {
 
-    use super::{KV, Record, Serializer, Result};
-
     let log = Logger::root(Discard, o!("version" => env!("CARGO_PKG_VERSION")));
 
-    let x = (1, 2);
-    let d = ["f"];
+    let f = "f";
+    let d = (1, 2);
 
-    info!(log, "message"; "f" => %x, "d" => ?d);
+    info!(log, "message"; "f" => %f, "d" => ?d);
 }
 
 #[test]
