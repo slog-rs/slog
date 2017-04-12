@@ -1020,17 +1020,19 @@ impl<D> Drain for Logger<D>
 // {{{ Drain
 /// Logging drain
 ///
-/// `Drain`s typially mean destination for logs, but `slog` generalizes the
+/// `Drain`s typically mean destination for logs, but `slog` generalizes the
 /// term.
 ///
 /// `Drain`s are responsible for handling logging statements (`Record`s) from
 /// `Logger`s associated with them: filtering, modifying, formatting
 /// and writing the log records into given destination(s).
 ///
-/// Implementing this trait allows writing custom `Drain`s.
-///
 /// It's a typical pattern to parametrize `Drain`s over `Drain` traits to allow
-/// combining them into one `Drain`. See `Duplicate` as an example.
+/// composing `Drain`s.
+///
+/// Implementing this trait allows writing custom `Drain`s. Slog users should
+/// not be afraid of implementing their own `Drain`s. Any custom log handling
+/// logic should be implemented as a `Drain`.
 pub trait Drain {
     /// Type returned by this drain
     ///
