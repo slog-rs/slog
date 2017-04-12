@@ -39,7 +39,6 @@
   * [Terminal output example](#terminal-output-example)
   * [Using & help](#using--help)
 * [Slog community](#slog-community)
-  * [Overview](#overview)
 * [Slog related resources](#slog-related-resources)
 
 ### Introduction
@@ -124,8 +123,6 @@ extern crate slog;
 
 ## Slog community
 
-### Overview
-
 Slog related crates are hosted under [slog github
 organization](https://github.com/slog-rs).
 
@@ -138,7 +135,7 @@ Any particular repositories under slog ecosystem might be created, controlled,
 maintained by other entities with various level of autonomy. Lets work together
 toward a common goal in respectful and welcoming atmosphere!
 
-## slog-related articles
+## slog-related resources
 
 * [24 days of Rust - structured logging](https://siciarz.net/24-days-rust-structured-logging/) - review and tutorial by Zbigniew Siciarz 2016-12-05
 * [Writing GStreamer Elements in Rust (Part 4): Logging, COWs and Plugins](https://coaxion.net/blog/2017/03/writing-gstreamer-elements-in-rust-part-4-logging-cows-and-plugins/) - experiences using Rust & slog for GStreamer
