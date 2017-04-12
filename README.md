@@ -38,7 +38,6 @@
   * [Advantages over log crate](#advantages-over-log-crate)
   * [Terminal output example](#terminal-output-example)
   * [Using & help](#using--help)
-  * [Compatibility Policy](#compatibility-policy)
 * [Slog community](#slog-community)
   * [Overview](#overview)
 * [Slog related resources](#slog-related-resources)
