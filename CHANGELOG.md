@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.0 - 2017-04-11
+### Changed (since v1; bigger picture)
+
+* Unified and simplified logging macros structure and ordering.
+* Added logging Record `tags`.
+* Refactored key-value pairs traits and structures and overall handling.
+  * It's now possible to `impl KV for MyStruct`.
+  * `kv!` can be used to create on stack key-value list.
+  * `KV`-implementing data can appear on the key-value list directly.
+* Support chaining of `OwnedKVList`s. Existing `Logger` can be used as a `Drain`
+  to allow custom handling logic for a part of the logging hierarchy.
+* Added associated `Ok` type to `Drain`.
+* Support for `Drain`s unwind safety.
+* Refactored `Record` to optimize performance on async operations.
+* `slog-extra` has been renamed to `slog-async` since that's the only functionality it contained.
+* `slog-stream` is obsoleted and won't be used in `slog v2` at all. It was a wrong abstraction.
+  `Decorators` functionality was moved to `slog-term`.
+* `slog-term` provides open `Decorator` traits to allow multiple terminal / file writing backends.
+* `slog-term` default `Decorator`s use `term` crate and should work correctly on all supported OSes.
+* `DrainExt` has been removed and utility methods moved directly to `Drain`
+* `slog-stdlog` utilizes `slog-scope` directly.
+* Support for "typed" `Logger`s to allow squeezing last drops of performance possible,
+  at the cost of `T` in `Logger<T>`.
+
 ## 2.0.0-3.1 - 2017-03-25
 ### Added
 
