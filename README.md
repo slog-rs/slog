@@ -63,7 +63,7 @@ still not have a stable release for `slog v2` and you might need to point
 to their pre-release versions. Eg. (`Cargo.toml` excerpt):
 
 ```
-slog-term = "~2.0.0-3"
+slog-term = "~2.0.0-4"
 ```
 
 `slog v1` (versions `1.x.y`) is a previous stable major release. No new development
