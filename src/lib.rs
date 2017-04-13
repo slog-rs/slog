@@ -560,7 +560,9 @@ macro_rules! log(
        log!(2 @ { $($fmt)* }, $l, $lvl, $tag, $msg_fmt,)
    };
    ($l:expr, $lvl:expr, $tag:expr, $($args:tt)*) => {
-       log!(1 @ { }, $l, $lvl, $tag, $($args)*)
+       if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
+           log!(1 @ { }, $l, $lvl, $tag, $($args)*)
+       }
    };
 );
 
@@ -602,7 +604,9 @@ macro_rules! slog_log(
        slog_log!(2 @ { $($fmt)* }, $l, $lvl, $tag, $msg_fmt,)
    };
    ($l:expr, $lvl:expr, $tag:expr, $($args:tt)*) => {
-       slog_log!(1 @ { }, $l, $lvl, $tag, $($args)*)
+       if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
+           slog_log!(1 @ { }, $l, $lvl, $tag, $($args)*)
+       }
    };
 );
 
