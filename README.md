@@ -46,7 +46,7 @@
 `slog` is an ecosystem of reusable components for structured, extensible,
 composable logging for [Rust][rust].
 
-The ambition is to be The Logging Framework for Rust. `slog` should accommodate
+The ambition is to be The Logging Framework for Rust. `slog` should accommodate a
 variety of logging features and requirements.
 
 ### Status & news
@@ -67,13 +67,13 @@ slog-term = "~2.0.0-4"
 ```
 
 `slog v1` (versions `1.x.y`) is a previous stable major release. No new development
-is planed, but bugfixes and PRs are always welcome.
+is planned, but bugfixes and PRs are always welcome.
 
 ### Features & technical documentation
 
-Most of interesting documentation is using rustdoc itself.
+Most of the interesting documentation is using rustdoc itself.
 
-You can view on [docs.rs/slog for v1](https://docs.rs/slog/1/) or [docs.rs/slog
+You can view it at [docs.rs/slog for v1](https://docs.rs/slog/1/) or [docs.rs/slog
 for v2](https://docs.rs/slog/2/).
 
 ### Terminal output example
@@ -132,8 +132,8 @@ slog Dawid follows and expects everyone to follow his [Code of
 Conduct](https://github.com/dpc/public/blob/master/COC.md).
 
 Any particular repositories under slog ecosystem might be created, controlled,
-maintained by other entities with various level of autonomy. Lets work together
-toward a common goal in respectful and welcoming atmosphere!
+maintained by other entities with various levels of autonomy. Lets work together
+toward a common goal in a respectful and welcoming atmosphere!
 
 ## slog-related resources
 
