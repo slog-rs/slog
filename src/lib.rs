@@ -7,8 +7,8 @@
 //! `slog` is `slog-rs`'s main crate providing core components shared between
 //! all other parts of `slog-rs` ecosystem.
 //!
-//! This is automatically generated technical documentation of `slog`. For
-//! information about project organization, development, help, etc. please see
+//! This is auto-generated technical documentation of `slog`. For information
+//! about project organization, development, help, etc. please see
 //! [slog github page](https://github.com/slog-rs/slog)
 //!
 //! ## Core advantages over `log` crate
@@ -19,17 +19,20 @@
 //! * **composable** - `trait`s that `slog` exposes to provide extensibility
 //!   are designed to be easy to efficiently reuse and combine. By combining
 //!   different functionalities every application can specify when, where and
-//!   how exactly log data.
-//! * **structured** - Logging with `slog` is not based on just one global
-//!   logger. `slog`'s `Logger`s carry chain of key-value data that contains
-//!   the context of logging - information that otherwise would have to be
-//!   repeated in every logging statement.
-//! * both **human and machine readable** - By keeping the key-value data format
-//!   and retaining it's type information, meaning of logging data is preserved.
-//!   Data can be serialized to machine readable formats like JSON and send it
-//!   to data-mining system for further analysis etc. On the other hand, when
-//!   presenting on screen, logging information can be presented in
-//!   aesthetically pleasing and easy to understand way.
+//!   how exactly process logging data from the application and it's
+//!   dependencies.
+//! * **flexible** - `slog` does not constrain logging to just one globally
+//!   registered backend. Parts of your application can handle logging
+//!   in a customized way, or completely independently.
+//! * **structured** and both **human and machine readable** - By keeping the
+//!   key-value data format and retaining its type information, meaning of logging
+//!   data is preserved.  Data can be serialized to machine readable formats like
+//!   JSON and send it to data-mining system for further analysis etc. On the
+//!   other hand, when presenting on screen, logging information can be presented
+//!   in aesthetically pleasing and easy to understand way.
+//! * **contextual** - `slog`'s `Logger` objects carry set of key-value data
+//!   pairs that contains the context of logging - information that otherwise
+//!   would have to be repeated in every logging statement.
 //!
 //! ## `slog` features
 //!
@@ -73,7 +76,6 @@
 //!        [slog-config crate](https://docs.rs/slog-config)
 //!
 //!
-//! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
 //! [env_logger]: https://crates.io/crates/env_logger
 //!
 //! ## Notable details
@@ -94,7 +96,6 @@
 //! errors. This forces user to pick error handing strategy.
 //! `Drain::fuse()` or `Drain::ignore_res()`.
 //!
-//! [signal]: https://github.com/slog-rs/misc/blob/master/examples/signal.rs
 //! [env_logger]: https://crates.io/crates/env_logger
 //! [fn-overv]: https://github.com/dpc/slog-rs/wiki/Functional-overview
 //! [atomic-switch]: https://docs.rs/slog-atomic/
@@ -107,13 +108,14 @@
 //!
 //! ## Examples & help
 //!
-//! [Some slog-rs examples are maintained in `slog-misc`
-//! repository](https://github.com/slog-rs/misc/tree/master/examples)
+//! Basic examples that are kept up-to-date are typically stored in
+//! respective git repository, under `examples/` subdirectory. Eg.
+//! [slog-term examples](https://github.com/slog-rs/term/tree/master/examples).
 //!
 //! [slog-rs wiki pages](https://github.com/slog-rs/slog/wiki) contain
 //! some pages about `slog-rs` technical details.
 //!
-//! Source code o other [software using
+//! Source code of other [software using
 //! slog-rs](https://crates.io/crates/slog/reverse_dependencies) can
 //! be an useful reference.
 //!
