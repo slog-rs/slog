@@ -104,7 +104,138 @@
 //!
 //! [`Drain`](trait.Drain.html), [`Logger`](struct.Logger.html) and
 //! [`log` macro](macro.log.html) are the most important elements of
-//! slog.
+//! slog. Make sure to read their respective documentation
+//!
+//! Typically the biggest problem is creating a `Drain`
+//!
+//!
+//! ### Logging to the terminal
+//!
+//! ```
+//! #[macro_use]
+//! extern crate slog;
+//! extern crate slog_term;
+//! extern crate slog_async;
+//!
+//! use slog::Drain;
+//!
+//! fn main() {
+//!     let decorator = slog_term::TermDecorator::new().build();
+//!     let drain = slog_term::FullFormat::new(decorator).build().fuse();
+//!     let drain = slog_async::Async::new(drain).build().fuse();
+//!
+//!     let _log = slog::Logger::root(drain, o!());
+//! }
+//! ```
+//!
+//! ### Logging to a file
+//!
+//! ```
+//! #[macro_use]
+//! extern crate slog;
+//! extern crate slog_term;
+//! extern crate slog_async;
+//!
+//! use std::fs::OpenOptions;
+//! use slog::Drain;
+//!
+//! fn main() {
+//!    let log_path = "your_log_file_path.log";
+//!    let file = OpenOptions::new()
+//!       .create(true)
+//!       .write(true)
+//!       .truncate(true)
+//!       .open(log_path)
+//!       .unwrap();
+//!
+//!     let decorator = slog_term::PlainDecorator::new(file);
+//!     let drain = slog_term::FullFormat::new(decorator).build().fuse();
+//!     let drain = slog_async::Async::new(drain).build().fuse();
+//!
+//!     let _log = slog::Logger::root(drain, o!());
+//! }
+//! ```
+//!
+//! You can consider using `slog-json` instead of `slog-term`.
+//! `slog-term` only coincidently fits the role of a file output format. A
+//! proper `slog-file` crate with suitable format, log file rotation and other
+//! file-logging related features would be awesome. Contributions are welcome!
+//!
+//! ### Change logging level at runtime
+//!
+//! ```
+//! #[macro_use]
+//! extern crate slog;
+//! extern crate slog_term;
+//! extern crate slog_async;
+//!
+//! use slog::Drain;
+//!
+//! use std::sync::{Arc, atomic};
+//! use std::sync::atomic::Ordering;
+//! use std::result;
+//!
+//! /// Custom Drain logic
+//! struct RuntimeLevelFilter<D>{
+//!    drain: D,
+//!    on: Arc<atomic::AtomicBool>,
+//! }
+//!
+//! impl<D> Drain for RuntimeLevelFilter<D>
+//!     where D : Drain {
+//!     type Ok = Option<D::Ok>;
+//!     type Err = Option<D::Err>;
+//!
+//!     fn log(&self,
+//!           record: &slog::Record,
+//!           values: &slog::OwnedKVList)
+//!           -> result::Result<Self::Ok, Self::Err> {
+//!           let current_level = if self.on.load(Ordering::Relaxed) {
+//!               slog::Level::Trace
+//!           } else {
+//!               slog::Level::Info
+//!           };
+//!
+//!           if record.level().is_at_least(current_level) {
+//!               self.drain.log(
+//!                   record,
+//!                   values
+//!               )
+//!               .map(Some)
+//!               .map_err(Some)
+//!           } else {
+//!               Ok(None)
+//!           }
+//!       }
+//!   }
+//!
+//! fn main() {
+//!     // atomic variable controlling logging level
+//!     let on = Arc::new(atomic::AtomicBool::new(false));
+//!
+//!     let decorator = slog_term::TermDecorator::new().build();
+//!     let drain = slog_term::FullFormat::new(decorator).build();
+//!     let drain = RuntimeLevelFilter {
+//!         drain: drain,
+//!         on: on.clone(),
+//!     }.fuse();
+//!     let drain = slog_async::Async::new(drain).build().fuse();
+//!
+//!     let _log = slog::Logger::root(drain, o!());
+//!
+//!     // switch level in your code
+//!     on.store(true, Ordering::Relaxed);
+//! }
+//! ```
+//!
+//! Why is this not an existing crate? Because there are multiple ways to
+//! achieve the same result, and each application might come with it's own
+//! variation. Supporting a more general solution is a maintenance effort.
+//! There is also nothing stopping anyone from publishing their own crate
+//! implementing it.
+//!
+//! Alternative to the above aproach is `slog-atomic` crate. It implements
+//! swapping whole parts of `Drain` logging hierarchy.
 //!
 //! ## Examples & help
 //!
