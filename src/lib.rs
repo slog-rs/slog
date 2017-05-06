@@ -121,6 +121,50 @@
 //!
 //! Visit [slog-rs gitter channel](https://gitter.im/slog-rs/slog) for immediate
 //! help.
+//!
+//! ## Migrating from slog v1 to slog v2
+//!
+//! ### Key-value pairs come now after format string
+//!
+//! ```
+//! #[macro_use]
+//! extern crate slog;
+//!
+//! fn main() {
+//!     let drain = slog::Discard;
+//!     let root = slog::Logger::root(drain, o!());
+//!     info!(root, "formatted: {}", 1; "log-key" => true);
+//! }
+//! ```
+//!
+//! See more information about format at [`log`](macro.log.html).
+//!
+//! ### `slog-streamer` is gone
+//!
+//! Create simple terminal logger like this:
+//!
+//! ```
+//! #[macro_use]
+//! extern crate slog;
+//! extern crate slog_term;
+//! extern crate slog_async;
+//!
+//! use slog::Drain;
+//!
+//! fn main() {
+//!     let decorator = slog_term::TermDecorator::new().build();
+//!     let drain = slog_term::FullFormat::new(decorator).build().fuse();
+//!     let drain = slog_async::Async::new(drain).build().fuse();
+//!
+//!     let _log = slog::Logger::root(drain, o!());
+//! }
+//! ```
+//!
+//!
+//! ### Logging macros now takes ownership of values.
+//!
+//! Pass them by reference: `&x`.
+//!
 // }}}
 
 // {{{ Imports & meta

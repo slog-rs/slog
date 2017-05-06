@@ -41,3 +41,7 @@ release_max_level_warn  = []
 release_max_level_info  = []
 release_max_level_debug = []
 release_max_level_trace = []
+
+[dev-dependencies]
+slog-term = "2"
+slog-async = "2"
