@@ -2,7 +2,7 @@
 name = "slog"
 version = "2.0.4"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
-description = "Structured, composable logging for Rust"
+description = "Structured, extensible, composable logging for Rust"
 keywords = ["log", "logging", "structured", "hierarchical"]
 categories = ["development-tools::debugging"]
 license = "MPL-2.0"
