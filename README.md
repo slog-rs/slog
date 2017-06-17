@@ -89,7 +89,7 @@ See following screenshot: same output in both compact and full output mode.
 ## Using & help
 
 See
-[examples/features.rs](https://github.com/slog-rs/misc/blob/master/examples/features.rs)
+[examples/slog1/features.rs](https://github.com/slog-rs/misc/blob/master/examples/slog1/features.rs)
 for full quick code example overview.
 
 See [faq] for answers to common questions and [wiki] for other documentation
