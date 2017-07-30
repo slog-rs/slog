@@ -62,7 +62,9 @@ many feature crates. To name a few:
 * [sloggers](https://docs.rs/sloggers/) for convenience methods (note: [3rd-party library](https://github.com/sile/sloggers))
 
 There are many more slog feature crates. Search for [more slog features on
-crates.io](https://crates.io/search?q=slog). It is easy to write and publish new ones!
+crates.io](https://crates.io/search?q=slog). It is easy to write and publish
+new ones. Look through all the [exiting crates using
+slog](https://crates.io/crates/slog/reverse_dependencies) for examples and ideas.
 
 ### Terminal output example
 
