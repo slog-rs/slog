@@ -30,70 +30,57 @@
 
 # slog-rs - The Logging for [Rust][rust]
 
-### Table of Contents
-
-* [Status & news](#status--news)
-* [`slog` crate](#slog-crate)
-  * [Features](#features)
-  * [Advantages over log crate](#advantages-over-log-crate)
-  * [Terminal output example](#terminal-output-example)
-  * [Using & help](#using--help)
-* [Slog community](#slog-community)
-* [Slog related resources](#slog-related-resources)
-
-### Introduction
+### Introduction (please read)
 
 `slog` is an ecosystem of reusable components for structured, extensible,
-composable logging for [Rust][rust].
+composable and contextual logging for [Rust][rust].
 
 The ambition is to be The Logging Framework for Rust. `slog` should accommodate a
-variety of logging features and requirements.
+variety of logging features and requirements. If there is a feature that you
+need and standard `log` crate is missing, `slog` might have it.
 
-### Status & news
+This power comes with a little steeper learning curve, so if you experience any
+problems, **please join [slog-rs gitter] channel** to get up to speed.
 
-`slog v2` (versions `2.x.y`) is the latest stable major release. API of `slog
-v2` is very similar to `slog v1` and most changes are under the hood, unleashing
-more power. Porting should be relatively easy.
-
-See [`slog v2` wiki page](https://github.com/slog-rs/slog/wiki/slog-v2)
-for more information.
-
-Note: at the time of writing, many important `slog` ecosystem crates might
-still not have a stable release for `slog v2` and you might need to point
-to their pre-release versions. Eg. (`Cargo.toml` excerpt):
-
-```
-slog-term = "~2.0.0-4"
-```
-
-`slog v1` (versions `1.x.y`) is a previous stable major release. No new development
-is planned, but bugfixes and PRs are always welcome.
+While the code is reliable, the documentation sometimes could use improvement.
+Report all issues, or ideas.
 
 ### Features & technical documentation
 
-Most of the interesting documentation is using rustdoc itself.
+Most of the interesting documentation is auto-generated and hosted on [https://docs.rs](https://docs.rs/slog/).
 
-You can view it at [docs.rs/slog for v1](https://docs.rs/slog/1/) or [docs.rs/slog
-for v2](https://docs.rs/slog/2/).
+Go to [docs.rs/slog](https://docs.rs/slog/) to read about features and APIs
+(examples included).
+
+**Note**: `slog` is just a core, and the actual functionality is inside
+many feature crates. To name a few:
+
+* [slog-term](https://docs.rs/slog-term/) for terminal output
+* [slog-async](https://docs.rs/slog-async/) for asynchronous logging
+* [slog-json](https://docs.rs/slog-json/) for logging JSON
+* [slog-syslog](https://docs.rs/slog-async/) for logging to syslog
+* [sloggers](https://docs.rs/sloggers/) for convenience methods (note: [3rd-party library](https://github.com/sile/sloggers))
+
+There are many more slog feature crates. Search for [more slog features on
+crates.io](https://crates.io/search?q=slog). It is easy to write and publish new ones!
 
 ### Terminal output example
 
 `slog-term` is only one of many `slog` features - useful showcase,
-featuring eg. automatic TTY detection and colors.
+multi-platform, and featuring eg. automatic TTY detection and colors.
 
 See following screenshot: same output in both compact and full output mode.
 
 ![slog-rs terminal example output](http://i.imgur.com/mqrG8yL.png)
 
-
 ## Using & help
+
+Please use [slog-rs gitter] channel to ask for help or discuss
+slog features.
 
 See
 [examples/features.rs](https://github.com/slog-rs/misc/blob/master/examples/features.rs)
 for full quick code example overview.
-
-See [faq] for answers to common questions and [wiki] for other documentation
-articles. If you want to say hi, or need help use [slog-rs gitter] channel.
 
 Read [Documentation](https://docs.rs/slog/) for details and features.
 
@@ -104,22 +91,6 @@ To report a bug or ask for features use [github issues][issues].
 [rust]: http://rust-lang.org
 [slog-rs gitter]: https://gitter.im/slog-rs/slog
 [issues]: //github.com/slog-rs/slog/issues
-
-#### In your project
-
-In Cargo.toml:
-
-```
-[dependencies]
-slog = "2"
-```
-
-In your `main.rs`:
-
-```
-#[macro_use]
-extern crate slog;
-```
 
 ## Slog community
 
@@ -134,8 +105,3 @@ Conduct](https://github.com/dpc/public/blob/master/COC.md).
 Any particular repositories under slog ecosystem might be created, controlled,
 maintained by other entities with various levels of autonomy. Lets work together
 toward a common goal in a respectful and welcoming atmosphere!
-
-## slog-related resources
-
-* [24 days of Rust - structured logging](https://siciarz.net/24-days-rust-structured-logging/) - review and tutorial by Zbigniew Siciarz 2016-12-05
-* [Writing GStreamer Elements in Rust (Part 4): Logging, COWs and Plugins](https://coaxion.net/blog/2017/03/writing-gstreamer-elements-in-rust-part-4-logging-cows-and-plugins/) - experiences using Rust & slog for GStreamer
