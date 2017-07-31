@@ -44,8 +44,8 @@ problems, **please join [slog-rs gitter] channel** to get up to speed. If you'd
 like to take a quick, convenient route, consider using
 [sloggers](https://docs.rs/sloggers/) wrapper library.
 
-While the code is reliable, the documentation sometimes could use improvement.
-Report all issues, or ideas.
+While the code is reliable, the documentation sometimes could use an improvement.
+Please report all issues and ideas.
 
 ### Features & technical documentation
 
