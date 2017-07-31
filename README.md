@@ -35,12 +35,14 @@
 `slog` is an ecosystem of reusable components for structured, extensible,
 composable and contextual logging for [Rust][rust].
 
-The ambition is to be The Logging Framework for Rust. `slog` should accommodate a
+The ambition is to be The Logging Library for Rust. `slog` should accommodate a
 variety of logging features and requirements. If there is a feature that you
 need and standard `log` crate is missing, `slog` might have it.
 
 This power comes with a little steeper learning curve, so if you experience any
-problems, **please join [slog-rs gitter] channel** to get up to speed.
+problems, **please join [slog-rs gitter] channel** to get up to speed. If you'd
+like to take a quick, convenient route, consider using
+[sloggers](https://docs.rs/sloggers/) wrapper library.
 
 While the code is reliable, the documentation sometimes could use improvement.
 Report all issues, or ideas.
