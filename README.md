@@ -37,7 +37,7 @@ composable and contextual logging for [Rust][rust].
 
 The ambition is to be The Logging Library for Rust. `slog` should accommodate a
 variety of logging features and requirements. If there is a feature that you
-need and standard `log` crate is missing, `slog` might have it.
+need and standard `log` crate is missing, `slog` should have it.
 
 This power comes with a little steeper learning curve, so if you experience any
 problems, **please join [slog-rs gitter] channel** to get up to speed. If you'd
