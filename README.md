@@ -60,7 +60,7 @@ many feature crates. To name a few:
 * [slog-term](https://docs.rs/slog-term/) for terminal output
 * [slog-async](https://docs.rs/slog-async/) for asynchronous logging
 * [slog-json](https://docs.rs/slog-json/) for logging JSON
-* [slog-syslog](https://docs.rs/slog-async/) for logging to syslog
+* [slog-syslog](https://docs.rs/slog-syslog/) for logging to syslog
 * [sloggers](https://docs.rs/sloggers/) for convenience methods (note: [3rd-party library](https://github.com/sile/sloggers))
 
 There are many more slog feature crates. Search for [more slog features on
