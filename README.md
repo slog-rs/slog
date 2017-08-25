@@ -65,7 +65,7 @@ many feature crates. To name a few:
 
 There are many more slog feature crates. Search for [more slog features on
 crates.io](https://crates.io/search?q=slog). It is easy to write and publish
-new ones. Look through all the [exiting crates using
+new ones. Look through all the [existing crates using
 slog](https://crates.io/crates/slog/reverse_dependencies) for examples and ideas.
 
 ### Terminal output example
