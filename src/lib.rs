@@ -2164,7 +2164,13 @@ impl<'a> Record<'a> {
         self.rstatic.location.module
     }
 
-    /// Get function
+    /// Get function (placeholder)
+    ///
+    /// There's currently no way to obtain that information
+    /// in Rust at compile time, so it is not implemented.
+    ///
+    /// It will be implemented at first opportunity, and
+    /// it will not be considered a breaking change.
     pub fn function(&self) -> &'static str {
         self.rstatic.location.function
     }
