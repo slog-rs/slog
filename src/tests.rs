@@ -1,8 +1,8 @@
-use {Logger, Discard};
+use {Discard, Logger};
 
 // Separate module to test lack of imports
 mod no_imports {
-    use {Logger, Discard};
+    use {Discard, Logger};
     /// ensure o! macro expands without error inside a module
     #[test]
     fn test_o_macro_expansion() {
@@ -39,12 +39,15 @@ mod std_only {
         impl Drain for CheckOwned {
             type Ok = ();
             type Err = Never;
-            fn log(&self,
-                   record: &Record,
-                   values: &OwnedKVList)
-                   -> std::result::Result<Self::Ok, Self::Err> {
-                assert_eq!(format!("{}", record.msg()),
-                           format!("{:?}", values));
+            fn log(
+                &self,
+                record: &Record,
+                values: &OwnedKVList,
+            ) -> std::result::Result<Self::Ok, Self::Err> {
+                assert_eq!(
+                    format!("{}", record.msg()),
+                    format!("{:?}", values)
+                );
                 Ok(())
             }
         }
@@ -64,7 +67,7 @@ mod std_only {
 #[test]
 fn expressions() {
 
-    use super::{KV, Record, Serializer, Result};
+    use super::{Record, Result, Serializer, KV};
 
     struct Foo;
 
@@ -96,19 +99,32 @@ fn expressions() {
     warn!(log, "logging message bar={}", r.foo.bar());
     slog_warn!(log, "logging message bar={}", r.foo.bar());
 
-    warn!(log,
-          "logging message bar={} foo={}",
-          r.foo.bar(),
-          r.foo.bar());
-    slog_warn!(log,
-               "logging message bar={} foo={}",
-               r.foo.bar(),
-               r.foo.bar());
+    warn!(
+        log,
+        "logging message bar={} foo={}",
+        r.foo.bar(),
+        r.foo.bar()
+    );
+    slog_warn!(
+        log,
+        "logging message bar={} foo={}",
+        r.foo.bar(),
+        r.foo.bar()
+    );
 
     // trailing comma check
-    warn!(log, "logging message bar={} foo={}", r.foo.bar(), r.foo.bar(), );
-    slog_warn!(log, "logging message bar={} foo={}",
-               r.foo.bar(), r.foo.bar(), );
+    warn!(
+        log,
+        "logging message bar={} foo={}",
+        r.foo.bar(),
+        r.foo.bar(),
+    );
+    slog_warn!(
+        log,
+        "logging message bar={} foo={}",
+        r.foo.bar(),
+        r.foo.bar(),
+    );
 
     warn!(log, "logging message bar={}", r.foo.bar(); "x" => 1);
     slog_warn!(log, "logging message bar={}", r.foo.bar(); "x" => 1);
@@ -145,10 +161,11 @@ fn expressions() {
         struct K;
 
         impl KV for K {
-            fn serialize(&self,
-                         _record: &Record,
-                         _serializer: &mut Serializer)
-                         -> Result {
+            fn serialize(
+                &self,
+                _record: &Record,
+                _serializer: &mut Serializer,
+            ) -> Result {
                 Ok(())
             }
         }
@@ -158,8 +175,9 @@ fn expressions() {
         let _log = log.new(o!(x.clone()));
         let _log = log.new(o!("foo" => "bar", x.clone()));
         let _log = log.new(o!("foo" => "bar", x.clone(), x.clone()));
-        let _log =
-            log.new(slog_o!("foo" => "bar", x.clone(), x.clone(), "aaa" => "bbb"));
+        let _log = log.new(
+            slog_o!("foo" => "bar", x.clone(), x.clone(), "aaa" => "bbb"),
+        );
 
         info!(log, "message"; "foo" => "bar", &x, &x, "aaa" => "bbb");
     }
@@ -187,12 +205,14 @@ fn expressions_fmt() {
 #[test]
 fn makers() {
     use ::*;
-    let drain =
-        Duplicate(Discard.filter(|r| r.level().is_at_least(Level::Info)),
-                  Discard.filter_level(Level::Warning))
-                .map(Fuse);
-    let _log = Logger::root(Arc::new(drain),
-                            o!("version" => env!("CARGO_PKG_VERSION")));
+    let drain = Duplicate(
+        Discard.filter(|r| r.level().is_at_least(Level::Info)),
+        Discard.filter_level(Level::Warning),
+    ).map(Fuse);
+    let _log = Logger::root(
+        Arc::new(drain),
+        o!("version" => env!("CARGO_PKG_VERSION")),
+    );
 }
 
 #[test]
@@ -202,8 +222,8 @@ fn simple_logger_erased() {
     fn takes_arced_drain(_l: Logger) {}
 
     let drain = Discard.filter_level(Level::Warning).map(Fuse);
-    let log = Logger::root_typed(drain,
-                                 o!("version" => env!("CARGO_PKG_VERSION")));
+    let log =
+        Logger::root_typed(drain, o!("version" => env!("CARGO_PKG_VERSION")));
 
     takes_arced_drain(log.to_erased());
 }
@@ -214,12 +234,12 @@ fn logger_to_erased() {
 
     fn takes_arced_drain(_l: Logger) {}
 
-    let drain =
-        Duplicate(Discard.filter(|r| r.level().is_at_least(Level::Info)),
-                  Discard.filter_level(Level::Warning))
-                .map(Fuse);
-    let log = Logger::root_typed(drain,
-                                 o!("version" => env!("CARGO_PKG_VERSION")));
+    let drain = Duplicate(
+        Discard.filter(|r| r.level().is_at_least(Level::Info)),
+        Discard.filter_level(Level::Warning),
+    ).map(Fuse);
+    let log =
+        Logger::root_typed(drain, o!("version" => env!("CARGO_PKG_VERSION")));
 
     takes_arced_drain(log.into_erased());
 }

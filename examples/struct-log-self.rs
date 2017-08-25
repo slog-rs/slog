@@ -23,10 +23,11 @@ impl Peer {
 
 // `KV` can be implemented for a struct
 impl KV for Peer {
-    fn serialize(&self,
-                 _record: &Record,
-                 serializer: &mut Serializer)
-                 -> Result {
+    fn serialize(
+        &self,
+        _record: &Record,
+        serializer: &mut Serializer,
+    ) -> Result {
 
         serializer.emit_u32("peer-port", self.port)?;
         serializer.emit_str("peer-host", &self.host)?;
@@ -71,10 +72,7 @@ struct PeerCounter {
 
 impl PeerCounter {
     fn new(log: Logger) -> Self {
-        PeerCounter {
-            count: 0,
-            log: log,
-        }
+        PeerCounter { count: 0, log: log }
     }
 
     // A hybrid approach with `Logger` with parent logging-context embedded into
@@ -90,8 +88,10 @@ impl PeerCounter {
 }
 
 fn main() {
-    let log = Logger::root(Fuse(common::PrintlnDrain),
-                           o!("build-id" => "7.3.3-abcdef"));
+    let log = Logger::root(
+        Fuse(common::PrintlnDrain),
+        o!("build-id" => "7.3.3-abcdef"),
+    );
 
     let server = Server::new("localhost".into(), 12345, log.clone());
 

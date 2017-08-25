@@ -16,14 +16,18 @@ impl Drain for PrintlnDrain {
     type Ok = ();
     type Err = ();
 
-    fn log(&self,
-           record: &Record,
-           values: &OwnedKVList)
-           -> result::Result<Self::Ok, Self::Err> {
+    fn log(
+        &self,
+        record: &Record,
+        values: &OwnedKVList,
+    ) -> result::Result<Self::Ok, Self::Err> {
 
         print!("{}", record.msg());
 
-        record.kv().serialize(record, &mut PrintlnSerializer).unwrap();
+        record
+            .kv()
+            .serialize(record, &mut PrintlnSerializer)
+            .unwrap();
         values.serialize(record, &mut PrintlnSerializer).unwrap();
 
         println!("");
