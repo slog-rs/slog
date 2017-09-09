@@ -304,13 +304,13 @@
 #![warn(missing_docs)]
 #![no_std]
 
-#[macro_use]
-#[cfg(feature = "std")]
-extern crate std;
 #[cfg(not(feature = "std"))]
 extern crate alloc;
 #[cfg(not(feature = "std"))]
 extern crate collections;
+#[macro_use]
+#[cfg(feature = "std")]
+extern crate std;
 
 #[cfg(not(feature = "std"))]
 use alloc::arc::Arc;
@@ -1192,7 +1192,6 @@ where
         record: &Record,
         values: &OwnedKVList,
     ) -> result::Result<Self::Ok, Self::Err> {
-
         let chained = OwnedKVList {
             node: Arc::new(MultiListNode {
                 next_node: values.node.clone(),
@@ -2454,13 +2453,13 @@ where
 }*/
 
 /// Explicit lazy-closure `Value`
-pub struct FnValue<V: 'static + Value, F>(pub F)
+pub struct FnValue<V: Value, F>(pub F)
 where
-    F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> V;
+    F: for<'c, 'd> Fn(&'c Record<'d>) -> V;
 
-impl<V: 'static + Value, F> Value for FnValue<V, F>
+impl<'a, V: 'a + Value, F> Value for FnValue<V, F>
 where
-    F: 'static + for<'c, 'd> Fn(&'c Record<'d>) -> V,
+    F: 'a + for<'c, 'd> Fn(&'c Record<'d>) -> V,
 {
     fn serialize(
         &self,
@@ -2793,7 +2792,6 @@ where
         record: &Record,
         serializer: &mut Serializer,
     ) -> Result {
-
         try!(self.kv.serialize(record, serializer));
         try!(self.next_node.serialize(record, serializer));
 
@@ -2807,7 +2805,6 @@ impl KV for MultiListNode {
         record: &Record,
         serializer: &mut Serializer,
     ) -> Result {
-
         try!(self.next_node.serialize(record, serializer));
         try!(self.node.serialize(record, serializer));
 
@@ -2821,7 +2818,6 @@ impl KV for OwnedKVList {
         record: &Record,
         serializer: &mut Serializer,
     ) -> Result {
-
         try!(self.node.serialize(record, serializer));
 
         Ok(())

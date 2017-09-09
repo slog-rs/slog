@@ -23,7 +23,6 @@ mod std_only {
 
     #[test]
     fn logger_fmt_debug_sanity() {
-
         let root = Logger::root(Discard, o!("a" => "aa"));
         let log = root.new(o!("b" => "bb", "c" => "cc"));
 
@@ -66,7 +65,6 @@ mod std_only {
 
 #[test]
 fn expressions() {
-
     use super::{Record, Result, Serializer, KV};
 
     struct Foo;
@@ -193,7 +191,6 @@ fn expressions() {
 
 #[test]
 fn expressions_fmt() {
-
     let log = Logger::root(Discard, o!("version" => env!("CARGO_PKG_VERSION")));
 
     let f = "f";
