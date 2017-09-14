@@ -2440,17 +2440,16 @@ where
     }
 }
 
-/*impl<T> Value for T
-    where T: fmt::Display
+impl<'a> Value for std::path::Display<'a>
 {
     fn serialize(&self,
                  _record: &Record,
                  key: Key,
                  serializer: &mut Serializer)
                  -> Result {
-        serializer.emit_arguments(key, format_args!("{}", *self))
+        serializer.emit_arguments(key, &format_args!("{}", *self))
     }
-}*/
+}
 
 /// Explicit lazy-closure `Value`
 pub struct FnValue<V: Value, F>(pub F)
