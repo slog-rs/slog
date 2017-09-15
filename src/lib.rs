@@ -517,6 +517,7 @@ macro_rules! record(
         record!($lvl, $tag, $args, $b)
     };
     ($lvl:expr, $tag:expr, $args:expr, $b:expr) => {{
+        #[allow(dead_code)]
         static RS : $crate::RecordStatic<'static> = record_static!($lvl, $tag);
         $crate::Record::new(&RS, $args, $b)
     }};

@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.12 - 2017-09-14
+### Changed
+
+* `#[allow(dead_code)` on unused log statements
+
+## 2.0.11 - 2017-09-13
+### Changed
+
+* Impl `Value` for `std::path::Display`
+
 ## 2.0.10 - 2017-09-09
 ### Changed
 
