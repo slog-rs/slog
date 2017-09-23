@@ -140,7 +140,7 @@
 //! use slog::Drain;
 //!
 //! fn main() {
-//!    let log_path = "your_log_file_path.log";
+//!    let log_path = "target/your_log_file_path.log";
 //!    let file = OpenOptions::new()
 //!       .create(true)
 //!       .write(true)
