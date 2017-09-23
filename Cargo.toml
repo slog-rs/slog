@@ -46,5 +46,5 @@ release_max_level_trace = []
 slog-term = "2"
 slog-async = "2"
 
-[replace]
-"slog:2.0.12" = { path = "." }
+[patch.crates-io]
+slog = { path = "." }
