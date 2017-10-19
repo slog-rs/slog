@@ -225,8 +225,6 @@ impl<'a> Serialize for fmt::Arguments<'a>{
     }
 }
 
-impl SyncSerialize for fmt::Arguments<'static> {}
-
 impl SyncSerialize for &'static str {}
 
 impl Serialize for String {
