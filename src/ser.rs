@@ -23,7 +23,7 @@ use alloc::boxed::Box;
 #[cfg(feature = "std")]
 use std::string::String;
 #[cfg(not(feature = "std"))]
-use collections::string::String;
+use alloc::string::String;
 
 use super::Record;
 

@@ -101,7 +101,6 @@
 //!
 //! Visit [slog-rs gitter channel](https://gitter.im/slog-rs/slog) for immediate help.
 #![cfg_attr(not(feature = "std"), feature(alloc))]
-#![cfg_attr(not(feature = "std"), feature(collections))]
 #![warn(missing_docs)]
 
 #![no_std]
@@ -111,8 +110,6 @@
 extern crate std;
 #[cfg(not(feature = "std"))]
 extern crate alloc;
-#[cfg(not(feature = "std"))]
-extern crate collections;
 
 use core::str::FromStr;
 use core::fmt;
