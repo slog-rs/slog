@@ -312,6 +312,7 @@ extern crate collections;
 #[cfg(feature = "std")]
 extern crate std;
 
+
 #[cfg(not(feature = "std"))]
 use alloc::arc::Arc;
 #[cfg(not(feature = "std"))]
@@ -321,6 +322,8 @@ use alloc::rc::Rc;
 #[cfg(not(feature = "std"))]
 use collections::string::String;
 
+#[cfg(feature = "serde")]
+extern crate erased_serde;
 
 use core::{convert, fmt, result};
 
@@ -2239,12 +2242,29 @@ pub trait Serializer {
         self.emit_arguments(key, &format_args!(""))
     }
 
+
     /// Emit `fmt::Arguments`
     ///
     /// This is the only method that has to implemented, but for performance and
     /// to retain type information most serious `Serializer`s will want to
     /// implement all other methods as well.
     fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result;
+
+
+    /// Emit a value implementing
+    /// [`serde::Serialize`](https://docs.rs/serde/1/serde/trait.Serialize.html)
+    ///
+    /// This is especially useful for composite values, eg. structs as Json values, or sequences.
+    ///
+    /// To prevent pulling-in `serde` dependency, this is an extension behind a
+    /// `serde` feature flag.
+    ///
+    /// The value needs to implement `SerdeValue`.
+    #[cfg(feature = "serde")]
+    fn emit_serde(&mut self, key: Key, value: &SerdeValue) -> Result where Self:
+    Sized {
+        value.serialize_fallback(key, self)
+    }
 }
 
 /// Serializer to closure adapter.
@@ -2262,6 +2282,73 @@ where
         (self.0)(key, *val)
     }
 }
+// }}}
+
+// {{{ serde
+/// A value that can be serialized via serde
+///
+/// This is useful for implementing nested values, like sequences or structures.
+#[cfg(feature = "serde")]
+pub trait SerdeValue : erased_serde::Serialize {
+    /// Serialize the value in a way that is compatible with `slog::Serializer`s
+    /// that do not support serde.
+    ///
+    /// The implementation should *not* call `slog::Serialize::serialize`
+    /// on itself, as it will lead to infinite recursion.
+    ///
+    /// Default implementation is provided, but it returns error, so use it
+    /// only for internal types in systems and libraries where `serde` is always
+    /// enabled.
+    fn serialize_fallback(&self, _key: Key, _serializer: &mut Serializer) -> Result<()> {
+        Err(Error::Other)
+    }
+
+    /// Convert to `erased_serialize::Serialize` of the underlying value,
+    /// so `slog::Serializer`s can use it to serialize via `serde`.
+    ///
+    /// Default implementation is provided.
+    fn as_serde(&self) -> &erased_serde::Serialize where Self : Sized { self }
+
+
+    /// Convert to a boxed value that can be sent across threads
+    ///
+    /// This enables functionality like `slog-async` and similar.
+    ///
+    /// Default implementation is provided.
+    fn to_sendable(&self) -> Box<SerdeValue + Send + 'static>
+        where Self : Send + 'static + Clone {
+        Box::new(self.clone()) as Box<SerdeValue + Send + 'static>
+    }
+}
+
+/*
+impl<T> SerdeValue for T where T: erased_serde::Serialize + Clone + Send {
+    fn serialize(&self, serializer: &erased_serde::Serializer) -> Result<()> {
+        match self.serialize(serializer) {
+            Err(_) => Err(Error::Other),
+            Ok(_) => Ok(()),
+        }
+    }
+
+    fn to_boxed(&self) -> Box<SerdeValue + Send + 'static> {
+        Box::new(self.clone())
+    }
+}
+*/
+/*
+#[cfg(feature = "serde")]
+impl<T> SerdeValue for T where T: erased_serde::Serialize + Clone + Send {
+    fn serialize(&self, serializer: &erased_serde::Serializer) -> Result<()> {
+        match self.serialize(serializer) {
+            Err(_) => Err(Error::Other),
+            Ok(_) => Ok(()),
+        }
+    }
+    fn to_boxed(&self) -> Box<SerdeValue> {
+        Box::new(self.clone())
+    }
+}
+*/
 // }}}
 
 // {{{ Key
@@ -2907,7 +2994,7 @@ where
 #[cfg(feature = "std")]
 /// Serialization Error
 pub enum Error {
-    /// `io::Error` (no available in ![no_std] mode)
+    /// `io::Error` (not available in ![no_std] mode)
     Io(std::io::Error),
     /// `fmt::Error`
     Fmt(std::fmt::Error),
