@@ -2261,9 +2261,9 @@ pub trait Serializer {
     ///
     /// The value needs to implement `SerdeValue`.
     #[cfg(feature = "serde")]
-    fn emit_serde(&mut self, key: Key, value: &SerdeValue) -> Result where Self:
-    Sized {
-        value.serialize_fallback(key, self)
+    fn emit_serde(&mut self, key: Key, value: &SerdeValue) -> Result {
+        // value.serialize_fallback(key, self)
+        Err(Error::Other)
     }
 }
 
@@ -2299,9 +2299,9 @@ pub trait SerdeValue : erased_serde::Serialize {
     /// Default implementation is provided, but it returns error, so use it
     /// only for internal types in systems and libraries where `serde` is always
     /// enabled.
-    fn serialize_fallback(&self, _key: Key, _serializer: &mut Serializer) -> Result<()> {
-        Err(Error::Other)
-    }
+    // fn serialize_fallback(&self, _key: Key, _serializer: &mut Serializer) -> Result<()> {
+    //     Err(Error::Other)
+    // }
 
     /// Convert to `erased_serialize::Serialize` of the underlying value,
     /// so `slog::Serializer`s can use it to serialize via `serde`.
@@ -2314,34 +2314,6 @@ pub trait SerdeValue : erased_serde::Serialize {
     fn to_sendable(&self) -> Box<SerdeValue + Send + 'static>;
 }
 
-/*
-impl<T> SerdeValue for T where T: erased_serde::Serialize + Clone + Send {
-    fn serialize(&self, serializer: &erased_serde::Serializer) -> Result<()> {
-        match self.serialize(serializer) {
-            Err(_) => Err(Error::Other),
-            Ok(_) => Ok(()),
-        }
-    }
-
-    fn to_boxed(&self) -> Box<SerdeValue + Send + 'static> {
-        Box::new(self.clone())
-    }
-}
-*/
-/*
-#[cfg(feature = "serde")]
-impl<T> SerdeValue for T where T: erased_serde::Serialize + Clone + Send {
-    fn serialize(&self, serializer: &erased_serde::Serializer) -> Result<()> {
-        match self.serialize(serializer) {
-            Err(_) => Err(Error::Other),
-            Ok(_) => Ok(()),
-        }
-    }
-    fn to_boxed(&self) -> Box<SerdeValue> {
-        Box::new(self.clone())
-    }
-}
-*/
 // }}}
 
 // {{{ Key
