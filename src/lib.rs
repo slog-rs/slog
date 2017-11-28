@@ -2305,20 +2305,13 @@ pub trait SerdeValue : erased_serde::Serialize {
 
     /// Convert to `erased_serialize::Serialize` of the underlying value,
     /// so `slog::Serializer`s can use it to serialize via `serde`.
-    ///
-    /// Default implementation is provided.
-    fn as_serde(&self) -> &erased_serde::Serialize where Self : Sized { self }
+    fn as_serde(&self) -> &erased_serde::Serialize;
 
 
     /// Convert to a boxed value that can be sent across threads
     ///
     /// This enables functionality like `slog-async` and similar.
-    ///
-    /// Default implementation is provided.
-    fn to_sendable(&self) -> Box<SerdeValue + Send + 'static>
-        where Self : Send + 'static {
-        Box::new(self.clone()) as Box<SerdeValue + Send + 'static>
-    }
+    fn to_sendable(&self) -> Box<SerdeValue + Send + 'static>;
 }
 
 /*
