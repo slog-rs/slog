@@ -2316,7 +2316,7 @@ pub trait SerdeValue : erased_serde::Serialize {
     ///
     /// Default implementation is provided.
     fn to_sendable(&self) -> Box<SerdeValue + Send + 'static>
-        where Self : Send + 'static + Clone {
+        where Self : Send + 'static {
         Box::new(self.clone()) as Box<SerdeValue + Send + 'static>
     }
 }
