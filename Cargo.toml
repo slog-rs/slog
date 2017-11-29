@@ -24,9 +24,9 @@ lto = true
 debug-assertions = false
 
 [features]
-
 std = []
 default = ["std"]
+opaque-keys = []
 
 max_level_off   = []
 max_level_error = []

@@ -312,6 +312,9 @@ extern crate collections;
 #[cfg(feature = "std")]
 extern crate std;
 
+mod key;
+pub use self::key::Key;
+
 #[cfg(not(feature = "std"))]
 use alloc::arc::Arc;
 #[cfg(not(feature = "std"))]
@@ -320,7 +323,6 @@ use alloc::boxed::Box;
 use alloc::rc::Rc;
 #[cfg(not(feature = "std"))]
 use collections::string::String;
-
 
 use core::{convert, fmt, result};
 
@@ -336,6 +338,8 @@ use std::rc::Rc;
 use std::string::String;
 #[cfg(feature = "std")]
 use std::sync::Arc;
+#[cfg(feature = "std")]
+use std::borrow::Cow;
 // }}}
 
 // {{{ Macros
@@ -2264,10 +2268,6 @@ where
 }
 // }}}
 
-// {{{ Key
-/// Key type (alias for &'static str)
-pub type Key = &'static str;
-// }}}
 
 // {{{ Value
 /// Value that can be serialized
@@ -2498,7 +2498,7 @@ impl<'a> PushFnValueSerializer<'a> {
     /// This consumes `self` to prevent serializing one value multiple times
     pub fn emit<'b, S: 'b + Value>(mut self, s: S) -> Result {
         self.done = true;
-        s.serialize(self.record, self.key, self.serializer)
+        s.serialize(self.record, self.key.clone(), self.serializer)
     }
 }
 
@@ -2506,7 +2506,7 @@ impl<'a> Drop for PushFnValueSerializer<'a> {
     fn drop(&mut self) {
         if !self.done {
             // unfortunately this gives no change to return serialization errors
-            let _ = self.serializer.emit_unit(self.key);
+            let _ = self.serializer.emit_unit(self.key.clone());
         }
     }
 }
@@ -2645,7 +2645,7 @@ where
         record: &Record,
         serializer: &mut Serializer,
     ) -> Result {
-        self.1.serialize(record, self.0, serializer)
+        self.1.serialize(record, self.0.clone(), serializer)
     }
 }
 
