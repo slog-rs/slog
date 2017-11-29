@@ -22,6 +22,7 @@ impl Peer {
 }
 
 // `KV` can be implemented for a struct
+#[cfg(not(feature = "opaque-keys"))]
 impl KV for Peer {
     fn serialize(
         &self,
@@ -31,6 +32,19 @@ impl KV for Peer {
 
         serializer.emit_u32("peer-port", self.port)?;
         serializer.emit_str("peer-host", &self.host)?;
+        Ok(())
+    }
+}
+#[cfg(feature = "opaque-keys")]
+impl KV for Peer {
+    fn serialize(
+        &self,
+        _record: &Record,
+        serializer: &mut Serializer,
+    ) -> Result {
+
+        serializer.emit_u32(Key::from("peer-port"), self.port)?;
+        serializer.emit_str(Key::from("peer-host"), &self.host)?;
         Ok(())
     }
 }
