@@ -1,4 +1,3 @@
-// {{{ Crate docs
 //! # Slog -  Structured, extensible, composable logging for Rust
 //!
 //! `slog-rs` is an ecosystem of reusable components for structured, extensible,
@@ -402,46 +401,22 @@ macro_rules! slog_b(
 #[macro_export]
 macro_rules! kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
-        if cfg!(not(features = "opaque-keys")) {
-            kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); )
-        } else {
-            kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{}", $v)), $args_ready); )
-        }
+        kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
-        if cfg!(not(features = "opaque-keys")) {
-            kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); $($args)* )
-        } else {
-            kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{}", $v)), $args_ready); $($args)* )
-        }
+        kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr) => {
-        if cfg!(not(features = "opaque-keys")) {
-            kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); )
-        } else {
-            kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{:?}", $v)), $args_ready); )
-        }
+        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
-        if cfg!(not(features = "opaque-keys")) {
-            kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); $($args)* )
-        } else {
-            kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{:?}", $v)), $args_ready); $($args)* )
-        }
+        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
-        if cfg!(not(features = "opaque-keys")) {
-            kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
-        } else {
-            kv!(@ ($crate::SingleKV(Key::from($k), $v), $args_ready); )
-        }
+        kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        if cfg!(not(features = "opaque-keys")) {
-            kv!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
-        } else {
-            kv!(@ ($crate::SingleKV(Key::from($k), $v), $args_ready); $($args)* )
-        }
+        kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $kv:expr) => {
         kv!(@ ($kv, $args_ready); )
@@ -464,46 +439,22 @@ macro_rules! kv(
 #[macro_export]
 macro_rules! slog_kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
-        if cfg!(not(features = "opaque-keys")) {
-            slog_kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); )
-        } else {
-            slog_kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{}", $v)), $args_ready); )
-        }
+        slog_kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
-        if cfg!(not(features = "opaque-keys")) {
-            slog_kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); $($args)* )
-        } else {
-            slog_kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{}", $v)), $args_ready); $($args)* )
-        } 
+        slog_kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr) => {
-        if cfg!(not(features = "opaque-keys")) {
-            kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); )
-        } else {
-            kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{:?}", $v)), $args_ready); )
-        }
+        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
-        if cfg!(not(features = "opaque-keys")) {
-            kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); $($args)* )
-        } else {
-            kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{:?}", $v)), $args_ready); $($args)* )
-        }
+        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
-        if cfg!(not(features = "opaque-keys")) {
-            slog_kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
-        } else {
-            slog_kv!(@ ($crate::SingleKV(Key::from($k), $v), $args_ready); )
-        }
+        slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        if cfg!(not(features = "opaque-keys")) {
-            slog_kv!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
-        } else {
-            slog_kv!(@ ($crate::SingleKV(Key::from($k), $v), $args_ready); $($args)* )
-        }
+        slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $slog_kv:expr) => {
         slog_kv!(@ ($slog_kv, $args_ready); )
@@ -703,7 +654,7 @@ macro_rules! slog_record(
 /// It's possible to directly specify type that implements `KV` trait without
 /// `=>` syntax.
 ///
-/// ```
+/// ```ignore
 /// #[macro_use]
 /// extern crate slog;
 ///
@@ -2280,7 +2231,7 @@ pub trait Serializer {
     impl_default_as_fmt!(f64, emit_f64);
     /// Emit str
     impl_default_as_fmt!(&str, emit_str);
-
+    
     /// Emit `()`
     fn emit_unit(&mut self, key: Key) -> Result {
         self.emit_arguments(key, &format_args!("()"))
@@ -2297,6 +2248,7 @@ pub trait Serializer {
     /// to retain type information most serious `Serializer`s will want to
     /// implement all other methods as well.
     fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result;
+
 }
 
 /// Serializer to closure adapter.
@@ -2682,6 +2634,25 @@ where
 pub struct SingleKV<V>(pub Key, pub V)
 where
     V: Value;
+
+#[cfg(feature = "opaque-keys")]
+impl<V: Value> From<(String,V)> for SingleKV<V> {
+    fn from(x: (String,V)) -> SingleKV<V> {
+        SingleKV(Key::from(x.0),x.1)
+    }
+}
+#[cfg(feature = "opaque-keys")]
+impl<V: Value> From<(&'static str, V)> for SingleKV<V> {
+    fn from(x: (&'static str, V)) -> SingleKV<V> {
+        SingleKV(Key::from(x.0), x.1)
+    }
+}
+#[cfg(not(feature = "opaque-keys"))]
+impl<V: Value> From<(&'static str, V)> for SingleKV<V> {
+    fn from(x: (&'static str, V)) -> SingleKV<V> {
+        SingleKV(x.0, x.1)
+    }
+}
 
 
 impl<V> KV for SingleKV<V>
