@@ -24,8 +24,8 @@ lto = true
 debug-assertions = false
 
 [features]
-
 nested-values = ["erased-serde"]
+opaque-keys = []
 std = []
 default = ["std"]
 
@@ -54,4 +54,4 @@ slog-async = "2"
 slog = { path = "." }
 
 [package.metadata.docs.rs]
-features = ["std", "nested-values"]
+features = ["std", "nested-values", "opaque-keys"]
