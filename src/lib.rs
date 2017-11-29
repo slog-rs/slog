@@ -402,22 +402,46 @@ macro_rules! slog_b(
 #[macro_export]
 macro_rules! kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
-        kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); )
+        if cfg!(not(features = "opaque-keys")) {
+            kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); )
+        } else {
+            kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{}", $v)), $args_ready); )
+        }
     };
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); $($args)* )
+        if cfg!(not(features = "opaque-keys")) {
+            kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); $($args)* )
+        } else {
+            kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{}", $v)), $args_ready); $($args)* )
+        }
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr) => {
-        kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); )
+        if cfg!(not(features = "opaque-keys")) {
+            kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); )
+        } else {
+            kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{:?}", $v)), $args_ready); )
+        }
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); $($args)* )
+        if cfg!(not(features = "opaque-keys")) {
+            kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); $($args)* )
+        } else {
+            kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{:?}", $v)), $args_ready); $($args)* )
+        }
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
-        kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
+        if cfg!(not(features = "opaque-keys")) {
+            kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
+        } else {
+            kv!(@ ($crate::SingleKV(Key::from($k), $v), $args_ready); )
+        }
     };
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+        if cfg!(not(features = "opaque-keys")) {
+            kv!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+        } else {
+            kv!(@ ($crate::SingleKV(Key::from($k), $v), $args_ready); $($args)* )
+        }
     };
     (@ $args_ready:expr; $kv:expr) => {
         kv!(@ ($kv, $args_ready); )
@@ -440,22 +464,46 @@ macro_rules! kv(
 #[macro_export]
 macro_rules! slog_kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
-        slog_kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); )
+        if cfg!(not(features = "opaque-keys")) {
+            slog_kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); )
+        } else {
+            slog_kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{}", $v)), $args_ready); )
+        }
     };
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); $($args)* )
+        if cfg!(not(features = "opaque-keys")) {
+            slog_kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); $($args)* )
+        } else {
+            slog_kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{}", $v)), $args_ready); $($args)* )
+        } 
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr) => {
-        kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); )
+        if cfg!(not(features = "opaque-keys")) {
+            kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); )
+        } else {
+            kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{:?}", $v)), $args_ready); )
+        }
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); $($args)* )
+        if cfg!(not(features = "opaque-keys")) {
+            kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); $($args)* )
+        } else {
+            kv!(@ ($crate::SingleKV(Key::from($k), format_args!("{:?}", $v)), $args_ready); $($args)* )
+        }
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
-        slog_kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
+        if cfg!(not(features = "opaque-keys")) {
+            slog_kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
+        } else {
+            slog_kv!(@ ($crate::SingleKV(Key::from($k), $v), $args_ready); )
+        }
     };
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+        if cfg!(not(features = "opaque-keys")) {
+            slog_kv!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+        } else {
+            slog_kv!(@ ($crate::SingleKV(Key::from($k), $v), $args_ready); $($args)* )
+        }
     };
     (@ $args_ready:expr; $slog_kv:expr) => {
         slog_kv!(@ ($slog_kv, $args_ready); )
