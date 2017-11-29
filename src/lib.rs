@@ -1,4 +1,3 @@
-// {{{ Crate docs
 //! # Slog -  Structured, extensible, composable logging for Rust
 //!
 //! `slog-rs` is an ecosystem of reusable components for structured, extensible,
@@ -312,6 +311,9 @@ extern crate collections;
 #[cfg(feature = "std")]
 extern crate std;
 
+mod key;
+pub use self::key::Key;
+
 #[cfg(not(feature = "std"))]
 use alloc::arc::Arc;
 #[cfg(not(feature = "std"))]
@@ -320,7 +322,6 @@ use alloc::boxed::Box;
 use alloc::rc::Rc;
 #[cfg(not(feature = "std"))]
 use collections::string::String;
-
 
 use core::{convert, fmt, result};
 
@@ -336,6 +337,8 @@ use std::rc::Rc;
 use std::string::String;
 #[cfg(feature = "std")]
 use std::sync::Arc;
+#[cfg(feature = "std")]
+use std::borrow::Cow;
 // }}}
 
 // {{{ Macros
@@ -398,22 +401,22 @@ macro_rules! slog_b(
 #[macro_export]
 macro_rules! kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
-        kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); )
+        kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr) => {
-        kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); )
+        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
-        kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
+        kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $kv:expr) => {
         kv!(@ ($kv, $args_ready); )
@@ -436,22 +439,22 @@ macro_rules! kv(
 #[macro_export]
 macro_rules! slog_kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
-        slog_kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); )
+        slog_kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV($k, format_args!("{}", $v)), $args_ready); $($args)* )
+        slog_kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr) => {
-        kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); )
+        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV($k, format_args!("{:?}", $v)), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
-        slog_kv!(@ ($crate::SingleKV($k, $v), $args_ready); )
+        slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV($k, $v), $args_ready); $($args)* )
+        slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $slog_kv:expr) => {
         slog_kv!(@ ($slog_kv, $args_ready); )
@@ -651,7 +654,7 @@ macro_rules! slog_record(
 /// It's possible to directly specify type that implements `KV` trait without
 /// `=>` syntax.
 ///
-/// ```
+/// ```ignore
 /// #[macro_use]
 /// extern crate slog;
 ///
@@ -2228,7 +2231,7 @@ pub trait Serializer {
     impl_default_as_fmt!(f64, emit_f64);
     /// Emit str
     impl_default_as_fmt!(&str, emit_str);
-
+    
     /// Emit `()`
     fn emit_unit(&mut self, key: Key) -> Result {
         self.emit_arguments(key, &format_args!("()"))
@@ -2245,6 +2248,7 @@ pub trait Serializer {
     /// to retain type information most serious `Serializer`s will want to
     /// implement all other methods as well.
     fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result;
+
 }
 
 /// Serializer to closure adapter.
@@ -2264,10 +2268,6 @@ where
 }
 // }}}
 
-// {{{ Key
-/// Key type (alias for &'static str)
-pub type Key = &'static str;
-// }}}
 
 // {{{ Value
 /// Value that can be serialized
@@ -2498,7 +2498,7 @@ impl<'a> PushFnValueSerializer<'a> {
     /// This consumes `self` to prevent serializing one value multiple times
     pub fn emit<'b, S: 'b + Value>(mut self, s: S) -> Result {
         self.done = true;
-        s.serialize(self.record, self.key, self.serializer)
+        s.serialize(self.record, self.key.clone(), self.serializer)
     }
 }
 
@@ -2506,7 +2506,7 @@ impl<'a> Drop for PushFnValueSerializer<'a> {
     fn drop(&mut self) {
         if !self.done {
             // unfortunately this gives no change to return serialization errors
-            let _ = self.serializer.emit_unit(self.key);
+            let _ = self.serializer.emit_unit(self.key.clone());
         }
     }
 }
@@ -2635,6 +2635,25 @@ pub struct SingleKV<V>(pub Key, pub V)
 where
     V: Value;
 
+#[cfg(feature = "opaque-keys")]
+impl<V: Value> From<(String,V)> for SingleKV<V> {
+    fn from(x: (String,V)) -> SingleKV<V> {
+        SingleKV(Key::from(x.0),x.1)
+    }
+}
+#[cfg(feature = "opaque-keys")]
+impl<V: Value> From<(&'static str, V)> for SingleKV<V> {
+    fn from(x: (&'static str, V)) -> SingleKV<V> {
+        SingleKV(Key::from(x.0), x.1)
+    }
+}
+#[cfg(not(feature = "opaque-keys"))]
+impl<V: Value> From<(&'static str, V)> for SingleKV<V> {
+    fn from(x: (&'static str, V)) -> SingleKV<V> {
+        SingleKV(x.0, x.1)
+    }
+}
+
 
 impl<V> KV for SingleKV<V>
 where
@@ -2645,7 +2664,7 @@ where
         record: &Record,
         serializer: &mut Serializer,
     ) -> Result {
-        self.1.serialize(record, self.0, serializer)
+        self.1.serialize(record, self.0.clone(), serializer)
     }
 }
 
