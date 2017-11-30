@@ -2196,6 +2196,23 @@ macro_rules! impl_default_as_fmt{
     };
 }
 
+/// This is a workaround to be able to pass &mut Serializer, from
+/// `Serializer::emit_serde` default implementation. `&Self` can't be casted to
+/// `&Serializer` (without : Sized, which break object safety), but it can be
+/// used as <T: Serializer>.
+struct SerializerForward<'a, T: 'a+?Sized>(&'a mut T);
+
+impl<'a, T : Serializer+'a+?Sized> Serializer for SerializerForward<'a, T> {
+    fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result {
+        self.0.emit_arguments(key, val)
+    }
+
+    #[cfg(feature = "serde")]
+    fn emit_serde(&mut self, _key: Key, _value: &SerdeValue) -> Result {
+        panic!();
+    }
+}
+
 /// Serializer
 ///
 /// Drains using `Format` will internally use
@@ -2262,8 +2279,7 @@ pub trait Serializer {
     /// The value needs to implement `SerdeValue`.
     #[cfg(feature = "serde")]
     fn emit_serde(&mut self, key: Key, value: &SerdeValue) -> Result {
-        // value.serialize_fallback(key, self)
-        Err(Error::Other)
+        value.serialize_fallback(key, &mut SerializerForward(self))
     }
 }
 
@@ -2299,9 +2315,9 @@ pub trait SerdeValue : erased_serde::Serialize {
     /// Default implementation is provided, but it returns error, so use it
     /// only for internal types in systems and libraries where `serde` is always
     /// enabled.
-    // fn serialize_fallback(&self, _key: Key, _serializer: &mut Serializer) -> Result<()> {
-    //     Err(Error::Other)
-    // }
+    fn serialize_fallback(&self, _key: Key, _serializer: &mut Serializer) -> Result<()> {
+         Err(Error::Other)
+    }
 
     /// Convert to `erased_serialize::Serialize` of the underlying value,
     /// so `slog::Serializer`s can use it to serialize via `serde`.
