@@ -44,7 +44,6 @@ release_max_level_debug = []
 release_max_level_trace = []
 
 [dependencies]
-#serde = { version = "1", optional = true }
 erased-serde = { version = "0.3", optional = true }
 
 [dev-dependencies]
