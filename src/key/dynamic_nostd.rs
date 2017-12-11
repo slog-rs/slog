@@ -2,6 +2,7 @@
 use alloc::String;
 use alloc::borrow::Cow;
 use alloc::Clone;
+use alloc::string::ToString;
 
 use core::convert::{From,Into,AsRef};
 use core::ops::Deref;
@@ -15,29 +16,26 @@ use core::fmt;
 ///
 /// It is owned, and largely forms a contract for
 /// key to follow.
+#[derive(Clone)]
 pub struct Key {
     data: Cow<'static, str>
 }
+
 impl Key {
 
-    pub fn as_str<'a>(&'a self) -> &'a str {
+    pub fn len(&self) -> usize {
+        self.data.len()
+    }
+
+    pub fn as_str(&self) -> &str {
         self.data.as_ref()
     }
 
-    pub fn into_string(&self) -> String {
-        match &self.data {
-            &Cow::Borrowed(ptr) => String::from(ptr),
-            &Cow::Owned(ref ptr) => ptr.clone()
-        }
-    }
-
-    pub fn into_owned(&self) -> String {
-        match &self.data {
-            &Cow::Borrowed(ptr) => String::from(ptr),
-            &Cow::Owned(ref ptr) => ptr.clone()
-        }
+    pub fn as_ref(&self) -> &str {
+        self.as_str()
     }
 }
+
 impl Default for Key {
     fn default() -> Key {
         Key {
@@ -45,6 +43,7 @@ impl Default for Key {
         }
     }
 }
+
 impl Hash for Key {
     fn hash<H: Hasher>(&self, state: &mut H) {
         match self.data {
@@ -53,14 +52,7 @@ impl Hash for Key {
         }
     }
 }
-impl Clone for Key {
-    fn clone(&self) -> Key {
-        match self.data {
-            Cow::Borrowed(ptr) => Key::from(ptr)
-            Cow::Owned(ref ptr) => Key::from(ptr.clone())
-        }
-    }
-}
+
 impl From<&'static str> for Key {
     #[inline(always)]
     fn from(data: &'static str) -> Key {
@@ -69,6 +61,7 @@ impl From<&'static str> for Key {
         }
     }
 }
+
 impl From<String> for Key {
     #[inline(always)]
     fn from(data: String) -> Key {
@@ -77,12 +70,7 @@ impl From<String> for Key {
         }
     }
 }
-impl Into<String> for Key {
-    #[inline(always)]
-    fn into(self) -> String {
-        self.data.into_owned()
-    }
-}
+
 impl FromIterator<char> for Key {
     fn from_iter<I: IntoIterator<Item=char>>(iter: I) -> Key {
         Key {
@@ -90,6 +78,7 @@ impl FromIterator<char> for Key {
         }
     }
 }
+
 impl<'a> FromIterator<&'a char> for Key {
     fn from_iter<I: IntoIterator<Item=&'a char>>(iter: I) -> Key {
         Key {
@@ -97,6 +86,7 @@ impl<'a> FromIterator<&'a char> for Key {
         }
     }
 }
+
 impl FromIterator<String> for Key {
     fn from_iter<I: IntoIterator<Item=String>>(iter: I) -> Key {
         Key {
@@ -104,6 +94,7 @@ impl FromIterator<String> for Key {
         }
     }
 }
+
 impl<'a> FromIterator<&'a String> for Key {
     fn from_iter<I: IntoIterator<Item=&'a String>>(iter: I) -> Key {
         Key {
@@ -111,6 +102,7 @@ impl<'a> FromIterator<&'a String> for Key {
         }
     }
 }
+
 impl<'a> FromIterator<&'a str> for Key {
     fn from_iter<I: IntoIterator<Item=&'a str>>(iter: I) -> Key {
         Key {
@@ -118,6 +110,7 @@ impl<'a> FromIterator<&'a str> for Key {
         }
     }
 }
+
 impl<'a> FromIterator<Cow<'a,str>> for Key {
     fn from_iter<I: IntoIterator<Item=Cow<'a,str>>>(iter: I) -> Key {
         Key {
@@ -125,18 +118,21 @@ impl<'a> FromIterator<Cow<'a,str>> for Key {
         }
     }
 }
+
 impl PartialEq<str> for Key {
     #[inline(always)]
     fn eq(&self, other: &str) -> bool {
         self.as_ref().eq(other)
     }
 }
+
 impl PartialEq<String> for Key {
     #[inline(always)]
     fn eq(&self, other: &String) -> bool {
         self.as_ref().eq(other.as_str())
     }
 }
+
 impl PartialEq<Self> for Key {
     #[inline(always)]
     fn eq(&self, other: &Self) -> bool {

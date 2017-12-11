@@ -655,7 +655,7 @@ macro_rules! slog_record(
 /// It's possible to directly specify type that implements `KV` trait without
 /// `=>` syntax.
 ///
-/// ```ignore
+/// ```
 /// #[macro_use]
 /// extern crate slog;
 ///
