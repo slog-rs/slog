@@ -340,8 +340,6 @@ use std::rc::Rc;
 use std::string::String;
 #[cfg(feature = "std")]
 use std::sync::Arc;
-#[cfg(feature = "opaque-keys")]
-use std::borrow::Cow;
 // }}}
 
 // {{{ Macros
