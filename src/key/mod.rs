@@ -1,16 +1,15 @@
 
-#[cfg(all(feature = "opaque-keys", feature = "std"))]
-mod opaque_key_std;
-#[cfg(all(feature = "opaque-keys", feature = "std"))]
-pub use self::opaque_key_std::Key;
+#[cfg(all(feature = "dynamic-keys", feature = "std"))]
+mod dynamic_std;
+#[cfg(all(feature = "dynamic-keys", feature = "std"))]
+pub use self::dynamic_std::Key;
 
-#[cfg(not(feature = "opaque-keys"))]
-mod old_key;
-#[cfg(not(feature = "opaque-keys"))]
-pub use self::old_key::Key;
+#[cfg(not(feature = "dynamic-keys"))]
+mod static_key;
+#[cfg(not(feature = "dynamic-keys"))]
+pub use self::static_key::Key;
 
-#[cfg(all(feature = "opaque-keys", not(feature = "std")))]
-mod opaque_key_nostd;
-#[cfg(all(feature = "opaque-keys", not(feature = "std")))]
-pub use self::opaque_key_nostd::Key;
-
+#[cfg(all(feature = "dynamic-keys", not(feature = "std")))]
+mod dynamic_nostd;
+#[cfg(all(feature = "dynamic-keys", not(feature = "std")))]
+pub use self::dynamic_nostd::Key;

@@ -2700,19 +2700,19 @@ pub struct SingleKV<V>(pub Key, pub V)
 where
     V: Value;
 
-#[cfg(feature = "opaque-keys")]
+#[cfg(feature = "dynamic-keys")]
 impl<V: Value> From<(String,V)> for SingleKV<V> {
     fn from(x: (String,V)) -> SingleKV<V> {
         SingleKV(Key::from(x.0),x.1)
     }
 }
-#[cfg(feature = "opaque-keys")]
+#[cfg(feature = "dynamic-keys")]
 impl<V: Value> From<(&'static str, V)> for SingleKV<V> {
     fn from(x: (&'static str, V)) -> SingleKV<V> {
         SingleKV(Key::from(x.0), x.1)
     }
 }
-#[cfg(not(feature = "opaque-keys"))]
+#[cfg(not(feature = "dynamic-keys"))]
 impl<V: Value> From<(&'static str, V)> for SingleKV<V> {
     fn from(x: (&'static str, V)) -> SingleKV<V> {
         SingleKV(x.0, x.1)
