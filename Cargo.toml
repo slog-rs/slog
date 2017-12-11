@@ -47,7 +47,7 @@ release_max_level_trace = []
 erased-serde = { version = "0.3", optional = true }
 
 [dev-dependencies]
-slog-term = { git = 'https://github.com/valarauca/term', branch = 'opaque_keys'}
+slog-term = "2"
 slog-async = "2"
 
 [package.metadata.docs.rs]
