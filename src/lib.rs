@@ -322,7 +322,7 @@ use alloc::rc::Rc;
 #[cfg(not(feature = "std"))]
 use collections::string::String;
 
-#[cfg(feature = "serde")]
+#[cfg(feature = "nested-values")]
 extern crate erased_serde;
 
 use core::{convert, fmt, result};
@@ -2200,14 +2200,16 @@ macro_rules! impl_default_as_fmt{
 /// `Serializer::emit_serde` default implementation. `&Self` can't be casted to
 /// `&Serializer` (without : Sized, which break object safety), but it can be
 /// used as <T: Serializer>.
+#[cfg(feature = "nested-values")]
 struct SerializerForward<'a, T: 'a+?Sized>(&'a mut T);
 
+#[cfg(feature = "nested-values")]
 impl<'a, T : Serializer+'a+?Sized> Serializer for SerializerForward<'a, T> {
     fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result {
         self.0.emit_arguments(key, val)
     }
 
-    #[cfg(feature = "serde")]
+    #[cfg(feature = "nested-values")]
     fn emit_serde(&mut self, _key: Key, _value: &SerdeValue) -> Result {
         panic!();
     }
@@ -2277,7 +2279,7 @@ pub trait Serializer {
     /// `serde` feature flag.
     ///
     /// The value needs to implement `SerdeValue`.
-    #[cfg(feature = "serde")]
+    #[cfg(feature = "nested-values")]
     fn emit_serde(&mut self, key: Key, value: &SerdeValue) -> Result {
         value.serialize_fallback(key, &mut SerializerForward(self))
     }
@@ -2304,7 +2306,7 @@ where
 /// A value that can be serialized via serde
 ///
 /// This is useful for implementing nested values, like sequences or structures.
-#[cfg(feature = "serde")]
+#[cfg(feature = "nested-values")]
 pub trait SerdeValue : erased_serde::Serialize {
     /// Serialize the value in a way that is compatible with `slog::Serializer`s
     /// that do not support serde.
