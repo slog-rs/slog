@@ -2292,7 +2292,7 @@ where
 ///
 /// This is useful for implementing nested values, like sequences or structures.
 #[cfg(feature = "nested-values")]
-pub trait SerdeValue: erased_serde::Serialize {
+pub trait SerdeValue: erased_serde::Serialize + Value {
     /// Serialize the value in a way that is compatible with `slog::Serializer`s
     /// that do not support serde.
     ///
