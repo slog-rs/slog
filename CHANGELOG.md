@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 2.1.0 - 2017-12-10
 ### Added
 
-* Support for nested-values through `emit_serde`, behind `nested-values` feature flag
-  disabled by default for backward compatibility. **Note**: Consider unstable.
+* Support for nested-values through `emit_serde`, behind `nested-values` feature flag,
+  disabled by default for backward compatibility. **Note**: Consider unstable for the time
+  being.
+* Support for dynamic key (`String` vs `&'static str`), behind `dynamic-keys` feature
+  flag, disabled by default for backward compatibility. **Note**: Consider unstable for
+  the time being.
 
 ## 2.0.12 - 2017-09-14
 ### Changed
