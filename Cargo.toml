@@ -50,8 +50,5 @@ erased-serde = { version = "0.3", optional = true }
 slog-term = { git = 'https://github.com/valarauca/term', branch = 'opaque_keys'}
 slog-async = "2"
 
-[patch.crates-io]
-slog = { path = "." }
-
 [package.metadata.docs.rs]
 features = ["std", "nested-values", "dynamic-keys"]
