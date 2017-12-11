@@ -313,7 +313,6 @@ extern crate std;
 
 mod key;
 pub use self::key::Key;
-
 #[cfg(not(feature = "std"))]
 use alloc::arc::Arc;
 #[cfg(not(feature = "std"))]
@@ -327,9 +326,7 @@ use collections::string::String;
 extern crate erased_serde;
 
 use core::{convert, fmt, result};
-
 use core::str::FromStr;
-
 #[cfg(feature = "std")]
 use std::boxed::Box;
 #[cfg(feature = "std")]
@@ -386,7 +383,6 @@ macro_rules! b(
         $crate::BorrowedKV(&kv!($($args)*))
     };
 );
-
 
 /// Alias of `b`
 #[macro_export]
@@ -539,7 +535,6 @@ macro_rules! slog_record(
         $crate::Record::new(&RS, $args, $b)
     }};
 );
-
 
 /// Log message a logging record
 ///
@@ -849,7 +844,6 @@ macro_rules! slog_error(
     };
 );
 
-
 /// Log warning level record
 ///
 /// See `log` for documentation.
@@ -936,7 +930,6 @@ macro_rules! slog_debug(
         slog_log!($l, $crate::Level::Debug, "", $($args)+)
     };
 );
-
 
 /// Log trace level record
 ///
@@ -1052,8 +1045,8 @@ where
         T: SendSyncRefUnwindSafeKV + 'static,
     {
         Logger {
-            drain: Arc::new(drain) as
-                Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
+            drain: Arc::new(drain)
+                as Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
             list: OwnedKVList::root(values),
         }
     }
@@ -1156,8 +1149,8 @@ where
         D: SendRefUnwindSafeDrain + 'static,
     {
         Logger {
-            drain: Arc::new(self.drain) as
-                Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
+            drain: Arc::new(self.drain)
+                as Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
             list: self.list,
         }
     }
@@ -1270,7 +1263,6 @@ pub trait Drain {
         f(self)
     }
 
-
     /// Filter logging records passed to `Drain`
     ///
     /// Wrap `Self` in `Filter`
@@ -1346,7 +1338,6 @@ where
 {
 }
 
-
 #[cfg(feature = "std")]
 /// `Drain + Send + Sync + UnwindSafe` bound
 ///
@@ -1384,7 +1375,13 @@ pub trait MapErrFn<EI, EO>
 #[cfg(feature = "std")]
 impl<T, EI, EO> MapErrFn<EI, EO> for T
 where
-    T: 'static + Sync + Send + ?Sized + UnwindSafe + RefUnwindSafe + Fn(EI) -> EO,
+    T: 'static
+        + Sync
+        + Send
+        + ?Sized
+        + UnwindSafe
+        + RefUnwindSafe
+        + Fn(EI) -> EO,
 {
 }
 
@@ -1435,7 +1432,6 @@ where
 {
 }
 
-
 #[cfg(feature = "std")]
 /// `Drain + Send + RefUnwindSafe` bound
 pub trait SendRefUnwindSafeDrain: Drain + Send + RefUnwindSafe {}
@@ -1446,7 +1442,6 @@ where
     T: Drain + Send + RefUnwindSafe + ?Sized,
 {
 }
-
 
 #[cfg(not(feature = "std"))]
 /// `Drain + Send + RefUnwindSafe` bound
@@ -1592,8 +1587,6 @@ impl<D: Drain> Drain for LevelFilter<D> {
     }
 }
 
-
-
 /// `Drain` mapping error returned by another `Drain`
 ///
 /// See `Drain::map_err` for convenience function.
@@ -1636,7 +1629,6 @@ impl<D: Drain, E> Drain for MapError<D, E> {
 #[derive(Debug, Clone)]
 pub struct Duplicate<D1: Drain, D2: Drain>(pub D1, pub D2);
 
-
 impl<D1: Drain, D2: Drain> Duplicate<D1, D2> {
     /// Create `Duplicate`
     pub fn new(drain1: D1, drain2: D2) -> Self {
@@ -1664,7 +1656,6 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
         }
     }
 }
-
 
 /// `Drain` panicking on error
 ///
@@ -1706,7 +1697,6 @@ where
     }
 }
 
-
 /// `Drain` ignoring result
 ///
 /// `Logger` requires a root drain to handle all errors (`Drain::Err=()`), and
@@ -1736,7 +1726,6 @@ impl<D: Drain> Drain for IgnoreResult<D> {
         Ok(())
     }
 }
-
 
 /// Error returned by `Mutex<D : Drain>`
 #[cfg(feature = "std")]
@@ -1833,7 +1822,6 @@ pub static LOG_LEVEL_NAMES: [&'static str; 7] =
 /// In order of `as_usize()`.
 pub static LOG_LEVEL_SHORT_NAMES: [&'static str; 7] =
     ["OFF", "CRIT", "ERRO", "WARN", "INFO", "DEBG", "TRCE"];
-
 
 /// Logging level associated with a logging `Record`
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
@@ -1954,7 +1942,6 @@ impl FilterLevel {
         FilterLevel::Trace
     }
 
-
     /// Minimum logging level (log nothing)
     #[inline]
     pub fn min() -> Self {
@@ -1995,8 +1982,8 @@ impl FromStr for Level {
             .position(|&name| {
                 name.as_bytes().iter().zip(level.as_bytes().iter()).all(
                     |(a, b)| {
-                        ASCII_LOWERCASE_MAP[*a as usize] ==
-                            ASCII_LOWERCASE_MAP[*b as usize]
+                        ASCII_LOWERCASE_MAP[*a as usize]
+                            == ASCII_LOWERCASE_MAP[*b as usize]
                     },
                 )
             })
@@ -2013,8 +2000,8 @@ impl FromStr for FilterLevel {
             .position(|&name| {
                 name.as_bytes().iter().zip(level.as_bytes().iter()).all(
                     |(a, b)| {
-                        ASCII_LOWERCASE_MAP[*a as usize] ==
-                            ASCII_LOWERCASE_MAP[*b as usize]
+                        ASCII_LOWERCASE_MAP[*a as usize]
+                            == ASCII_LOWERCASE_MAP[*b as usize]
                     },
                 )
             })
@@ -2100,7 +2087,6 @@ pub struct Record<'a> {
     msg: &'a fmt::Arguments<'a>,
     kv: BorrowedKV<'a>,
 }
-
 
 impl<'a> Record<'a> {
     /// Create a new `Record`
@@ -2202,10 +2188,10 @@ macro_rules! impl_default_as_fmt{
 /// `&Serializer` (without : Sized, which break object safety), but it can be
 /// used as <T: Serializer>.
 #[cfg(feature = "nested-values")]
-struct SerializerForward<'a, T: 'a+?Sized>(&'a mut T);
+struct SerializerForward<'a, T: 'a + ?Sized>(&'a mut T);
 
 #[cfg(feature = "nested-values")]
-impl<'a, T : Serializer+'a+?Sized> Serializer for SerializerForward<'a, T> {
+impl<'a, T: Serializer + 'a + ?Sized> Serializer for SerializerForward<'a, T> {
     fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result {
         self.0.emit_arguments(key, val)
     }
@@ -2251,7 +2237,7 @@ pub trait Serializer {
     impl_default_as_fmt!(f64, emit_f64);
     /// Emit str
     impl_default_as_fmt!(&str, emit_str);
-    
+
     /// Emit `()`
     fn emit_unit(&mut self, key: Key) -> Result {
         self.emit_arguments(key, &format_args!("()"))
@@ -2261,7 +2247,6 @@ pub trait Serializer {
     fn emit_none(&mut self, key: Key) -> Result {
         self.emit_arguments(key, &format_args!(""))
     }
-
 
     /// Emit `fmt::Arguments`
     ///
@@ -2307,7 +2292,7 @@ where
 ///
 /// This is useful for implementing nested values, like sequences or structures.
 #[cfg(feature = "nested-values")]
-pub trait SerdeValue : erased_serde::Serialize {
+pub trait SerdeValue: erased_serde::Serialize {
     /// Serialize the value in a way that is compatible with `slog::Serializer`s
     /// that do not support serde.
     ///
@@ -2317,14 +2302,17 @@ pub trait SerdeValue : erased_serde::Serialize {
     /// Default implementation is provided, but it returns error, so use it
     /// only for internal types in systems and libraries where `serde` is always
     /// enabled.
-    fn serialize_fallback(&self, _key: Key, _serializer: &mut Serializer) -> Result<()> {
-         Err(Error::Other)
+    fn serialize_fallback(
+        &self,
+        _key: Key,
+        _serializer: &mut Serializer,
+    ) -> Result<()> {
+        Err(Error::Other)
     }
 
     /// Convert to `erased_serialize::Serialize` of the underlying value,
     /// so `slog::Serializer`s can use it to serialize via `serde`.
     fn as_serde(&self) -> &erased_serde::Serialize;
-
 
     /// Convert to a boxed value that can be sent across threads
     ///
@@ -2402,7 +2390,6 @@ impl Value for () {
         serializer.emit_unit(key)
     }
 }
-
 
 impl Value for str {
     fn serialize(
@@ -2506,13 +2493,13 @@ where
     }
 }
 
-impl<'a> Value for std::path::Display<'a>
-{
-    fn serialize(&self,
-                 _record: &Record,
-                 key: Key,
-                 serializer: &mut Serializer)
-                 -> Result {
+impl<'a> Value for std::path::Display<'a> {
+    fn serialize(
+        &self,
+        _record: &Record,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
         serializer.emit_arguments(key, &format_args!("{}", *self))
     }
 }
@@ -2613,11 +2600,13 @@ impl<'a> Drop for PushFnValueSerializer<'a> {
 /// ```
 pub struct PushFnValue<F>(pub F)
 where
-    F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnValueSerializer<'c>) -> Result;
+    F: 'static
+        + for<'c, 'd> Fn(&'c Record<'d>, PushFnValueSerializer<'c>) -> Result;
 
 impl<F> Value for PushFnValue<F>
 where
-    F: 'static + for<'c, 'd> Fn(&'c Record<'d>, PushFnValueSerializer<'c>) -> Result,
+    F: 'static
+        + for<'c, 'd> Fn(&'c Record<'d>, PushFnValueSerializer<'c>) -> Result,
 {
     fn serialize(
         &self,
@@ -2694,16 +2683,15 @@ where
 {
 }
 
-
 /// Single pair `Key` and `Value`
 pub struct SingleKV<V>(pub Key, pub V)
 where
     V: Value;
 
 #[cfg(feature = "dynamic-keys")]
-impl<V: Value> From<(String,V)> for SingleKV<V> {
-    fn from(x: (String,V)) -> SingleKV<V> {
-        SingleKV(Key::from(x.0),x.1)
+impl<V: Value> From<(String, V)> for SingleKV<V> {
+    fn from(x: (String, V)) -> SingleKV<V> {
+        SingleKV(Key::from(x.0), x.1)
     }
 }
 #[cfg(feature = "dynamic-keys")]
@@ -2719,7 +2707,6 @@ impl<V: Value> From<(&'static str, V)> for SingleKV<V> {
     }
 }
 
-
 impl<V> KV for SingleKV<V>
 where
     V: Value,
@@ -2732,7 +2719,6 @@ where
         self.1.serialize(record, self.0.clone(), serializer)
     }
 }
-
 
 impl KV for () {
     fn serialize(
@@ -2859,13 +2845,11 @@ struct MultiListNode {
     node: Arc<SendSyncRefUnwindSafeKV + 'static>,
 }
 
-
 /// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
 #[derive(Clone)]
 pub struct OwnedKVList {
     node: Arc<SendSyncRefUnwindSafeKV + 'static>,
 }
-
 
 impl<T> KV for OwnedKVListNode<T>
 where
@@ -2907,7 +2891,6 @@ impl KV for OwnedKVList {
         Ok(())
     }
 }
-
 
 impl fmt::Debug for OwnedKVList {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -3134,8 +3117,6 @@ pub fn __slog_static_max_level() -> FilterLevel {
         }
     }
 }
-
-
 
 // }}}
 

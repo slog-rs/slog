@@ -18,7 +18,6 @@ mod no_imports {
 #[cfg(feature = "std")]
 mod std_only {
     use super::super::*;
-
     use std;
 
     #[test]
@@ -28,7 +27,6 @@ mod std_only {
 
         assert_eq!(format!("{:?}", log), "Logger(c, b, a)");
     }
-
 
     #[test]
     fn multichain() {
@@ -78,7 +76,6 @@ fn expressions() {
     struct X {
         foo: Foo,
     }
-
 
     let log = Logger::root(Discard, o!("version" => env!("CARGO_PKG_VERSION")));
 

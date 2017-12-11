@@ -1,4 +1,25 @@
-
+#[cfg(not(feature = "std"))]
+use alloc::Clone;
+#[cfg(not(feature = "std"))]
+use alloc::String;
+#[cfg(not(feature = "std"))]
+use alloc::borrow::Cow;
+#[cfg(not(feature = "std"))]
+use alloc::string::ToString;
+#[cfg(not(feature = "std"))]
+use core::cmp::PartialEq;
+#[cfg(not(feature = "std"))]
+use core::convert::{AsRef, From, Into};
+#[cfg(not(feature = "std"))]
+use core::fmt;
+#[cfg(not(feature = "std"))]
+use core::hash::{Hash, Hasher};
+#[cfg(not(feature = "std"))]
+use core::iter::{FromIterator, IntoIterator};
+#[cfg(not(feature = "std"))]
+use core::ops::Deref;
+#[cfg(not(feature = "std"))]
+use core::str::FromStr;
 #[cfg(feature = "std")]
 use std::borrow::Cow;
 #[cfg(feature = "std")]
@@ -15,31 +36,6 @@ use std::iter::{FromIterator, IntoIterator};
 use std::string::String;
 #[cfg(feature = "std")]
 use std::string::ToString;
-
-#[cfg(not(feature = "std"))]
-use alloc::String;
-#[cfg(not(feature = "std"))]
-use alloc::borrow::Cow;
-#[cfg(not(feature = "std"))]
-use alloc::Clone;
-#[cfg(not(feature = "std"))]
-use alloc::string::ToString;
-
-#[cfg(not(feature = "std"))]
-use core::convert::{From,Into,AsRef};
-#[cfg(not(feature = "std"))]
-use core::ops::Deref;
-#[cfg(not(feature = "std"))]
-use core::str::FromStr;
-#[cfg(not(feature = "std"))]
-use core::cmp::PartialEq;
-#[cfg(not(feature = "std"))]
-use core::hash::{Hash,Hasher};
-#[cfg(not(feature = "std"))]
-use core::iter::{FromIterator, IntoIterator};
-#[cfg(not(feature = "std"))]
-use core::fmt;
-
 
 /// Opaque Key is a representation of a key.
 ///
