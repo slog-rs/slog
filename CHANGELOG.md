@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.1.0 - 2017-12-10
+### Added
+
+* Support for nested-values through `emit_serde`, behind `nested-values` feature flag
+  disabled by default for backward compatibility. **Note**: Consider unstable.
+
 ## 2.0.12 - 2017-09-14
 ### Changed
 
