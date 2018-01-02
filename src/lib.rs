@@ -2323,7 +2323,28 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
 // }}}
 
 // {{{ Value
-/// Value that can be serialized
+/// # Value that can be serialized
+///
+/// Types that implement this type implement custome serialization in the
+/// structured part of the log macros. Without an implementation of `Value` for
+/// your type you must emit using either the `?` "debug", `%` "display" or
+/// [`SerdeValue`](trait.SerdeValue.html) (if you have the `nested-values`
+/// feature enabled) formatters.
+///
+/// # Example
+///
+/// ```
+/// use slog::{Key, Value, Record, Result, Serializer};
+/// struct MyNewType(i64);
+///
+/// impl Value for MyNewType {
+///     fn serialize(&self, _rec: &Record, key: Key, serializer: &mut Serializer) -> Result {
+///         serializer.emit_i64(key, self.0)
+///     }
+/// }
+/// ```
+///
+/// See also [`KV`](trait.KV.html) for formatting both the key and value.
 pub trait Value {
     /// Serialize self into `Serializer`
     ///
@@ -2626,17 +2647,56 @@ where
 // }}}
 
 // {{{ KV
-/// Key-value pair(s)
+/// # Key-value pair(s) for log events
 ///
 /// Zero, one or more key value pairs chained together
 ///
-/// Any logging data must implement this trait for
-/// slog to be able to use it.
+/// Any logging data must implement this trait for slog to be able to use it,
+/// although slog comes with default implementations within its macros (the
+/// `=>` and `kv!` portions of the log macros).
 ///
-/// Types implementing this trait can emit multiple key-value pairs. The order
-/// of emitting them should be consistent with the way key-value pair hierarchy
-/// is traversed: from data most specific to the logging context to the most
-/// general one. Or in other words: from newest to oldest.
+/// If you don't use this trait, you must emit your structured data by
+/// specifying both key and value in each log event:
+///
+/// ```ignore
+/// info!(logger, "my event"; "type_key" => %my_val);
+/// ```
+///
+/// If you implement this trait, that can become:
+///
+/// ```ignore
+/// info!(logger, "my event"; my_val);
+/// ```
+///
+/// Types implementing this trait can emit multiple key-value pairs, and can
+/// customize their structured representation. The order of emitting them
+/// should be consistent with the way key-value pair hierarchy is traversed:
+/// from data most specific to the logging context to the most general one. Or
+/// in other words: from newest to oldest.
+///
+/// Implementers are are responsible for calling the `emit_*` methods on the
+/// `Serializer` passed in, the `Record` can be used to make display decisions
+/// based on context, but for most plain-value structs you will just call
+/// `emit_*`.
+///
+/// # Example
+///
+/// ```
+/// use slog::{KV, Record, Result, Serializer};
+///
+/// struct MyNewType(i64);
+///
+/// impl KV for MyNewType {
+///    fn serialize(&self, _rec: &Record, serializer: &mut Serializer) -> Result {
+///        serializer.emit_i64("my_new_type", self.0)
+///    }
+/// }
+/// ```
+///
+/// See also [`Value`](trait.Value.html), which allows you to customize just
+/// the right hand side of the `=>` structure macro, and (if you have the
+/// `nested-values` feature enabled) [`SerdeValue`](trait.SerdeValue.html)
+/// which allows emitting anything serde can emit.
 pub trait KV {
     /// Serialize self into `Serializer`
     ///
