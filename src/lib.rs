@@ -716,10 +716,8 @@ macro_rules! slog_record(
 /// }
 /// ```
 #[macro_export]
-// may God have mercy upon my soul, as I am macro sinner --dpc
-// if you plan to modify something here, you probably want to rethink it from
-// scratch; the biggest source of duplication are needless/trailing ',' and ';' handling
 macro_rules! log(
+    // `2` means that `;` was already found
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
       $l.log(&record!($lvl, $tag, &format_args!($msg_fmt, $($fmt)*), b!($($kv)*)))
    };
@@ -729,80 +727,42 @@ macro_rules! log(
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr;) => {
        log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
    };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, ; $($args:tt)*) => {
-       log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $($args:tt)*) => {
+       log!(2 @ { $($fmt)* }, { $($kv)* $($args)*}, $l, $lvl, $tag, $msg_fmt)
    };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; ; $($args:tt)*) => {
-       log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:expr => $v:expr) => {
-       log!(2 @ { $($fmt)* }, { $($kv)* $k => $v }, $l, $lvl, $tag, $msg_fmt)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; $k:expr => $v:expr) => {
-       log!(2 @ { $($fmt)* }, { $($kv)* $k => $v }, $l, $lvl, $tag, $msg_fmt)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:expr => $v:expr, $($args:tt)*) => {
-       log!(2 @ { $($fmt)* }, { $($kv)* $k => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:expr => $v:expr; $($args:tt)*) => {
-       log!(2 @ { $($fmt)* }, { $($kv)* $k => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; $k:expr => $v:expr, $($args:tt)*) => {
-       log!(2 @ { $($fmt)* }, { $($kv)* $k => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; $k:expr => $v:expr; $($args:tt)*) => {
-       log!(2 @ { $($fmt)* }, { $($kv)* $k => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $($t:tt)*) => {
-       log!(2 @ { $($fmt)* }, { $($kv)* $($t)*}, $l, $lvl, $tag, $msg_fmt)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $t:tt, $($args:tt)*) => {
-       log!(2 @ { $($fmt)* }, { $($kv)* $t,}, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
+    // `1` means that we are still looking for `;`
+    // -- handle named arguments to format string
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr) => {
-       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; stringify!($k) => $v)
+       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr;) => {
-       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; stringify!($k) => $v)
+       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr,) => {
-       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; stringify!($k) => $v)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr; , $($args:tt)*) => {
-       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*; stringify!($k) => $v)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr , ;) => {
-       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; stringify!($k) => $v)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr , ; $($args:tt)*) => {
-       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; $($args)*; stringify!($k) => $v)
+       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr; $($args:tt)*) => {
-       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; $($args)*; stringify!($k) => $v)
+       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr, $($args:tt)*) => {
-       log!(1 @ { $($fmt)* $k = $v, }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*; stringify!($k) => $v)
+       log!(1 @ { $($fmt)* $k = $v, }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+   };
+    // -- look for `;` termination
+   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
+       log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
+   };
+   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
+       log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, ; $($args:tt)*) => {
        log!(1 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; $($args)*)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $f:tt $($args:tt)*) => {
-       log!(1 @ { $($fmt)* $f }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; $($args:tt)*) => {
        log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; ; $($args:tt)*) => {
-       log!(1 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; $($args)*)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, ; $($args:tt)*) => {
-       log!(1 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; $($args)*)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
-       log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt,)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-       log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt,)
+    // -- must be normal argument to format string
+   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $f:tt $($args:tt)*) => {
+       log!(1 @ { $($fmt)* $f }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
    ($l:expr, $lvl:expr, $tag:expr, $($args:tt)*) => {
        if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
@@ -830,6 +790,7 @@ macro_rules! log(
 /// ```
 #[macro_export]
 macro_rules! slog_log(
+    // `2` means that `;` was already found
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
       $l.log(&slog_record!($lvl, $tag, &format_args!($msg_fmt, $($fmt)*), slog_b!($($kv)*)))
    };
@@ -839,80 +800,42 @@ macro_rules! slog_log(
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr;) => {
        slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
    };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, ; $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $($args:tt)*) => {
+       slog_log!(2 @ { $($fmt)* }, { $($kv)* $($args)*}, $l, $lvl, $tag, $msg_fmt)
    };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; ; $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:expr => $v:expr) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* $k => $v }, $l, $lvl, $tag, $msg_fmt)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; $k:expr => $v:expr) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* $k => $v }, $l, $lvl, $tag, $msg_fmt)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:expr => $v:expr, $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* $k => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:expr => $v:expr; $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* $k => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; $k:expr => $v:expr, $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* $k => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; $k:expr => $v:expr; $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* $k => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $($t:tt)*) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* $($t)*}, $l, $lvl, $tag, $msg_fmt)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $t:tt, $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* $t,}, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
+    // `1` means that we are still looking for `;`
+    // -- handle named arguments to format string
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; stringify!($k) => $v)
+       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr;) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; stringify!($k) => $v)
+       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr,) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; stringify!($k) => $v)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr; , $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*; stringify!($k) => $v)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr , ;) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; stringify!($k) => $v)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr , ; $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; $($args)*; stringify!($k) => $v)
+       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr; $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; $($args)*; stringify!($k) => $v)
+       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr, $($args:tt)*) => {
-       slog_log!(1 @ { $($fmt)* $k = $v, }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*; stringify!($k) => $v)
+       slog_log!(1 @ { $($fmt)* $k = $v, }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+   };
+    // -- look for `;` termination
+   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
+       slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
+   };
+   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
+       slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, ; $($args:tt)*) => {
        slog_log!(1 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; $($args)*)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $f:tt $($args:tt)*) => {
-       slog_log!(1 @ { $($fmt)* $f }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; $($args:tt)*) => {
        slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; ; $($args:tt)*) => {
-       slog_log!(1 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; $($args)*)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, ; $($args:tt)*) => {
-       slog_log!(1 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; $($args)*)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt,)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt,)
+    // -- must be normal argument to format string
+   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $f:tt $($args:tt)*) => {
+       slog_log!(1 @ { $($fmt)* $f }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
    ($l:expr, $lvl:expr, $tag:expr, $($args:tt)*) => {
        if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {

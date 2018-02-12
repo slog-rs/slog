@@ -24,4 +24,5 @@ fn main() {
     info!(log, "foo is {foo} {bar} {baz}", bar = 3, foo = 2, baz = 4;);
     info!(log, "foo is {foo} {bar} {baz}", bar=3, foo = 2, baz=4);
     info!(log, "foo is {foo} {bar} {baz}", bar=3, foo = 2, baz=4,);
+    info!(log, "{first} {third} {second}", first = 1, second = 2, third=3; "forth" => 4, "fifth" => 5);
 }
