@@ -42,6 +42,8 @@
 //!   * async IO support included: see [`slog-async`
 //!     crate](https://docs.rs/slog-async)
 //! * `#![no_std]` support (with opt-out `std` cargo feature flag)
+//! * support for named format arguments (eg. `info!(logger, "printed {line_count} lines", line_count = 2);`)
+//!   for easy bridging the human readable and machine-readable output
 //! * tree-structured loggers
 //! * modular, lightweight and very extensible
 //!   * tiny core crate that does not pull any dependencies
