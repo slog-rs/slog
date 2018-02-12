@@ -580,7 +580,7 @@ macro_rules! slog_record(
 /// }
 /// ```
 ///
-/// ### `fmt::Arguments` support:
+/// ### Formatting support:
 ///
 /// ```
 /// #[macro_use]
@@ -591,13 +591,17 @@ macro_rules! slog_record(
 ///     let root = slog::Logger::root(drain,
 ///         o!("key1" => "value1", "key2" => "value2")
 ///     );
-///     info!(root, "formatted: {}", 1; "log-key" => true);
+///     info!(root, "formatted {num_entries} entries of {}", "something", num_entries = 2; "log-key" => true);
 /// }
 /// ```
 ///
-/// Note that that `;` separates formatting string from key value pairs.
+/// Note:
 ///
-/// Again, `"key" => value` part is optional:
+/// * `;` is used to separate message arguments and key value pairs.
+/// * message behaves like `format!`/`format_args!`
+/// * Named arguments to messages will be added to key-value pairs as well!
+///
+/// `"key" => value` part is optional:
 ///
 /// ```
 /// #[macro_use]
@@ -612,10 +616,8 @@ macro_rules! slog_record(
 /// }
 /// ```
 ///
-/// Note: use formatting support only when it really makes sense. Eg. logging
-/// message like `"found {} keys"` is against structured logging. It should be
-/// `"found keys", "count" => keys_num` instead, so that data is clearly named,
-/// typed and separated from the message.
+/// Use formatting support wisely. Prefer named arguments, so the associated
+/// data is not "lost" by becoming an untyped string in the message.
 ///
 /// ### Tags
 ///

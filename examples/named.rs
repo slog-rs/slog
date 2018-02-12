@@ -3,7 +3,6 @@
 extern crate slog;
 extern crate slog_async;
 extern crate slog_term;
-use slog::*;
 use slog::Drain;
 
 
@@ -24,5 +23,6 @@ fn main() {
     info!(log, "foo is {foo} {bar} {baz}", bar = 3, foo = 2, baz = 4;);
     info!(log, "foo is {foo} {bar} {baz}", bar=3, foo = 2, baz=4);
     info!(log, "foo is {foo} {bar} {baz}", bar=3, foo = 2, baz=4,);
+    info!(log, "formatted {num_entries} entries of {}", "something", num_entries = 2; "log-key" => true);
     info!(log, "{first} {third} {second}", first = 1, second = 2, third=3; "forth" => 4, "fifth" => 5);
 }
