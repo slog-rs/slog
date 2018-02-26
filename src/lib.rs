@@ -65,7 +65,7 @@
 //!       * [`slog-envlogger`](https://github.com/slog-rs/envlogger) - port of
 //!         `env_logger`
 //!       * terminal output, with color support: see [`slog-term`
-//!         crate](docs.r/slog-term)
+//!         crate](https://docs.rs/slog-term)
 //!  * [json](https://docs.rs/slog-json)
 //!      * [bunyan](https://docs.rs/slog-bunyan)
 //!  * [syslog](https://docs.rs/slog-syslog)
