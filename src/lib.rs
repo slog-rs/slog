@@ -769,7 +769,7 @@ macro_rules! log(
        log!(1 @ { $($fmt)* $f }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
    ($l:expr, $lvl:expr, $tag:expr, $($args:tt)*) => {
-       if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
+       if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() && $crate::Drain::is_enabled(&$l, $lvl) {
            log!(1 @ { }, { }, $l, $lvl, $tag, $($args)*)
        }
    };
@@ -1259,8 +1259,12 @@ where
         };
         self.drain.log(record, &chained)
     }
+
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        self.drain.is_enabled(level)
+    }
 }
-// }}}
 
 // {{{ Drain
 /// Logging drain
@@ -1303,7 +1307,67 @@ pub trait Drain {
         record: &Record,
         values: &OwnedKVList,
     ) -> result::Result<Self::Ok, Self::Err>;
-
+    /// Check if messages at the specified log level are enabled for this logger.
+    ///
+    /// Since disabled log levels are guaranteed to have their records ignored,
+    /// it's safe to skip logging messages at these level.
+    /// This can be used to avoid expensive computation of log message
+    /// arguments if the message would be ignored anyway.
+    ///
+    /// The logger is still free to ignore records even if the level is enabled,
+    /// so an enabled level doesn't necessarily guarantee that the record will actually be logged.
+    ///
+    /// It's generally preferable to use a `FnValue` for values that might require some computation to calculate.
+    /// A `FnValue` is more precise and does not require additional (potentially recursive) calls to
+    /// do something that `log` will already do anyways.
+    /// 
+    /// ```
+    /// # #[macro_use]
+    /// # extern crate slog;
+    /// # use slog::*;
+    /// # fn main() {
+    /// let logger = Logger::root(Discard, o!());
+    /// if logger.is_enabled(Level::Debug) {
+    ///     let num = 5.0f64;
+    ///     let sqrt = num.sqrt();
+    ///     debug!(logger, "Sqrt"; "num" => num, "sqrt" => sqrt);
+    /// }
+    /// # }
+    /// ```
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        level.as_usize() <= ::__slog_static_max_level().as_usize()
+    }
+    /// Check if messages at the critical log level are enabled for this logger via `is_enabled`.
+    #[inline]
+    fn is_critical_enabled(&self) -> bool {
+        self.is_enabled(Level::Critical)
+    }
+    /// Check if messages at the error log level are enabled for this logger via `is_enabled`.
+    #[inline]
+    fn is_error_enabled(&self) -> bool {
+        self.is_enabled(Level::Error)
+    }
+    /// Check if messages at the warning log level are enabled for this logger via `is_enabled`.
+    #[inline]
+    fn is_warning_enabled(&self) -> bool {
+        self.is_enabled(Level::Warning)
+    }
+    /// Check if messages at the info log level are enabled for this logger via `is_enabled`.
+    #[inline]
+    fn is_info_enabled(&self) -> bool {
+        self.is_enabled(Level::Info)
+    }
+    /// Check if messages at the debug log level are enabled for this logger via `is_enabled`.
+    #[inline]
+    fn is_debug_enabled(&self) -> bool {
+        self.is_enabled(Level::Debug)
+    }
+    /// Check if messages at the trace log level are enabled for this logger via `is_enabled`.
+    #[inline]
+    fn is_trace_enabled(&self) -> bool {
+        self.is_enabled(Level::Trace)
+    }
     /// Pass `Drain` through a closure, eg. to wrap
     /// into another `Drain`.
     ///
@@ -1547,6 +1611,10 @@ impl<D: Drain + ?Sized> Drain for Box<D> {
     ) -> result::Result<Self::Ok, D::Err> {
         (**self).log(record, o)
     }
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        (**self).is_enabled(level)
+    }
 }
 
 impl<D: Drain + ?Sized> Drain for Arc<D> {
@@ -1558,6 +1626,10 @@ impl<D: Drain + ?Sized> Drain for Arc<D> {
         o: &OwnedKVList,
     ) -> result::Result<Self::Ok, D::Err> {
         (**self).log(record, o)
+    }
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        (**self).is_enabled(level)
     }
 }
 
@@ -1572,6 +1644,10 @@ impl Drain for Discard {
     type Err = Never;
     fn log(&self, _: &Record, _: &OwnedKVList) -> result::Result<(), Never> {
         Ok(())
+    }
+    #[inline]
+    fn is_enabled(&self, _1: Level) -> bool {
+        false
     }
 }
 
@@ -1611,6 +1687,15 @@ where
             Ok(None)
         }
     }
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        /*
+         * This is one of the reasons we can't guarantee the value is actually logged.
+         * The filter function is given dynamic control over whether or not the record is logged
+         * and could filter stuff out even if the log level is supposed to be enabled
+         */
+        self.0.is_enabled(level)
+    }
 }
 
 /// `Drain` filtering records by `Record` logging level
@@ -1645,6 +1730,10 @@ impl<D: Drain> Drain for LevelFilter<D> {
         } else {
             Ok(None)
         }
+    }
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        level.is_at_least(self.1) && self.0.is_enabled(level)
     }
 }
 
@@ -1682,6 +1771,10 @@ impl<D: Drain, E> Drain for MapError<D, E> {
             .log(record, logger_values)
             .map_err(|e| (self.map_fn)(e))
     }
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        self.drain.is_enabled(level)
+    }
 }
 
 /// `Drain` duplicating records into two other `Drain`s
@@ -1715,6 +1808,10 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
             (Ok(o1), Ok(o2)) => Ok((o1, o2)),
             (r1, r2) => Err((r1, r2)),
         }
+    }
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        self.0.is_enabled(level) || self.1.is_enabled(level)
     }
 }
 
@@ -1756,6 +1853,10 @@ where
             .unwrap_or_else(|e| panic!("slog::Fuse Drain: {:?}", e));
         Ok(())
     }
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        self.0.is_enabled(level)
+    }
 }
 
 /// `Drain` ignoring result
@@ -1785,6 +1886,11 @@ impl<D: Drain> Drain for IgnoreResult<D> {
     ) -> result::Result<(), Never> {
         let _ = self.drain.log(record, logger_values);
         Ok(())
+    }
+
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        self.drain.is_enabled(level)
     }
 }
 
@@ -1867,6 +1973,10 @@ impl<D: Drain> Drain for std::sync::Mutex<D> {
     ) -> result::Result<Self::Ok, Self::Err> {
         let d = self.lock()?;
         d.log(record, logger_values).map_err(MutexDrainError::Drain)
+    }
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        self.lock().ok().map_or(true, |lock| lock.is_enabled(level))
     }
 }
 // }}}
