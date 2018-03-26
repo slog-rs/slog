@@ -1448,6 +1448,22 @@ pub trait Drain {
         self.map(Fuse)
     }
 }
+impl<'a, D: Drain + 'a> Drain for &'a D {
+    type Ok = D::Ok;
+    type Err = D::Err;
+    #[inline]
+    fn log(
+        &self,
+        record: &Record,
+        values: &OwnedKVList,
+    ) -> result::Result<Self::Ok, Self::Err> {
+        (**self).log(record, values)
+    }
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        (**self).is_enabled(level)
+    }
+}
 
 #[cfg(feature = "std")]
 /// `Send + Sync + UnwindSafe` bound

@@ -237,3 +237,14 @@ fn logger_to_erased() {
 
     takes_arced_drain(log.into_erased());
 }
+
+#[test]
+fn logger_by_ref() {
+    use ::*;
+    let drain = Discard.filter_level(Level::Warning).map(Fuse);
+    let log = Logger::root_typed(drain, o!("version" => env!("CARGO_PKG_VERSION")));
+    let f = "f";
+    let d = (1, 2);
+    info!(&log, "message"; "f" => %f, "d" => ?d);
+}
+
