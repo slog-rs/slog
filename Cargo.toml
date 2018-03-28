@@ -49,6 +49,8 @@ erased-serde = { version = "0.3", optional = true }
 [dev-dependencies]
 slog-term = "2"
 slog-async = "2"
+# Needed to regression test some strange issues
+rustc-demangle = "^0.1.7"
 
 [package.metadata.docs.rs]
 features = ["std", "nested-values", "dynamic-keys"]

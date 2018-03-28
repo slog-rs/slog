@@ -1,3 +1,7 @@
+use std::os::raw::c_void;
+
+use rustc_demangle::demangle;
+
 use {Discard, Logger};
 
 // Separate module to test lack of imports
@@ -248,3 +252,12 @@ fn logger_by_ref() {
     info!(&log, "message"; "f" => %f, "d" => ?d);
 }
 
+#[test]
+fn named_format_arguments() {
+    trace_macros!(true);
+    let log = Logger::root_typed(Discard, o!("version" => env!("CARGO_PKG_VERSION")));
+    let ip = 728 as *const c_void;
+    let demangled = demangle("_ZN3foo17h05af221e174051e9E");
+    error!(log, "at {name:?} {sym:#}", name = ip, sym = demangled);
+    trace_macros!(false);
+}

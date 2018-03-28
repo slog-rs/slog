@@ -302,8 +302,12 @@
 // {{{ Imports & meta
 #![cfg_attr(not(feature = "std"), feature(alloc))]
 #![cfg_attr(not(feature = "std"), feature(collections))]
+#![feature(trace_macros)]
 #![warn(missing_docs)]
 #![no_std]
+
+#[cfg(test)]
+extern crate rustc_demangle;
 
 #[cfg(not(feature = "std"))]
 extern crate alloc;
