@@ -769,7 +769,7 @@ macro_rules! log(
        log!(1 @ { $($fmt)* $f }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
    ($l:expr, $lvl:expr, $tag:expr, $($args:tt)*) => {
-       if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() && $crate::Drain::is_enabled(&$l, $lvl) {
+       if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
            log!(1 @ { }, { }, $l, $lvl, $tag, $($args)*)
        }
    };
@@ -1307,20 +1307,26 @@ pub trait Drain {
         record: &Record,
         values: &OwnedKVList,
     ) -> result::Result<Self::Ok, Self::Err>;
-    /// Check if messages at the specified log level are enabled for this logger.
+
+    /// **Avoid**: Check if messages at the specified log level are **maybe**
+    /// enabled for this logger.
     ///
-    /// Since disabled log levels are guaranteed to have their records ignored,
-    /// it's safe to skip logging messages at these level.
-    /// This can be used to avoid expensive computation of log message
-    /// arguments if the message would be ignored anyway.
+    /// The purpose of it so to allow **imprecise** detection if a given logging
+    /// level has any chance of actually being logged. This might be used
+    /// to explicitly skip needless computation.
+    ///
+    /// **It is best effort, can return false positives, but not false negatives.**
     ///
     /// The logger is still free to ignore records even if the level is enabled,
-    /// so an enabled level doesn't necessarily guarantee that the record will actually be logged.
+    /// so an enabled level doesn't necessarily guarantee that the record will
+    /// actually be logged.
     ///
-    /// It's generally preferable to use a `FnValue` for values that might require some computation to calculate.
-    /// A `FnValue` is more precise and does not require additional (potentially recursive) calls to
-    /// do something that `log` will already do anyways.
-    /// 
+    /// This function is somewhat needless, and is better expressed by using
+    /// lazy values (see `FnValue`).  A `FnValue` is more precise and does not
+    /// require additional (potentially recursive) calls to do something that
+    /// `log` will already do anyways (making decision if something should be
+    /// logged or not).
+    ///
     /// ```
     /// # #[macro_use]
     /// # extern crate slog;
@@ -1338,36 +1344,43 @@ pub trait Drain {
     fn is_enabled(&self, level: Level) -> bool {
         level.as_usize() <= ::__slog_static_max_level().as_usize()
     }
-    /// Check if messages at the critical log level are enabled for this logger via `is_enabled`.
+
+    /// **Avoid**: See `is_enabled`
     #[inline]
     fn is_critical_enabled(&self) -> bool {
         self.is_enabled(Level::Critical)
     }
-    /// Check if messages at the error log level are enabled for this logger via `is_enabled`.
+
+    /// **Avoid**: See `is_enabled`
     #[inline]
     fn is_error_enabled(&self) -> bool {
         self.is_enabled(Level::Error)
     }
-    /// Check if messages at the warning log level are enabled for this logger via `is_enabled`.
+
+    /// **Avoid**: See `is_enabled`
     #[inline]
     fn is_warning_enabled(&self) -> bool {
         self.is_enabled(Level::Warning)
     }
-    /// Check if messages at the info log level are enabled for this logger via `is_enabled`.
+
+    /// **Avoid**: See `is_enabled`
     #[inline]
     fn is_info_enabled(&self) -> bool {
         self.is_enabled(Level::Info)
     }
-    /// Check if messages at the debug log level are enabled for this logger via `is_enabled`.
+
+    /// **Avoid**: See `is_enabled`
     #[inline]
     fn is_debug_enabled(&self) -> bool {
         self.is_enabled(Level::Debug)
     }
-    /// Check if messages at the trace log level are enabled for this logger via `is_enabled`.
+
+    /// **Avoid**: See `is_enabled`
     #[inline]
     fn is_trace_enabled(&self) -> bool {
         self.is_enabled(Level::Trace)
     }
+
     /// Pass `Drain` through a closure, eg. to wrap
     /// into another `Drain`.
     ///
@@ -1448,7 +1461,25 @@ pub trait Drain {
         self.map(Fuse)
     }
 }
+
 impl<'a, D: Drain + 'a> Drain for &'a D {
+    type Ok = D::Ok;
+    type Err = D::Err;
+    #[inline]
+    fn log(
+        &self,
+        record: &Record,
+        values: &OwnedKVList,
+    ) -> result::Result<Self::Ok, Self::Err> {
+        (**self).log(record, values)
+    }
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        (**self).is_enabled(level)
+    }
+}
+
+impl<'a, D: Drain + 'a> Drain for &'a mut D {
     type Ok = D::Ok;
     type Err = D::Err;
     #[inline]
