@@ -2265,17 +2265,17 @@ fn level_from_str() {
 // {{{ Record
 #[doc(hidden)]
 #[derive(Clone, Copy)]
-pub struct RecordLocation {
+pub struct RecordLocation<'a> {
     /// File
-    pub file: &'static str,
+    pub file: &'a str,
     /// Line
     pub line: u32,
     /// Column (currently not implemented)
     pub column: u32,
     /// Function (currently not implemented)
-    pub function: &'static str,
+    pub function: &'a str,
     /// Module
-    pub module: &'static str,
+    pub module: &'a str,
 }
 #[doc(hidden)]
 /// Information that can be static in the given record thus allowing to optimize
@@ -2285,7 +2285,7 @@ pub struct RecordLocation {
 /// instead.
 pub struct RecordStatic<'a> {
     /// Code location
-    pub location: &'a RecordLocation,
+    pub location: &'a RecordLocation<'a>,
     /// Tag
     pub tag: &'a str,
     /// Logging level
@@ -2313,14 +2313,14 @@ impl<'a> Record<'a> {
     #[inline]
     #[doc(hidden)]
     pub fn new(
-        s: &'a RecordStatic<'a>,
+        rstatic: &'a RecordStatic<'a>,
         msg: &'a fmt::Arguments<'a>,
         kv: BorrowedKV<'a>,
     ) -> Self {
         Record {
-            rstatic: s,
-            msg: msg,
-            kv: kv,
+            rstatic,
+            msg,
+            kv,
         }
     }
 
@@ -2350,7 +2350,7 @@ impl<'a> Record<'a> {
     }
 
     /// Get file path
-    pub fn file(&self) -> &'static str {
+    pub fn file(&self) -> &'a str {
         self.rstatic.location.file
     }
 
@@ -2368,7 +2368,7 @@ impl<'a> Record<'a> {
     }
 
     /// Get module
-    pub fn module(&self) -> &'static str {
+    pub fn module(&self) -> &'a str {
         self.rstatic.location.module
     }
 
@@ -2379,7 +2379,7 @@ impl<'a> Record<'a> {
     ///
     /// It will be implemented at first opportunity, and
     /// it will not be considered a breaking change.
-    pub fn function(&self) -> &'static str {
+    pub fn function(&self) -> &'a str {
         self.rstatic.location.function
     }
 
