@@ -400,16 +400,16 @@ macro_rules! slog_b(
 #[macro_export]
 macro_rules! kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
-        kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); )
+        kv!(@ ($crate::SingleKV::from(($k, $crate::FmtDisplay($v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV::from(($k, $crate::FmtDisplay($v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr) => {
-        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); )
+        kv!(@ ($crate::SingleKV::from(($k, $crate::FmtDebug($v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV::from(($k, $crate::FmtDebug($v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
@@ -438,16 +438,16 @@ macro_rules! kv(
 #[macro_export]
 macro_rules! slog_kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); )
+        slog_kv!(@ ($crate::SingleKV::from(($k, $crate::FmtDisplay($v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); $($args)* )
+        slog_kv!(@ ($crate::SingleKV::from(($k, $crate::FmtDisplay($v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr) => {
-        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); )
+        kv!(@ ($crate::SingleKV::from(($k, $crate::FmtDebug($v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV::from(($k, $crate::FmtDebug($v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
@@ -3406,6 +3406,35 @@ pub fn __slog_static_max_level() -> FilterLevel {
     }
 }
 
+/// Helper for `?` syntax in `kv!` to work around `format_args!` issues
+#[doc(hidden)]
+pub struct FmtDebug<T: fmt::Debug>(pub T);
+
+impl<T: fmt::Debug> Value for FmtDebug<T> {
+    fn serialize(
+        &self,
+        _record: &Record,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
+        serializer.emit_arguments(key, &format_args!("{:?}", self.0))
+    }
+}
+
+/// Helper for `%` syntax in `kv!` to work around `format_args!` issues
+#[doc(hidden)]
+pub struct FmtDisplay<T: fmt::Display>(pub T);
+
+impl<T: fmt::Display> Value for FmtDisplay<T> {
+    fn serialize(
+        &self,
+        _record: &Record,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
+        serializer.emit_arguments(key, &format_args!("{}", self.0))
+    }
+}
 // }}}
 
 // {{{ Slog v1 Compat
