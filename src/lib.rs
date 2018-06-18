@@ -331,8 +331,8 @@ use alloc::rc::Rc;
 #[cfg(not(feature = "std"))]
 use collections::string::String;
 
-extern crate serde;
 extern crate erased_serde;
+extern crate serde;
 
 use core::str::FromStr;
 use core::{convert, fmt, result};
@@ -2960,8 +2960,7 @@ impl<T: fmt::Debug> Value for FmtDebug<T> {
         key: Key,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        format_args!("{:?}", self.0)
-            .serialize(record, key, serializer)
+        format_args!("{:?}", self.0).serialize(record, key, serializer)
     }
 }
 
@@ -2976,8 +2975,7 @@ impl<T: fmt::Display> Value for FmtDisplay<T> {
         key: Key,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        format_args!("{}", self.0)
-            .serialize(record, key, serializer)
+        format_args!("{}", self.0).serialize(record, key, serializer)
     }
 }
 // }}}
