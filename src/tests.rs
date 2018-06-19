@@ -248,3 +248,10 @@ fn logger_by_ref() {
     info!(&log, "message"; "f" => %f, "d" => ?d);
 }
 
+#[test]
+fn o_fmt_takes_ownership() {
+    let n = 1;
+
+    Logger::root(Discard, o!("foo" => ?n));
+    Logger::root(Discard, o!("bar" => %n));
+}
