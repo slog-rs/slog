@@ -24,8 +24,6 @@ lto = true
 debug-assertions = false
 
 [features]
-nested-values = ["erased-serde"]
-dynamic-keys = []
 std = []
 default = ["std"]
 
@@ -44,7 +42,8 @@ release_max_level_debug = []
 release_max_level_trace = []
 
 [dependencies]
-erased-serde = { version = "0.3", optional = true }
+erased-serde = { version = "0.3" }
+serde = { version = "1" }
 
 [dev-dependencies]
 slog-term = "2"

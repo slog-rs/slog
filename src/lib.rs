@@ -309,7 +309,6 @@ extern crate collections;
 #[cfg(feature = "std")]
 extern crate std;
 
-
 #[cfg(feature = "std")]
 mod key;
 #[cfg(not(feature = "std"))]
@@ -329,17 +328,14 @@ use alloc::rc::Rc;
 #[cfg(not(feature = "std"))]
 use collections::string::String;
 
-#[cfg(feature = "nested-values")]
 extern crate erased_serde;
 
-use core::{convert, fmt, result};
 use core::str::FromStr;
+use core::{convert, fmt, result};
 #[cfg(feature = "std")]
 use std::boxed::Box;
 #[cfg(feature = "std")]
 use std::panic::{RefUnwindSafe, UnwindSafe};
-#[cfg(feature = "std")]
-use std::rc::Rc;
 #[cfg(feature = "std")]
 use std::string::String;
 #[cfg(feature = "std")]
@@ -1509,11 +1505,7 @@ impl<'a, D: Drain + 'a> Drain for &'a mut D {
 pub trait SendSyncUnwindSafe: Send + Sync + UnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> SendSyncUnwindSafe for T
-where
-    T: Send + Sync + UnwindSafe + ?Sized,
-{
-}
+impl<T> SendSyncUnwindSafe for T where T: Send + Sync + UnwindSafe + ?Sized {}
 
 #[cfg(feature = "std")]
 /// `Drain + Send + Sync + UnwindSafe` bound
@@ -1523,63 +1515,60 @@ where
 pub trait SendSyncUnwindSafeDrain: Drain + Send + Sync + UnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> SendSyncUnwindSafeDrain for T
-where
-    T: Drain + Send + Sync + UnwindSafe + ?Sized,
-{
-}
+impl<T> SendSyncUnwindSafeDrain for T where
+    T: Drain + Send + Sync + UnwindSafe + ?Sized
+{}
 
 #[cfg(feature = "std")]
 /// `Drain + Send + Sync + RefUnwindSafe` bound
 ///
 /// This type is used to enforce `Drain`s associated with `Logger`s
 /// are thread-safe.
-pub trait SendSyncRefUnwindSafeDrain: Drain + Send + Sync + RefUnwindSafe {}
-
-#[cfg(feature = "std")]
-impl<T> SendSyncRefUnwindSafeDrain for T
-where
-    T: Drain + Send + Sync + RefUnwindSafe + ?Sized,
+pub trait SendSyncRefUnwindSafeDrain:
+    Drain + Send + Sync + RefUnwindSafe
 {
 }
+
+#[cfg(feature = "std")]
+impl<T> SendSyncRefUnwindSafeDrain for T where
+    T: Drain + Send + Sync + RefUnwindSafe + ?Sized
+{}
 
 #[cfg(feature = "std")]
 /// Function that can be used in `MapErr` drain
-pub trait MapErrFn<EI, EO>
-    : 'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(EI) -> EO {
+pub trait MapErrFn<EI, EO>:
+    'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(EI) -> EO
+{
 }
 
 #[cfg(feature = "std")]
-impl<T, EI, EO> MapErrFn<EI, EO> for T
-where
+impl<T, EI, EO> MapErrFn<EI, EO> for T where
     T: 'static
         + Sync
         + Send
         + ?Sized
         + UnwindSafe
         + RefUnwindSafe
-        + Fn(EI) -> EO,
-{
-}
+        + Fn(EI) -> EO
+{}
 
 #[cfg(feature = "std")]
 /// Function that can be used in `Filter` drain
-pub trait FilterFn
-    : 'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(&Record) -> bool {
+pub trait FilterFn:
+    'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(&Record) -> bool
+{
 }
 
 #[cfg(feature = "std")]
-impl<T> FilterFn for T
-where
+impl<T> FilterFn for T where
     T: 'static
         + Sync
         + Send
         + ?Sized
         + UnwindSafe
         + RefUnwindSafe
-        + Fn(&Record) -> bool,
-{
-}
+        + Fn(&Record) -> bool
+{}
 
 #[cfg(not(feature = "std"))]
 /// `Drain + Send + Sync + UnwindSafe` bound
@@ -1589,11 +1578,7 @@ where
 pub trait SendSyncUnwindSafeDrain: Drain + Send + Sync {}
 
 #[cfg(not(feature = "std"))]
-impl<T> SendSyncUnwindSafeDrain for T
-where
-    T: Drain + Send + Sync + ?Sized,
-{
-}
+impl<T> SendSyncUnwindSafeDrain for T where T: Drain + Send + Sync + ?Sized {}
 
 #[cfg(not(feature = "std"))]
 /// `Drain + Send + Sync + RefUnwindSafe` bound
@@ -1603,55 +1588,41 @@ where
 pub trait SendSyncRefUnwindSafeDrain: Drain + Send + Sync {}
 
 #[cfg(not(feature = "std"))]
-impl<T> SendSyncRefUnwindSafeDrain for T
-where
-    T: Drain + Send + Sync + ?Sized,
-{
-}
+impl<T> SendSyncRefUnwindSafeDrain for T where T: Drain + Send + Sync + ?Sized {}
 
 #[cfg(feature = "std")]
 /// `Drain + Send + RefUnwindSafe` bound
 pub trait SendRefUnwindSafeDrain: Drain + Send + RefUnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> SendRefUnwindSafeDrain for T
-where
-    T: Drain + Send + RefUnwindSafe + ?Sized,
-{
-}
+impl<T> SendRefUnwindSafeDrain for T where
+    T: Drain + Send + RefUnwindSafe + ?Sized
+{}
 
 #[cfg(not(feature = "std"))]
 /// `Drain + Send + RefUnwindSafe` bound
 pub trait SendRefUnwindSafeDrain: Drain + Send {}
 
 #[cfg(not(feature = "std"))]
-impl<T> SendRefUnwindSafeDrain for T
-where
-    T: Drain + Send + ?Sized,
-{
-}
+impl<T> SendRefUnwindSafeDrain for T where T: Drain + Send + ?Sized {}
 
 #[cfg(not(feature = "std"))]
 /// Function that can be used in `MapErr` drain
 pub trait MapErrFn<EI, EO>: 'static + Sync + Send + Fn(EI) -> EO {}
 
 #[cfg(not(feature = "std"))]
-impl<T, EI, EO> MapErrFn<EI, EO> for T
-where
-    T: 'static + Sync + Send + ?Sized + Fn(EI) -> EO,
-{
-}
+impl<T, EI, EO> MapErrFn<EI, EO> for T where
+    T: 'static + Sync + Send + ?Sized + Fn(EI) -> EO
+{}
 
 #[cfg(not(feature = "std"))]
 /// Function that can be used in `Filter` drain
 pub trait FilterFn: 'static + Sync + Send + Fn(&Record) -> bool {}
 
 #[cfg(not(feature = "std"))]
-impl<T> FilterFn for T
-where
-    T: 'static + Sync + Send + ?Sized + Fn(&Record) -> bool,
-{
-}
+impl<T> FilterFn for T where
+    T: 'static + Sync + Send + ?Sized + Fn(&Record) -> bool
+{}
 
 impl<D: Drain + ?Sized> Drain for Box<D> {
     type Ok = D::Ok;
@@ -1900,7 +1871,8 @@ where
         record: &Record,
         logger_values: &OwnedKVList,
     ) -> result::Result<Self::Ok, Never> {
-        let _ = self.0
+        let _ = self
+            .0
             .log(record, logger_values)
             .unwrap_or_else(|e| panic!("slog::Fuse Drain: {:?}", e));
         Ok(())
@@ -1993,7 +1965,8 @@ where
 
 #[cfg(feature = "std")]
 impl<'a, D: Drain> From<std::sync::PoisonError<std::sync::MutexGuard<'a, D>>>
-    for MutexDrainError<D> {
+    for MutexDrainError<D>
+{
     fn from(
         _: std::sync::PoisonError<std::sync::MutexGuard<'a, D>>,
     ) -> MutexDrainError<D> {
@@ -2322,11 +2295,7 @@ impl<'a> Record<'a> {
         msg: &'a fmt::Arguments<'a>,
         kv: BorrowedKV<'a>,
     ) -> Self {
-        Record {
-            rstatic,
-            msg,
-            kv,
-        }
+        Record { rstatic, msg, kv }
     }
 
     /// Get a log record message
@@ -2396,101 +2365,12 @@ impl<'a> Record<'a> {
 // }}}
 
 // {{{ Serializer
-macro_rules! impl_default_as_fmt{
-    ($t:ty, $f:ident) => {
-        /// Emit $t
-        fn $f(&mut self, key : Key, val : $t)
-            -> Result {
-                self.emit_arguments(key, &format_args!("{}", val))
-            }
-    };
-}
-
-/// This is a workaround to be able to pass &mut Serializer, from
-/// `Serializer::emit_serde` default implementation. `&Self` can't be casted to
-/// `&Serializer` (without : Sized, which break object safety), but it can be
-/// used as <T: Serializer>.
-#[cfg(feature = "nested-values")]
-struct SerializerForward<'a, T: 'a + ?Sized>(&'a mut T);
-
-#[cfg(feature = "nested-values")]
-impl<'a, T: Serializer + 'a + ?Sized> Serializer for SerializerForward<'a, T> {
-    fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result {
-        self.0.emit_arguments(key, val)
-    }
-
-    #[cfg(feature = "nested-values")]
-    fn emit_serde(&mut self, _key: Key, _value: &SerdeValue) -> Result {
-        panic!();
-    }
-}
-
 /// Serializer
 ///
 /// Drains using `Format` will internally use
 /// types implementing this trait.
 pub trait Serializer {
-    /// Emit usize
-    impl_default_as_fmt!(usize, emit_usize);
-    /// Emit isize
-    impl_default_as_fmt!(isize, emit_isize);
-    /// Emit bool
-    impl_default_as_fmt!(bool, emit_bool);
-    /// Emit char
-    impl_default_as_fmt!(char, emit_char);
-    /// Emit u8
-    impl_default_as_fmt!(u8, emit_u8);
-    /// Emit i8
-    impl_default_as_fmt!(i8, emit_i8);
-    /// Emit u16
-    impl_default_as_fmt!(u16, emit_u16);
-    /// Emit i16
-    impl_default_as_fmt!(i16, emit_i16);
-    /// Emit u32
-    impl_default_as_fmt!(u32, emit_u32);
-    /// Emit i32
-    impl_default_as_fmt!(i32, emit_i32);
-    /// Emit f32
-    impl_default_as_fmt!(f32, emit_f32);
-    /// Emit u64
-    impl_default_as_fmt!(u64, emit_u64);
-    /// Emit i64
-    impl_default_as_fmt!(i64, emit_i64);
-    /// Emit f64
-    impl_default_as_fmt!(f64, emit_f64);
-    /// Emit str
-    impl_default_as_fmt!(&str, emit_str);
-
-    /// Emit `()`
-    fn emit_unit(&mut self, key: Key) -> Result {
-        self.emit_arguments(key, &format_args!("()"))
-    }
-
-    /// Emit `None`
-    fn emit_none(&mut self, key: Key) -> Result {
-        self.emit_arguments(key, &format_args!(""))
-    }
-
-    /// Emit `fmt::Arguments`
-    ///
-    /// This is the only method that has to implemented, but for performance and
-    /// to retain type information most serious `Serializer`s will want to
-    /// implement all other methods as well.
-    fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result;
-
-    /// Emit a value implementing
-    /// [`serde::Serialize`](https://docs.rs/serde/1/serde/trait.Serialize.html)
-    ///
-    /// This is especially useful for composite values, eg. structs as Json values, or sequences.
-    ///
-    /// To prevent pulling-in `serde` dependency, this is an extension behind a
-    /// `serde` feature flag.
-    ///
-    /// The value needs to implement `SerdeValue`.
-    #[cfg(feature = "nested-values")]
-    fn emit_serde(&mut self, key: Key, value: &SerdeValue) -> Result {
-        value.serialize_fallback(key, &mut SerializerForward(self))
-    }
+    fn emit(&mut self, key: Key, value: & dyn erased_serde::Serialize) -> Result;
 }
 
 /// Serializer to closure adapter.
@@ -2504,45 +2384,11 @@ impl<F> Serializer for AsFmtSerializer<F>
 where
     F: for<'a> FnMut(Key, fmt::Arguments<'a>) -> Result,
 {
-    fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result {
-        (self.0)(key, *val)
+    fn emit(&mut self, key: Key, value: & dyn erased_serde::Serialize) -> Result {
+        (self.0)(key, format_args!("{}", 1i32));
+            unimplemented!();
     }
 }
-// }}}
-
-// {{{ serde
-/// A value that can be serialized via serde
-///
-/// This is useful for implementing nested values, like sequences or structures.
-#[cfg(feature = "nested-values")]
-pub trait SerdeValue: erased_serde::Serialize + Value {
-    /// Serialize the value in a way that is compatible with `slog::Serializer`s
-    /// that do not support serde.
-    ///
-    /// The implementation should *not* call `slog::Serialize::serialize`
-    /// on itself, as it will lead to infinite recursion.
-    ///
-    /// Default implementation is provided, but it returns error, so use it
-    /// only for internal types in systems and libraries where `serde` is always
-    /// enabled.
-    fn serialize_fallback(
-        &self,
-        _key: Key,
-        _serializer: &mut Serializer,
-    ) -> Result<()> {
-        Err(Error::Other)
-    }
-
-    /// Convert to `erased_serialize::Serialize` of the underlying value,
-    /// so `slog::Serializer`s can use it to serialize via `serde`.
-    fn as_serde(&self) -> &erased_serde::Serialize;
-
-    /// Convert to a boxed value that can be sent across threads
-    ///
-    /// This enables functionality like `slog-async` and similar.
-    fn to_sendable(&self) -> Box<SerdeValue + Send + 'static>;
-}
-
 // }}}
 
 // {{{ Value
@@ -2577,176 +2423,22 @@ pub trait Value {
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result;
 }
 
-impl<'a, V> Value for &'a V
-where
-    V: Value + ?Sized,
-{
-    fn serialize(
-        &self,
-        record: &Record,
-        key: Key,
-        serializer: &mut Serializer,
-    ) -> Result {
-        (*self).serialize(record, key, serializer)
-    }
-}
+impl<T:?Sized> Value for T where T : erased_serde::Serialize {
 
-macro_rules! impl_value_for{
-    ($t:ty, $f:ident) => {
-        impl Value for $t {
-            fn serialize(&self,
-                         _record : &Record,
-                         key : Key,
-                         serializer : &mut Serializer
-                         ) -> Result {
-                serializer.$f(key, *self)
-            }
-        }
-    };
-}
-
-impl_value_for!(usize, emit_usize);
-impl_value_for!(isize, emit_isize);
-impl_value_for!(bool, emit_bool);
-impl_value_for!(char, emit_char);
-impl_value_for!(u8, emit_u8);
-impl_value_for!(i8, emit_i8);
-impl_value_for!(u16, emit_u16);
-impl_value_for!(i16, emit_i16);
-impl_value_for!(u32, emit_u32);
-impl_value_for!(i32, emit_i32);
-impl_value_for!(f32, emit_f32);
-impl_value_for!(u64, emit_u64);
-impl_value_for!(i64, emit_i64);
-impl_value_for!(f64, emit_f64);
-
-impl Value for () {
     fn serialize(
         &self,
         _record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
-        serializer.emit_unit(key)
+        serializer.emit(key, self)
     }
 }
 
-impl Value for str {
-    fn serialize(
-        &self,
-        _record: &Record,
-        key: Key,
-        serializer: &mut Serializer,
-    ) -> Result {
-        serializer.emit_str(key, self)
-    }
-}
-
-impl<'a> Value for fmt::Arguments<'a> {
-    fn serialize(
-        &self,
-        _record: &Record,
-        key: Key,
-        serializer: &mut Serializer,
-    ) -> Result {
-        serializer.emit_arguments(key, self)
-    }
-}
-
-impl Value for String {
-    fn serialize(
-        &self,
-        _record: &Record,
-        key: Key,
-        serializer: &mut Serializer,
-    ) -> Result {
-        serializer.emit_str(key, self.as_str())
-    }
-}
-
-impl<T: Value> Value for Option<T> {
-    fn serialize(
-        &self,
-        record: &Record,
-        key: Key,
-        serializer: &mut Serializer,
-    ) -> Result {
-        match *self {
-            Some(ref s) => s.serialize(record, key, serializer),
-            None => serializer.emit_none(key),
-        }
-    }
-}
-
-impl<T> Value for Box<T>
-where
-    T: Value + ?Sized,
-{
-    fn serialize(
-        &self,
-        record: &Record,
-        key: Key,
-        serializer: &mut Serializer,
-    ) -> Result {
-        (**self).serialize(record, key, serializer)
-    }
-}
-impl<T> Value for Arc<T>
-where
-    T: Value + ?Sized,
-{
-    fn serialize(
-        &self,
-        record: &Record,
-        key: Key,
-        serializer: &mut Serializer,
-    ) -> Result {
-        (**self).serialize(record, key, serializer)
-    }
-}
-
-impl<T> Value for Rc<T>
-where
-    T: Value,
-{
-    fn serialize(
-        &self,
-        record: &Record,
-        key: Key,
-        serializer: &mut Serializer,
-    ) -> Result {
-        (**self).serialize(record, key, serializer)
-    }
-}
-
-impl<T> Value for core::num::Wrapping<T>
-where
-    T: Value,
-{
-    fn serialize(
-        &self,
-        record: &Record,
-        key: Key,
-        serializer: &mut Serializer,
-    ) -> Result {
-        self.0.serialize(record, key, serializer)
-    }
-}
-
-impl<'a> Value for std::path::Display<'a> {
-    fn serialize(
-        &self,
-        _record: &Record,
-        key: Key,
-        serializer: &mut Serializer,
-    ) -> Result {
-        serializer.emit_arguments(key, &format_args!("{}", *self))
-    }
-}
 
 /// Explicit lazy-closure `Value`
 pub struct FnValue<V: Value, F>(pub F)
@@ -2783,12 +2475,6 @@ pub struct PushFnValueSerializer<'a> {
 }
 
 impl<'a> PushFnValueSerializer<'a> {
-    #[deprecated(note = "Renamed to `emit`")]
-    /// Emit a value
-    pub fn serialize<'b, S: 'b + Value>(self, s: S) -> Result {
-        self.emit(s)
-    }
-
     /// Emit a value
     ///
     /// This consumes `self` to prevent serializing one value multiple times
@@ -2802,7 +2488,7 @@ impl<'a> Drop for PushFnValueSerializer<'a> {
     fn drop(&mut self) {
         if !self.done {
             // unfortunately this gives no change to return serialization errors
-            let _ = self.serializer.emit_unit(self.key.clone());
+            let _ = self.serializer.emit(self.key.clone(), &());
         }
     }
 }
@@ -2949,22 +2635,16 @@ where
 pub trait SendSyncRefUnwindSafeKV: KV + Send + Sync + RefUnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> SendSyncRefUnwindSafeKV for T
-where
-    T: KV + Send + Sync + RefUnwindSafe + ?Sized,
-{
-}
+impl<T> SendSyncRefUnwindSafeKV for T where
+    T: KV + Send + Sync + RefUnwindSafe + ?Sized
+{}
 
 #[cfg(not(feature = "std"))]
 /// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
 pub trait SendSyncRefUnwindSafeKV: KV + Send + Sync {}
 
 #[cfg(not(feature = "std"))]
-impl<T> SendSyncRefUnwindSafeKV for T
-where
-    T: KV + Send + Sync + ?Sized,
-{
-}
+impl<T> SendSyncRefUnwindSafeKV for T where T: KV + Send + Sync + ?Sized {}
 
 /// Single pair `Key` and `Value`
 pub struct SingleKV<V>(pub Key, pub V)
@@ -3190,9 +2870,9 @@ impl fmt::Debug for OwnedKVList {
                         &Record::new(
                             &record_static,
                             &format_args!(""),
-                            BorrowedKV(&STATIC_TERMINATOR_UNIT)
+                            BorrowedKV(&STATIC_TERMINATOR_UNIT),
                         ),
-                        &mut as_str_ser
+                        &mut as_str_ser,
                     )
                     .map_err(|_| fmt::Error)
             );
@@ -3400,7 +3080,7 @@ impl<T: fmt::Debug> Value for FmtDebug<T> {
         key: Key,
         serializer: &mut Serializer,
     ) -> Result {
-        serializer.emit_arguments(key, &format_args!("{:?}", self.0))
+        serializer.emit(key, &format_args!("{:?}", self.0))
     }
 }
 
@@ -3415,34 +3095,8 @@ impl<T: fmt::Display> Value for FmtDisplay<T> {
         key: Key,
         serializer: &mut Serializer,
     ) -> Result {
-        serializer.emit_arguments(key, &format_args!("{}", self.0))
+        serializer.emit(key, &format_args!("{}", self.0))
     }
-}
-// }}}
-
-// {{{ Slog v1 Compat
-#[deprecated(note = "Renamed to `Value`")]
-/// Compatibility name to ease upgrading from `slog v1`
-pub type Serialize = Value;
-
-#[deprecated(note = "Renamed to `PushFnValue`")]
-/// Compatibility name to ease upgrading from `slog v1`
-pub type PushLazy<T> = PushFnValue<T>;
-
-#[deprecated(note = "Renamed to `PushFnValueSerializer`")]
-/// Compatibility name to ease upgrading from `slog v1`
-pub type ValueSerializer<'a> = PushFnValueSerializer<'a>;
-
-#[deprecated(note = "Renamed to `OwnedKVList`")]
-/// Compatibility name to ease upgrading from `slog v1`
-pub type OwnedKeyValueList = OwnedKVList;
-
-#[deprecated(note = "Content of ser module moved to main namespace")]
-/// Compatibility name to ease upgrading from `slog v1`
-pub mod ser {
-    #[allow(deprecated)]
-    pub use super::{OwnedKeyValueList, PushLazy, Serialize, Serializer,
-                    ValueSerializer};
 }
 // }}}
 
