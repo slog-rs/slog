@@ -309,8 +309,17 @@ extern crate collections;
 #[cfg(feature = "std")]
 extern crate std;
 
+
+#[cfg(feature = "std")]
 mod key;
+#[cfg(not(feature = "std"))]
+mod key_nostd;
+
+#[cfg(feature = "std")]
 pub use self::key::Key;
+#[cfg(not(feature = "std"))]
+pub use self::key_nostd::Key;
+
 #[cfg(not(feature = "std"))]
 use alloc::arc::Arc;
 #[cfg(not(feature = "std"))]
@@ -2962,22 +2971,14 @@ pub struct SingleKV<V>(pub Key, pub V)
 where
     V: Value;
 
-#[cfg(feature = "dynamic-keys")]
 impl<V: Value> From<(String, V)> for SingleKV<V> {
     fn from(x: (String, V)) -> SingleKV<V> {
         SingleKV(Key::from(x.0), x.1)
     }
 }
-#[cfg(feature = "dynamic-keys")]
 impl<V: Value> From<(&'static str, V)> for SingleKV<V> {
     fn from(x: (&'static str, V)) -> SingleKV<V> {
         SingleKV(Key::from(x.0), x.1)
-    }
-}
-#[cfg(not(feature = "dynamic-keys"))]
-impl<V: Value> From<(&'static str, V)> for SingleKV<V> {
-    fn from(x: (&'static str, V)) -> SingleKV<V> {
-        SingleKV(x.0, x.1)
     }
 }
 

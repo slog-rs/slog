@@ -51,7 +51,7 @@ slog-term = "2"
 slog-async = "2"
 
 [package.metadata.docs.rs]
-features = ["std", "nested-values", "dynamic-keys"]
+features = ["std", "nested-values"]
 
 [patch.crates-io]
 slog-async = { git = "https://github.com/jacekchmiel/slog-async", branch = "log-0.4-support" }
