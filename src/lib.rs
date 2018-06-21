@@ -2427,8 +2427,7 @@ pub trait Value {
     ) -> Result;
 }
 
-impl<T:?Sized> Value for T where T : erased_serde::Serialize {
-
+impl<T> Value for T where T : erased_serde::Serialize {
     fn serialize(
         &self,
         _record: &Record,
