@@ -299,6 +299,7 @@
 #![cfg_attr(not(feature = "std"), feature(alloc))]
 #![cfg_attr(not(feature = "std"), feature(collections))]
 #![warn(missing_docs)]
+#![warn(bare_trait_objects)]
 #![no_std]
 
 #[cfg(not(feature = "std"))]
@@ -1063,7 +1064,7 @@ macro_rules! slog_trace(
 /// means `Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>`. See
 /// `Logger::root_typed` and `Logger::to_erased` for more information.
 #[derive(Clone)]
-pub struct Logger<D = Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
+pub struct Logger<D = Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
 where
     D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>,
 {
@@ -1108,7 +1109,7 @@ where
     {
         Logger {
             drain: Arc::new(drain)
-                as Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
+                as Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
             list: OwnedKVList::root(values),
         }
     }
@@ -1206,13 +1207,13 @@ where
     /// Rust gains trait implementation specialization.
     pub fn into_erased(
         self,
-    ) -> Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
+    ) -> Logger<Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
     where
         D: SendRefUnwindSafeDrain + 'static,
     {
         Logger {
             drain: Arc::new(self.drain)
-                as Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
+                as Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
             list: self.list,
         }
     }
@@ -1222,7 +1223,7 @@ where
     /// See `into_erased`
     pub fn to_erased(
         &self,
-    ) -> Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
+    ) -> Logger<Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
     where
         D: SendRefUnwindSafeDrain + 'static + Clone,
     {
@@ -1766,7 +1767,7 @@ impl<D: Drain> Drain for LevelFilter<D> {
 pub struct MapError<D: Drain, E> {
     drain: D,
     // eliminated dynamic dispatch, after rust learns `-> impl Trait`
-    map_fn: Box<MapErrFn<D::Err, E, Output = E>>,
+    map_fn: Box<dyn MapErrFn<D::Err, E, Output = E>>,
 }
 
 impl<D: Drain, E> MapError<D, E> {
@@ -1955,7 +1956,7 @@ where
         }
     }
 
-    fn cause(&self) -> Option<&std::error::Error> {
+    fn cause(&self) -> Option<&dyn std::error::Error> {
         match *self {
             MutexDrainError::Mutex => None,
             MutexDrainError::Drain(ref e) => Some(e),
@@ -2385,7 +2386,7 @@ impl<F> Serializer for AsFmtSerializer<F>
 where
     F: for<'a> FnMut(Key, fmt::Arguments<'a>) -> Result,
 {
-    fn emit(&mut self, key: Key, value: & dyn erased_serde::Serialize) -> Result {
+    fn emit(&mut self, key: Key, value: &dyn erased_serde::Serialize) -> Result {
         (self.0)(key, format_args!("{}", 1i32))?;
             unimplemented!();
     }
@@ -2465,7 +2466,7 @@ where
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (self.0)(record).serialize(record, key, serializer)
     }
@@ -2482,7 +2483,7 @@ pub type PushFnSerializer<'a> = PushFnValueSerializer<'a>;
 pub struct PushFnValueSerializer<'a> {
     record: &'a Record<'a>,
     key: Key,
-    serializer: &'a mut Serializer,
+    serializer: &'a mut dyn Serializer,
     done: bool,
 }
 
@@ -2554,7 +2555,7 @@ where
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         let ser = PushFnValueSerializer {
             record: record,
@@ -2623,7 +2624,7 @@ pub trait KV {
     ///
     /// `KV` should call respective `Serializer` methods
     /// for each key-value pair it contains.
-    fn serialize(&self, record: &Record, serializer: &mut Serializer)
+    fn serialize(&self, record: &Record, serializer: &mut dyn Serializer)
         -> Result;
 }
 
@@ -2634,7 +2635,7 @@ where
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (**self).serialize(record, serializer)
     }
@@ -2681,7 +2682,7 @@ where
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         self.1.serialize(record, self.0.clone(), serializer)
     }
@@ -2691,7 +2692,7 @@ impl KV for () {
     fn serialize(
         &self,
         _record: &Record,
-        _serializer: &mut Serializer,
+        _serializer: &mut dyn Serializer,
     ) -> Result {
         Ok(())
     }
@@ -2701,7 +2702,7 @@ impl<T: KV, R: KV> KV for (T, R) {
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         try!(self.0.serialize(record, serializer));
         self.1.serialize(record, serializer)
@@ -2715,7 +2716,7 @@ where
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (**self).serialize(record, serializer)
     }
@@ -2728,7 +2729,7 @@ where
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (**self).serialize(record, serializer)
     }
@@ -2741,7 +2742,7 @@ where
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         self.0.serialize(record, serializer)
     }
@@ -2751,7 +2752,7 @@ impl<'a> KV for BorrowedKV<'a> {
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         self.0.serialize(record, serializer)
     }
@@ -2793,7 +2794,7 @@ pub struct BorrowedKV<'a>(
     /// macros should be used instead to create
     /// `BorrowedKV` instances.
     #[doc(hidden)]
-    pub &'a KV,
+    pub &'a dyn KV,
 );
 
 // }}}
@@ -2803,19 +2804,19 @@ struct OwnedKVListNode<T>
 where
     T: SendSyncRefUnwindSafeKV + 'static,
 {
-    next_node: Arc<SendSyncRefUnwindSafeKV + 'static>,
+    next_node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
     kv: T,
 }
 
 struct MultiListNode {
-    next_node: Arc<SendSyncRefUnwindSafeKV + 'static>,
-    node: Arc<SendSyncRefUnwindSafeKV + 'static>,
+    next_node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
+    node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
 }
 
 /// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
 #[derive(Clone)]
 pub struct OwnedKVList {
-    node: Arc<SendSyncRefUnwindSafeKV + 'static>,
+    node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
 }
 
 impl<T> KV for OwnedKVListNode<T>
@@ -2825,7 +2826,7 @@ where
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         try!(self.kv.serialize(record, serializer));
         try!(self.next_node.serialize(record, serializer));
@@ -2838,7 +2839,7 @@ impl KV for MultiListNode {
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         try!(self.next_node.serialize(record, serializer));
         try!(self.node.serialize(record, serializer));
@@ -2851,7 +2852,7 @@ impl KV for OwnedKVList {
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         try!(self.node.serialize(record, serializer));
 
@@ -2912,7 +2913,7 @@ impl OwnedKVList {
     /// New `OwnedKVList` node with an existing parent
     fn new<T>(
         values: OwnedKV<T>,
-        next_node: Arc<SendSyncRefUnwindSafeKV + 'static>,
+        next_node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
     ) -> Self
     where
         T: SendSyncRefUnwindSafeKV + 'static,
@@ -3001,7 +3002,7 @@ impl std::error::Error for Error {
         }
     }
 
-    fn cause(&self) -> Option<&std::error::Error> {
+    fn cause(&self) -> Option<&dyn std::error::Error> {
         match *self {
             Error::Io(ref e) => Some(e),
             Error::Fmt(ref e) => Some(e),
@@ -3090,7 +3091,7 @@ impl<T: fmt::Debug> Value for FmtDebug<T> {
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         FmtArguments(&format_args!("{:?}", self.0)).serialize(record, key, serializer)
     }
@@ -3105,7 +3106,7 @@ impl<T: fmt::Display> Value for FmtDisplay<T> {
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         FmtArguments(&format_args!("{}", self.0)).serialize(record, key, serializer)
     }
