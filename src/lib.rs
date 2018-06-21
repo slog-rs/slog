@@ -81,12 +81,8 @@
 //!
 //! ## Notable details
 //!
-//! **Note:** At compile time `slog` by default removes trace and debug level
-//! statements in release builds, and trace level records in debug builds. This
-//! makes `trace` and `debug` level logging records practically free, which
-//! should encourage using them freely. If you want to enable trace/debug
-//! messages or raise the compile time logging level limit, use the following in
-//! your `Cargo.toml`:
+//! It's possible to control statically compiled logging level
+//! through Cargo `features` settings.
 //!
 //! ```norust
 //! slog = { version = ... ,
@@ -3388,11 +3384,7 @@ pub fn __slog_static_max_level() -> FilterLevel {
     } else if cfg!(feature = "max_level_trace") {
         FilterLevel::Trace
     } else {
-        if !cfg!(debug_assertions) {
-            FilterLevel::Info
-        } else {
-            FilterLevel::Debug
-        }
+        FilterLevel::Trace
     }
 }
 
