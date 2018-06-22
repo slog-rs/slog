@@ -1182,15 +1182,6 @@ where
         }
     }
 
-    /// Log one logging `Record`
-    ///
-    /// Use specific logging functions instead. See `log!` macro
-    /// documentation.
-    #[inline]
-    pub fn log(&self, record: &Record) {
-        let _ = self.drain.log(record, &self.list);
-    }
-
     /// Get list of key-value pairs assigned to this `Logger`
     pub fn list(&self) -> &OwnedKVList {
         &self.list
@@ -1248,18 +1239,25 @@ where
     type Ok = ();
     type Err = Never;
 
-    fn log(
+    fn log_with_context(
         &self,
         record: &Record,
-        values: &OwnedKVList,
+        values: &dyn Context,
     ) -> result::Result<Self::Ok, Self::Err> {
         let chained = OwnedKVList {
             node: Arc::new(MultiListNode {
-                next_node: values.node.clone(),
+                next_node: values.to_owned(),
                 node: self.list.node.clone(),
             }),
         };
-        self.drain.log(record, &chained)
+        self.drain.log_with_context(record, &chained)
+    }
+
+    fn log(
+        &self,
+        record: &Record,
+    ) -> result::Result<Self::Ok, Self::Err> {
+        self.drain.log_with_context(record, &self.list)
     }
 
     #[inline]
@@ -1304,11 +1302,19 @@ pub trait Drain {
     /// * pass this information (or not) to the sub-logger(s) (filters)
     /// * format and write the information the a destination (writers)
     /// * deal with the errors returned from the sub-logger(s)
+    fn log_with_context(
+        &self,
+        record: &Record,
+        values: &dyn Context,
+    ) -> result::Result<Self::Ok, Self::Err>;
+
     fn log(
         &self,
         record: &Record,
-        values: &OwnedKVList,
-    ) -> result::Result<Self::Ok, Self::Err>;
+    ) -> result::Result<Self::Ok, Self::Err> {
+        self.log_with_context(record, &o!())
+    }
+
 
     /// **Avoid**: Check if messages at the specified log level are **maybe**
     /// enabled for this logger.
@@ -1468,12 +1474,12 @@ impl<'a, D: Drain + 'a> Drain for &'a D {
     type Ok = D::Ok;
     type Err = D::Err;
     #[inline]
-    fn log(
+    fn log_with_context(
         &self,
         record: &Record,
-        values: &OwnedKVList,
+        values: &dyn Context,
     ) -> result::Result<Self::Ok, Self::Err> {
-        (**self).log(record, values)
+        (**self).log_with_context(record, values)
     }
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
@@ -1485,12 +1491,12 @@ impl<'a, D: Drain + 'a> Drain for &'a mut D {
     type Ok = D::Ok;
     type Err = D::Err;
     #[inline]
-    fn log(
+    fn log_with_context(
         &self,
         record: &Record,
-        values: &OwnedKVList,
+        values: &dyn Context,
     ) -> result::Result<Self::Ok, Self::Err> {
-        (**self).log(record, values)
+        (**self).log_with_context(record, values)
     }
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
@@ -1628,12 +1634,12 @@ impl<T> FilterFn for T where
 impl<D: Drain + ?Sized> Drain for Box<D> {
     type Ok = D::Ok;
     type Err = D::Err;
-    fn log(
+    fn log_with_context(
         &self,
         record: &Record,
-        o: &OwnedKVList,
+        values: &dyn Context,
     ) -> result::Result<Self::Ok, D::Err> {
-        (**self).log(record, o)
+        (**self).log_with_context(record, values)
     }
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
@@ -1644,13 +1650,14 @@ impl<D: Drain + ?Sized> Drain for Box<D> {
 impl<D: Drain + ?Sized> Drain for Arc<D> {
     type Ok = D::Ok;
     type Err = D::Err;
-    fn log(
+    fn log_with_context(
         &self,
         record: &Record,
-        o: &OwnedKVList,
+        values: &dyn Context,
     ) -> result::Result<Self::Ok, D::Err> {
-        (**self).log(record, o)
+        (**self).log_with_context(record, values)
     }
+
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         (**self).is_enabled(level)
@@ -1666,7 +1673,7 @@ pub struct Discard;
 impl Drain for Discard {
     type Ok = ();
     type Err = Never;
-    fn log(&self, _: &Record, _: &OwnedKVList) -> result::Result<(), Never> {
+    fn log_with_context(&self, _: &Record, _: &dyn Context) -> result::Result<(), Never> {
         Ok(())
     }
     #[inline]
@@ -1700,13 +1707,13 @@ where
 {
     type Ok = Option<D::Ok>;
     type Err = D::Err;
-    fn log(
+    fn log_with_context(
         &self,
         record: &Record,
-        logger_values: &OwnedKVList,
+        values: &dyn Context,
     ) -> result::Result<Self::Ok, Self::Err> {
         if (self.1)(record) {
-            Ok(Some(self.0.log(record, logger_values)?))
+            Ok(Some(self.0.log_with_context(record, values)?))
         } else {
             Ok(None)
         }
@@ -1744,13 +1751,13 @@ impl<D: Drain> LevelFilter<D> {
 impl<D: Drain> Drain for LevelFilter<D> {
     type Ok = Option<D::Ok>;
     type Err = D::Err;
-    fn log(
+    fn log_with_context(
         &self,
         record: &Record,
-        logger_values: &OwnedKVList,
+        values: &dyn Context,
     ) -> result::Result<Self::Ok, Self::Err> {
         if record.level().is_at_least(self.1) {
-            Ok(Some(self.0.log(record, logger_values)?))
+            Ok(Some(self.0.log_with_context(record, values)?))
         } else {
             Ok(None)
         }
@@ -1786,13 +1793,13 @@ impl<D: Drain, E> MapError<D, E> {
 impl<D: Drain, E> Drain for MapError<D, E> {
     type Ok = D::Ok;
     type Err = E;
-    fn log(
+    fn log_with_context(
         &self,
         record: &Record,
-        logger_values: &OwnedKVList,
+        values: &dyn Context,
     ) -> result::Result<Self::Ok, Self::Err> {
         self.drain
-            .log(record, logger_values)
+            .log_with_context(record, values)
             .map_err(|e| (self.map_fn)(e))
     }
     #[inline]
@@ -1820,13 +1827,13 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
         result::Result<D1::Ok, D1::Err>,
         result::Result<D2::Ok, D2::Err>,
     );
-    fn log(
+    fn log_with_context(
         &self,
         record: &Record,
-        logger_values: &OwnedKVList,
+        values: &dyn Context,
     ) -> result::Result<Self::Ok, Self::Err> {
-        let res1 = self.0.log(record, logger_values);
-        let res2 = self.1.log(record, logger_values);
+        let res1 = self.0.log_with_context(record, values);
+        let res2 = self.1.log_with_context(record, values);
 
         match (res1, res2) {
             (Ok(o1), Ok(o2)) => Ok((o1, o2)),
@@ -1867,14 +1874,14 @@ where
 {
     type Ok = ();
     type Err = Never;
-    fn log(
+    fn log_with_context(
         &self,
         record: &Record,
-        logger_values: &OwnedKVList,
+        values: &dyn Context,
     ) -> result::Result<Self::Ok, Never> {
         let _ = self
             .0
-            .log(record, logger_values)
+            .log_with_context(record, values)
             .unwrap_or_else(|e| panic!("slog::Fuse Drain: {:?}", e));
         Ok(())
     }
@@ -1904,12 +1911,12 @@ impl<D: Drain> IgnoreResult<D> {
 impl<D: Drain> Drain for IgnoreResult<D> {
     type Ok = ();
     type Err = Never;
-    fn log(
+    fn log_with_context(
         &self,
         record: &Record,
-        logger_values: &OwnedKVList,
+        values: &dyn Context,
     ) -> result::Result<(), Never> {
-        let _ = self.drain.log(record, logger_values);
+        let _ = self.drain.log_with_context(record, values);
         Ok(())
     }
 
@@ -1992,13 +1999,13 @@ where
 impl<D: Drain> Drain for std::sync::Mutex<D> {
     type Ok = D::Ok;
     type Err = MutexDrainError<D>;
-    fn log(
+    fn log_with_context(
         &self,
         record: &Record,
-        logger_values: &OwnedKVList,
+        values: &dyn Context,
     ) -> result::Result<Self::Ok, Self::Err> {
         let d = self.lock()?;
-        d.log(record, logger_values).map_err(MutexDrainError::Drain)
+        d.log_with_context(record, values).map_err(MutexDrainError::Drain)
     }
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
@@ -2649,8 +2656,22 @@ pub trait SendSyncRefUnwindSafeKV: KV + Send + Sync + RefUnwindSafe {}
 
 #[cfg(feature = "std")]
 impl<T> SendSyncRefUnwindSafeKV for T where
-    T: KV + Send + Sync + RefUnwindSafe + ?Sized
+    T: KV + Send + Sync +  RefUnwindSafe + ?Sized
 {}
+
+trait Context : SendSyncRefUnwindSafeKV {
+
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV>;
+}
+
+impl<T> Context for T where T : KV + Send + Sync +  RefUnwindSafe + Clone +
+'static {
+
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV>
+    {
+        Arc::new(self.clone())
+    }
+}
 
 #[cfg(not(feature = "std"))]
 /// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
@@ -2768,6 +2789,7 @@ impl<'a> KV for BorrowedKV<'a> {
 /// Zero, one or more owned key-value pairs.
 ///
 /// Can be constructed with [`o!` macro](macro.o.html).
+#[derive(Clone)]
 pub struct OwnedKV<T>(
     #[doc(hidden)]
     /// The exact details of that it are not considered public
