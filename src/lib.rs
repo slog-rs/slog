@@ -1,3 +1,5 @@
+#![feature(never_type)]
+
 //! # Slog -  Structured, extensible, composable logging for Rust
 //!
 //! `slog-rs` is an ecosystem of reusable components for structured, extensible,
@@ -362,7 +364,7 @@ use std::sync::Arc;
 #[macro_export]
 macro_rules! o(
     ($($args:tt)*) => {
-        $crate::OwnedKV(kv!($($args)*))
+        $crate::OwnedContext(Arc::new(kv!($($args)*)))
     };
 );
 
@@ -372,7 +374,7 @@ macro_rules! o(
 #[macro_export]
 macro_rules! slog_o(
     ($($args:tt)*) => {
-        $crate::OwnedKV(slog_kv!($($args)*))
+        $crate::OwnedContext(Arc::new(slog_kv!($($args)*)))
     };
 );
 
@@ -1061,20 +1063,20 @@ macro_rules! slog_trace(
 ///
 /// Logger is parametrized over type of a `Drain` associated with it (`D`). It
 /// default to type-erased version so `Logger` without any type annotation
-/// means `Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>`. See
+/// means `Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = !>>>`. See
 /// `Logger::root_typed` and `Logger::to_erased` for more information.
 #[derive(Clone)]
-pub struct Logger<D = Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
+pub struct Logger<D = Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = !>>>
 where
-    D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>,
+    D: SendSyncUnwindSafeDrain<Ok = (), Err = !>,
 {
     drain: D,
-    list: OwnedKVList,
+    context: OwnedContext,
 }
 
 impl<D> Logger<D>
 where
-    D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>,
+    D: SendSyncUnwindSafeDrain<Ok = (), Err = !>,
 {
     /// Build a root `Logger`
     ///
@@ -1086,7 +1088,7 @@ where
     /// sharing a common drain. See `Logger::new`.
     ///
     /// This version (as opposed to `Logger:root_typed`) will take `drain` and
-    /// made it into `Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>`.
+    /// made it into `Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = !>>`.
     /// This is typically the most convenient way to work with `Logger`s.
     ///
     /// Use `o!` macro to build `OwnedKV` object.
@@ -1102,15 +1104,15 @@ where
     ///     );
     /// }
     /// ```
-    pub fn root<T>(drain: D, values: OwnedKV<T>) -> Logger
+    pub fn root<T>(drain: D, context: OwnedContext) -> Logger
     where
-        D: 'static + SendSyncRefUnwindSafeDrain<Err = Never, Ok = ()>,
+        D: 'static + SendSyncRefUnwindSafeDrain<Err = !, Ok = ()>,
         T: SendSyncRefUnwindSafeKV + 'static,
     {
         Logger {
             drain: Arc::new(drain)
-                as Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
-            list: OwnedKVList::root(values),
+                as Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = !>>,
+            context: context,
         }
     }
 
@@ -1127,14 +1129,14 @@ where
     /// See `Logger:into_erased` and `Logger::to_erased` for conversion from
     /// type returned by this function to version that would be returned by
     /// `Logger::root`.
-    pub fn root_typed<T>(drain: D, values: OwnedKV<T>) -> Logger<D>
+    pub fn root_typed<T>(drain: D, context: OwnedContext) -> Logger<D>
     where
-        D: 'static + SendSyncUnwindSafeDrain<Err = Never, Ok = ()> + Sized,
+        D: 'static + SendSyncUnwindSafeDrain<Err = !, Ok = ()> + Sized,
         T: SendSyncRefUnwindSafeKV + 'static,
     {
         Logger {
             drain: drain,
-            list: OwnedKVList::root(values),
+            context: context,
         }
     }
 
@@ -1171,20 +1173,20 @@ where
     ///     let _log = root.new(o!("key" => "value"));
     /// }
     #[cfg_attr(feature = "cargo-clippy", allow(wrong_self_convention))]
-    pub fn new<T>(&self, values: OwnedKV<T>) -> Logger<D>
+    pub fn new<T>(&self, context: OwnedContext) -> Logger<D>
     where
         T: SendSyncRefUnwindSafeKV + 'static,
         D: Clone,
     {
         Logger {
             drain: self.drain.clone(),
-            list: OwnedKVList::new(values, self.list.node.clone()),
+            context: OwnedContext(Arc::new(ContextList{first: context.to_owned(), second: self.context.to_owned()})),
         }
     }
 
     /// Get list of key-value pairs assigned to this `Logger`
-    pub fn list(&self) -> &OwnedKVList {
-        &self.list
+    pub fn list(&self) -> &OwnedContext {
+        &self.context
     }
 
     /// Convert to default, "erased" type:
@@ -1198,14 +1200,14 @@ where
     /// Rust gains trait implementation specialization.
     pub fn into_erased(
         self,
-    ) -> Logger<Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
+    ) -> Logger<Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = !>>>
     where
         D: SendRefUnwindSafeDrain + 'static,
     {
         Logger {
             drain: Arc::new(self.drain)
-                as Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
-            list: self.list,
+                as Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = !>>,
+            context: self.context,
         }
     }
 
@@ -1214,7 +1216,7 @@ where
     /// See `into_erased`
     pub fn to_erased(
         &self,
-    ) -> Logger<Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
+    ) -> Logger<Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = !>>>
     where
         D: SendRefUnwindSafeDrain + 'static + Clone,
     {
@@ -1222,34 +1224,36 @@ where
     }
 }
 
+/* TODO
 impl<D> fmt::Debug for Logger<D>
 where
-    D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>,
+    D: SendSyncUnwindSafeDrain<Ok = (), Err = !>,
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        try!(write!(f, "Logger{:?}", self.list));
+        try!(write!(f, "Logger{:?}", self.context));
         Ok(())
     }
 }
+*/
 
 impl<D> Drain for Logger<D>
 where
-    D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>,
+    D: SendSyncUnwindSafeDrain<Ok = (), Err = !>,
 {
     type Ok = ();
-    type Err = Never;
+    type Err = !;
 
     fn log_with_context(
         &self,
         record: &Record,
-        values: &dyn Context,
+        context: &dyn Context,
     ) -> result::Result<Self::Ok, Self::Err> {
-        let chained = OwnedKVList {
-            node: Arc::new(MultiListNode {
-                next_node: values.to_owned(),
-                node: self.list.node.clone(),
+        let chained = OwnedContext (
+            Arc::new(ContextList {
+                first: context.to_owned(),
+                second: self.context.0.to_owned(),
             }),
-        };
+        );
         self.drain.log_with_context(record, &chained)
     }
 
@@ -1257,7 +1261,7 @@ where
         &self,
         record: &Record,
     ) -> result::Result<Self::Ok, Self::Err> {
-        self.drain.log_with_context(record, &self.list)
+        self.drain.log_with_context(record, &self.context)
     }
 
     #[inline]
@@ -1672,8 +1676,8 @@ pub struct Discard;
 
 impl Drain for Discard {
     type Ok = ();
-    type Err = Never;
-    fn log_with_context(&self, _: &Record, _: &dyn Context) -> result::Result<(), Never> {
+    type Err = !;
+    fn log_with_context(&self, _: &Record, _: &dyn Context) -> result::Result<(), !> {
         Ok(())
     }
     #[inline]
@@ -1873,12 +1877,12 @@ where
     D::Err: fmt::Debug,
 {
     type Ok = ();
-    type Err = Never;
+    type Err = !;
     fn log_with_context(
         &self,
         record: &Record,
         values: &dyn Context,
-    ) -> result::Result<Self::Ok, Never> {
+    ) -> result::Result<Self::Ok, !> {
         let _ = self
             .0
             .log_with_context(record, values)
@@ -1910,12 +1914,12 @@ impl<D: Drain> IgnoreResult<D> {
 
 impl<D: Drain> Drain for IgnoreResult<D> {
     type Ok = ();
-    type Err = Never;
+    type Err = !;
     fn log_with_context(
         &self,
         record: &Record,
         values: &dyn Context,
-    ) -> result::Result<(), Never> {
+    ) -> result::Result<(), !> {
         let _ = self.drain.log_with_context(record, values);
         Ok(())
     }
@@ -2659,19 +2663,42 @@ impl<T> SendSyncRefUnwindSafeKV for T where
     T: KV + Send + Sync +  RefUnwindSafe + ?Sized
 {}
 
-pub trait Context : SendSyncRefUnwindSafeKV {
+pub trait Context {
 
-    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV>;
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static>;
 }
 
-impl<T> Context for T where T : KV + Send + Sync +  RefUnwindSafe + Clone +
-'static {
 
-    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV>
+impl<T> Context for Arc<T> where T : SendSyncRefUnwindSafeKV + 'static {
+
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static>
     {
-        Arc::new(self.clone())
+        self.clone()
     }
 }
+
+impl Context for Arc<dyn SendSyncRefUnwindSafeKV + 'static> {
+
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static>
+    {
+        self.clone()
+    }
+}
+impl Context for OwnedContext {
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static>
+    {
+        self.0.clone()
+    }
+}
+
+
+impl Context for () {
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static>
+    {
+        Arc::new(())
+    }
+}
+
 
 #[cfg(not(feature = "std"))]
 /// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
@@ -2756,19 +2783,6 @@ where
     }
 }
 
-impl<T> KV for OwnedKV<T>
-where
-    T: SendSyncRefUnwindSafeKV + ?Sized,
-{
-    fn serialize(
-        &self,
-        record: &Record,
-        serializer: &mut dyn Serializer,
-    ) -> Result {
-        self.0.serialize(record, serializer)
-    }
-}
-
 impl<'a> KV for BorrowedKV<'a> {
     fn serialize(
         &self,
@@ -2781,24 +2795,55 @@ impl<'a> KV for BorrowedKV<'a> {
 // }}}
 
 // {{{ OwnedKV
-/// Owned KV
-///
-/// "Owned" means that the contained data (key-value pairs) can belong
-/// to a `Logger` and thus must be thread-safe (`'static`, `Send`, `Sync`)
-///
-/// Zero, one or more owned key-value pairs.
-///
-/// Can be constructed with [`o!` macro](macro.o.html).
+/// Owned Context
 #[derive(Clone)]
-pub struct OwnedKV<T>(
-    #[doc(hidden)]
-    /// The exact details of that it are not considered public
-    /// and stable API. `slog_o` or `o` macro should be used
-    /// instead to create `OwnedKV` instances.
-    pub T,
-)
-where
-    T: SendSyncRefUnwindSafeKV + ?Sized;
+pub struct OwnedContext(pub Arc<dyn SendSyncRefUnwindSafeKV>);
+
+impl KV for OwnedContext
+{
+    fn serialize(
+        &self,
+        record: &Record,
+        serializer: &mut dyn Serializer,
+    ) -> Result {
+        self.0.serialize(record, serializer)
+    }
+}
+
+
+
+struct ContextList
+{
+    first: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
+    second: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
+}
+
+
+
+impl KV for ContextList {
+    fn serialize(
+        &self,
+        record: &Record,
+        serializer: &mut dyn Serializer,
+    ) -> Result {
+        try!(self.first.serialize(record, serializer));
+        try!(self.second.serialize(record, serializer));
+
+        Ok(())
+    }
+}
+
+impl Context for ContextList {
+
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static>
+    {
+        Arc::new(ContextList {
+            first: self.first.clone(),
+            second: self.second.clone(),
+        })
+    }
+}
+
 // }}}
 
 // {{{ BorrowedKV
@@ -2820,145 +2865,6 @@ pub struct BorrowedKV<'a>(
 );
 
 // }}}
-
-// {{{ OwnedKVList
-struct OwnedKVListNode<T>
-where
-    T: SendSyncRefUnwindSafeKV + 'static,
-{
-    next_node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
-    kv: T,
-}
-
-struct MultiListNode {
-    next_node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
-    node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
-}
-
-/// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
-#[derive(Clone)]
-pub struct OwnedKVList {
-    node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
-}
-
-impl<T> KV for OwnedKVListNode<T>
-where
-    T: SendSyncRefUnwindSafeKV + 'static,
-{
-    fn serialize(
-        &self,
-        record: &Record,
-        serializer: &mut dyn Serializer,
-    ) -> Result {
-        try!(self.kv.serialize(record, serializer));
-        try!(self.next_node.serialize(record, serializer));
-
-        Ok(())
-    }
-}
-
-impl KV for MultiListNode {
-    fn serialize(
-        &self,
-        record: &Record,
-        serializer: &mut dyn Serializer,
-    ) -> Result {
-        try!(self.next_node.serialize(record, serializer));
-        try!(self.node.serialize(record, serializer));
-
-        Ok(())
-    }
-}
-
-impl KV for OwnedKVList {
-    fn serialize(
-        &self,
-        record: &Record,
-        serializer: &mut dyn Serializer,
-    ) -> Result {
-        try!(self.node.serialize(record, serializer));
-
-        Ok(())
-    }
-}
-
-impl fmt::Debug for OwnedKVList {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        try!(write!(f, "("));
-        let mut i = 0;
-
-        {
-            let mut as_str_ser = AsFmtSerializer(|key, _val| {
-                if i != 0 {
-                    try!(write!(f, ", "));
-                }
-
-                try!(write!(f, "{}", key));
-                i += 1;
-                Ok(())
-            });
-            let record_static = record_static!(Level::Trace, "");
-
-            try!(
-                self.node
-                    .serialize(
-                        &Record::new(
-                            &record_static,
-                            &format_args!(""),
-                            BorrowedKV(&STATIC_TERMINATOR_UNIT),
-                        ),
-                        &mut as_str_ser,
-                    )
-                    .map_err(|_| fmt::Error)
-            );
-        }
-
-        try!(write!(f, ")"));
-        Ok(())
-    }
-}
-
-impl OwnedKVList {
-    /// New `OwnedKVList` node without a parent (root)
-    fn root<T>(values: OwnedKV<T>) -> Self
-    where
-        T: SendSyncRefUnwindSafeKV + 'static,
-    {
-        OwnedKVList {
-            node: Arc::new(OwnedKVListNode {
-                next_node: Arc::new(()),
-                kv: values.0,
-            }),
-        }
-    }
-
-    /// New `OwnedKVList` node with an existing parent
-    fn new<T>(
-        values: OwnedKV<T>,
-        next_node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
-    ) -> Self
-    where
-        T: SendSyncRefUnwindSafeKV + 'static,
-    {
-        OwnedKVList {
-            node: Arc::new(OwnedKVListNode {
-                next_node: next_node,
-                kv: values.0,
-            }),
-        }
-    }
-}
-
-impl<T> convert::From<OwnedKV<T>> for OwnedKVList
-where
-    T: SendSyncRefUnwindSafeKV + 'static,
-{
-    fn from(from: OwnedKV<T>) -> Self {
-        OwnedKVList::root(from)
-    }
-}
-// }}}
-
 // {{{ Error
 #[derive(Debug)]
 #[cfg(feature = "std")]
@@ -3046,17 +2952,6 @@ impl core::fmt::Display for Error {
 // }}}
 
 // {{{ Misc
-/// This type is here just to abstract away lack of `!` type support in stable
-/// rust during time of the release. It will be switched to `!` at some point
-/// and `Never` should not be considered "stable" API.
-#[doc(hidden)]
-pub type Never = private::NeverStruct;
-
-mod private {
-    #[doc(hidden)]
-    #[derive(Debug)]
-    pub struct NeverStruct(());
-}
 
 /// This is not part of "stable" API
 #[doc(hidden)]
