@@ -2370,6 +2370,7 @@ impl<'a> Record<'a> {
 /// Drains using `Format` will internally use
 /// types implementing this trait.
 pub trait Serializer {
+    /// Emit a `value`
     fn emit(&mut self, key: Key, value: & dyn erased_serde::Serialize) -> Result;
 }
 
@@ -2385,7 +2386,7 @@ where
     F: for<'a> FnMut(Key, fmt::Arguments<'a>) -> Result,
 {
     fn emit(&mut self, key: Key, value: & dyn erased_serde::Serialize) -> Result {
-        (self.0)(key, format_args!("{}", 1i32));
+        (self.0)(key, format_args!("{}", 1i32))?;
             unimplemented!();
     }
 }
@@ -2438,6 +2439,18 @@ impl<T> Value for T where T : erased_serde::Serialize {
     }
 }
 
+struct FmtArguments<'a>(pub &'a core::fmt::Arguments<'a>);
+
+impl<'a> Value for FmtArguments<'a> {
+    fn serialize(
+        &self,
+        _record: &Record,
+        key: Key,
+        serializer: &mut dyn Serializer,
+    ) -> Result {
+        serializer.emit(key, &format!("{}", self.0).as_str())
+    }
+}
 
 /// Explicit lazy-closure `Value`
 pub struct FnValue<V: Value, F>(pub F)
@@ -3075,11 +3088,11 @@ pub struct FmtDebug<T: fmt::Debug>(pub T);
 impl<T: fmt::Debug> Value for FmtDebug<T> {
     fn serialize(
         &self,
-        _record: &Record,
+        record: &Record,
         key: Key,
         serializer: &mut Serializer,
     ) -> Result {
-        serializer.emit(key, &format_args!("{:?}", self.0))
+        FmtArguments(&format_args!("{:?}", self.0)).serialize(record, key, serializer)
     }
 }
 
@@ -3090,11 +3103,11 @@ pub struct FmtDisplay<T: fmt::Display>(pub T);
 impl<T: fmt::Display> Value for FmtDisplay<T> {
     fn serialize(
         &self,
-        _record: &Record,
+        record: &Record,
         key: Key,
         serializer: &mut Serializer,
     ) -> Result {
-        serializer.emit(key, &format_args!("{}", self.0))
+        FmtArguments(&format_args!("{}", self.0)).serialize(record, key, serializer)
     }
 }
 // }}}
