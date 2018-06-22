@@ -43,11 +43,10 @@ release_max_level_trace = []
 
 [dependencies]
 erased-serde = { version = "0.3" }
-serde = { version = "1" }
 
 [dev-dependencies]
-slog-term = "2"
-slog-async = "2"
+#slog-term = "2"
+#slog-async = "2"
 
 [package.metadata.docs.rs]
 features = ["std", "nested-values"]

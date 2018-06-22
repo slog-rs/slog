@@ -725,7 +725,7 @@ macro_rules! slog_record(
 macro_rules! log(
     // `2` means that `;` was already found
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-      $l.log(&record!($lvl, $tag, &format_args!($msg_fmt, $($fmt)*), b!($($kv)*)))
+      $crate::Drain::log(&$l, &record!($lvl, $tag, &format_args!($msg_fmt, $($fmt)*), b!($($kv)*))).unwrap()
    };
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
        log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
@@ -798,7 +798,7 @@ macro_rules! log(
 macro_rules! slog_log(
     // `2` means that `;` was already found
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-      $l.log(&slog_record!($lvl, $tag, &format_args!($msg_fmt, $($fmt)*), slog_b!($($kv)*)))
+      $crate::Drain::log(&$l, &slog_record!($lvl, $tag, &format_args!($msg_fmt, $($fmt)*), slog_b!($($kv)*))).unwrap()
    };
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
        slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
@@ -845,7 +845,7 @@ macro_rules! slog_log(
    };
    ($l:expr, $lvl:expr, $tag:expr, $($args:tt)*) => {
        if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-           slog_log!(1 @ { }, { }, $l, $lvl, $tag, $($args)*)
+           slog_log!(1 @ { }, { }, $l, $lvl, $tag, $($args)*);
        }
    };
 );
@@ -2659,7 +2659,7 @@ impl<T> SendSyncRefUnwindSafeKV for T where
     T: KV + Send + Sync +  RefUnwindSafe + ?Sized
 {}
 
-trait Context : SendSyncRefUnwindSafeKV {
+pub trait Context : SendSyncRefUnwindSafeKV {
 
     fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV>;
 }
