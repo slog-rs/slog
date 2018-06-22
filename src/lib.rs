@@ -1180,7 +1180,10 @@ where
     {
         Logger {
             drain: self.drain.clone(),
-            context: OwnedContext(Arc::new(ContextList{first: context.to_owned(), second: self.context.to_owned()})),
+            context: OwnedContext(Arc::new(ContextList {
+                first: context.to_owned(),
+                second: self.context.to_owned(),
+            })),
         }
     }
 
@@ -1248,19 +1251,14 @@ where
         record: &Record,
         context: &dyn Context,
     ) -> result::Result<Self::Ok, Self::Err> {
-        let chained = OwnedContext (
-            Arc::new(ContextList {
-                first: context.to_owned(),
-                second: self.context.0.to_owned(),
-            }),
-        );
+        let chained = OwnedContext(Arc::new(ContextList {
+            first: context.to_owned(),
+            second: self.context.0.to_owned(),
+        }));
         self.drain.log_with_context(record, &chained)
     }
 
-    fn log(
-        &self,
-        record: &Record,
-    ) -> result::Result<Self::Ok, Self::Err> {
+    fn log(&self, record: &Record) -> result::Result<Self::Ok, Self::Err> {
         self.drain.log_with_context(record, &self.context)
     }
 
@@ -1312,13 +1310,9 @@ pub trait Drain {
         values: &dyn Context,
     ) -> result::Result<Self::Ok, Self::Err>;
 
-    fn log(
-        &self,
-        record: &Record,
-    ) -> result::Result<Self::Ok, Self::Err> {
+    fn log(&self, record: &Record) -> result::Result<Self::Ok, Self::Err> {
         self.log_with_context(record, &o!())
     }
-
 
     /// **Avoid**: Check if messages at the specified log level are **maybe**
     /// enabled for this logger.
@@ -1677,7 +1671,11 @@ pub struct Discard;
 impl Drain for Discard {
     type Ok = ();
     type Err = !;
-    fn log_with_context(&self, _: &Record, _: &dyn Context) -> result::Result<(), !> {
+    fn log_with_context(
+        &self,
+        _: &Record,
+        _: &dyn Context,
+    ) -> result::Result<(), !> {
         Ok(())
     }
     #[inline]
@@ -2009,7 +2007,8 @@ impl<D: Drain> Drain for std::sync::Mutex<D> {
         values: &dyn Context,
     ) -> result::Result<Self::Ok, Self::Err> {
         let d = self.lock()?;
-        d.log_with_context(record, values).map_err(MutexDrainError::Drain)
+        d.log_with_context(record, values)
+            .map_err(MutexDrainError::Drain)
     }
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
@@ -2383,7 +2382,8 @@ impl<'a> Record<'a> {
 /// types implementing this trait.
 pub trait Serializer {
     /// Emit a `value`
-    fn emit(&mut self, key: Key, value: & dyn erased_serde::Serialize) -> Result;
+    fn emit(&mut self, key: Key, value: &dyn erased_serde::Serialize)
+        -> Result;
 }
 
 /// Serializer to closure adapter.
@@ -2397,9 +2397,13 @@ impl<F> Serializer for AsFmtSerializer<F>
 where
     F: for<'a> FnMut(Key, fmt::Arguments<'a>) -> Result,
 {
-    fn emit(&mut self, key: Key, value: &dyn erased_serde::Serialize) -> Result {
+    fn emit(
+        &mut self,
+        key: Key,
+        value: &dyn erased_serde::Serialize,
+    ) -> Result {
         (self.0)(key, format_args!("{}", 1i32))?;
-            unimplemented!();
+        unimplemented!();
     }
 }
 // }}}
@@ -2440,7 +2444,10 @@ pub trait Value {
     ) -> Result;
 }
 
-impl<T> Value for T where T : erased_serde::Serialize {
+impl<T> Value for T
+where
+    T: erased_serde::Serialize,
+{
     fn serialize(
         &self,
         _record: &Record,
@@ -2635,8 +2642,11 @@ pub trait KV {
     ///
     /// `KV` should call respective `Serializer` methods
     /// for each key-value pair it contains.
-    fn serialize(&self, record: &Record, serializer: &mut dyn Serializer)
-        -> Result;
+    fn serialize(
+        &self,
+        record: &Record,
+        serializer: &mut dyn Serializer,
+    ) -> Result;
 }
 
 impl<'a, T> KV for &'a T
@@ -2660,45 +2670,38 @@ pub trait SendSyncRefUnwindSafeKV: KV + Send + Sync + RefUnwindSafe {}
 
 #[cfg(feature = "std")]
 impl<T> SendSyncRefUnwindSafeKV for T where
-    T: KV + Send + Sync +  RefUnwindSafe + ?Sized
+    T: KV + Send + Sync + RefUnwindSafe + ?Sized
 {}
 
 pub trait Context {
-
     fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static>;
 }
 
-
-impl<T> Context for Arc<T> where T : SendSyncRefUnwindSafeKV + 'static {
-
-    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static>
-    {
+impl<T> Context for Arc<T>
+where
+    T: SendSyncRefUnwindSafeKV + 'static,
+{
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static> {
         self.clone()
     }
 }
 
 impl Context for Arc<dyn SendSyncRefUnwindSafeKV + 'static> {
-
-    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static>
-    {
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static> {
         self.clone()
     }
 }
 impl Context for OwnedContext {
-    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static>
-    {
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static> {
         self.0.clone()
     }
 }
 
-
 impl Context for () {
-    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static>
-    {
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static> {
         Arc::new(())
     }
 }
-
 
 #[cfg(not(feature = "std"))]
 /// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
@@ -2799,8 +2802,7 @@ impl<'a> KV for BorrowedKV<'a> {
 #[derive(Clone)]
 pub struct OwnedContext(pub Arc<dyn SendSyncRefUnwindSafeKV>);
 
-impl KV for OwnedContext
-{
+impl KV for OwnedContext {
     fn serialize(
         &self,
         record: &Record,
@@ -2810,15 +2812,10 @@ impl KV for OwnedContext
     }
 }
 
-
-
-struct ContextList
-{
+struct ContextList {
     first: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
     second: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
 }
-
-
 
 impl KV for ContextList {
     fn serialize(
@@ -2834,9 +2831,7 @@ impl KV for ContextList {
 }
 
 impl Context for ContextList {
-
-    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static>
-    {
+    fn to_owned(&self) -> Arc<dyn SendSyncRefUnwindSafeKV + 'static> {
         Arc::new(ContextList {
             first: self.first.clone(),
             second: self.second.clone(),
@@ -3010,7 +3005,8 @@ impl<T: fmt::Debug> Value for FmtDebug<T> {
         key: Key,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        FmtArguments(&format_args!("{:?}", self.0)).serialize(record, key, serializer)
+        FmtArguments(&format_args!("{:?}", self.0))
+            .serialize(record, key, serializer)
     }
 }
 
@@ -3025,7 +3021,8 @@ impl<T: fmt::Display> Value for FmtDisplay<T> {
         key: Key,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        FmtArguments(&format_args!("{}", self.0)).serialize(record, key, serializer)
+        FmtArguments(&format_args!("{}", self.0))
+            .serialize(record, key, serializer)
     }
 }
 // }}}
