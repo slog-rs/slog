@@ -514,6 +514,10 @@ macro_rules! slog_record_static(
 
 #[macro_export]
 /// Create `Record` at the given code location
+///
+/// Note that this requires that `lvl` and `tag` are compile-time constants. If
+/// you need them to *not* be compile-time, such as when recreating a `Record`
+/// from a serialized version, use `Record::new` instead.
 macro_rules! record(
     ($lvl:expr, $tag:expr, $args:expr, $b:expr,) => {
         record!($lvl, $tag, $args, $b)
@@ -2277,18 +2281,19 @@ pub struct RecordLocation {
     /// Module
     pub module: &'static str,
 }
-#[doc(hidden)]
 /// Information that can be static in the given record thus allowing to optimize
 /// record creation to be done mostly at compile-time.
 ///
-/// This is not cosidered a part of stable API, and macros should be used
-/// instead.
+/// This should be constructed via the `record_static!` macro.
 pub struct RecordStatic<'a> {
     /// Code location
+    #[doc(hidden)]
     pub location: &'a RecordLocation,
     /// Tag
+    #[doc(hidden)]
     pub tag: &'a str,
     /// Logging level
+    #[doc(hidden)]
     pub level: Level,
 }
 
@@ -2309,9 +2314,14 @@ pub struct Record<'a> {
 impl<'a> Record<'a> {
     /// Create a new `Record`
     ///
-    /// This function is not considered a part of stable API
+    /// Most of the time, it is slightly more performant to construct a `Record`
+    /// via the `record!` macro because it enforces that the *entire*
+    /// `RecordStatic` is built at compile-time.
+    ///
+    /// Use this if runtime record creation is a requirement, as is the case with
+    /// [slog-async](https://docs.rs/slog-async/latest/slog_async/struct.Async.html),
+    /// for example.
     #[inline]
-    #[doc(hidden)]
     pub fn new(
         s: &'a RecordStatic<'a>,
         msg: &'a fmt::Arguments<'a>,
