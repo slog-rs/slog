@@ -331,6 +331,7 @@ use alloc::rc::Rc;
 #[cfg(not(feature = "std"))]
 use collections::string::String;
 
+extern crate serde;
 extern crate erased_serde;
 
 use core::str::FromStr;
@@ -1226,18 +1227,6 @@ where
         self.clone().into_erased()
     }
 }
-
-/* TODO
-impl<D> fmt::Debug for Logger<D>
-where
-    D: SendSyncUnwindSafeDrain<Ok = (), Err = !>,
-{
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        try!(write!(f, "Logger{:?}", self.context));
-        Ok(())
-    }
-}
-*/
 
 impl<D> Drain for Logger<D>
 where
@@ -2385,27 +2374,6 @@ pub trait Serializer {
     fn emit(&mut self, key: Key, value: &dyn erased_serde::Serialize)
         -> Result;
 }
-
-/// Serializer to closure adapter.
-///
-/// Formats all arguments as `fmt::Arguments` and passes them to a given closure.
-struct AsFmtSerializer<F>(pub F)
-where
-    F: for<'a> FnMut(Key, fmt::Arguments<'a>) -> Result;
-
-impl<F> Serializer for AsFmtSerializer<F>
-where
-    F: for<'a> FnMut(Key, fmt::Arguments<'a>) -> Result,
-{
-    fn emit(
-        &mut self,
-        key: Key,
-        value: &dyn erased_serde::Serialize,
-    ) -> Result {
-        (self.0)(key, format_args!("{}", 1i32))?;
-        unimplemented!();
-    }
-}
 // }}}
 
 // {{{ Value
@@ -2446,7 +2414,7 @@ pub trait Value {
 
 impl<T> Value for T
 where
-    T: erased_serde::Serialize,
+    T: serde::Serialize,
 {
     fn serialize(
         &self,
@@ -2455,19 +2423,6 @@ where
         serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit(key, self)
-    }
-}
-
-struct FmtArguments<'a>(pub &'a core::fmt::Arguments<'a>);
-
-impl<'a> Value for FmtArguments<'a> {
-    fn serialize(
-        &self,
-        _record: &Record,
-        key: Key,
-        serializer: &mut dyn Serializer,
-    ) -> Result {
-        serializer.emit(key, &format!("{}", self.0).as_str())
     }
 }
 
@@ -3005,7 +2960,7 @@ impl<T: fmt::Debug> Value for FmtDebug<T> {
         key: Key,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        FmtArguments(&format_args!("{:?}", self.0))
+        format_args!("{:?}", self.0)
             .serialize(record, key, serializer)
     }
 }
@@ -3021,7 +2976,7 @@ impl<T: fmt::Display> Value for FmtDisplay<T> {
         key: Key,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        FmtArguments(&format_args!("{}", self.0))
+        format_args!("{}", self.0)
             .serialize(record, key, serializer)
     }
 }
