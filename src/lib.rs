@@ -2753,6 +2753,17 @@ impl<'a> Value for std::path::Display<'a> {
     }
 }
 
+impl Value for std::net::SocketAddr {
+    fn serialize(
+        &self,
+        _record: &Record,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
+        serializer.emit_arguments(key, &format_args!("{}", self))
+    }
+}
+
 /// Explicit lazy-closure `Value`
 pub struct FnValue<V: Value, F>(pub F)
 where
