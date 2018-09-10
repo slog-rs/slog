@@ -787,7 +787,7 @@ macro_rules! log(
 /// See [`log`](macro.log.html) for documentation.
 ///
 /// ```
-/// #[macro_use(slog_o,slog_b,slog_record,slog_record_static,slog_log,slog_info,slog_kv)]
+/// #[macro_use(slog_o,slog_b,slog_record,slog_record_static,slog_log,slog_info,slog_kv,__slog_builtin)]
 /// extern crate slog;
 ///
 /// fn main() {
