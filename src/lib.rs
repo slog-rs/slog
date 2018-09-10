@@ -400,16 +400,16 @@ macro_rules! slog_b(
 #[macro_export(local_inner_macros)]
 macro_rules! kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
-        kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); )
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr) => {
-        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); )
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
@@ -438,16 +438,16 @@ macro_rules! kv(
 #[macro_export(local_inner_macros)]
 macro_rules! slog_kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); )
+        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, format_args!("{}", $v))), $args_ready); $($args)* )
+        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr) => {
-        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); )
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV::from(($k, format_args!("{:?}", $v))), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
@@ -478,11 +478,11 @@ macro_rules! record_static(
     ($lvl:expr, $tag:expr,) => { record_static!($lvl, $tag) };
     ($lvl:expr, $tag:expr) => {{
         static LOC : $crate::RecordLocation = $crate::RecordLocation {
-            file: file!(),
-            line: line!(),
-            column: column!(),
+            file: __slog_builtin!(@file),
+            line: __slog_builtin!(@line),
+            column: __slog_builtin!(@column),
             function: "",
-            module: module_path!(),
+            module: __slog_builtin!(@module_path),
         };
         $crate::RecordStatic {
             location : &LOC,
@@ -498,11 +498,11 @@ macro_rules! slog_record_static(
     ($lvl:expr, $tag:expr,) => { slog_record_static!($lvl, $tag) };
     ($lvl:expr, $tag:expr) => {{
         static LOC : $crate::RecordLocation = $crate::RecordLocation {
-            file: file!(),
-            line: line!(),
-            column: column!(),
+            file: __slog_builtin!(@file),
+            line: __slog_builtin!(@line),
+            column: __slog_builtin!(@column),
             function: "",
-            module: module_path!(),
+            module: __slog_builtin!(@module_path),
         };
         $crate::RecordStatic {
             location : &LOC,
@@ -727,7 +727,7 @@ macro_rules! slog_record(
 macro_rules! log(
     // `2` means that `;` was already found
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-      $l.log(&record!($lvl, $tag, &format_args!($msg_fmt, $($fmt)*), b!($($kv)*)))
+      $l.log(&record!($lvl, $tag, &__slog_builtin!(@format_args $msg_fmt, $($fmt)*), b!($($kv)*)))
    };
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
        log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
@@ -741,19 +741,19 @@ macro_rules! log(
     // `1` means that we are still looking for `;`
     // -- handle named arguments to format string
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr) => {
-       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt)
+       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr;) => {
-       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt)
+       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr,) => {
-       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt)
+       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr; $($args:tt)*) => {
-       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+       log!(2 @ { $($fmt)* $k = $v }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr, $($args:tt)*) => {
-       log!(1 @ { $($fmt)* $k = $v, }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+       log!(1 @ { $($fmt)* $k = $v, }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
     // -- look for `;` termination
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
@@ -800,7 +800,7 @@ macro_rules! log(
 macro_rules! slog_log(
     // `2` means that `;` was already found
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-      $l.log(&slog_record!($lvl, $tag, &format_args!($msg_fmt, $($fmt)*), slog_b!($($kv)*)))
+      $l.log(&slog_record!($lvl, $tag, &__slog_builtin!(@format_args $msg_fmt, $($fmt)*), slog_b!($($kv)*)))
    };
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
        slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
@@ -814,19 +814,19 @@ macro_rules! slog_log(
     // `1` means that we are still looking for `;`
     // -- handle named arguments to format string
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt)
+       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr;) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt)
+       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr,) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt)
+       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr; $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr, $($args:tt)*) => {
-       slog_log!(1 @ { $($fmt)* $k = $v, }, { $($kv)* stringify!($k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
+       slog_log!(1 @ { $($fmt)* $k = $v, }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
    };
     // -- look for `;` termination
    (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
@@ -1027,6 +1027,20 @@ macro_rules! slog_trace(
         slog_log!($crate::Level::Trace, $($args)+)
     };
 );
+
+/// Helper macro for using the built-in macros inside of
+/// exposed macros with `local_inner_macros` attribute.
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __slog_builtin {
+    (@format_args $($t:tt)*) => ( format_args!($($t)*) );
+    (@stringify $($t:tt)*) => ( stringify!($($t)*) );
+    (@file) => ( file!() );
+    (@line) => ( line!() );
+    (@column) => ( column!() );
+    (@module_path) => ( module_path!() );
+}
+
 // }}}
 
 // {{{ Logger
