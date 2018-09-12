@@ -1,0 +1,14 @@
+[package]
+name = "test_edition2018"
+version = "0.0.0"
+edition = "2018"
+description = "A crate for testing 2018-style macro imports"
+authors = ["Yusuke Sasaki <yusuke.sasaki.nuem@gmail.com>"]
+publish = false
+
+[lib]
+path = "lib.rs"
+name = "test_edition2018"
+
+[dependencies]
+slog = { path = "../.." }
