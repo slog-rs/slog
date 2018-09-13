@@ -2565,7 +2565,7 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
 // }}}
 
 // {{{ Value
-/// # Value that can be serialized
+/// Value that can be serialized
 ///
 /// Types that implement this type implement custome serialization in the
 /// structured part of the log macros. Without an implementation of `Value` for
@@ -2900,7 +2900,7 @@ where
 // }}}
 
 // {{{ KV
-/// # Key-value pair(s) for log events
+/// Key-value pair(s) for log events
 ///
 /// Zero, one or more key value pairs chained together
 ///
