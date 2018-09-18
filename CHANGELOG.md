@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.4.0 - 2018-09-18
+
+* Implement Value for 128 bit integers
+* Bump miminum supported Rust version to 1.26
+
 ## 2.3.3 - 2018-07-20
 
 * `impl Value for SocketAddr`
