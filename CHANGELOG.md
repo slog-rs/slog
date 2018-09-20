@@ -4,9 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 2.4.0 - 2018-09-18
+## 2.4.0 - 2018-09-19
 
 * Implement Value for 128 bit integers
+* Add support 2018-style macro imports
 * Bump miminum supported Rust version to 1.26
 
 ## 2.3.3 - 2018-07-20
