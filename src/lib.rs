@@ -2413,13 +2413,16 @@ impl<'a> Record<'a> {
 
 // {{{ Serializer
 macro_rules! impl_default_as_fmt{
-    ($t:ty, $f:ident) => {
-        /// Emit $t
+    ($(
+        $(#[$m:meta])*
+        $t:ty => $f:ident,
+    )*) => {$(
+        $(#[$m])*
         fn $f(&mut self, key : Key, val : $t)
             -> Result {
                 self.emit_arguments(key, &format_args!("{}", val))
             }
-    };
+    )*};
 }
 
 /// This is a workaround to be able to pass &mut Serializer, from
@@ -2446,40 +2449,42 @@ impl<'a, T: Serializer + 'a + ?Sized> Serializer for SerializerForward<'a, T> {
 /// Drains using `Format` will internally use
 /// types implementing this trait.
 pub trait Serializer {
-    /// Emit usize
-    impl_default_as_fmt!(usize, emit_usize);
-    /// Emit isize
-    impl_default_as_fmt!(isize, emit_isize);
-    /// Emit bool
-    impl_default_as_fmt!(bool, emit_bool);
-    /// Emit char
-    impl_default_as_fmt!(char, emit_char);
-    /// Emit u8
-    impl_default_as_fmt!(u8, emit_u8);
-    /// Emit i8
-    impl_default_as_fmt!(i8, emit_i8);
-    /// Emit u16
-    impl_default_as_fmt!(u16, emit_u16);
-    /// Emit i16
-    impl_default_as_fmt!(i16, emit_i16);
-    /// Emit u32
-    impl_default_as_fmt!(u32, emit_u32);
-    /// Emit i32
-    impl_default_as_fmt!(i32, emit_i32);
-    /// Emit f32
-    impl_default_as_fmt!(f32, emit_f32);
-    /// Emit u64
-    impl_default_as_fmt!(u64, emit_u64);
-    /// Emit i64
-    impl_default_as_fmt!(i64, emit_i64);
-    /// Emit f64
-    impl_default_as_fmt!(f64, emit_f64);
-    /// Emit u128
-    impl_default_as_fmt!(u128, emit_u128);
-    /// Emit i128
-    impl_default_as_fmt!(i128, emit_i128);
-    /// Emit str
-    impl_default_as_fmt!(&str, emit_str);
+    impl_default_as_fmt! {
+        /// Emit `usize`
+        usize => emit_usize,
+        /// Emit `isize`
+        isize => emit_isize,
+        /// Emit `bool`
+        bool => emit_bool,
+        /// Emit `char`
+        char => emit_char,
+        /// Emit `u8`
+        u8 => emit_u8,
+        /// Emit `i8`
+        i8 => emit_i8,
+        /// Emit `u16`
+        u16 => emit_u16,
+        /// Emit `i16`
+        i16 => emit_i16,
+        /// Emit `u32`
+        u32 => emit_u32,
+        /// Emit `i32`
+        i32 => emit_i32,
+        /// Emit `f32`
+        f32 => emit_f32,
+        /// Emit `u64`
+        u64 => emit_u64,
+        /// Emit `i64`
+        i64 => emit_i64,
+        /// Emit `f64`
+        f64 => emit_f64,
+        /// Emit `u128`
+        u128 => emit_u128,
+        /// Emit `i128`
+        i128 => emit_i128,
+        /// Emit `&str`
+        &str => emit_str,
+    }
 
     /// Emit `()`
     fn emit_unit(&mut self, key: Key) -> Result {
