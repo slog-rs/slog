@@ -112,7 +112,7 @@
 //!
 //! ### Logging to the terminal
 //!
-//! ```
+//! ```ignore
 //! #[macro_use]
 //! extern crate slog;
 //! extern crate slog_term;
@@ -131,7 +131,7 @@
 //!
 //! ### Logging to a file
 //!
-//! ```
+//! ```ignore
 //! #[macro_use]
 //! extern crate slog;
 //! extern crate slog_term;
@@ -164,7 +164,7 @@
 //!
 //! ### Change logging level at runtime
 //!
-//! ```
+//! ```ignore
 //! #[macro_use]
 //! extern crate slog;
 //! extern crate slog_term;
@@ -275,7 +275,7 @@
 //!
 //! Create simple terminal logger like this:
 //!
-//! ```
+//! ```ignore
 //! #[macro_use]
 //! extern crate slog;
 //! extern crate slog_term;
@@ -301,14 +301,11 @@
 
 // {{{ Imports & meta
 #![cfg_attr(not(feature = "std"), feature(alloc))]
-#![cfg_attr(not(feature = "std"), feature(collections))]
 #![warn(missing_docs)]
 #![no_std]
 
 #[cfg(not(feature = "std"))]
 extern crate alloc;
-#[cfg(not(feature = "std"))]
-extern crate collections;
 #[macro_use]
 #[cfg(feature = "std")]
 extern crate std;
@@ -316,13 +313,13 @@ extern crate std;
 mod key;
 pub use self::key::Key;
 #[cfg(not(feature = "std"))]
-use alloc::arc::Arc;
+use alloc::sync::Arc;
 #[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::rc::Rc;
 #[cfg(not(feature = "std"))]
-use collections::string::String;
+use alloc::string::String;
 
 #[cfg(feature = "nested-values")]
 extern crate erased_serde;

@@ -1,20 +1,15 @@
 //#![feature(trace_macros)]
 #[macro_use]
 extern crate slog;
-extern crate slog_async;
-extern crate slog_term;
-use slog::Drain;
+use slog::{Fuse, Logger};
 
+mod common;
 
 fn main() {
-    let decorator = slog_term::TermDecorator::new().build();
-    let drain = slog_term::FullFormat::new(decorator)
-        .use_original_order()
-        .build()
-        .fuse();
-    let drain = slog_async::Async::new(drain).build().fuse();
-
-    let log = slog::Logger::root(drain, o!("version" => "0.5"));
+    let log = Logger::root(
+        Fuse(common::PrintlnDrain),
+        o!("version" => "2")
+    );
 
     //trace_macros!(true);
     info!(log, "foo is {foo}", foo = 2; "a" => "b");
