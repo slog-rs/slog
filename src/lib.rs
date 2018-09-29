@@ -112,7 +112,7 @@
 //!
 //! ### Logging to the terminal
 //!
-//! ```
+//! ```ignore
 //! #[macro_use]
 //! extern crate slog;
 //! extern crate slog_term;
@@ -131,7 +131,7 @@
 //!
 //! ### Logging to a file
 //!
-//! ```
+//! ```ignore
 //! #[macro_use]
 //! extern crate slog;
 //! extern crate slog_term;
@@ -164,7 +164,7 @@
 //!
 //! ### Change logging level at runtime
 //!
-//! ```
+//! ```ignore
 //! #[macro_use]
 //! extern crate slog;
 //! extern crate slog_term;
@@ -275,7 +275,7 @@
 //!
 //! Create simple terminal logger like this:
 //!
-//! ```
+//! ```ignore
 //! #[macro_use]
 //! extern crate slog;
 //! extern crate slog_term;
