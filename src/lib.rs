@@ -2412,17 +2412,31 @@ impl<'a> Record<'a> {
 // }}}
 
 // {{{ Serializer
+
+#[cfg(macro_workaround)]
 macro_rules! impl_default_as_fmt{
-    ($(
-        $(#[$m:meta])*
-        $t:ty => $f:ident,
-    )*) => {$(
+    (#[$m:meta] $($t:tt)+) => {
+        #[$m]
+        impl_default_as_fmt!($($t)*);
+    };
+    ($t:ty => $f:ident) => {
+        #[allow(missing_docs)]
+        fn $f(&mut self, key : Key, val : $t)
+            -> Result {
+                self.emit_arguments(key, &format_args!("{}", val))
+            }
+    };
+}
+
+#[cfg(not(macro_workaround))]
+macro_rules! impl_default_as_fmt{
+    ($(#[$m:meta])* $t:ty => $f:ident) => {
         $(#[$m])*
         fn $f(&mut self, key : Key, val : $t)
             -> Result {
                 self.emit_arguments(key, &format_args!("{}", val))
             }
-    )*};
+    };
 }
 
 /// This is a workaround to be able to pass &mut Serializer, from
@@ -2451,41 +2465,73 @@ impl<'a, T: Serializer + 'a + ?Sized> Serializer for SerializerForward<'a, T> {
 pub trait Serializer {
     impl_default_as_fmt! {
         /// Emit `usize`
-        usize => emit_usize,
+        usize => emit_usize
+    }
+    impl_default_as_fmt! {
         /// Emit `isize`
-        isize => emit_isize,
+        isize => emit_isize
+    }
+    impl_default_as_fmt! {
         /// Emit `bool`
-        bool => emit_bool,
+        bool => emit_bool
+    }
+    impl_default_as_fmt! {
         /// Emit `char`
-        char => emit_char,
+        char => emit_char
+    }
+    impl_default_as_fmt! {
         /// Emit `u8`
-        u8 => emit_u8,
+        u8 => emit_u8
+    }
+    impl_default_as_fmt! {
         /// Emit `i8`
-        i8 => emit_i8,
+        i8 => emit_i8
+    }
+    impl_default_as_fmt! {
         /// Emit `u16`
-        u16 => emit_u16,
+        u16 => emit_u16
+    }
+    impl_default_as_fmt! {
         /// Emit `i16`
-        i16 => emit_i16,
+        i16 => emit_i16
+    }
+    impl_default_as_fmt! {
         /// Emit `u32`
-        u32 => emit_u32,
+        u32 => emit_u32
+    }
+    impl_default_as_fmt! {
         /// Emit `i32`
-        i32 => emit_i32,
+        i32 => emit_i32
+    }
+    impl_default_as_fmt! {
         /// Emit `f32`
-        f32 => emit_f32,
+        f32 => emit_f32
+    }
+    impl_default_as_fmt! {
         /// Emit `u64`
-        u64 => emit_u64,
+        u64 => emit_u64
+    }
+    impl_default_as_fmt! {
         /// Emit `i64`
-        i64 => emit_i64,
+        i64 => emit_i64
+    }
+    impl_default_as_fmt! {
         /// Emit `f64`
-        f64 => emit_f64,
+        f64 => emit_f64
+    }
+    impl_default_as_fmt! {
         /// Emit `u128`
         #[cfg(integer128)]
-        u128 => emit_u128,
+        u128 => emit_u128
+    }
+    impl_default_as_fmt! {
         /// Emit `i128`
         #[cfg(integer128)]
-        i128 => emit_i128,
+        i128 => emit_i128
+    }
+    impl_default_as_fmt! {
         /// Emit `&str`
-        &str => emit_str,
+        &str => emit_str
     }
 
     /// Emit `()`

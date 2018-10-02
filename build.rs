@@ -34,4 +34,11 @@ fn main() {
     if minor >= 26 && !is_emscripten {
         println!("cargo:rustc-cfg=integer128");
     }
+
+    // workaround on macro bugs fixed in 1.20
+    //
+    // https://github.com/rust-lang/rust/pull/42913
+    if minor < 20 {
+        println!("cargo:rustc-cfg=macro_workaround");
+    }
 }
