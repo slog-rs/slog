@@ -11,6 +11,8 @@ homepage = "https://github.com/slog-rs/slog"
 repository = "https://github.com/slog-rs/slog"
 readme = "README.md"
 
+build = "build.rs"
+
 [profile.release]
 opt-level = 3
 debug = false

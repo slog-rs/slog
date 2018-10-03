@@ -186,6 +186,15 @@ fn expressions() {
           "aaa" => "bbb");
 }
 
+#[cfg(integer128)]
+#[test]
+fn integer_128_types() {
+    let log = Logger::root(Discard, o!("version" => env!("CARGO_PKG_VERSION")));
+
+    info!(log, "i128 = {}", 42i128; "foo" => 7i128);
+    info!(log, "u128 = {}", 42u128; "foo" => 7u128);
+}
+
 #[test]
 fn expressions_fmt() {
     let log = Logger::root(Discard, o!("version" => env!("CARGO_PKG_VERSION")));
