@@ -20,10 +20,10 @@ pub struct Failover<D1: Drain, D2: Drain>
     drain2: D2,
 }
 
-impl<D1: Drain, D2: Drain, O, E2> Failover<D1, D2>
+impl<D1: Drain, D2: Drain, O> Failover<D1, D2>
     where
     D1 : Drain<Ok = O>,
-    D2 : Drain<Err = E2, Ok = O>,
+    D2 : Drain<Ok = O>,
 {
     /// Create `Failover`
     pub fn new(drain1: D1, drain2: D2) -> Self {
@@ -37,7 +37,7 @@ impl<D1: Drain, D2: Drain, O, E2> Failover<D1, D2>
 impl<D1, D2, E2, O> Drain for Failover<D1, D2>
     where
     D1 : Drain<Ok = O>,
-    D2 : Drain<Err = E2, Ok = O>,
+    D2 : Drain<Ok = O>,
 {
     type Ok = O;
     type Err = D2::Err;
@@ -55,10 +55,10 @@ impl<D1, D2, E2, O> Drain for Failover<D1, D2>
 /// Failover logging to secondary drain on primary's failure
 ///
 /// Create `Failover` drain
-pub fn failover<D1: Drain, D2: Drain, O, E2>(d1: D1, d2: D2) -> Failover<D1, D2>
+pub fn failover<D1: Drain, D2: Drain, O>(d1: D1, d2: D2) -> Failover<D1, D2>
     where
     D1 : Drain<Ok = O>,
-    D2 : Drain<Err = E2, Ok = O>,
+    D2 : Drain<Ok = O>,
 {
     Failover::new(d1, d2)
 }
