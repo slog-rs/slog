@@ -14,7 +14,7 @@ script:
   - if [ "$TRAVIS_RUST_VERSION" != "1.15.1" ]; then make travistest ; fi
   - if [ "$TRAVIS_RUST_VERSION" == "nightly" ]; then make bench ; fi
   - if [ "$TRAVIS_RUST_VERSION" == "nightly" ]; then cargo build --no-default-features; cargo test --no-default-features; fi
-  - if [ "$TRAVIS_RUST_VERSION" == "nightly" ]; then cargo test --manifest-path crates/test_edition2018/Cargo.toml; fi
+  - if [ "$TRAVIS_RUST_VERSION" == "nightly" ]; then cargo test -p test_edition2018; fi
 
 env:
   global:
