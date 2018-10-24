@@ -2814,6 +2814,7 @@ where
     }
 }
 
+#[cfg(feature = "std")]
 impl<'a> Value for std::path::Display<'a> {
     fn serialize(
         &self,
@@ -2825,6 +2826,7 @@ impl<'a> Value for std::path::Display<'a> {
     }
 }
 
+#[cfg(feature = "std")]
 impl Value for std::net::SocketAddr {
     fn serialize(
         &self,
