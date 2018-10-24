@@ -50,3 +50,8 @@ erased-serde = { version = "0.3", optional = true }
 
 [package.metadata.docs.rs]
 features = ["std", "nested-values", "dynamic-keys"]
+
+[workspace]
+members = [
+  "crates/test_edition2018",
+]
