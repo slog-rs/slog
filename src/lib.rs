@@ -3032,29 +3032,28 @@ where
     }
 }
 
-#[cfg(feature = "std")]
+#[cfg(feature = "nothreads")]
 /// Thread-local safety bound for `KV`
 ///
 /// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
+pub trait SendSyncRefUnwindSafeKV: KV {}
+
+#[cfg(feature = "nothreads")]
+impl<T> SendSyncRefUnwindSafeKV for T where T: KV + ?Sized {}
+
+#[cfg(all(not(feature = "nothreads"), feature = "std"))]
+/// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
 pub trait SendSyncRefUnwindSafeKV: KV + Send + Sync + RefUnwindSafe {}
 
-#[cfg(feature = "std")]
-impl<T> SendSyncRefUnwindSafeKV for T
-where
-    T: KV + Send + Sync + RefUnwindSafe + ?Sized,
-{
-}
+#[cfg(all(not(feature = "nothreads"), feature = "std"))]
+impl<T> SendSyncRefUnwindSafeKV for T where T: KV + Send + Sync + RefUnwindSafe + ?Sized {}
 
-#[cfg(not(feature = "std"))]
+#[cfg(all(not(feature = "nothreads"), not(feature = "std")))]
 /// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
 pub trait SendSyncRefUnwindSafeKV: KV + Send + Sync {}
 
-#[cfg(not(feature = "std"))]
-impl<T> SendSyncRefUnwindSafeKV for T
-where
-    T: KV + Send + Sync + ?Sized,
-{
-}
+#[cfg(all(not(feature = "nothreads"), not(feature = "std")))]
+impl<T> SendSyncRefUnwindSafeKV for T where T: KV + Send + Sync + ?Sized {}
 
 /// Single pair `Key` and `Value`
 pub struct SingleKV<V>(pub Key, pub V)

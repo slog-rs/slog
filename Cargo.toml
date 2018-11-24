@@ -29,6 +29,7 @@ debug-assertions = false
 nested-values = ["erased-serde"]
 dynamic-keys = []
 std = []
+nothreads = []
 default = ["std"]
 
 max_level_off   = []
