@@ -6,7 +6,6 @@ use slog::*;
 
 mod common;
 
-
 struct Peer {
     host: String,
     port: u32,
@@ -22,33 +21,13 @@ impl Peer {
 }
 
 // `KV` can be implemented for a struct
-#[cfg(not(feature = "opaque-keys"))]
 impl KV for Peer {
-    fn serialize(
-        &self,
-        _record: &Record,
-        serializer: &mut Serializer,
-    ) -> Result {
-
-        serializer.emit_u32("peer-port", self.port)?;
-        serializer.emit_str("peer-host", &self.host)?;
-        Ok(())
-    }
-}
-#[cfg(feature = "opaque-keys")]
-impl KV for Peer {
-    fn serialize(
-        &self,
-        _record: &Record,
-        serializer: &mut Serializer,
-    ) -> Result {
-
+    fn serialize(&self, _record: &Record, serializer: &mut Serializer) -> Result {
         serializer.emit_u32(Key::from("peer-port"), self.port)?;
         serializer.emit_str(Key::from("peer-host"), &self.host)?;
         Ok(())
     }
 }
-
 
 struct Server {
     _host: String,
@@ -59,11 +38,9 @@ struct Server {
     log: Logger,
 }
 
-
 impl Server {
     fn new(host: String, port: u32, log: Logger) -> Server {
-        let log =
-            log.new(o!("server-host" => host.clone(), "server-port" => port));
+        let log = log.new(o!("server-host" => host.clone(), "server-port" => port));
         Server {
             _host: host,
             _port: port,
@@ -102,10 +79,7 @@ impl PeerCounter {
 }
 
 fn main() {
-    let log = Logger::root(
-        Fuse(common::PrintlnDrain),
-        o!("build-id" => "7.3.3-abcdef"),
-    );
+    let log = Logger::root(Fuse(common::PrintlnDrain), o!("build-id" => "7.3.3-abcdef"));
 
     let server = Server::new("localhost".into(), 12345, log.clone());
 
