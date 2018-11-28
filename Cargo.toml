@@ -10,6 +10,7 @@ documentation = "https://docs.rs/slog"
 homepage = "https://github.com/slog-rs/slog"
 repository = "https://github.com/slog-rs/slog"
 readme = "README.md"
+autoexamples = true
 
 build = "build.rs"
 
@@ -48,6 +49,10 @@ release_max_level_trace = []
 
 [dependencies]
 erased-serde = { version = "0.3", optional = true }
+
+[[example]]
+name = "singlethread"
+required-features = ["nothreads"]
 
 [package.metadata.docs.rs]
 features = ["std", "nested-values", "dynamic-keys"]
