@@ -48,8 +48,10 @@ longtest:
 	@i=0; while i=$$((i + 1)) && echo "Iteration $$i" && make test ; do :; done
 
 .PHONY: $(EXAMPLES)
-$(EXAMPLES):
+named struct-log-self:
 	cargo build --example $@ $(CARGO_FLAGS)
+singlethread:
+	cargo build --features nothreads --example $@ $(CARGO_FLAGS)
 
 .PHONY: doc
 doc: FORCE
