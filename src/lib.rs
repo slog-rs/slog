@@ -235,7 +235,7 @@
 //! There is also nothing stopping anyone from publishing their own crate
 //! implementing it.
 //!
-//! Alternative to the above aproach is `slog-atomic` crate. It implements
+//! Alternative to the above approach is `slog-atomic` crate. It implements
 //! swapping whole parts of `Drain` logging hierarchy.
 //!
 //! ## Examples & help
@@ -1315,7 +1315,7 @@ pub trait Drain {
     /// Typically `Drain`s:
     ///
     /// * pass this information (or not) to the sub-logger(s) (filters)
-    /// * format and write the information the a destination (writers)
+    /// * format and write the information to a destination (writers)
     /// * deal with the errors returned from the sub-logger(s)
     fn log(
         &self,
@@ -1882,8 +1882,8 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
 /// `Logger` requires a root drain to handle all errors (`Drain::Error == ()`),
 /// `Fuse` will wrap a `Drain` and panic if it returns any errors.
 ///
-/// Note: `Drain::Err` must implement `Display` (for displaying on panick). It's
-/// easy to create own `Fuse` drain if this requirement can't be fulfilled.
+/// Note: `Drain::Err` must implement `Display` (for displaying on panic). It's
+/// easy to create your own `Fuse` drain if this requirement can't be fulfilled.
 #[derive(Debug, Clone)]
 pub struct Fuse<D: Drain>(pub D)
 where
@@ -2378,11 +2378,11 @@ impl<'a> Record<'a> {
     /// Get tag
     ///
     /// Tag is information that can be attached to `Record` that is not meant
-    /// to be part of the norma key-value pairs, but only as an ad-hoc control
+    /// to be part of the normal key-value pairs, but only as an ad-hoc control
     /// flag for quick lookup in the `Drain`s. As such should be used carefully
     /// and mostly in application code (as opposed to libraries) - where tag
     /// meaning across the system can be coordinated. When used in libraries,
-    /// make sure to prefix is with something reasonably distinct, like create
+    /// make sure to prefix it with something reasonably distinct, like create
     /// name.
     pub fn tag(&self) -> &str {
         self.rstatic.tag
@@ -2621,7 +2621,7 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
 // {{{ Value
 /// Value that can be serialized
 ///
-/// Types that implement this type implement custome serialization in the
+/// Types that implement this type implement custom serialization in the
 /// structured part of the log macros. Without an implementation of `Value` for
 /// your type you must emit using either the `?` "debug", `%` "display" or
 /// [`SerdeValue`](trait.SerdeValue.html) (if you have the `nested-values`
