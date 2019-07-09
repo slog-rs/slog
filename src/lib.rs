@@ -300,7 +300,6 @@
 // }}}
 
 // {{{ Imports & meta
-#![cfg_attr(not(feature = "std"), feature(alloc))]
 #![warn(missing_docs)]
 #![no_std]
 
