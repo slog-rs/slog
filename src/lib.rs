@@ -2135,6 +2135,16 @@ impl Level {
 }
 
 impl FilterLevel {
+    /// Convert to `str` from `LOG_LEVEL_SHORT_NAMES`
+    pub fn as_short_str(&self) -> &'static str {
+        LOG_LEVEL_SHORT_NAMES[self.as_usize()]
+    }
+
+    /// Convert to `str` from `LOG_LEVEL_NAMES`
+    pub fn as_str(&self) -> &'static str {
+        LOG_LEVEL_NAMES[self.as_usize()]
+    }
+
     /// Convert to `usize` value
     ///
     /// `Off` is 0, and `Trace` 6
@@ -2204,6 +2214,12 @@ impl FromStr for FilterLevel {
 }
 
 impl fmt::Display for Level {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.as_short_str())
+    }
+}
+
+impl fmt::Display for FilterLevel {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.as_short_str())
     }
