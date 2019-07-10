@@ -2189,6 +2189,11 @@ impl FilterLevel {
     pub fn min() -> Self {
         FilterLevel::Off
     }
+
+    /// Check if message with given level should be logged
+    pub fn accepts(self, level: Level) -> bool {
+        self.as_usize() >= level.as_usize()
+    }
 }
 
 impl FromStr for Level {
@@ -2315,6 +2320,14 @@ fn refute_from_str<T>(level_str: &str)
     if let Ok(level) = result {
         panic!("Parsing filter level '{}' succeeded: {:?}", level_str, level)
     }
+}
+
+#[test]
+fn filter_level_accepts_tests() {
+    assert_eq!(true, FilterLevel::Warning.accepts(Level::Error));
+    assert_eq!(true, FilterLevel::Warning.accepts(Level::Warning));
+    assert_eq!(false, FilterLevel::Warning.accepts(Level::Info));
+    assert_eq!(false, FilterLevel::Off.accepts(Level::Critical));
 }
 // }}}
 
