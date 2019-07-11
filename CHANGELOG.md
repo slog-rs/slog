@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Added `FilterLevel::accepts`
 * Added `as_str`, `as_short_str` and `Display` to `FilterLevel`
+* Added parsing of `Level` and `FilterLevel` short names
 
 ## 2.4.1 - 2018-10-03
 

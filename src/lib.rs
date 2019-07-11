@@ -2198,24 +2198,30 @@ impl FilterLevel {
 
 impl FromStr for Level {
     type Err = ();
-    fn from_str(level: &str) -> core::result::Result<Level, ()> {
-        LOG_LEVEL_NAMES
-            .iter()
-            .position(|name| name.eq_ignore_ascii_case(level))
-            .and_then(|p| Level::from_usize(p))
+    fn from_str(name: &str) -> core::result::Result<Level, ()> {
+        index_of_log_level_name(name)
+            .and_then(|idx| Level::from_usize(idx))
             .ok_or(())
     }
 }
 
 impl FromStr for FilterLevel {
     type Err = ();
-    fn from_str(level: &str) -> core::result::Result<FilterLevel, ()> {
-        LOG_LEVEL_NAMES
-            .iter()
-            .position(|name| name.eq_ignore_ascii_case(level))
-            .and_then(|p| FilterLevel::from_usize(p))
+    fn from_str(name: &str) -> core::result::Result<FilterLevel, ()> {
+        index_of_log_level_name(name)
+            .and_then(|idx| FilterLevel::from_usize(idx))
             .ok_or(())
     }
+}
+
+fn index_of_log_level_name(name: &str) -> Option<usize> {
+    index_of_str_ignore_case(&LOG_LEVEL_NAMES, name)
+        .or_else(|| index_of_str_ignore_case(&LOG_LEVEL_SHORT_NAMES, name))
+}
+
+fn index_of_str_ignore_case(haystack: &[&str], needle: &str) -> Option<usize> {
+    haystack.iter()
+        .position(|hay| hay.eq_ignore_ascii_case(needle))
 }
 
 impl fmt::Display for Level {
@@ -2256,11 +2262,15 @@ fn filter_level_sanity() {
 fn level_from_str() {
     refute_from_str::<Level>("off");
     assert_from_str(Level::Critical, "critical");
+    assert_from_str(Level::Critical, "crit");
     assert_from_str(Level::Error, "error");
+    assert_from_str(Level::Error, "erro");
     assert_from_str(Level::Warning, "warn");
     assert_from_str(Level::Info, "info");
     assert_from_str(Level::Debug, "debug");
+    assert_from_str(Level::Debug, "debg");
     assert_from_str(Level::Trace, "trace");
+    assert_from_str(Level::Trace, "trce");
 
     assert_from_str(Level::Info, "Info");
     assert_from_str(Level::Info, "INFO");
@@ -2279,11 +2289,15 @@ fn level_from_str() {
 fn filter_level_from_str() {
     assert_from_str(FilterLevel::Off, "off");
     assert_from_str(FilterLevel::Critical, "critical");
+    assert_from_str(FilterLevel::Critical, "crit");
     assert_from_str(FilterLevel::Error, "error");
+    assert_from_str(FilterLevel::Error, "erro");
     assert_from_str(FilterLevel::Warning, "warn");
     assert_from_str(FilterLevel::Info, "info");
     assert_from_str(FilterLevel::Debug, "debug");
+    assert_from_str(FilterLevel::Debug, "debg");
     assert_from_str(FilterLevel::Trace, "trace");
+    assert_from_str(FilterLevel::Trace, "trce");
 
     assert_from_str(FilterLevel::Info, "Info");
     assert_from_str(FilterLevel::Info, "INFO");
@@ -2320,6 +2334,42 @@ fn refute_from_str<T>(level_str: &str)
     if let Ok(level) = result {
         panic!("Parsing filter level '{}' succeeded: {:?}", level_str, level)
     }
+}
+
+#[cfg(feature = "std")]
+#[test]
+fn level_to_string_and_from_str_are_compatible() {
+    assert_to_string_from_str(Level::Critical);
+    assert_to_string_from_str(Level::Error);
+    assert_to_string_from_str(Level::Warning);
+    assert_to_string_from_str(Level::Info);
+    assert_to_string_from_str(Level::Debug);
+    assert_to_string_from_str(Level::Trace);
+}
+
+#[cfg(feature = "std")]
+#[test]
+fn filter_level_to_string_and_from_str_are_compatible() {
+    assert_to_string_from_str(FilterLevel::Off);
+    assert_to_string_from_str(FilterLevel::Critical);
+    assert_to_string_from_str(FilterLevel::Error);
+    assert_to_string_from_str(FilterLevel::Warning);
+    assert_to_string_from_str(FilterLevel::Info);
+    assert_to_string_from_str(FilterLevel::Debug);
+    assert_to_string_from_str(FilterLevel::Trace);
+}
+
+#[cfg(all(test, feature = "std"))]
+fn assert_to_string_from_str<T>(expected: T)
+    where
+        T: std::string::ToString + FromStr + PartialEq + fmt::Debug,
+        <T as FromStr>::Err: fmt::Debug {
+    let string = expected.to_string();
+
+    let actual = T::from_str(&string)
+        .expect(&format!("Failed to parse string representation of {:?}", expected));
+
+    assert_eq!(expected, actual, "Invalid value parsed from string representation of {:?}", actual);
 }
 
 #[test]
