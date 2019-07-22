@@ -2220,7 +2220,12 @@ fn index_of_log_level_name(name: &str) -> Option<usize> {
 }
 
 fn index_of_str_ignore_case(haystack: &[&str], needle: &str) -> Option<usize> {
+    if needle.is_empty() {
+        return None;
+    }
     haystack.iter()
+        // This will never panic because haystack has only ASCII characters
+        .map(|hay| &hay[..needle.len().min(hay.len())])
         .position(|hay| hay.eq_ignore_ascii_case(needle))
 }
 
@@ -2277,10 +2282,13 @@ fn level_from_str() {
     assert_from_str(Level::Info, "iNfO");
 
     refute_from_str::<Level>("");
+    assert_from_str(Level::Info, "i");
+    assert_from_str(Level::Info, "in");
+    assert_from_str(Level::Info, "inf");
+    refute_from_str::<Level>("infor");
+
     refute_from_str::<Level>("?");
-    refute_from_str::<Level>("i");
     refute_from_str::<Level>("info ");
-    refute_from_str::<Level>("informal");
     refute_from_str::<Level>(" info");
     refute_from_str::<Level>("desinfo");
 }
@@ -2304,10 +2312,13 @@ fn filter_level_from_str() {
     assert_from_str(FilterLevel::Info, "iNfO");
 
     refute_from_str::<FilterLevel>("");
+    assert_from_str(FilterLevel::Info, "i");
+    assert_from_str(FilterLevel::Info, "in");
+    assert_from_str(FilterLevel::Info, "inf");
+    refute_from_str::<FilterLevel>("infor");
+
     refute_from_str::<FilterLevel>("?");
-    refute_from_str::<FilterLevel>("i");
     refute_from_str::<FilterLevel>("info ");
-    refute_from_str::<FilterLevel>("informal");
     refute_from_str::<FilterLevel>(" info");
     refute_from_str::<FilterLevel>("desinfo");
 }

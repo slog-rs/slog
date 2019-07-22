@@ -4,10 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.5.2 - ????-??-??
+
+* Restored parsing of `Level` and `FilterLevel` truncated names
+
 ## 2.5.1 - 2019-07-11
 
 * Added parsing of `Level` and `FilterLevel` short names
- 
+
 ## 2.5.0 - 2019-07-11
 
 * Added `FilterLevel::accepts`
