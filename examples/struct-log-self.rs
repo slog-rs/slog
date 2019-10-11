@@ -22,7 +22,11 @@ impl Peer {
 
 // `KV` can be implemented for a struct
 impl KV for Peer {
-    fn serialize(&self, _record: &Record, serializer: &mut dyn Serializer) -> Result {
+    fn serialize(
+        &self,
+        _record: &Record,
+        serializer: &mut dyn Serializer,
+    ) -> Result {
         serializer.emit_u32(Key::from("peer-port"), self.port)?;
         serializer.emit_str(Key::from("peer-host"), &self.host)?;
         Ok(())
@@ -40,7 +44,8 @@ struct Server {
 
 impl Server {
     fn new(host: String, port: u32, log: Logger) -> Server {
-        let log = log.new(o!("server-host" => host.clone(), "server-port" => port));
+        let log =
+            log.new(o!("server-host" => host.clone(), "server-port" => port));
         Server {
             _host: host,
             _port: port,
@@ -79,7 +84,10 @@ impl PeerCounter {
 }
 
 fn main() {
-    let log = Logger::root(Fuse(common::PrintlnDrain), o!("build-id" => "7.3.3-abcdef"));
+    let log = Logger::root(
+        Fuse(common::PrintlnDrain),
+        o!("build-id" => "7.3.3-abcdef"),
+    );
 
     let server = Server::new("localhost".into(), 12345, log.clone());
 

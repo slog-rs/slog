@@ -170,9 +170,8 @@ fn expressions() {
         let _log = log.new(o!(x.clone()));
         let _log = log.new(o!("foo" => "bar", x.clone()));
         let _log = log.new(o!("foo" => "bar", x.clone(), x.clone()));
-        let _log = log.new(
-            slog_o!("foo" => "bar", x.clone(), x.clone(), "aaa" => "bbb"),
-        );
+        let _log = log
+            .new(slog_o!("foo" => "bar", x.clone(), x.clone(), "aaa" => "bbb"));
 
         info!(log, "message"; "foo" => "bar", &x, &x, "aaa" => "bbb");
     }
@@ -211,7 +210,8 @@ fn makers() {
     let drain = Duplicate(
         Discard.filter(|r| r.level().is_at_least(Level::Info)),
         Discard.filter_level(Level::Warning),
-    ).map(Fuse);
+    )
+    .map(Fuse);
     let _log = Logger::root(
         Arc::new(drain),
         o!("version" => env!("CARGO_PKG_VERSION")),
@@ -240,7 +240,8 @@ fn logger_to_erased() {
     let drain = Duplicate(
         Discard.filter(|r| r.level().is_at_least(Level::Info)),
         Discard.filter_level(Level::Warning),
-    ).map(Fuse);
+    )
+    .map(Fuse);
     let log =
         Logger::root_typed(drain, o!("version" => env!("CARGO_PKG_VERSION")));
 
@@ -251,9 +252,9 @@ fn logger_to_erased() {
 fn logger_by_ref() {
     use crate::*;
     let drain = Discard.filter_level(Level::Warning).map(Fuse);
-    let log = Logger::root_typed(drain, o!("version" => env!("CARGO_PKG_VERSION")));
+    let log =
+        Logger::root_typed(drain, o!("version" => env!("CARGO_PKG_VERSION")));
     let f = "f";
     let d = (1, 2);
     info!(&log, "message"; "f" => %f, "d" => ?d);
 }
-
