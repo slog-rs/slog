@@ -113,12 +113,7 @@
 //! ### Logging to the terminal
 //!
 //! ```ignore
-//! #[macro_use]
-//! extern crate slog;
-//! extern crate slog_term;
-//! extern crate slog_async;
-//!
-//! use slog::Drain;
+//! use slog::{o, Drain};
 //!
 //! fn main() {
 //!     let decorator = slog_term::TermDecorator::new().build();
@@ -132,13 +127,8 @@
 //! ### Logging to a file
 //!
 //! ```ignore
-//! #[macro_use]
-//! extern crate slog;
-//! extern crate slog_term;
-//! extern crate slog_async;
-//!
 //! use std::fs::OpenOptions;
-//! use slog::Drain;
+//! use slog::{o, Drain};
 //!
 //! fn main() {
 //!    let log_path = "target/your_log_file_path.log";
@@ -165,12 +155,7 @@
 //! ### Change logging level at runtime
 //!
 //! ```ignore
-//! #[macro_use]
-//! extern crate slog;
-//! extern crate slog_term;
-//! extern crate slog_async;
-//!
-//! use slog::Drain;
+//! use slog::{o, Drain};
 //!
 //! use std::sync::{Arc, atomic};
 //! use std::sync::atomic::Ordering;
@@ -259,8 +244,7 @@
 //! ### Key-value pairs come now after format string
 //!
 //! ```
-//! #[macro_use]
-//! extern crate slog;
+//! use slog::{info, o};
 //!
 //! fn main() {
 //!     let drain = slog::Discard;
@@ -276,12 +260,7 @@
 //! Create simple terminal logger like this:
 //!
 //! ```ignore
-//! #[macro_use]
-//! extern crate slog;
-//! extern crate slog_term;
-//! extern crate slog_async;
-//!
-//! use slog::Drain;
+//! use slog::{o, Drain};
 //!
 //! fn main() {
 //!     let decorator = slog_term::TermDecorator::new().build();

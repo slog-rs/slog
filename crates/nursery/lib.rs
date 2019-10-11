@@ -4,8 +4,6 @@
 //! at a given moment are useful but not final.
 #![warn(missing_docs)]
 
-extern crate slog;
-
 use slog::*;
 use std::result;
 
