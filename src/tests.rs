@@ -38,7 +38,7 @@ mod std_only {
             type Err = Never;
             fn log(
                 &self,
-                record: &Record,
+                record: &Record<'_>,
                 values: &OwnedKVList,
             ) -> std::result::Result<Self::Ok, Self::Err> {
                 assert_eq!(
@@ -61,6 +61,8 @@ mod std_only {
     }
 }
 
+// Allow unused_must_use for macro testing.
+#[allow(unused_must_use)]
 #[test]
 fn expressions() {
     use super::{Record, Result, Serializer, KV};
@@ -158,7 +160,7 @@ fn expressions() {
         impl KV for K {
             fn serialize(
                 &self,
-                _record: &Record,
+                _record: &Record<'_>,
                 _serializer: &mut dyn Serializer,
             ) -> Result {
                 Ok(())
