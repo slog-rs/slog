@@ -1,8 +1,8 @@
-use {Discard, Logger};
+use crate::{Discard, Logger};
 
 // Separate module to test lack of imports
 mod no_imports {
-    use {Discard, Logger};
+    use crate::{Discard, Logger};
     /// ensure o! macro expands without error inside a module
     #[test]
     fn test_o_macro_expansion() {
@@ -159,7 +159,7 @@ fn expressions() {
             fn serialize(
                 &self,
                 _record: &Record,
-                _serializer: &mut Serializer,
+                _serializer: &mut dyn Serializer,
             ) -> Result {
                 Ok(())
             }
@@ -207,7 +207,7 @@ fn expressions_fmt() {
 
 #[test]
 fn makers() {
-    use ::*;
+    use crate::*;
     let drain = Duplicate(
         Discard.filter(|r| r.level().is_at_least(Level::Info)),
         Discard.filter_level(Level::Warning),
@@ -220,7 +220,7 @@ fn makers() {
 
 #[test]
 fn simple_logger_erased() {
-    use ::*;
+    use crate::*;
 
     fn takes_arced_drain(_l: Logger) {}
 
@@ -233,7 +233,7 @@ fn simple_logger_erased() {
 
 #[test]
 fn logger_to_erased() {
-    use ::*;
+    use crate::*;
 
     fn takes_arced_drain(_l: Logger) {}
 
@@ -249,7 +249,7 @@ fn logger_to_erased() {
 
 #[test]
 fn logger_by_ref() {
-    use ::*;
+    use crate::*;
     let drain = Discard.filter_level(Level::Warning).map(Fuse);
     let log = Logger::root_typed(drain, o!("version" => env!("CARGO_PKG_VERSION")));
     let f = "f";

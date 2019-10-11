@@ -1076,7 +1076,7 @@ macro_rules! __slog_builtin {
 /// means `Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>`. See
 /// `Logger::root_typed` and `Logger::to_erased` for more information.
 #[derive(Clone)]
-pub struct Logger<D = Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
+pub struct Logger<D = Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
 where
     D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>,
 {
@@ -1121,7 +1121,7 @@ where
     {
         Logger {
             drain: Arc::new(drain)
-                as Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
+                as Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
             list: OwnedKVList::root(values),
         }
     }
@@ -1219,13 +1219,13 @@ where
     /// Rust gains trait implementation specialization.
     pub fn into_erased(
         self,
-    ) -> Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
+    ) -> Logger<Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
     where
         D: SendRefUnwindSafeDrain + 'static,
     {
         Logger {
             drain: Arc::new(self.drain)
-                as Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
+                as Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>,
             list: self.list,
         }
     }
@@ -1235,7 +1235,7 @@ where
     /// See `into_erased`
     pub fn to_erased(
         &self,
-    ) -> Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
+    ) -> Logger<Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
     where
         D: SendRefUnwindSafeDrain + 'static + Clone,
     {
@@ -1248,7 +1248,7 @@ where
     D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>,
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        try!(write!(f, "Logger{:?}", self.list));
+        r#try!(write!(f, "Logger{:?}", self.list));
         Ok(())
     }
 }
@@ -1356,7 +1356,7 @@ pub trait Drain {
     /// ```
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
-        level.as_usize() <= ::__slog_static_max_level().as_usize()
+        level.as_usize() <= crate::__slog_static_max_level().as_usize()
     }
 
     /// **Avoid**: See `is_enabled`
@@ -1804,7 +1804,7 @@ impl<D: Drain> Drain for LevelFilter<D> {
 pub struct MapError<D: Drain, E> {
     drain: D,
     // eliminated dynamic dispatch, after rust learns `-> impl Trait`
-    map_fn: Box<MapErrFn<D::Err, E, Output = E>>,
+    map_fn: Box<dyn MapErrFn<D::Err, E, Output = E>>,
 }
 
 impl<D: Drain, E> MapError<D, E> {
@@ -1992,7 +1992,7 @@ where
         }
     }
 
-    fn cause(&self) -> Option<&std::error::Error> {
+    fn cause(&self) -> Option<&dyn std::error::Error> {
         match *self {
             MutexDrainError::Mutex => None,
             MutexDrainError::Drain(ref e) => Some(e),
@@ -2568,7 +2568,7 @@ impl<'a, T: Serializer + 'a + ?Sized> Serializer for SerializerForward<'a, T> {
     }
 
     #[cfg(feature = "nested-values")]
-    fn emit_serde(&mut self, _key: Key, _value: &SerdeValue) -> Result {
+    fn emit_serde(&mut self, _key: Key, _value: &dyn SerdeValue) -> Result {
         panic!();
     }
 }
@@ -2676,7 +2676,7 @@ pub trait Serializer {
     ///
     /// The value needs to implement `SerdeValue`.
     #[cfg(feature = "nested-values")]
-    fn emit_serde(&mut self, key: Key, value: &SerdeValue) -> Result {
+    fn emit_serde(&mut self, key: Key, value: &dyn SerdeValue) -> Result {
         value.serialize_fallback(key, &mut SerializerForward(self))
     }
 }
@@ -2716,19 +2716,19 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
     fn serialize_fallback(
         &self,
         _key: Key,
-        _serializer: &mut Serializer,
+        _serializer: &mut dyn Serializer,
     ) -> Result<()> {
         Err(Error::Other)
     }
 
     /// Convert to `erased_serialize::Serialize` of the underlying value,
     /// so `slog::Serializer`s can use it to serialize via `serde`.
-    fn as_serde(&self) -> &erased_serde::Serialize;
+    fn as_serde(&self) -> &dyn erased_serde::Serialize;
 
     /// Convert to a boxed value that can be sent across threads
     ///
     /// This enables functionality like `slog-async` and similar.
-    fn to_sendable(&self) -> Box<SerdeValue + Send + 'static>;
+    fn to_sendable(&self) -> Box<dyn SerdeValue + Send + 'static>;
 }
 
 // }}}
@@ -2765,7 +2765,7 @@ pub trait Value {
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result;
 }
 
@@ -2777,7 +2777,7 @@ where
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (*self).serialize(record, key, serializer)
     }
@@ -2789,7 +2789,7 @@ macro_rules! impl_value_for{
             fn serialize(&self,
                          _record : &Record,
                          key : Key,
-                         serializer : &mut Serializer
+                         serializer : &mut dyn Serializer
                          ) -> Result {
                 serializer.$f(key, *self)
             }
@@ -2821,7 +2821,7 @@ impl Value for () {
         &self,
         _record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit_unit(key)
     }
@@ -2832,7 +2832,7 @@ impl Value for str {
         &self,
         _record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit_str(key, self)
     }
@@ -2843,7 +2843,7 @@ impl<'a> Value for fmt::Arguments<'a> {
         &self,
         _record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit_arguments(key, self)
     }
@@ -2854,7 +2854,7 @@ impl Value for String {
         &self,
         _record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit_str(key, self.as_str())
     }
@@ -2865,7 +2865,7 @@ impl<T: Value> Value for Option<T> {
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         match *self {
             Some(ref s) => s.serialize(record, key, serializer),
@@ -2882,7 +2882,7 @@ where
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (**self).serialize(record, key, serializer)
     }
@@ -2895,7 +2895,7 @@ where
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (**self).serialize(record, key, serializer)
     }
@@ -2909,7 +2909,7 @@ where
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (**self).serialize(record, key, serializer)
     }
@@ -2923,7 +2923,7 @@ where
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         self.0.serialize(record, key, serializer)
     }
@@ -2935,7 +2935,7 @@ impl<'a> Value for std::path::Display<'a> {
         &self,
         _record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit_arguments(key, &format_args!("{}", *self))
     }
@@ -2947,7 +2947,7 @@ impl Value for std::net::SocketAddr {
         &self,
         _record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit_arguments(key, &format_args!("{}", self))
     }
@@ -2966,7 +2966,7 @@ where
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (self.0)(record).serialize(record, key, serializer)
     }
@@ -2983,7 +2983,7 @@ pub type PushFnSerializer<'a> = PushFnValueSerializer<'a>;
 pub struct PushFnValueSerializer<'a> {
     record: &'a Record<'a>,
     key: Key,
-    serializer: &'a mut Serializer,
+    serializer: &'a mut dyn Serializer,
     done: bool,
 }
 
@@ -3061,7 +3061,7 @@ where
         &self,
         record: &Record,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         let ser = PushFnValueSerializer {
             record: record,
@@ -3130,7 +3130,7 @@ pub trait KV {
     ///
     /// `KV` should call respective `Serializer` methods
     /// for each key-value pair it contains.
-    fn serialize(&self, record: &Record, serializer: &mut Serializer)
+    fn serialize(&self, record: &Record, serializer: &mut dyn Serializer)
         -> Result;
 }
 
@@ -3141,7 +3141,7 @@ where
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (**self).serialize(record, serializer)
     }
@@ -3201,7 +3201,7 @@ where
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         self.1.serialize(record, self.0.clone(), serializer)
     }
@@ -3211,7 +3211,7 @@ impl KV for () {
     fn serialize(
         &self,
         _record: &Record,
-        _serializer: &mut Serializer,
+        _serializer: &mut dyn Serializer,
     ) -> Result {
         Ok(())
     }
@@ -3221,9 +3221,9 @@ impl<T: KV, R: KV> KV for (T, R) {
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
-        try!(self.0.serialize(record, serializer));
+        r#try!(self.0.serialize(record, serializer));
         self.1.serialize(record, serializer)
     }
 }
@@ -3235,7 +3235,7 @@ where
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (**self).serialize(record, serializer)
     }
@@ -3248,7 +3248,7 @@ where
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (**self).serialize(record, serializer)
     }
@@ -3261,7 +3261,7 @@ where
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         self.0.serialize(record, serializer)
     }
@@ -3271,7 +3271,7 @@ impl<'a> KV for BorrowedKV<'a> {
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         self.0.serialize(record, serializer)
     }
@@ -3313,7 +3313,7 @@ pub struct BorrowedKV<'a>(
     /// macros should be used instead to create
     /// `BorrowedKV` instances.
     #[doc(hidden)]
-    pub &'a KV,
+    pub &'a dyn KV,
 );
 
 // }}}
@@ -3323,19 +3323,19 @@ struct OwnedKVListNode<T>
 where
     T: SendSyncRefUnwindSafeKV + 'static,
 {
-    next_node: Arc<SendSyncRefUnwindSafeKV + 'static>,
+    next_node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
     kv: T,
 }
 
 struct MultiListNode {
-    next_node: Arc<SendSyncRefUnwindSafeKV + 'static>,
-    node: Arc<SendSyncRefUnwindSafeKV + 'static>,
+    next_node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
+    node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
 }
 
 /// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
 #[derive(Clone)]
 pub struct OwnedKVList {
-    node: Arc<SendSyncRefUnwindSafeKV + 'static>,
+    node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
 }
 
 impl<T> KV for OwnedKVListNode<T>
@@ -3345,10 +3345,10 @@ where
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
-        try!(self.kv.serialize(record, serializer));
-        try!(self.next_node.serialize(record, serializer));
+        r#try!(self.kv.serialize(record, serializer));
+        r#try!(self.next_node.serialize(record, serializer));
 
         Ok(())
     }
@@ -3358,10 +3358,10 @@ impl KV for MultiListNode {
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
-        try!(self.next_node.serialize(record, serializer));
-        try!(self.node.serialize(record, serializer));
+        r#try!(self.next_node.serialize(record, serializer));
+        r#try!(self.node.serialize(record, serializer));
 
         Ok(())
     }
@@ -3371,9 +3371,9 @@ impl KV for OwnedKVList {
     fn serialize(
         &self,
         record: &Record,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
-        try!(self.node.serialize(record, serializer));
+        r#try!(self.node.serialize(record, serializer));
 
         Ok(())
     }
@@ -3381,22 +3381,22 @@ impl KV for OwnedKVList {
 
 impl fmt::Debug for OwnedKVList {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        try!(write!(f, "("));
+        r#try!(write!(f, "("));
         let mut i = 0;
 
         {
             let mut as_str_ser = AsFmtSerializer(|key, _val| {
                 if i != 0 {
-                    try!(write!(f, ", "));
+                    r#try!(write!(f, ", "));
                 }
 
-                try!(write!(f, "{}", key));
+                r#try!(write!(f, "{}", key));
                 i += 1;
                 Ok(())
             });
             let record_static = record_static!(Level::Trace, "");
 
-            try!(
+            r#try!(
                 self.node
                     .serialize(
                         &Record::new(
@@ -3410,7 +3410,7 @@ impl fmt::Debug for OwnedKVList {
             );
         }
 
-        try!(write!(f, ")"));
+        r#try!(write!(f, ")"));
         Ok(())
     }
 }
@@ -3432,7 +3432,7 @@ impl OwnedKVList {
     /// New `OwnedKVList` node with an existing parent
     fn new<T>(
         values: OwnedKV<T>,
-        next_node: Arc<SendSyncRefUnwindSafeKV + 'static>,
+        next_node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
     ) -> Self
     where
         T: SendSyncRefUnwindSafeKV + 'static,
@@ -3521,7 +3521,7 @@ impl std::error::Error for Error {
         }
     }
 
-    fn cause(&self) -> Option<&std::error::Error> {
+    fn cause(&self) -> Option<&dyn std::error::Error> {
         match *self {
             Error::Io(ref e) => Some(e),
             Error::Fmt(ref e) => Some(e),
@@ -3610,7 +3610,7 @@ pub fn __slog_static_max_level() -> FilterLevel {
 // {{{ Slog v1 Compat
 #[deprecated(note = "Renamed to `Value`")]
 /// Compatibility name to ease upgrading from `slog v1`
-pub type Serialize = Value;
+pub type Serialize = dyn Value;
 
 #[deprecated(note = "Renamed to `PushFnValue`")]
 /// Compatibility name to ease upgrading from `slog v1`

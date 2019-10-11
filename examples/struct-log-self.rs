@@ -22,7 +22,7 @@ impl Peer {
 
 // `KV` can be implemented for a struct
 impl KV for Peer {
-    fn serialize(&self, _record: &Record, serializer: &mut Serializer) -> Result {
+    fn serialize(&self, _record: &Record, serializer: &mut dyn Serializer) -> Result {
         serializer.emit_u32(Key::from("peer-port"), self.port)?;
         serializer.emit_str(Key::from("peer-host"), &self.host)?;
         Ok(())
