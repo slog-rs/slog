@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.5.3 - ????-??-??
+
+* Use fully qualified call syntax for `Logger::log` in macros
+
 ## 2.5.2 - 2019-07-22
 
 * Restored parsing of `Level` and `FilterLevel` truncated names
