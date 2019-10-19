@@ -723,7 +723,7 @@ macro_rules! slog_record(
 macro_rules! log(
     // `2` means that `;` was already found
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-      $l.log(&record!($lvl, $tag, &__slog_builtin!(@format_args $msg_fmt, $($fmt)*), b!($($kv)*)))
+      $crate::Logger::log(&$l, &record!($lvl, $tag, &__slog_builtin!(@format_args $msg_fmt, $($fmt)*), b!($($kv)*)))
    };
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
        log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
@@ -796,7 +796,7 @@ macro_rules! log(
 macro_rules! slog_log(
     // `2` means that `;` was already found
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-      $l.log(&slog_record!($lvl, $tag, &__slog_builtin!(@format_args $msg_fmt, $($fmt)*), slog_b!($($kv)*)))
+      $crate::Logger::log(&$l, &slog_record!($lvl, $tag, &__slog_builtin!(@format_args $msg_fmt, $($fmt)*), slog_b!($($kv)*)))
    };
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
        slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
