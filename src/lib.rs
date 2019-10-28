@@ -407,6 +407,12 @@ macro_rules! kv(
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
         kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); $($args)* )
     };
+    (@ $args_ready:expr; $k:expr => #?$v:expr) => {
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => #?$v:expr, $($args:tt)* ) => {
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); $($args)* )
+    };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
     };
@@ -444,6 +450,12 @@ macro_rules! slog_kv(
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
         kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; $k:expr => #?$v:expr) => {
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => #?$v:expr, $($args:tt)* ) => {
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
@@ -701,7 +713,8 @@ macro_rules! slog_record(
 /// `format_args!("{}", v)`. This is especially useful for errors. Not that
 /// this does not allocate any `String` since it operates on `fmt::Arguments`.
 ///
-/// Similarly to use `std::fmt::Debug` value can be prefixed with `?`.
+/// Similarly to use `std::fmt::Debug` value can be prefixed with `?`,
+/// or pretty-printed with `#?`.
 ///
 /// ```
 /// #[macro_use]
@@ -2738,9 +2751,9 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
 ///
 /// Types that implement this type implement custom serialization in the
 /// structured part of the log macros. Without an implementation of `Value` for
-/// your type you must emit using either the `?` "debug", `%` "display" or
-/// [`SerdeValue`](trait.SerdeValue.html) (if you have the `nested-values`
-/// feature enabled) formatters.
+/// your type you must emit using either the `?` "debug", `#?` "pretty-debug",
+/// `%` "display" or [`SerdeValue`](trait.SerdeValue.html)
+/// (if you have the `nested-values` feature enabled) formatters.
 ///
 /// # Example
 ///
