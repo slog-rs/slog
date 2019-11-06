@@ -1,4 +1,5 @@
 use {Discard, Logger};
+use Never;
 
 // Separate module to test lack of imports
 mod no_imports {
@@ -257,3 +258,12 @@ fn logger_by_ref() {
     info!(&log, "message"; "f" => %f, "d" => ?d);
 }
 
+#[test]
+fn test_never_type_clone() {
+    // We just want to make sure that this compiles
+    fn _do_not_run() {
+        let x: Never = panic!("Can't actually construct a Never type here!");
+        let y = x.clone();
+    }
+    // Always pass if we compiled
+}
