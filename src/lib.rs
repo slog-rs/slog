@@ -3564,7 +3564,7 @@ pub type Never = private::NeverStruct;
 
 mod private {
     #[doc(hidden)]
-    #[derive(Debug)]
+    #[derive(Clone, Debug)]
     pub struct NeverStruct(());
 }
 
