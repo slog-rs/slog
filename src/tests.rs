@@ -1,5 +1,4 @@
-use {Discard, Logger};
-use Never;
+use {Discard, Logger, Never, KV, Drain, OwnedKVList, Record, AsFmtSerializer};
 
 // Separate module to test lack of imports
 mod no_imports {
@@ -204,6 +203,60 @@ fn expressions_fmt() {
     let d = (1, 2);
 
     info!(log, "message"; "f" => %f, "d" => ?d);
+}
+
+#[test]
+fn display_and_alternate_display() {
+    use core::fmt;
+    use core::cell::Cell;
+
+    struct Example;
+
+    impl fmt::Display for Example {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            if f.alternate() {
+                f.write_str("alternate")
+            } else {
+                f.write_str("normal")
+            }
+        }
+    }
+
+    #[derive(Clone, Default)]
+    struct CheckExample;
+
+    impl Drain for CheckExample {
+        type Ok = ();
+        type Err = Never;
+
+        fn log(&self, record: &Record, values: &OwnedKVList) -> Result<(), Never> {
+            let mut checked_n = false;
+            let mut checked_a = false;
+            let mut serializer = AsFmtSerializer(|key, fmt_args| {
+                if key == "n" {
+                    assert_eq!(format!("{}", fmt_args), "normal");
+                    checked_n = true;
+                } else if key == "a" {
+                    assert_eq!(format!("{}", fmt_args), "alternate");
+                    checked_a = true;
+                } else {
+                    panic!("Unexpected key: {}", key);
+                }
+                Ok(())
+            });
+
+            record.kv.serialize(record, &mut serializer).unwrap();
+
+            assert!(checked_n, "Expected the normal formatter to be used");
+            assert!(checked_a, "Expected the alternate formatter to be used");
+
+            Ok(())
+        }
+    }
+
+    let log = Logger::root(CheckExample, o!());
+
+    info!(log, ""; "n" => %Example, "a" => #%Example);
 }
 
 #[test]
