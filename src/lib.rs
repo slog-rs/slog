@@ -724,8 +724,8 @@ macro_rules! slog_record(
 /// `%` in `k => v` expression to use it's text representation returned by
 /// `format_args!("{}", v)`. This is especially useful for errors. Not that
 /// this does not allocate any `String` since it operates on `fmt::Arguments`.
-/// You can also use the `#%` prefix to switch to the "alternate" form, represented
-/// by the `{:#}` formatting specifier.
+/// You can also use the `#%` prefix to use the "alternate" form of formatting,
+/// represented by the `{:#}` formatting specifier.
 ///
 /// Similarly to use `std::fmt::Debug` value can be prefixed with `?`,
 /// or pretty-printed with `#?`.
