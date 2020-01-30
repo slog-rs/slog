@@ -1087,7 +1087,7 @@ macro_rules! __slog_builtin {
 /// `Logger`s are `Sync+Send` - there's no need to synchronize accesses to them,
 /// as they can accept logging records from multiple threads at once. They can
 /// be sent to any thread. Because of that they require the `Drain` to be
-/// `Sync+Sync` as well. Not all `Drain`s are `Sync` or `Send` but they can
+/// `Sync+Send` as well. Not all `Drain`s are `Sync` or `Send` but they can
 /// often be made so by wrapping in a `Mutex` and/or `Arc`.
 ///
 /// `Logger` implements `Drain` trait. Any logging `Record` delivered to
