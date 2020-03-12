@@ -41,7 +41,7 @@ use std::string::ToString;
 ///
 /// It is owned, and largely forms a contract for
 /// key to follow.
-#[derive(Clone)]
+#[derive(Clone, Eq)]
 pub struct Key {
     data: Cow<'static, str>,
 }
