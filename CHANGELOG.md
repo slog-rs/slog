@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 2.7.0 - ????-??-??
 
 * Add #% for alternate display of the value part
+* Implement `Eq` for dynamic `Key`s
 
 ## 2.6.0 - 2019-10-28
 
