@@ -320,3 +320,10 @@ fn test_never_type_clone() {
     }
     // Always pass if we compiled
 }
+
+#[test]
+fn can_hash_keys() {
+    use std::collections::HashSet;
+    use Key;
+    let tab: HashSet<Key> = ["foo"].iter().map(|&k| k.into()).collect();
+}
