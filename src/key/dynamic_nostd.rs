@@ -126,6 +126,13 @@ impl PartialEq<str> for Key {
     }
 }
 
+impl PartialEq<&str> for Key {
+    #[inline(always)]
+    fn eq(&self, other: &&str) -> bool {
+        self.as_ref().eq(*other)
+    }
+}
+
 impl PartialEq<String> for Key {
     #[inline(always)]
     fn eq(&self, other: &String) -> bool {
