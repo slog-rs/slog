@@ -12,25 +12,25 @@
 //!
 //! ## Core advantages over `log` crate
 //!
-//! * **extensible** - `slog` crate provides core functionality: very basic
+//! * **extensible** - `slog` crate provides core functionality: a very basic
 //!   and portable standard feature-set based on open `trait`s. This allows
 //!   implementing new features that can be independently published.
 //! * **composable** - `trait`s that `slog` exposes to provide extensibility
 //!   are designed to be easy to efficiently reuse and combine. By combining
-//!   different functionalities every application can specify when, where and
-//!   how exactly process logging data from the application and it's
+//!   different functionalities, each application can specify precisely when,
+//!   where, and how to process logging data from an application and its
 //!   dependencies.
 //! * **flexible** - `slog` does not constrain logging to just one globally
 //!   registered backend. Parts of your application can handle logging
 //!   in a customized way, or completely independently.
-//! * **structured** and both **human and machine readable** - By keeping the
-//!   key-value data format and retaining its type information, meaning of logging
+//! * **structured** and both **human and machine readable** - By using the
+//!   key-value data format and retaining its type information, the meaning of logging
 //!   data is preserved.  Data can be serialized to machine readable formats like
-//!   JSON and send it to data-mining system for further analysis etc. On the
+//!   JSON and sent to data-mining systems for further analysis, etc. On the
 //!   other hand, when presenting on screen, logging information can be presented
-//!   in aesthetically pleasing and easy to understand way.
+//!   in aesthetically pleasing and easy to understand ways.
 //! * **contextual** - `slog`'s `Logger` objects carry set of key-value data
-//!   pairs that contains the context of logging - information that otherwise
+//!   pairs that contain the context of logging - information that otherwise
 //!   would have to be repeated in every logging statement.
 //!
 //! ## `slog` features
@@ -42,8 +42,8 @@
 //!   * async IO support included: see [`slog-async`
 //!     crate](https://docs.rs/slog-async)
 //! * `#![no_std]` support (with opt-out `std` cargo feature flag)
-//! * support for named format arguments (eg. `info!(logger, "printed {line_count} lines", line_count = 2);`)
-//!   for easy bridging the human readable and machine-readable output
+//! * support for named format arguments (e.g. `info!(logger, "printed {line_count} lines", line_count = 2);`)
+//!   for easy bridging between the human readable and machine-readable outputs
 //! * tree-structured loggers
 //! * modular, lightweight and very extensible
 //!   * tiny core crate that does not pull any dependencies
@@ -51,12 +51,12 @@
 //!   * using `slog` in library does not force users of the library to use slog
 //!     (but provides additional functionality); see [example how to use
 //!     `slog` in library](https://github.com/slog-rs/example-lib)
-//! * backward and forward compatibility with `log` crate:
+//! * backwards and forwards compatibility with `log` crate:
 //!   see [`slog-stdlog` crate](https://docs.rs/slog-stdlog)
 //! * convenience crates:
 //!   * logging-scopes for implicit `Logger` passing: see
 //!     [slog-scope crate](https://docs.rs/slog-scope)
-//! * many existing core&community provided features:
+//! * many existing core & community provided features:
 //!   * multiple outputs
 //!   * filtering control
 //!       * compile-time log level filter using cargo features (same as in `log`
@@ -230,7 +230,7 @@
 //! ```
 //!
 //! Why is this not an existing crate? Because there are multiple ways to
-//! achieve the same result, and each application might come with it's own
+//! achieve the same result, and each application might come with its own
 //! variation. Supporting a more general solution is a maintenance effort.
 //! There is also nothing stopping anyone from publishing their own crate
 //! implementing it.
@@ -721,7 +721,7 @@ macro_rules! slog_record(
 /// ### `fmt::Display` and `fmt::Debug` values
 ///
 /// Value of any type that implements `std::fmt::Display` can be prefixed with
-/// `%` in `k => v` expression to use it's text representation returned by
+/// `%` in `k => v` expression to use its text representation returned by
 /// `format_args!("{}", v)`. This is especially useful for errors. Not that
 /// this does not allocate any `String` since it operates on `fmt::Arguments`.
 /// You can also use the `#%` prefix to use the "alternate" form of formatting,
@@ -1075,11 +1075,11 @@ macro_rules! __slog_builtin {
 /// processing.
 /// * context - list of key-value pairs associated with it.
 ///
-/// Root `Logger` is created with a `Drain` that will be cloned to every
-/// member of it's hierarchy.
+/// The root `Logger` is created with a `Drain` that will be cloned to every
+/// member of its hierarchy.
 ///
-/// Child `Logger` are built from existing ones, and inherit their key-value
-/// pairs, which can be supplemented with additional ones.
+/// Child `Logger`s are built from existing ones, and inherit their key-value
+/// pairs, which can be supplemented with additional pairs.
 ///
 /// Cloning existing loggers and creating new ones is cheap. Loggers can be
 /// freely passed around the code and between threads.
@@ -1091,11 +1091,11 @@ macro_rules! __slog_builtin {
 /// often be made so by wrapping in a `Mutex` and/or `Arc`.
 ///
 /// `Logger` implements `Drain` trait. Any logging `Record` delivered to
-/// a `Logger` functioning as a `Drain`, will be delivered to it's `Drain`
-/// with existing key-value pairs appended to the `Logger`s key-value pairs.
-/// By itself it's effectively very similar to `Logger` being an ancestor
+/// a `Logger` functioning as a `Drain` will be delivered to its `Drain`
+/// with existing key-value pairs appended to the `Logger`'s key-value pairs.
+/// By itself, it is effectively very similar to `Logger` being an ancestor
 /// of `Logger` that originated the logging `Record`. Combined with other
-/// `Drain`s, allows custom processing logic for a sub-tree of a whole logging
+/// `Drain`s, this allows custom processing logic for a sub-tree of a whole logging
 /// tree.
 ///
 /// Logger is parametrized over type of a `Drain` associated with it (`D`). It
@@ -1191,7 +1191,7 @@ where
     /// That is why `Clone` must be implemented for `D` in `Logger<D>::new`.
     ///
     /// For some `Drain` types `Clone` is cheap or even free (a no-op). This is
-    /// the case for any `Logger` returned by `Logger::root` and it's children.
+    /// the case for any `Logger` returned by `Logger::root` and its children.
     ///
     /// When using `Logger::root_typed`, it's possible that cloning might be
     /// expensive, or even impossible.
@@ -2452,11 +2452,11 @@ pub struct RecordStatic<'a> {
 
 /// One logging record
 ///
-/// Corresponds to one logging statement like `info!(...)` and carries all it's
+/// Corresponds to one logging statement like `info!(...)` and carries all its
 /// data: eg. message, immediate key-value pairs and key-value pairs of `Logger`
 /// used to execute it.
 ///
-/// Record is passed to a `Logger`, which delivers it to it's own `Drain`,
+/// Record is passed to a `Logger`, which delivers it to its own `Drain`,
 /// where actual logging processing is implemented.
 pub struct Record<'a> {
     rstatic: &'a RecordStatic<'a>,
