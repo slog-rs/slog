@@ -3574,13 +3574,7 @@ impl core::fmt::Display for Error {
 /// rust during time of the release. It will be switched to `!` at some point
 /// and `Never` should not be considered "stable" API.
 #[doc(hidden)]
-pub type Never = private::NeverStruct;
-
-mod private {
-    #[doc(hidden)]
-    #[derive(Clone, Debug)]
-    pub struct NeverStruct(());
-}
+pub type Never = std::convert::Infallible;
 
 /// This is not part of "stable" API
 #[doc(hidden)]
