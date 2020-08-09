@@ -1,11 +1,7 @@
 #[cfg(not(feature = "std"))]
-use alloc::Clone;
-#[cfg(not(feature = "std"))]
-use alloc::String;
-#[cfg(not(feature = "std"))]
 use alloc::borrow::Cow;
 #[cfg(not(feature = "std"))]
-use alloc::string::ToString;
+use alloc::string::{String, ToString};
 #[cfg(not(feature = "std"))]
 use core::cmp::PartialEq;
 #[cfg(not(feature = "std"))]

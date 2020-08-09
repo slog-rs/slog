@@ -1,8 +1,5 @@
-
-use alloc::String;
 use alloc::borrow::Cow;
-use alloc::Clone;
-use alloc::string::ToString;
+use alloc::string::{String, ToString};
 
 use core::convert::{From,Into,AsRef};
 use core::ops::Deref;
