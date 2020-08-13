@@ -1446,7 +1446,7 @@ pub trait Drain {
     ///
     /// Wrap `Self` in `Filter`
     ///
-    /// This will convert `self` to a `Drain that ignores `Record`s
+    /// This will convert `self` to a `Drain` that ignores `Record`s
     /// for which `f` returns false.
     fn filter<F>(self, f: F) -> Filter<Self, F>
     where
@@ -1460,7 +1460,7 @@ pub trait Drain {
     ///
     /// Wrap `Self` in `LevelFilter`
     ///
-    /// This will convert `self` to a `Drain that ignores `Record`s of
+    /// This will convert `self` to a `Drain` that ignores `Record`s of
     /// logging lever smaller than `level`.
     fn filter_level(self, level: Level) -> LevelFilter<Self>
     where
