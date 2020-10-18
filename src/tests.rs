@@ -233,20 +233,22 @@ fn display_and_alternate_display() {
         fn log(&self, record: &Record, values: &OwnedKVList) -> Result<(), Never> {
             let mut checked_n = false;
             let mut checked_a = false;
-            let mut serializer = AsFmtSerializer(|key, fmt_args| {
-                if key == "n" {
-                    assert_eq!(format!("{}", fmt_args), "normal");
-                    checked_n = true;
-                } else if key == "a" {
-                    assert_eq!(format!("{}", fmt_args), "alternate");
-                    checked_a = true;
-                } else {
-                    panic!("Unexpected key: {}", key);
-                }
-                Ok(())
-            });
+            {
+                let mut serializer = AsFmtSerializer(|key, fmt_args| {
+                    if key == "n" {
+                        assert_eq!(format!("{}", fmt_args), "normal");
+                        checked_n = true;
+                    } else if key == "a" {
+                        assert_eq!(format!("{}", fmt_args), "alternate");
+                        checked_a = true;
+                    } else {
+                        panic!("Unexpected key: {}", key);
+                    }
+                    Ok(())
+                });
 
-            record.kv.serialize(record, &mut serializer).unwrap();
+                record.kv.serialize(record, &mut serializer).unwrap();
+            }
 
             assert!(checked_n, "Expected the normal formatter to be used");
             assert!(checked_a, "Expected the alternate formatter to be used");
