@@ -205,6 +205,7 @@ fn expressions_fmt() {
     info!(log, "message"; "f" => %f, "d" => ?d);
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn display_and_alternate_display() {
     use core::fmt;
@@ -321,6 +322,7 @@ fn test_never_type_clone() {
     // Always pass if we compiled
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn can_hash_keys() {
     use std::collections::HashSet;
