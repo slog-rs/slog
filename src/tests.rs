@@ -20,6 +20,66 @@ mod std_only {
     use super::super::*;
     use std;
 
+    #[derive(Clone)]
+    struct CheckError;
+
+    impl Drain for CheckError {
+        type Ok = ();
+        type Err = Never;
+        fn log(
+            &self,
+            record: &Record,
+            values: &OwnedKVList,
+        ) -> std::result::Result<Self::Ok, Self::Err> {
+            struct ErrorSerializer(String);
+
+            impl Serializer for ErrorSerializer {
+                fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result {
+                    use core::fmt::Write;
+
+                    assert!(key == "error");
+                    self.0.write_fmt(*val).unwrap();
+                    Ok(())
+                }
+            }
+
+            let mut serializer = ErrorSerializer(String::new());
+            values.serialize(record, &mut serializer).unwrap();
+            assert_eq!(
+                serializer.0,
+                format!("{}", record.msg())
+            );
+            Ok(())
+        }
+    }
+
+    #[derive(Debug)]
+    struct TestError<E=std::string::ParseError>(&'static str, Option<E>);
+
+    impl TestError {
+        fn new(message: &'static str) -> Self {
+            TestError(message, None)
+        }
+    }
+
+    impl<E> fmt::Display for TestError<E> {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "{}", self.0)
+        }
+    }
+
+    impl<E: std::error::Error + 'static> std::error::Error for TestError<E> {
+        #[allow(deprecated)]
+        fn cause(&self) -> Option<&std::error::Error> {
+            self.1.as_ref().map(|error| error as _)
+        }
+
+        #[allow(deprecated)]
+        fn description(&self) -> &str {
+            "test error"
+        }
+    }
+
     #[test]
     fn logger_fmt_debug_sanity() {
         let root = Logger::root(Discard, o!("a" => "aa"));
@@ -58,6 +118,32 @@ mod std_only {
         info!(log, "(c, b2, b1, a)");
         let log = Logger::root(log, o!("d1" => "dd", "d2" => "dd"));
         info!(log, "(d2, d1, c, b2, b1, a)");
+    }
+
+    #[test]
+    fn error_fmt_no_source() {
+        let logger = Logger::root(CheckError, o!("error" => #TestError::new("foo")));
+        info!(logger, "foo");
+    }
+
+    #[test]
+    fn error_fmt_single_source() {
+        let logger = Logger::root(CheckError, o!("error" => #TestError("foo", Some(TestError::new("bar")))));
+        info!(logger, "foo: bar");
+    }
+
+    #[test]
+    fn error_fmt_two_sources() {
+        let logger = Logger::root(CheckError, o!("error" => #TestError("foo", Some(TestError("bar", Some(TestError::new("baz")))))));
+        info!(logger, "foo: bar: baz");
+    }
+
+    #[test]
+    fn ioerror_impls_value() {
+        let logger = Logger::root(Discard, o!());
+        info!(logger, "not found"; "error" => std::io::Error::from(std::io::ErrorKind::NotFound));
+        // compiles?
+        info!(logger, "not found"; "error" => #std::io::Error::from(std::io::ErrorKind::NotFound));
     }
 }
 
