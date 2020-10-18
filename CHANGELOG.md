@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Add #% for alternate display of the value part
 * Implement `Eq` for dynamic `Key`s
+* Add `emit_error` to `Serializer`, `#` for serializing foreign errors, and
+  `impl Value for std::io::Error`
 
 ## 2.6.0 - 2019-10-28
 

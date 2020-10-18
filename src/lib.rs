@@ -419,6 +419,9 @@ macro_rules! kv(
     (@ $args_ready:expr; $k:expr => #?$v:expr, $($args:tt)* ) => {
         kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); $($args)* )
     };
+    (@ $args_ready:expr; $k:expr => #$v:expr) => {
+        kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); )
+    };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
     };
@@ -2706,6 +2709,23 @@ pub trait Serializer {
     fn emit_serde(&mut self, key: Key, value: &SerdeValue) -> Result {
         value.serialize_fallback(key, &mut SerializerForward(self))
     }
+
+    /// Emit a type implementing `std::error::Error`
+    ///
+    /// Error values are a bit special as their `Display` implementation doesn't show full
+    /// information about the type but must be retrieved using `source()`. This can be used
+    /// for formatting sources of errors differntly.
+    ///
+    /// The default implementation of this method formats the sources separated with `: `.
+    /// Serializers are encouraged to take advantage of the type information and format it as
+    /// appropriate.
+    ///
+    /// This method is only available in `std` because the `Error` trait is not available
+    /// without `std`.
+    #[cfg(feature = "std")]
+    fn emit_error(&mut self, key: Key, error: &(std::error::Error + 'static)) -> Result {
+        self.emit_arguments(key, &format_args!("{}", ErrorAsFmt(error)))
+    }
 }
 
 /// Serializer to closure adapter.
@@ -2723,6 +2743,30 @@ where
         (self.0)(key, *val)
     }
 }
+
+/// A helper for formatting std::error::Error types by joining sources with `: `
+///
+/// This avoids allocation in the default implementation of `Serializer::emit_error()`.
+/// This is only enabled with `std` as the trait is only available there.
+#[cfg(feature = "std")]
+struct ErrorAsFmt<'a>(pub &'a (std::error::Error + 'static));
+
+#[cfg(feature = "std")]
+impl<'a> fmt::Display for ErrorAsFmt<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // For backwards compatibility
+        // This is fine because we don't need downcasting
+        #![allow(deprecated)]
+        write!(f, "{}", self.0)?;
+        let mut error = self.0.cause();
+        while let Some(source) = error {
+            write!(f, ": {}", source)?;
+            error = source.cause();
+        }
+        Ok(())
+    }
+}
+
 // }}}
 
 // {{{ serde
@@ -2980,6 +3024,18 @@ impl Value for std::net::SocketAddr {
     }
 }
 
+#[cfg(feature = "std")]
+impl Value for std::io::Error {
+    fn serialize(
+        &self,
+        _record: &Record,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
+        serializer.emit_error(key, self)
+    }
+}
+
 /// Explicit lazy-closure `Value`
 pub struct FnValue<V: Value, F>(pub F)
 where
@@ -3099,6 +3155,33 @@ where
         (self.0)(record, ser)
     }
 }
+
+/// A wrapper struct for serializing errors
+///
+/// This struct can be used to wrap types that don't implement `slog::Value` but
+/// do implement `std::error::Error` so that they can be logged.
+/// This is usually not used directly but using `#error` in the macros.
+///
+/// This struct is only available in `std` because the `Error` trait is not available
+/// without `std`.
+#[cfg(feature = "std")]
+pub struct ErrorValue<E: std::error::Error>(pub E);
+
+#[cfg(feature = "std")]
+impl<E> Value for ErrorValue<E>
+where
+    E: 'static + std::error::Error,
+{
+    fn serialize(
+        &self,
+        _record: &Record,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
+        serializer.emit_error(key, &self.0)
+    }
+}
+
 // }}}
 
 // {{{ KV
