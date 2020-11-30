@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 2.7.0 - ????-??-??
+## 2.7.0 - 2020-11-29
 
 * Implement `Hash` for `Level` and `FilterLevel`
 * Add #% for alternate display of the value part
