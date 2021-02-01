@@ -2086,7 +2086,7 @@ pub static LOG_LEVEL_SHORT_NAMES: [&'static str; 7] =
     ["OFF", "CRIT", "ERRO", "WARN", "INFO", "DEBG", "TRCE"];
 
 /// Logging level associated with a logging `Record`
-#[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Level {
     /// Critical
     Critical,
@@ -2103,7 +2103,7 @@ pub enum Level {
 }
 
 /// Logging filtering level
-#[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq, Ord, PartialOrd)]
 pub enum FilterLevel {
     /// Log nothing
     Off,
