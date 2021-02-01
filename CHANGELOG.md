@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 2.7.0 - ????-??-??
 
-* Implement `Hash` for dynamic `Level` and `FilterLevel`
+* Implement `Hash` for `Level` and `FilterLevel`
 * Add #% for alternate display of the value part
 * Implement `Eq` for dynamic `Key`s
 * Add `emit_error` to `Serializer`, `#` for serializing foreign errors, and
