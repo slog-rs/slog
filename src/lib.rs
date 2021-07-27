@@ -393,6 +393,7 @@ macro_rules! slog_b(
 /// Macro for build `KV` implementing type
 ///
 /// You probably want to use `o!` or `b!` instead.
+// Note: make sure to keep in sync with `slog_kv`
 #[macro_export(local_inner_macros)]
 macro_rules! kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
@@ -422,6 +423,9 @@ macro_rules! kv(
     (@ $args_ready:expr; $k:expr => #$v:expr) => {
         kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); )
     };
+    (@ $args_ready:expr; $k:expr => #$v:expr, $($args:tt)* ) => {
+        kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); $($args)* )
+    };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
     };
@@ -446,6 +450,7 @@ macro_rules! kv(
 );
 
 /// Alias of `kv`
+// Note: make sure to keep in sync with `kv`
 #[macro_export(local_inner_macros)]
 macro_rules! slog_kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
@@ -471,6 +476,12 @@ macro_rules! slog_kv(
     };
     (@ $args_ready:expr; $k:expr => #?$v:expr, $($args:tt)* ) => {
         slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; $k:expr => #$v:expr) => {
+        slog_kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => #$v:expr, $($args:tt)* ) => {
+        slog_kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
@@ -723,6 +734,8 @@ macro_rules! slog_record(
 ///
 /// ### `fmt::Display` and `fmt::Debug` values
 ///
+/// Slog macros support couple of formatting modifiers for convenience.
+///
 /// Value of any type that implements `std::fmt::Display` can be prefixed with
 /// `%` in `k => v` expression to use its text representation returned by
 /// `format_args!("{}", v)`. This is especially useful for errors. Not that
@@ -732,6 +745,11 @@ macro_rules! slog_record(
 ///
 /// Similarly to use `std::fmt::Debug` value can be prefixed with `?`,
 /// or pretty-printed with `#?`.
+///
+/// Errors can be prefixed with `#` as a shorthand for wrapping with `ErrorValue`.
+///
+/// Full list of supported formats can always be inspected by looking at
+/// [`kv` macro](macro.log.html)
 ///
 /// ```
 /// #[macro_use]

@@ -37,8 +37,15 @@ mod std_only {
                 fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result {
                     use core::fmt::Write;
 
-                    assert!(key == "error");
-                    self.0.write_fmt(*val).unwrap();
+                    match key {
+                        "error" => self.0.write_fmt(*val).unwrap(),
+                        _ => {
+                            self.0.write_str(&key).unwrap();
+                            self.0.write_str(": ").unwrap();
+                            self.0.write_fmt(*val).unwrap();
+                            self.0.write_str("; ").unwrap();
+                        }
+                    }
                     Ok(())
                 }
             }
@@ -124,8 +131,22 @@ mod std_only {
     fn error_fmt_no_source() {
         let logger = Logger::root(CheckError, o!("error" => #TestError::new("foo")));
         info!(logger, "foo");
+        slog_info!(logger, "foo");
     }
 
+    #[test]
+    fn error_fmt_no_source_not_last() {
+        let logger = Logger::root(CheckError, o!("error" => #TestError::new("foo"), "not-error" => "not-error"));
+        info!(logger, "not-error: not-error; foo");
+        slog_info!(logger, "not-error: not-error; foo");
+    }
+
+    #[test]
+    fn error_fmt_no_source_last() {
+        let logger = Logger::root(CheckError, o!("not-error" => "not-error", "error" => #TestError::new("foo")));
+        info!(logger, "foonot-error: not-error; ");
+        slog_info!(logger, "foonot-error: not-error; ");
+    }
     #[test]
     fn error_fmt_single_source() {
         let logger = Logger::root(CheckError, o!("error" => #TestError("foo", Some(TestError::new("bar")))));
