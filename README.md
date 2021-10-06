@@ -51,7 +51,7 @@ Reasons you might want to stick with `slog` anyway:
 * you consider mature, stable code & API a plus
 * it has some features that `tracing` is missing
 * great performance (I have NOT done any comparison, but `slog`'s performance
-  is very good.
+  is very good).
 
 ### Introduction (please read)
 
