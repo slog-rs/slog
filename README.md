@@ -30,6 +30,29 @@
 
 # slog-rs - The Logging for [Rust][rust]
 
+### You might consider using `tracing` instead
+
+It's been a while since `slog` was created and it served
+Rust community well all this time. It remains a stable, featureful
+and battle-tested library, used in many important projects.
+
+In last few years,
+another ecosystem for Rust was
+created with similar features and a very good support for debugging `async` code
+and already larger dev team and community.
+
+Please check [tracing](https://github.com/tokio-rs/tracing) and see
+if it is more suitable for your use-case. It seems that it is already
+a go-to logging/tracing solution for Rust.
+
+Reasons you might want to stick with `slog` anyway:
+
+* `async` support doesn't benefit you
+* you consider mature, stable code & API a plus
+* it has some features that `tracing` is missing
+* great performance (I have NOT done any comparison, but `slog`'s performance
+  is very good.
+
 ### Introduction (please read)
 
 `slog` is an ecosystem of reusable components for structured, extensible,
