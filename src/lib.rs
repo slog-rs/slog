@@ -319,6 +319,8 @@ use alloc::boxed::Box;
 use alloc::rc::Rc;
 #[cfg(not(feature = "std"))]
 use alloc::string::String;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 
 #[cfg(feature = "nested-values")]
 extern crate erased_serde;
@@ -333,6 +335,8 @@ use std::panic::{RefUnwindSafe, UnwindSafe};
 use std::rc::Rc;
 #[cfg(feature = "std")]
 use std::string::String;
+#[cfg(feature = "std")]
+use std::vec::Vec;
 #[cfg(feature = "std")]
 use std::sync::Arc;
 // }}}
@@ -2707,6 +2711,15 @@ pub trait Serializer {
         self.emit_arguments(key, &format_args!(""))
     }
 
+    /// Emit bytes
+    ///
+    /// Note: this has literally bytes semantics, not array semantics.
+    /// It is probably most appropriate to display it as hex which is
+    /// also the default (space-separated).
+    fn emit_bytes(&mut self, key: Key, bytes: &[u8]) -> Result {
+        self.emit_arguments(key, &format_args!("{}", BytesAsFmt(bytes)))
+    }
+
     /// Emit `fmt::Arguments`
     ///
     /// This is the only method that has to implemented, but for performance and
@@ -2759,6 +2772,26 @@ where
 {
     fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result {
         (self.0)(key, *val)
+    }
+}
+
+/// A helper for formatting bytes as hex separated with spaces.
+///
+/// This avoids allocation in the default implementation of `Serializer::emit_bytes()`.
+struct BytesAsFmt<'a>(pub &'a [u8]);
+
+impl<'a> fmt::Display for BytesAsFmt<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut non_empty = false;
+        for byte in self.0 {
+            if non_empty {
+                write!(f, " {:02x}", byte)?;
+            } else {
+                write!(f, "{:02x}", byte)?;
+                non_empty = true;
+            }
+        }
+        Ok(())
     }
 }
 
@@ -2946,6 +2979,28 @@ impl Value for String {
         serializer: &mut Serializer,
     ) -> Result {
         serializer.emit_str(key, self.as_str())
+    }
+}
+
+impl Value for [u8] {
+    fn serialize(
+        &self,
+        _record: &Record,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
+        serializer.emit_bytes(key, self)
+    }
+}
+
+impl Value for Vec<u8> {
+    fn serialize(
+        &self,
+        _record: &Record,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
+        serializer.emit_bytes(key, self)
     }
 }
 
