@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Next
 
 * Fix `#` format when not used as a last argument.
+* Implement `Value` for `std::borrow::Cow`
 
 ## 2.7.0 - 2020-11-29
 

@@ -319,6 +319,8 @@ use alloc::boxed::Box;
 use alloc::rc::Rc;
 #[cfg(not(feature = "std"))]
 use alloc::string::String;
+#[cfg(not(feature = "std"))]
+use alloc::borrow::{Cow, ToOwned};
 
 #[cfg(feature = "nested-values")]
 extern crate erased_serde;
@@ -335,6 +337,8 @@ use std::rc::Rc;
 use std::string::String;
 #[cfg(feature = "std")]
 use std::sync::Arc;
+#[cfg(feature = "std")]
+use std::borrow::{Cow, ToOwned};
 // }}}
 
 // {{{ Macros
@@ -3017,6 +3021,21 @@ where
         self.0.serialize(record, key, serializer)
     }
 }
+
+impl<'a, T> Value for Cow <'a, T>
+where
+    T: Value + ToOwned + ?Sized,
+{
+    fn serialize(
+        &self,
+        record: &Record,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
+        (**self).serialize(record, key, serializer)
+    }
+}
+
 
 #[cfg(feature = "std")]
 impl<'a> Value for std::path::Display<'a> {
