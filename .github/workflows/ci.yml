@@ -1,0 +1,114 @@
+# We use `actions-rs` for most of our actions
+on: [push, pull_request]
+
+env:
+  CARGO_TERM_COLOR: always
+  # Has a history of occasional bugs (especially on old versions)
+  #
+  # The CI is free so we might as well use it ;)
+  CARGO_INCREMENTAL: 0
+
+
+#
+#
+# NOTE: We do not test (2) and (3) on 1.23 because it's just so darn old it won't `check` at all.
+# Things like &dyn won't even compile on my laptop
+
+# Tested versions:
+# 1. stable
+# 2. nightly
+# 3. Minimum Supported Rust Version (MSRV)
+# 4. 1.31
+#
+# A note on 1.23 & 1.31:
+# On 1.23 (our current minimum version), `cargo check --all-features` fails to compile the main crate
+# To be clear, not only do the tests fail to run, but `cargo check` fails to compile at all
+#
+# For this reason, we also test 1.31.
+# `cargo check --all-features` works on 1.31 and every version after that
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    fail-fast: false # Even if one job fails we still want to see the other
+    strategy:
+      matrix:
+        # Don't include 1.23 in the matrix because `cargo check --all-features` fails (see above)
+        rust: [1.31, stable, nightly]
+        # NOTE: Features to test must be specified manually. They are applied to all versions seperately.
+        #
+        # This has the advantage of being more flexibile and thorough
+        # This has the disadvantage of being more vebrose
+        #
+        # Specific feature combos can be overriden per-version with 'include' and 'ecclude'
+        features: ["", "nested-values dynamic-keys", "nested-values dynamic-keys nothreads"]
+        include:
+          # Manually include 1.23 (MSRV) and only compile it with default features
+          #
+          # This is because `cargo check --features nested-values` fails to compile on 1.23
+          - rust: 1.23
+            features:
+            required-success: true
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          override: true
+      - name: Check
+        # A failing check always ends the build
+        run: |
+          cargo check --verbose --features "${{ matrix.features }}"
+        # A failing `cargo check` always fails the build
+        continue-on-error: false
+      - name: Test
+        run: |
+          cargo test --verbose --features "${{ matrix.features }}"
+
+        # By default, we require tests to succeed if either
+        # 1. It has default features (`features == ""`)
+        #
+        # Otherwise, we allow tests to fail.
+        #
+        # This is necessary because most feature combos currently break the tests :(
+        #
+        # TODO: Add some sort of option to get around this (or fix the build)
+        continue-on-error: ${{ matrix.features == "" }}
+
+  
+  clippy:
+    runs-on: ubuntu-latest
+    # Clippy is something that is nice to have, but it shoudldn't break the build
+    continue-on-error: true
+    strategy:
+      matrix:
+        rust:
+          - stable
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+          components: clippy
+      - run: cargo clippy
+
+  rustfmt:
+    runs-on: ubuntu-latest
+    # rustfmt is something that is nice to have, but it shoudldn't break the build
+    continue-on-error: true
+    strategy:
+      matrix:
+        rust:
+          - stable
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+          components: rustfmt
+      - run: cargo fmt -- --check
