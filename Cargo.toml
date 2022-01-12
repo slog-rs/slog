@@ -12,6 +12,20 @@ repository = "https://github.com/slog-rs/slog"
 readme = "README.md"
 autoexamples = true
 
+# This is our Minimum Supported Rust Version (MSRV)
+#
+# See the wiki for our full policy on changing this.
+#
+# There are two main requirements:
+# 1. Bumping the MSRV requires increasing the minor version number (2.7 -> 2.8)
+# 2. Changes must be clearly announced in the CHANGELOG.md file
+# 3. At a minimum, we must support at least the latest stable rust, minus two releases. 
+#    - We can (and very often do) supprot versions much older than this
+#
+# The first version of Cargo that supports this field was released with Rust 1.56.0.
+# In older releases, the field will be ignored, and Cargo will display a warning.
+rust-version = "1.23"
+
 build = "build.rs"
 
 [profile.release]
