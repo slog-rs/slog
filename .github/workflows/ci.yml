@@ -30,8 +30,8 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    fail-fast: false # Even if one job fails we still want to see the other
     strategy:
+      fail-fast: false # Even if one job fails we still want to see the other ones
       matrix:
         # Don't include 1.23 in the matrix because `cargo check --all-features` fails (see above)
         rust: [1.31, stable, nightly]
