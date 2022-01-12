@@ -74,7 +74,7 @@ jobs:
         # This is necessary because most feature combos currently break the tests :(
         #
         # TODO: Add some sort of option to get around this (or fix the build)
-        continue-on-error: ${{ matrix.features == "" }}
+        continue-on-error: ${{ matrix.features == '' }}
 
   
   clippy:
