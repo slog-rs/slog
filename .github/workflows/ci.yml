@@ -1,5 +1,6 @@
 # We use `actions-rs` for most of our actions
 on: [push, pull_request]
+name: Rust
 
 env:
   CARGO_TERM_COLOR: always

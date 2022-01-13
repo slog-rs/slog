@@ -5,8 +5,8 @@
   </a>
   <br>
 
-  <a href="https://travis-ci.org/slog-rs/slog">
-      <img src="https://img.shields.io/travis/slog-rs/slog/master.svg" alt="Travis CI Build Status">
+  <a href="https://github.com/slog-rs/slog/actions">
+      <img src="https://img.shields.io/github/workflow/status/slog-rs/slog/Rust/master" alt="GH Actions Build Status">
   </a>
 
   <a href="https://crates.io/crates/slog">
