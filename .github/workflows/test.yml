@@ -1,19 +1,16 @@
 # We use `actions-rs` for most of our actions
+#
+# This file is for the main tests. clippy & rustfmt are seperate workflows
 on: [push, pull_request]
-name: Rust
+name: Cargo Test
 
 env:
   CARGO_TERM_COLOR: always
-  # Has a history of occasional bugs (especially on old versions)
+  # has a history of occasional bugs (especially on old versions)
   #
-  # The CI is free so we might as well use it ;)
+  # the ci is free so we might as well use it ;)
   CARGO_INCREMENTAL: 0
 
-
-#
-#
-# NOTE: We do not test (2) and (3) on 1.23 because it's just so darn old it won't `check` at all.
-# Things like &dyn won't even compile on my laptop
 
 # Tested versions:
 # 1. stable
@@ -61,7 +58,7 @@ jobs:
           toolchain: ${{ matrix.rust }}
           override: true
       - name: Check
-        # A failing check always ends the build
+        # A failing `cargo check` always ends the build
         run: |
           cargo check --verbose --features "${{ matrix.features }}"
         # A failing `cargo check` always fails the build
@@ -78,64 +75,4 @@ jobs:
         # This is necessary because most feature combos currently break the tests :(
         #
         # TODO: Add some sort of option to get around this (or fix the build)
-        continue-on-error: ${{ matrix.features == '' }}
-
-  
-  clippy:
-    # Only run on PRs if the source branch is on someone else's repo
-    if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
-    runs-on: ubuntu-latest
-    # Clippy is something that is nice to have, but it shoudldn't break the build
-    continue-on-error: true
-    strategy:
-      matrix:
-        rust:
-          - stable
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ matrix.rust }}
-          override: true
-          components: clippy
-      - shell: bash
-        run: |
-          # By default, GH actions runs `set -e` to make bash immediately exit
-          # if any command has an error.
-          #
-          # However, we want this check to always "succeed", just give a warning on error.
-          #
-          # As a result we undo that setting by runing `set +e` (notice the plus)
-          set +e
-          cargo clippy
-          # Give a github warning if the command didn't succeed
-          if [[ $? -ne 0 ]]; then echo "::warning title=Clippy:: Oh no, clippy is sad :("; fi
-          true # Exit with success
-
-
-  rustfmt:
-    # Only run on PRs if the source branch is on someone else's repo
-    if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
-    runs-on: ubuntu-latest
-    # rustfmt is something that is nice to have, but it shoudldn't break the build
-    continue-on-error: true
-    strategy:
-      matrix:
-        rust:
-          - stable
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ matrix.rust }}
-          override: true
-          components: rustfmt
-      - shell: bash
-        run: |
-          set +e # See above
-          cargo fmt -- --check
-          # Give a github warning if the command didn't succeed
-          if [[ $? -ne 0 ]]; then echo "::warning title=rustfmt:: Formatting problems"; fi;
-          true # Exit with success
+        continue-on-error: ${{ matrix.features == '' }} 

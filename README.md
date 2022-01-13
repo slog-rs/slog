@@ -5,8 +5,8 @@
   </a>
   <br>
 
-  <a href="https://github.com/slog-rs/slog/actions">
-      <img src="https://img.shields.io/github/workflow/status/slog-rs/slog/Rust/master" alt="GH Actions Build Status">
+  <a href="https://github.com/slog-rs/slog/actions/workflows/test.yml">
+      <img src="https://img.shields.io/github/workflow/status/slog-rs/slog/Cargo%20Test" alt="GH Actions (Cargo Test)">
   </a>
 
   <a href="https://crates.io/crates/slog">
