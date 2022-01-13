@@ -312,7 +312,7 @@ extern crate std;
 mod key;
 pub use self::key::Key;
 #[cfg(not(feature = "std"))]
-use alloc::sync::Arc;
+use alloc::borrow::{Cow, ToOwned};
 #[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
@@ -320,15 +320,17 @@ use alloc::rc::Rc;
 #[cfg(not(feature = "std"))]
 use alloc::string::String;
 #[cfg(not(feature = "std"))]
-use alloc::borrow::{Cow, ToOwned};
+use alloc::sync::Arc;
 
 #[cfg(feature = "nested-values")]
 extern crate erased_serde;
 #[cfg(feature = "nested-values")]
 extern crate serde;
 
-use core::{convert, fmt, result};
 use core::str::FromStr;
+use core::{convert, fmt, result};
+#[cfg(feature = "std")]
+use std::borrow::{Cow, ToOwned};
 #[cfg(feature = "std")]
 use std::boxed::Box;
 #[cfg(feature = "std")]
@@ -339,8 +341,6 @@ use std::rc::Rc;
 use std::string::String;
 #[cfg(feature = "std")]
 use std::sync::Arc;
-#[cfg(feature = "std")]
-use std::borrow::{Cow, ToOwned};
 // }}}
 
 // {{{ Macros
@@ -1572,11 +1572,7 @@ impl<'a, D: Drain + 'a> Drain for &'a mut D {
 pub trait SendSyncUnwindSafe: Send + Sync + UnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> SendSyncUnwindSafe for T
-where
-    T: Send + Sync + UnwindSafe + ?Sized,
-{
-}
+impl<T> SendSyncUnwindSafe for T where T: Send + Sync + UnwindSafe + ?Sized {}
 
 #[cfg(feature = "std")]
 /// `Drain + Send + Sync + UnwindSafe` bound
@@ -1586,9 +1582,8 @@ where
 pub trait SendSyncUnwindSafeDrain: Drain + Send + Sync + UnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> SendSyncUnwindSafeDrain for T
-where
-    T: Drain + Send + Sync + UnwindSafe + ?Sized,
+impl<T> SendSyncUnwindSafeDrain for T where
+    T: Drain + Send + Sync + UnwindSafe + ?Sized
 {
 }
 
@@ -1597,50 +1592,52 @@ where
 ///
 /// This type is used to enforce `Drain`s associated with `Logger`s
 /// are thread-safe.
-pub trait SendSyncRefUnwindSafeDrain: Drain + Send + Sync + RefUnwindSafe {}
+pub trait SendSyncRefUnwindSafeDrain:
+    Drain + Send + Sync + RefUnwindSafe
+{
+}
 
 #[cfg(feature = "std")]
-impl<T> SendSyncRefUnwindSafeDrain for T
-where
-    T: Drain + Send + Sync + RefUnwindSafe + ?Sized,
+impl<T> SendSyncRefUnwindSafeDrain for T where
+    T: Drain + Send + Sync + RefUnwindSafe + ?Sized
 {
 }
 
 #[cfg(feature = "std")]
 /// Function that can be used in `MapErr` drain
-pub trait MapErrFn<EI, EO>
-    : 'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(EI) -> EO {
+pub trait MapErrFn<EI, EO>:
+    'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(EI) -> EO
+{
 }
 
 #[cfg(feature = "std")]
-impl<T, EI, EO> MapErrFn<EI, EO> for T
-where
+impl<T, EI, EO> MapErrFn<EI, EO> for T where
     T: 'static
         + Sync
         + Send
         + ?Sized
         + UnwindSafe
         + RefUnwindSafe
-        + Fn(EI) -> EO,
+        + Fn(EI) -> EO
 {
 }
 
 #[cfg(feature = "std")]
 /// Function that can be used in `Filter` drain
-pub trait FilterFn
-    : 'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(&Record) -> bool {
+pub trait FilterFn:
+    'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(&Record) -> bool
+{
 }
 
 #[cfg(feature = "std")]
-impl<T> FilterFn for T
-where
+impl<T> FilterFn for T where
     T: 'static
         + Sync
         + Send
         + ?Sized
         + UnwindSafe
         + RefUnwindSafe
-        + Fn(&Record) -> bool,
+        + Fn(&Record) -> bool
 {
 }
 
@@ -1652,11 +1649,7 @@ where
 pub trait SendSyncUnwindSafeDrain: Drain + Send + Sync {}
 
 #[cfg(not(feature = "std"))]
-impl<T> SendSyncUnwindSafeDrain for T
-where
-    T: Drain + Send + Sync + ?Sized,
-{
-}
+impl<T> SendSyncUnwindSafeDrain for T where T: Drain + Send + Sync + ?Sized {}
 
 #[cfg(not(feature = "std"))]
 /// `Drain + Send + Sync + RefUnwindSafe` bound
@@ -1666,20 +1659,15 @@ where
 pub trait SendSyncRefUnwindSafeDrain: Drain + Send + Sync {}
 
 #[cfg(not(feature = "std"))]
-impl<T> SendSyncRefUnwindSafeDrain for T
-where
-    T: Drain + Send + Sync + ?Sized,
-{
-}
+impl<T> SendSyncRefUnwindSafeDrain for T where T: Drain + Send + Sync + ?Sized {}
 
 #[cfg(feature = "std")]
 /// `Drain + Send + RefUnwindSafe` bound
 pub trait SendRefUnwindSafeDrain: Drain + Send + RefUnwindSafe {}
 
 #[cfg(feature = "std")]
-impl<T> SendRefUnwindSafeDrain for T
-where
-    T: Drain + Send + RefUnwindSafe + ?Sized,
+impl<T> SendRefUnwindSafeDrain for T where
+    T: Drain + Send + RefUnwindSafe + ?Sized
 {
 }
 
@@ -1688,20 +1676,15 @@ where
 pub trait SendRefUnwindSafeDrain: Drain + Send {}
 
 #[cfg(not(feature = "std"))]
-impl<T> SendRefUnwindSafeDrain for T
-where
-    T: Drain + Send + ?Sized,
-{
-}
+impl<T> SendRefUnwindSafeDrain for T where T: Drain + Send + ?Sized {}
 
 #[cfg(not(feature = "std"))]
 /// Function that can be used in `MapErr` drain
 pub trait MapErrFn<EI, EO>: 'static + Sync + Send + Fn(EI) -> EO {}
 
 #[cfg(not(feature = "std"))]
-impl<T, EI, EO> MapErrFn<EI, EO> for T
-where
-    T: 'static + Sync + Send + ?Sized + Fn(EI) -> EO,
+impl<T, EI, EO> MapErrFn<EI, EO> for T where
+    T: 'static + Sync + Send + ?Sized + Fn(EI) -> EO
 {
 }
 
@@ -1710,9 +1693,8 @@ where
 pub trait FilterFn: 'static + Sync + Send + Fn(&Record) -> bool {}
 
 #[cfg(not(feature = "std"))]
-impl<T> FilterFn for T
-where
-    T: 'static + Sync + Send + ?Sized + Fn(&Record) -> bool,
+impl<T> FilterFn for T where
+    T: 'static + Sync + Send + ?Sized + Fn(&Record) -> bool
 {
 }
 
@@ -1963,7 +1945,8 @@ where
         record: &Record,
         logger_values: &OwnedKVList,
     ) -> result::Result<Self::Ok, Never> {
-        let _ = self.0
+        let _ = self
+            .0
             .log(record, logger_values)
             .unwrap_or_else(|e| panic!("slog::Fuse Drain: {:?}", e));
         Ok(())
@@ -2056,7 +2039,8 @@ where
 
 #[cfg(feature = "std")]
 impl<'a, D: Drain> From<std::sync::PoisonError<std::sync::MutexGuard<'a, D>>>
-    for MutexDrainError<D> {
+    for MutexDrainError<D>
+{
     fn from(
         _: std::sync::PoisonError<std::sync::MutexGuard<'a, D>>,
     ) -> MutexDrainError<D> {
@@ -2277,7 +2261,8 @@ fn index_of_str_ignore_case(haystack: &[&str], needle: &str) -> Option<usize> {
     if needle.is_empty() {
         return None;
     }
-    haystack.iter()
+    haystack
+        .iter()
         // This will never panic because haystack has only ASCII characters
         .map(|hay| &hay[..needle.len().min(hay.len())])
         .position(|hay| hay.eq_ignore_ascii_case(needle))
@@ -2379,25 +2364,34 @@ fn filter_level_from_str() {
 
 #[cfg(test)]
 fn assert_from_str<T>(expected: T, level_str: &str)
-    where
-        T: FromStr + fmt::Debug + PartialEq,
-        T::Err: fmt::Debug {
+where
+    T: FromStr + fmt::Debug + PartialEq,
+    T::Err: fmt::Debug,
+{
     let result = T::from_str(level_str);
 
     let actual = result.unwrap_or_else(|e| {
         panic!("Failed to parse filter level '{}': {:?}", level_str, e)
     });
-    assert_eq!(expected, actual, "Invalid filter level parsed from '{}'", level_str);
+    assert_eq!(
+        expected, actual,
+        "Invalid filter level parsed from '{}'",
+        level_str
+    );
 }
 
 #[cfg(test)]
 fn refute_from_str<T>(level_str: &str)
-    where
-        T: FromStr + fmt::Debug {
+where
+    T: FromStr + fmt::Debug,
+{
     let result = T::from_str(level_str);
 
     if let Ok(level) = result {
-        panic!("Parsing filter level '{}' succeeded: {:?}", level_str, level)
+        panic!(
+            "Parsing filter level '{}' succeeded: {:?}",
+            level_str, level
+        )
     }
 }
 
@@ -2426,15 +2420,22 @@ fn filter_level_to_string_and_from_str_are_compatible() {
 
 #[cfg(all(test, feature = "std"))]
 fn assert_to_string_from_str<T>(expected: T)
-    where
-        T: std::string::ToString + FromStr + PartialEq + fmt::Debug,
-        <T as FromStr>::Err: fmt::Debug {
+where
+    T: std::string::ToString + FromStr + PartialEq + fmt::Debug,
+    <T as FromStr>::Err: fmt::Debug,
+{
     let string = expected.to_string();
 
-    let actual = T::from_str(&string)
-        .expect(&format!("Failed to parse string representation of {:?}", expected));
+    let actual = T::from_str(&string).expect(&format!(
+        "Failed to parse string representation of {:?}",
+        expected
+    ));
 
-    assert_eq!(expected, actual, "Invalid value parsed from string representation of {:?}", actual);
+    assert_eq!(
+        expected, actual,
+        "Invalid value parsed from string representation of {:?}",
+        actual
+    );
 }
 
 #[test]
@@ -2747,7 +2748,11 @@ pub trait Serializer {
     /// This method is only available in `std` because the `Error` trait is not available
     /// without `std`.
     #[cfg(feature = "std")]
-    fn emit_error(&mut self, key: Key, error: &(std::error::Error + 'static)) -> Result {
+    fn emit_error(
+        &mut self,
+        key: Key,
+        error: &(std::error::Error + 'static),
+    ) -> Result {
         self.emit_arguments(key, &format_args!("{}", ErrorAsFmt(error)))
     }
 }
@@ -2923,14 +2928,15 @@ where
     }
 }
 
-macro_rules! impl_value_for{
+macro_rules! impl_value_for {
     ($t:ty, $f:ident) => {
         impl Value for $t {
-            fn serialize(&self,
-                         _record : &Record,
-                         key : Key,
-                         serializer : &mut Serializer
-                         ) -> Result {
+            fn serialize(
+                &self,
+                _record: &Record,
+                key: Key,
+                serializer: &mut Serializer,
+            ) -> Result {
                 serializer.$f(key, *self)
             }
         }
@@ -3069,7 +3075,7 @@ where
     }
 }
 
-impl<'a, T> Value for Cow <'a, T>
+impl<'a, T> Value for Cow<'a, T>
 where
     T: Value + ToOwned + ?Sized,
 {
@@ -3082,7 +3088,6 @@ where
         (**self).serialize(record, key, serializer)
     }
 }
-
 
 #[cfg(feature = "std")]
 impl<'a> Value for std::path::Display<'a> {
@@ -3370,7 +3375,10 @@ impl<T> SendSyncRefUnwindSafeKV for T where T: KV + ?Sized {}
 pub trait SendSyncRefUnwindSafeKV: KV + Send + Sync + RefUnwindSafe {}
 
 #[cfg(all(not(feature = "nothreads"), feature = "std"))]
-impl<T> SendSyncRefUnwindSafeKV for T where T: KV + Send + Sync + RefUnwindSafe + ?Sized {}
+impl<T> SendSyncRefUnwindSafeKV for T where
+    T: KV + Send + Sync + RefUnwindSafe + ?Sized
+{
+}
 
 #[cfg(all(not(feature = "nothreads"), not(feature = "std")))]
 /// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
@@ -3605,18 +3613,17 @@ impl fmt::Debug for OwnedKVList {
             });
             let record_static = record_static!(Level::Trace, "");
 
-            try!(
-                self.node
-                    .serialize(
-                        &Record::new(
-                            &record_static,
-                            &format_args!(""),
-                            BorrowedKV(&STATIC_TERMINATOR_UNIT)
-                        ),
-                        &mut as_str_ser
-                    )
-                    .map_err(|_| fmt::Error)
-            );
+            try!(self
+                .node
+                .serialize(
+                    &Record::new(
+                        &record_static,
+                        &format_args!(""),
+                        BorrowedKV(&STATIC_TERMINATOR_UNIT)
+                    ),
+                    &mut as_str_ser
+                )
+                .map_err(|_| fmt::Error));
         }
 
         try!(write!(f, ")"));
@@ -3837,8 +3844,9 @@ pub type OwnedKeyValueList = OwnedKVList;
 /// Compatibility name to ease upgrading from `slog v1`
 pub mod ser {
     #[allow(deprecated)]
-    pub use super::{OwnedKeyValueList, PushLazy, Serialize, Serializer,
-                    ValueSerializer};
+    pub use super::{
+        OwnedKeyValueList, PushLazy, Serialize, Serializer, ValueSerializer,
+    };
 }
 // }}}
 

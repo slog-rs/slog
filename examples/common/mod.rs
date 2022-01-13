@@ -21,7 +21,6 @@ impl Drain for PrintlnDrain {
         record: &Record,
         values: &OwnedKVList,
     ) -> result::Result<Self::Ok, Self::Err> {
-
         print!("{}", record.msg());
 
         record
