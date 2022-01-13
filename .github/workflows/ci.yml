@@ -93,7 +93,20 @@ jobs:
           toolchain: ${{ matrix.rust }}
           override: true
           components: clippy
-      - run: cargo clippy
+      - shell: bash
+        run: |
+          # By default, GH actions runs `set -e` to make bash immediately exit
+          # if any command has an error.
+          #
+          # However, we want this check to always "succeed", just give a warning on error.
+          #
+          # As a result we undo that setting by runing `set +e` (notice the plus)
+          set +e
+          cargo clippy
+          # Give a github warning if the command didn't succeed
+          if [[ $? -ne 0 ]]; then echo "::warning title=Clippy:: Oh no, clippy is sad :("; fi
+          true # Exit with success
+
 
   rustfmt:
     runs-on: ubuntu-latest
@@ -111,4 +124,10 @@ jobs:
           toolchain: ${{ matrix.rust }}
           override: true
           components: rustfmt
-      - run: cargo fmt -- --check
+      - shell: bash
+        run: |
+          set +e # See above
+          cargo fmt -- --check
+          # Give a github warning if the command didn't succeed
+          if [[ $? -ne 0 ]]; then echo "::warning title=rustfmt:: Formatting problems"; fi;
+          true # Exit with success
