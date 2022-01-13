@@ -1,0 +1,39 @@
+# The file is the workflow for rustfmt
+#
+# It runs `cargo fmt --check`
+#
+# Right now it always succeeds. We should probably change this to enforce stricter formatting.
+on: [push, pull_request]
+name: rustfmt
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rustfmt:
+    # Only run on PRs if the source branch is on someone else's repo
+    if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
+    runs-on: ubuntu-latest
+    # rustfmt is something that is nice to have, but it shoudldn't break the build
+    #
+    # TODO: Should we change this in the future to enforce stricter formatting?
+    continue-on-error: true
+    strategy:
+      matrix:
+        rust:
+          - stable
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+          components: rustfmt
+      - shell: bash
+        run: |
+          set +e # See above
+          cargo fmt -- --check
+          # Give a github warning if the command didn't succeed
+          if [[ $? -ne 0 ]]; then echo "::warning title=rustfmt:: Formatting problems"; fi;
+          true # Exit with success
