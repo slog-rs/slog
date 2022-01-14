@@ -4,10 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## Next
 
-* Updated crate to Rust 2018
-* Lowest supported `rustc` version is now `1.31.0`
+* **BIG:** Updated to Rust 2018
+  * Minimum supported Rust Version is now 1.31
+  * NOTE: Old 2015 crates will still work because of [excellent 2015/2018 compatibility](https://blog.rust-lang.org/2018/07/27/what-is-rust-2018.html#managing-compatibility)
+* Switch from Travis CI to Github Actions (fixes #294)
+  * `rustfmt --check` now run by default
+* Fix `#` format when not used as a last argument.
+* Implement `Value` for `std::borrow::Cow`
+
+## 2.7.0 - 2020-11-29
+
+* Implement `Hash` for `Level` and `FilterLevel`
+* Add #% for alternate display of the value part
+* Implement `Eq` for dynamic `Key`s
+* Add `emit_error` to `Serializer`, `#` for serializing foreign errors, and
+  `impl Value for std::io::Error`
+* Add `Serde` (if `nested-values` feature is enabled) to optionally wrap a value
+  that implements [serde::Serialize] so it's written to the log record as an
+  object, rather than a primitive.
+
+## 2.6.0 - 2019-10-28
+
+* Add #? for pretty-debug printing the value part
+
+## 2.5.3 - ????-??-??
+
+* Use fully qualified call syntax for `Logger::log` in macros
 
 ## 2.5.2 - 2019-07-22
 

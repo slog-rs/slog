@@ -5,8 +5,8 @@
   </a>
   <br>
 
-  <a href="https://travis-ci.org/slog-rs/slog">
-      <img src="https://img.shields.io/travis/slog-rs/slog/master.svg" alt="Travis CI Build Status">
+  <a href="https://github.com/slog-rs/slog/actions/workflows/test.yml">
+      <img src="https://img.shields.io/github/workflow/status/slog-rs/slog/Cargo%20Test" alt="GH Actions (Cargo Test)">
   </a>
 
   <a href="https://crates.io/crates/slog">
@@ -20,6 +20,9 @@
   <a href="https://docs.rs/releases/search?query=slog-">
       <img src="https://docs.rs/slog/badge.svg" alt="docs-rs: release versions documentation">
   </a>
+  <a href="https://blog.rust-lang.org/2018/01/04/Rust-1.23.html">
+      <img src="https://img.shields.io/badge/rust-1.23%2B-orange.svg">
+  </a>
   <br>
     <strong><a href="https://github.com/slog-rs/slog/wiki/Getting-started">Getting started</a></strong>
   <a href="//github.com/slog-rs/slog/wiki/Introduction-to-structured-logging-with-slog">Introduction</a>
@@ -29,6 +32,29 @@
 </p>
 
 # slog-rs - The Logging for [Rust][rust]
+
+### You might consider using `tracing` instead
+
+It's been a while since `slog` was created and it served
+Rust community well all this time. It remains a stable, featureful
+and battle-tested library, used in many important projects.
+
+In last few years,
+another ecosystem for Rust was
+created with similar features and a very good support for debugging `async` code
+and already larger dev team and community.
+
+Please check [tracing](https://github.com/tokio-rs/tracing) and see
+if it is more suitable for your use-case. It seems that it is already
+a go-to logging/tracing solution for Rust.
+
+Reasons you might want to stick with `slog` anyway:
+
+* `async` support doesn't benefit you
+* you consider mature, stable code & API a plus
+* it has some features that `tracing` is missing
+* great performance (I have NOT done any comparison, but `slog`'s performance
+  is very good).
 
 ### Introduction (please read)
 
@@ -109,3 +135,9 @@ Conduct](https://github.com/dpc/public/blob/master/COC.md).
 Any particular repositories under slog ecosystem might be created, controlled,
 maintained by other entities with various levels of autonomy. Lets work together
 toward a common goal in a respectful and welcoming atmosphere!
+
+## Verification Recommendation
+
+To help with the maintaince, the ownership of this crate is potentially shared between multiple developers.
+It is recommended to always use [cargo-crev](https://github.com/crev-dev/cargo-crev)
+to verify the trustworthiness of each of your dependencies, including this one.

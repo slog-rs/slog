@@ -12,25 +12,25 @@
 //!
 //! ## Core advantages over `log` crate
 //!
-//! * **extensible** - `slog` crate provides core functionality: very basic
+//! * **extensible** - `slog` crate provides core functionality: a very basic
 //!   and portable standard feature-set based on open `trait`s. This allows
 //!   implementing new features that can be independently published.
 //! * **composable** - `trait`s that `slog` exposes to provide extensibility
 //!   are designed to be easy to efficiently reuse and combine. By combining
-//!   different functionalities every application can specify when, where and
-//!   how exactly process logging data from the application and it's
+//!   different functionalities, each application can specify precisely when,
+//!   where, and how to process logging data from an application and its
 //!   dependencies.
 //! * **flexible** - `slog` does not constrain logging to just one globally
 //!   registered backend. Parts of your application can handle logging
 //!   in a customized way, or completely independently.
-//! * **structured** and both **human and machine readable** - By keeping the
-//!   key-value data format and retaining its type information, meaning of logging
+//! * **structured** and both **human and machine readable** - By using the
+//!   key-value data format and retaining its type information, the meaning of logging
 //!   data is preserved.  Data can be serialized to machine readable formats like
-//!   JSON and send it to data-mining system for further analysis etc. On the
+//!   JSON and sent to data-mining systems for further analysis, etc. On the
 //!   other hand, when presenting on screen, logging information can be presented
-//!   in aesthetically pleasing and easy to understand way.
+//!   in aesthetically pleasing and easy to understand ways.
 //! * **contextual** - `slog`'s `Logger` objects carry set of key-value data
-//!   pairs that contains the context of logging - information that otherwise
+//!   pairs that contain the context of logging - information that otherwise
 //!   would have to be repeated in every logging statement.
 //!
 //! ## `slog` features
@@ -42,8 +42,8 @@
 //!   * async IO support included: see [`slog-async`
 //!     crate](https://docs.rs/slog-async)
 //! * `#![no_std]` support (with opt-out `std` cargo feature flag)
-//! * support for named format arguments (eg. `info!(logger, "printed {line_count} lines", line_count = 2);`)
-//!   for easy bridging the human readable and machine-readable output
+//! * support for named format arguments (e.g. `info!(logger, "printed {line_count} lines", line_count = 2);`)
+//!   for easy bridging between the human readable and machine-readable outputs
 //! * tree-structured loggers
 //! * modular, lightweight and very extensible
 //!   * tiny core crate that does not pull any dependencies
@@ -51,12 +51,12 @@
 //!   * using `slog` in library does not force users of the library to use slog
 //!     (but provides additional functionality); see [example how to use
 //!     `slog` in library](https://github.com/slog-rs/example-lib)
-//! * backward and forward compatibility with `log` crate:
+//! * backwards and forwards compatibility with `log` crate:
 //!   see [`slog-stdlog` crate](https://docs.rs/slog-stdlog)
 //! * convenience crates:
 //!   * logging-scopes for implicit `Logger` passing: see
 //!     [slog-scope crate](https://docs.rs/slog-scope)
-//! * many existing core&community provided features:
+//! * many existing core & community provided features:
 //!   * multiple outputs
 //!   * filtering control
 //!       * compile-time log level filter using cargo features (same as in `log`
@@ -215,7 +215,7 @@
 //! ```
 //!
 //! Why is this not an existing crate? Because there are multiple ways to
-//! achieve the same result, and each application might come with it's own
+//! achieve the same result, and each application might come with its own
 //! variation. Supporting a more general solution is a maintenance effort.
 //! There is also nothing stopping anyone from publishing their own crate
 //! implementing it.
@@ -291,6 +291,8 @@ extern crate std;
 mod key;
 pub use self::key::Key;
 #[cfg(not(feature = "std"))]
+use alloc::borrow::{Cow, ToOwned};
+#[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::rc::Rc;
@@ -301,9 +303,13 @@ use alloc::sync::Arc;
 
 #[cfg(feature = "nested-values")]
 extern crate erased_serde;
+#[cfg(feature = "nested-values")]
+extern crate serde;
 
 use core::str::FromStr;
 use core::{convert, fmt, result};
+#[cfg(feature = "std")]
+use std::borrow::{Cow, ToOwned};
 #[cfg(feature = "std")]
 use std::boxed::Box;
 #[cfg(feature = "std")]
@@ -372,6 +378,7 @@ macro_rules! slog_b(
 /// Macro for build `KV` implementing type
 ///
 /// You probably want to use `o!` or `b!` instead.
+// Note: make sure to keep in sync with `slog_kv`
 #[macro_export(local_inner_macros)]
 macro_rules! kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
@@ -380,11 +387,29 @@ macro_rules! kv(
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
         kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{}", $v))), $args_ready); $($args)* )
     };
+    (@ $args_ready:expr; $k:expr => #%$v:expr) => {
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#}", $v))), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => #%$v:expr, $($args:tt)* ) => {
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#}", $v))), $args_ready); $($args)* )
+    };
     (@ $args_ready:expr; $k:expr => ?$v:expr) => {
         kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
         kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; $k:expr => #?$v:expr) => {
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => #?$v:expr, $($args:tt)* ) => {
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; $k:expr => #$v:expr) => {
+        kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => #$v:expr, $($args:tt)* ) => {
+        kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
@@ -410,6 +435,7 @@ macro_rules! kv(
 );
 
 /// Alias of `kv`
+// Note: make sure to keep in sync with `kv`
 #[macro_export(local_inner_macros)]
 macro_rules! slog_kv(
     (@ $args_ready:expr; $k:expr => %$v:expr) => {
@@ -418,11 +444,29 @@ macro_rules! slog_kv(
     (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
         slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{}", $v))), $args_ready); $($args)* )
     };
+    (@ $args_ready:expr; $k:expr => #%$v:expr) => {
+        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#}", $v))), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => #%$v:expr, $($args:tt)* ) => {
+        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#}", $v))), $args_ready); $($args)* )
+    };
     (@ $args_ready:expr; $k:expr => ?$v:expr) => {
-        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); )
+        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); $($args)* )
+        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; $k:expr => #?$v:expr) => {
+        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => #?$v:expr, $($args:tt)* ) => {
+        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); $($args)* )
+    };
+    (@ $args_ready:expr; $k:expr => #$v:expr) => {
+        slog_kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); )
+    };
+    (@ $args_ready:expr; $k:expr => #$v:expr, $($args:tt)* ) => {
+        slog_kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
@@ -675,12 +719,22 @@ macro_rules! slog_record(
 ///
 /// ### `fmt::Display` and `fmt::Debug` values
 ///
+/// Slog macros support couple of formatting modifiers for convenience.
+///
 /// Value of any type that implements `std::fmt::Display` can be prefixed with
-/// `%` in `k => v` expression to use it's text representation returned by
+/// `%` in `k => v` expression to use its text representation returned by
 /// `format_args!("{}", v)`. This is especially useful for errors. Not that
 /// this does not allocate any `String` since it operates on `fmt::Arguments`.
+/// You can also use the `#%` prefix to use the "alternate" form of formatting,
+/// represented by the `{:#}` formatting specifier.
 ///
-/// Similarly to use `std::fmt::Debug` value can be prefixed with `?`.
+/// Similarly to use `std::fmt::Debug` value can be prefixed with `?`,
+/// or pretty-printed with `#?`.
+///
+/// Errors can be prefixed with `#` as a shorthand for wrapping with `ErrorValue`.
+///
+/// Full list of supported formats can always be inspected by looking at
+/// [`kv` macro](macro.log.html)
 ///
 /// ```
 /// #[macro_use]
@@ -702,7 +756,7 @@ macro_rules! slog_record(
 macro_rules! log(
     // `2` means that `;` was already found
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-      $l.log(&record!($lvl, $tag, &__slog_builtin!(@format_args $msg_fmt, $($fmt)*), b!($($kv)*)))
+      $crate::Logger::log(&$l, &record!($lvl, $tag, &__slog_builtin!(@format_args $msg_fmt, $($fmt)*), b!($($kv)*)))
    };
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
        log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
@@ -775,7 +829,7 @@ macro_rules! log(
 macro_rules! slog_log(
     // `2` means that `;` was already found
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-      $l.log(&slog_record!($lvl, $tag, &__slog_builtin!(@format_args $msg_fmt, $($fmt)*), slog_b!($($kv)*)))
+      $crate::Logger::log(&$l, &slog_record!($lvl, $tag, &__slog_builtin!(@format_args $msg_fmt, $($fmt)*), slog_b!($($kv)*)))
    };
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
        slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
@@ -1027,11 +1081,11 @@ macro_rules! __slog_builtin {
 /// processing.
 /// * context - list of key-value pairs associated with it.
 ///
-/// Root `Logger` is created with a `Drain` that will be cloned to every
-/// member of it's hierarchy.
+/// The root `Logger` is created with a `Drain` that will be cloned to every
+/// member of its hierarchy.
 ///
-/// Child `Logger` are built from existing ones, and inherit their key-value
-/// pairs, which can be supplemented with additional ones.
+/// Child `Logger`s are built from existing ones, and inherit their key-value
+/// pairs, which can be supplemented with additional pairs.
 ///
 /// Cloning existing loggers and creating new ones is cheap. Loggers can be
 /// freely passed around the code and between threads.
@@ -1039,15 +1093,15 @@ macro_rules! __slog_builtin {
 /// `Logger`s are `Sync+Send` - there's no need to synchronize accesses to them,
 /// as they can accept logging records from multiple threads at once. They can
 /// be sent to any thread. Because of that they require the `Drain` to be
-/// `Sync+Sync` as well. Not all `Drain`s are `Sync` or `Send` but they can
+/// `Sync+Send` as well. Not all `Drain`s are `Sync` or `Send` but they can
 /// often be made so by wrapping in a `Mutex` and/or `Arc`.
 ///
 /// `Logger` implements `Drain` trait. Any logging `Record` delivered to
-/// a `Logger` functioning as a `Drain`, will be delivered to it's `Drain`
-/// with existing key-value pairs appended to the `Logger`s key-value pairs.
-/// By itself it's effectively very similar to `Logger` being an ancestor
+/// a `Logger` functioning as a `Drain` will be delivered to its `Drain`
+/// with existing key-value pairs appended to the `Logger`'s key-value pairs.
+/// By itself, it is effectively very similar to `Logger` being an ancestor
 /// of `Logger` that originated the logging `Record`. Combined with other
-/// `Drain`s, allows custom processing logic for a sub-tree of a whole logging
+/// `Drain`s, this allows custom processing logic for a sub-tree of a whole logging
 /// tree.
 ///
 /// Logger is parametrized over type of a `Drain` associated with it (`D`). It
@@ -1143,7 +1197,7 @@ where
     /// That is why `Clone` must be implemented for `D` in `Logger<D>::new`.
     ///
     /// For some `Drain` types `Clone` is cheap or even free (a no-op). This is
-    /// the case for any `Logger` returned by `Logger::root` and it's children.
+    /// the case for any `Logger` returned by `Logger::root` and its children.
     ///
     /// When using `Logger::root_typed`, it's possible that cloning might be
     /// expensive, or even impossible.
@@ -1398,7 +1452,7 @@ pub trait Drain {
     ///
     /// Wrap `Self` in `Filter`
     ///
-    /// This will convert `self` to a `Drain that ignores `Record`s
+    /// This will convert `self` to a `Drain` that ignores `Record`s
     /// for which `f` returns false.
     fn filter<F>(self, f: F) -> Filter<Self, F>
     where
@@ -1412,7 +1466,7 @@ pub trait Drain {
     ///
     /// Wrap `Self` in `LevelFilter`
     ///
-    /// This will convert `self` to a `Drain that ignores `Record`s of
+    /// This will convert `self` to a `Drain` that ignores `Record`s of
     /// logging lever smaller than `level`.
     fn filter_level(self, level: Level) -> LevelFilter<Self>
     where
@@ -2029,7 +2083,7 @@ pub static LOG_LEVEL_SHORT_NAMES: [&'static str; 7] =
     ["OFF", "CRIT", "ERRO", "WARN", "INFO", "DEBG", "TRCE"];
 
 /// Logging level associated with a logging `Record`
-#[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Level {
     /// Critical
     Critical,
@@ -2046,7 +2100,7 @@ pub enum Level {
 }
 
 /// Logging filtering level
-#[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Copy, Clone, Debug, Hash, Eq, PartialEq, Ord, PartialOrd)]
 pub enum FilterLevel {
     /// Log nothing
     Off,
@@ -2415,11 +2469,11 @@ pub struct RecordStatic<'a> {
 
 /// One logging record
 ///
-/// Corresponds to one logging statement like `info!(...)` and carries all it's
+/// Corresponds to one logging statement like `info!(...)` and carries all its
 /// data: eg. message, immediate key-value pairs and key-value pairs of `Logger`
 /// used to execute it.
 ///
-/// Record is passed to a `Logger`, which delivers it to it's own `Drain`,
+/// Record is passed to a `Logger`, which delivers it to its own `Drain`,
 /// where actual logging processing is implemented.
 pub struct Record<'a> {
     rstatic: &'a RecordStatic<'a>,
@@ -2487,7 +2541,7 @@ impl<'a> Record<'a> {
     /// flag for quick lookup in the `Drain`s. As such should be used carefully
     /// and mostly in application code (as opposed to libraries) - where tag
     /// meaning across the system can be coordinated. When used in libraries,
-    /// make sure to prefix it with something reasonably distinct, like create
+    /// make sure to prefix it with something reasonably distinct, like crate
     /// name.
     pub fn tag(&self) -> &str {
         self.rstatic.tag
@@ -2669,6 +2723,27 @@ pub trait Serializer {
     fn emit_serde(&mut self, key: Key, value: &dyn SerdeValue) -> Result {
         value.serialize_fallback(key, &mut SerializerForward(self))
     }
+
+    /// Emit a type implementing `std::error::Error`
+    ///
+    /// Error values are a bit special as their `Display` implementation doesn't show full
+    /// information about the type but must be retrieved using `source()`. This can be used
+    /// for formatting sources of errors differntly.
+    ///
+    /// The default implementation of this method formats the sources separated with `: `.
+    /// Serializers are encouraged to take advantage of the type information and format it as
+    /// appropriate.
+    ///
+    /// This method is only available in `std` because the `Error` trait is not available
+    /// without `std`.
+    #[cfg(feature = "std")]
+    fn emit_error(
+        &mut self,
+        key: Key,
+        error: &(std::error::Error + 'static),
+    ) -> Result {
+        self.emit_arguments(key, &format_args!("{}", ErrorAsFmt(error)))
+    }
 }
 
 /// Serializer to closure adapter.
@@ -2686,6 +2761,30 @@ where
         (self.0)(key, *val)
     }
 }
+
+/// A helper for formatting std::error::Error types by joining sources with `: `
+///
+/// This avoids allocation in the default implementation of `Serializer::emit_error()`.
+/// This is only enabled with `std` as the trait is only available there.
+#[cfg(feature = "std")]
+struct ErrorAsFmt<'a>(pub &'a (std::error::Error + 'static));
+
+#[cfg(feature = "std")]
+impl<'a> fmt::Display for ErrorAsFmt<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // For backwards compatibility
+        // This is fine because we don't need downcasting
+        #![allow(deprecated)]
+        write!(f, "{}", self.0)?;
+        let mut error = self.0.cause();
+        while let Some(source) = error {
+            write!(f, ": {}", source)?;
+            error = source.cause();
+        }
+        Ok(())
+    }
+}
+
 // }}}
 
 // {{{ serde
@@ -2721,6 +2820,51 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
     fn to_sendable(&self) -> Box<dyn SerdeValue + Send + 'static>;
 }
 
+/// Use to wrap a value that implements [serde::Serialize] so it's written to
+/// the log record as an object, rather than a primitive.
+///
+/// # Examples
+/// ```
+/// # #[macro_use]
+/// # extern crate serde_derive;
+/// # use serde_derive::Serialize;
+/// # use slog::{info, o, Drain, Logger};
+///
+/// #[derive(Clone, Serialize)]
+/// struct Thing {
+///     one: String,
+///     two: String,
+/// }
+///
+/// # fn main() {
+/// #   let log = Logger::root(slog::Discard, o!());
+/// #   fn get_thing() -> Thing { Thing{ one: "a".to_string(), two: "b".to_string() } }
+///
+///     let thing = get_thing();
+///
+///     info!(log, "Got a thing"; "thing" => slog::Serde(thing.clone()));
+/// # }
+/// ```
+#[cfg(feature = "nested-values")]
+#[derive(Clone, serde_derive::Serialize)]
+pub struct Serde<T>(pub T)
+where
+    T: serde::Serialize + Clone + Send + 'static;
+
+#[cfg(feature = "nested-values")]
+impl<T> SerdeValue for Serde<T>
+where
+    T: serde::Serialize + Clone + Send + 'static,
+{
+    fn as_serde(&self) -> &dyn erased_serde::Serialize {
+        &self.0
+    }
+
+    fn to_sendable(&self) -> Box<dyn SerdeValue + Send + 'static> {
+        Box::new(self.clone())
+    }
+}
+
 // }}}
 
 // {{{ Value
@@ -2728,9 +2872,9 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
 ///
 /// Types that implement this type implement custom serialization in the
 /// structured part of the log macros. Without an implementation of `Value` for
-/// your type you must emit using either the `?` "debug", `%` "display" or
-/// [`SerdeValue`](trait.SerdeValue.html) (if you have the `nested-values`
-/// feature enabled) formatters.
+/// your type you must emit using either the `?` "debug", `#?` "pretty-debug",
+/// `%` "display", `#%` "alternate display" or [`SerdeValue`](trait.SerdeValue.html)
+/// (if you have the `nested-values` feature enabled) formatters.
 ///
 /// # Example
 ///
@@ -2920,6 +3064,20 @@ where
     }
 }
 
+impl<'a, T> Value for Cow<'a, T>
+where
+    T: Value + ToOwned + ?Sized,
+{
+    fn serialize(
+        &self,
+        record: &Record,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
+        (**self).serialize(record, key, serializer)
+    }
+}
+
 #[cfg(feature = "std")]
 impl<'a> Value for std::path::Display<'a> {
     fn serialize(
@@ -2941,6 +3099,18 @@ impl Value for std::net::SocketAddr {
         serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit_arguments(key, &format_args!("{}", self))
+    }
+}
+
+#[cfg(feature = "std")]
+impl Value for std::io::Error {
+    fn serialize(
+        &self,
+        _record: &Record,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
+        serializer.emit_error(key, self)
     }
 }
 
@@ -3063,6 +3233,48 @@ where
         (self.0)(record, ser)
     }
 }
+
+/// A wrapper struct for serializing errors
+///
+/// This struct can be used to wrap types that don't implement `slog::Value` but
+/// do implement `std::error::Error` so that they can be logged.
+/// This is usually not used directly but using `#error` in the macros.
+///
+/// This struct is only available in `std` because the `Error` trait is not available
+/// without `std`.
+#[cfg(feature = "std")]
+pub struct ErrorValue<E: std::error::Error>(pub E);
+
+#[cfg(feature = "std")]
+impl<E> Value for ErrorValue<E>
+where
+    E: 'static + std::error::Error,
+{
+    fn serialize(
+        &self,
+        _record: &Record,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
+        serializer.emit_error(key, &self.0)
+    }
+}
+
+#[cfg(feature = "nested-values")]
+impl<T> Value for Serde<T>
+where
+    T: serde::Serialize + Clone + Send + 'static,
+{
+    fn serialize(
+        &self,
+        _: &Record<'_>,
+        key: Key,
+        serializer: &mut Serializer,
+    ) -> Result {
+        serializer.emit_serde(key, self)
+    }
+}
+
 // }}}
 
 // {{{ KV
@@ -3547,7 +3759,7 @@ pub type Never = private::NeverStruct;
 
 mod private {
     #[doc(hidden)]
-    #[derive(Debug)]
+    #[derive(Clone, Debug)]
     pub struct NeverStruct(());
 }
 

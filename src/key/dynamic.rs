@@ -1,9 +1,7 @@
 #[cfg(not(feature = "std"))]
 use alloc::borrow::Cow;
 #[cfg(not(feature = "std"))]
-use alloc::string::String;
-#[cfg(not(feature = "std"))]
-use alloc::string::ToString;
+use alloc::string::{String, ToString};
 #[cfg(not(feature = "std"))]
 use core::clone::Clone;
 #[cfg(not(feature = "std"))]
@@ -38,7 +36,7 @@ use std::string::ToString;
 ///
 /// It is owned, and largely forms a contract for
 /// key to follow.
-#[derive(Clone)]
+#[derive(Clone, Eq)]
 pub struct Key {
     data: Cow<'static, str>,
 }
@@ -158,6 +156,12 @@ impl<'a> FromIterator<Cow<'a, str>> for Key {
 impl PartialEq<str> for Key {
     fn eq(&self, other: &str) -> bool {
         self.as_ref().eq(other)
+    }
+}
+
+impl PartialEq<&str> for Key {
+    fn eq(&self, other: &&str) -> bool {
+        self.as_ref().eq(*other)
     }
 }
 

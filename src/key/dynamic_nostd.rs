@@ -1,7 +1,5 @@
 use alloc::borrow::Cow;
-use alloc::string::String;
-use alloc::string::ToString;
-use core::clone::Clone;
+use alloc::string::{String, ToString};
 
 use core::cmp::PartialEq;
 use core::convert::{AsRef, From, Into};
@@ -15,7 +13,7 @@ use core::str::FromStr;
 ///
 /// It is owned, and largely forms a contract for
 /// key to follow.
-#[derive(Clone)]
+#[derive(Clone, Eq)]
 pub struct Key {
     data: Cow<'static, str>,
 }
@@ -123,6 +121,13 @@ impl PartialEq<str> for Key {
     #[inline(always)]
     fn eq(&self, other: &str) -> bool {
         self.as_ref().eq(other)
+    }
+}
+
+impl PartialEq<&str> for Key {
+    #[inline(always)]
+    fn eq(&self, other: &&str) -> bool {
+        self.as_ref().eq(*other)
     }
 }
 
