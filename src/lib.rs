@@ -3270,7 +3270,7 @@ where
         &self,
         _: &Record<'_>,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit_serde(key, self)
     }

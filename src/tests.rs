@@ -356,7 +356,7 @@ fn display_and_alternate_display() {
         fn log(
             &self,
             record: &Record<'_>,
-            values: &OwnedKVList,
+            _values: &OwnedKVList,
         ) -> Result<(), Never> {
             let mut checked_n = false;
             let mut checked_a = false;
@@ -444,6 +444,7 @@ fn logger_by_ref() {
 }
 
 #[test]
+#[allow(unreachable_code, unused_variables)]
 fn test_never_type_clone() {
     // We just want to make sure that this compiles
     fn _do_not_run() {
@@ -458,5 +459,5 @@ fn test_never_type_clone() {
 fn can_hash_keys() {
     use crate::Key;
     use std::collections::HashSet;
-    let tab: HashSet<Key> = ["foo"].iter().map(|&k| k.into()).collect();
+    let _tab: HashSet<Key> = ["foo"].iter().map(|&k| k.into()).collect();
 }
