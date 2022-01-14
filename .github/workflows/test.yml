@@ -16,14 +16,6 @@ env:
 # 1. stable
 # 2. nightly
 # 3. Minimum Supported Rust Version (MSRV)
-# 4. 1.31
-#
-# A note on 1.23 & 1.31:
-# On 1.23 (our current minimum version), `cargo check --all-features` fails to compile the main crate
-# To be clear, not only do the tests fail to run, but `cargo check` fails to compile at all
-#
-# For this reason, we also test 1.31.
-# `cargo check --all-features` works on 1.31 and every version after that
 
 jobs:
   test:
@@ -34,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false # Even if one job fails we still want to see the other ones
       matrix:
-        # Don't include 1.23 in the matrix because `cargo check --all-features` fails (see above)
+        # 1.31 is MSRV
         rust: [1.31, stable, nightly]
         # NOTE: Features to test must be specified manually. They are applied to all versions seperately.
         #
@@ -43,13 +35,6 @@ jobs:
         #
         # Specific feature combos can be overriden per-version with 'include' and 'ecclude'
         features: ["", "nested-values dynamic-keys", "nested-values dynamic-keys nothreads"]
-        include:
-          # Manually include 1.23 (MSRV) and only compile it with default features
-          #
-          # This is because `cargo check --features nested-values` fails to compile on 1.23
-          - rust: 1.23
-            features:
-            required-success: true
 
     steps:
       - uses: actions/checkout@v2
