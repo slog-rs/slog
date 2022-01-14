@@ -43,14 +43,13 @@ mod std_only {
                 ) -> Result {
                     use core::fmt::Write;
 
-                    match key {
-                        "error" => self.0.write_fmt(*val).unwrap(),
-                        _ => {
-                            self.0.write_str(&key).unwrap();
-                            self.0.write_str(": ").unwrap();
-                            self.0.write_fmt(*val).unwrap();
-                            self.0.write_str("; ").unwrap();
-                        }
+                    if key == "error" {
+                        self.0.write_fmt(*val)?;
+                    } else {
+                        self.0.write_str(key.as_ref())?;
+                        self.0.write_str(": ")?;
+                        self.0.write_fmt(*val)?;
+                        self.0.write_str("; ")?;
                     }
                     Ok(())
                 }
