@@ -2575,22 +2575,6 @@ impl<'a> Record<'a> {
 
 // {{{ Serializer
 
-#[cfg(macro_workaround)]
-macro_rules! impl_default_as_fmt{
-    (#[$m:meta] $($t:tt)+) => {
-        #[$m]
-        impl_default_as_fmt!($($t)*);
-    };
-    ($t:ty => $f:ident) => {
-        #[allow(missing_docs)]
-        fn $f(&mut self, key : Key, val : $t)
-            -> Result {
-                self.emit_arguments(key, &format_args!("{}", val))
-            }
-    };
-}
-
-#[cfg(not(macro_workaround))]
 macro_rules! impl_default_as_fmt{
     ($(#[$m:meta])* $t:ty => $f:ident) => {
         $(#[$m])*
