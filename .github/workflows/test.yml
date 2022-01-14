@@ -34,7 +34,7 @@ jobs:
         # This has the disadvantage of being more vebrose
         #
         # Specific feature combos can be overriden per-version with 'include' and 'ecclude'
-        features: ["", "nested-values dynamic-keys", "nested-values dynamic-keys nothreads"]
+        features: ["", "nested-values", "dynamic-keys", "nothreads", "nested-values dynamic-keys", "nested-values dynamic-keys nothreads"]
 
     steps:
       - uses: actions/checkout@v2
