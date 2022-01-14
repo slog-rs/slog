@@ -1134,8 +1134,7 @@ pub struct Logger<D = Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
 where
     D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>,
 {
-    drain:
-        D,
+    drain: D,
     list: OwnedKVList,
 }
 
