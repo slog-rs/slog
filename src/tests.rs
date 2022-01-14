@@ -30,7 +30,7 @@ mod std_only {
         type Err = Never;
         fn log(
             &self,
-            record: &Record,
+            record: &Record<'_>,
             values: &OwnedKVList,
         ) -> std::result::Result<Self::Ok, Self::Err> {
             struct ErrorSerializer(String);
@@ -39,7 +39,7 @@ mod std_only {
                 fn emit_arguments(
                     &mut self,
                     key: Key,
-                    val: &fmt::Arguments,
+                    val: &fmt::Arguments<'_>,
                 ) -> Result {
                     use core::fmt::Write;
 
@@ -73,14 +73,14 @@ mod std_only {
     }
 
     impl<E> fmt::Display for TestError<E> {
-        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{}", self.0)
         }
     }
 
     impl<E: std::error::Error + 'static> std::error::Error for TestError<E> {
         #[allow(deprecated)]
-        fn cause(&self) -> Option<&std::error::Error> {
+        fn cause(&self) -> Option<&dyn std::error::Error> {
             self.1.as_ref().map(|error| error as _)
         }
 
@@ -332,13 +332,12 @@ fn expressions_fmt() {
 #[cfg(feature = "std")]
 #[test]
 fn display_and_alternate_display() {
-    use core::cell::Cell;
     use core::fmt;
 
     struct Example;
 
     impl fmt::Display for Example {
-        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             if f.alternate() {
                 f.write_str("alternate")
             } else {
@@ -356,7 +355,7 @@ fn display_and_alternate_display() {
 
         fn log(
             &self,
-            record: &Record,
+            record: &Record<'_>,
             values: &OwnedKVList,
         ) -> Result<(), Never> {
             let mut checked_n = false;
@@ -457,7 +456,7 @@ fn test_never_type_clone() {
 #[cfg(feature = "std")]
 #[test]
 fn can_hash_keys() {
+    use crate::Key;
     use std::collections::HashSet;
-    use Key;
     let tab: HashSet<Key> = ["foo"].iter().map(|&k| k.into()).collect();
 }

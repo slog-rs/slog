@@ -279,7 +279,8 @@
 // }}}
 
 // {{{ Imports & meta
-#![warn(missing_docs, rust_2018_idioms)]
+#![warn(missing_docs)]
+#![deny(rust_2018_idioms)]
 #![no_std]
 
 #[cfg(not(feature = "std"))]
@@ -1281,7 +1282,7 @@ where
     D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        r#try!(write!(f, "Logger{:?}", self.list));
+        write!(f, "Logger{:?}", self.list)?;
         Ok(())
     }
 }
@@ -2740,7 +2741,7 @@ pub trait Serializer {
     fn emit_error(
         &mut self,
         key: Key,
-        error: &(std::error::Error + 'static),
+        error: &(dyn std::error::Error + 'static),
     ) -> Result {
         self.emit_arguments(key, &format_args!("{}", ErrorAsFmt(error)))
     }
@@ -2767,11 +2768,11 @@ where
 /// This avoids allocation in the default implementation of `Serializer::emit_error()`.
 /// This is only enabled with `std` as the trait is only available there.
 #[cfg(feature = "std")]
-struct ErrorAsFmt<'a>(pub &'a (std::error::Error + 'static));
+struct ErrorAsFmt<'a>(pub &'a (dyn std::error::Error + 'static));
 
 #[cfg(feature = "std")]
 impl<'a> fmt::Display for ErrorAsFmt<'a> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         // For backwards compatibility
         // This is fine because we don't need downcasting
         #![allow(deprecated)]
@@ -3070,9 +3071,9 @@ where
 {
     fn serialize(
         &self,
-        record: &Record,
+        record: &Record<'_>,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         (**self).serialize(record, key, serializer)
     }
@@ -3106,9 +3107,9 @@ impl Value for std::net::SocketAddr {
 impl Value for std::io::Error {
     fn serialize(
         &self,
-        _record: &Record,
+        _record: &Record<'_>,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit_error(key, self)
     }
@@ -3252,9 +3253,9 @@ where
 {
     fn serialize(
         &self,
-        _record: &Record,
+        _record: &Record<'_>,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit_error(key, &self.0)
     }
@@ -3432,7 +3433,7 @@ impl<T: KV, R: KV> KV for (T, R) {
         record: &Record<'_>,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        r#try!(self.0.serialize(record, serializer));
+        self.0.serialize(record, serializer)?;
         self.1.serialize(record, serializer)
     }
 }
@@ -3556,8 +3557,8 @@ where
         record: &Record<'_>,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        r#try!(self.kv.serialize(record, serializer));
-        r#try!(self.next_node.serialize(record, serializer));
+        self.kv.serialize(record, serializer)?;
+        self.next_node.serialize(record, serializer)?;
 
         Ok(())
     }
@@ -3569,8 +3570,8 @@ impl KV for MultiListNode {
         record: &Record<'_>,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        r#try!(self.next_node.serialize(record, serializer));
-        r#try!(self.node.serialize(record, serializer));
+        self.next_node.serialize(record, serializer)?;
+        self.node.serialize(record, serializer)?;
 
         Ok(())
     }
@@ -3582,7 +3583,7 @@ impl KV for OwnedKVList {
         record: &Record<'_>,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        r#try!(self.node.serialize(record, serializer));
+        self.node.serialize(record, serializer)?;
 
         Ok(())
     }
@@ -3590,35 +3591,34 @@ impl KV for OwnedKVList {
 
 impl fmt::Debug for OwnedKVList {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        r#try!(write!(f, "("));
+        write!(f, "(")?;
         let mut i = 0;
 
         {
             let mut as_str_ser = AsFmtSerializer(|key, _val| {
                 if i != 0 {
-                    r#try!(write!(f, ", "));
+                    write!(f, ", ")?;
                 }
 
-                r#try!(write!(f, "{}", key));
+                write!(f, "{}", key)?;
                 i += 1;
                 Ok(())
             });
             let record_static = record_static!(Level::Trace, "");
 
-            r#try!(self
-                .node
+            self.node
                 .serialize(
                     &Record::new(
                         &record_static,
                         &format_args!(""),
-                        BorrowedKV(&STATIC_TERMINATOR_UNIT)
+                        BorrowedKV(&STATIC_TERMINATOR_UNIT),
                     ),
-                    &mut as_str_ser
+                    &mut as_str_ser,
                 )
-                .map_err(|_| fmt::Error));
+                .map_err(|_| fmt::Error)?;
         }
 
-        r#try!(write!(f, ")"));
+        write!(f, ")")?;
         Ok(())
     }
 }
