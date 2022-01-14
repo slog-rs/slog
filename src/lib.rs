@@ -693,7 +693,7 @@ macro_rules! slog_record(
 ///                     _record: &Record,
 ///                     serializer: &mut dyn Serializer)
 ///                    -> Result {
-///            serializer.emit_u32("MyK", 16)
+///            serializer.emit_u32("MyK".into(), 16)
 ///        }
 ///     }
 ///
@@ -703,7 +703,7 @@ macro_rules! slog_record(
 ///                     key : Key,
 ///                     serializer: &mut dyn Serializer)
 ///                    -> Result {
-///            serializer.emit_u32("MyKV", 16)
+///            serializer.emit_u32("MyKV".into(), 16)
 ///        }
 ///     }
 ///
@@ -3306,7 +3306,7 @@ where
 ///
 /// impl KV for MyNewType {
 ///    fn serialize(&self, _rec: &Record, serializer: &mut dyn Serializer) -> Result {
-///        serializer.emit_i64("my_new_type", self.0)
+///        serializer.emit_i64("my_new_type".into(), self.0)
 ///    }
 /// }
 /// ```
