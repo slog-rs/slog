@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Next
 
 * Switch from Travis CI to Github Actions (fixes #294)
+  * `rustfmt --check` now run by default
 * Fix `#` format when not used as a last argument.
 * Implement `Value` for `std::borrow::Cow`
 

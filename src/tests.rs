@@ -1,4 +1,4 @@
-use {Discard, Logger, Never, KV, Drain, OwnedKVList, Record, AsFmtSerializer};
+use {AsFmtSerializer, Discard, Drain, Logger, Never, OwnedKVList, Record, KV};
 
 // Separate module to test lack of imports
 mod no_imports {
@@ -34,7 +34,11 @@ mod std_only {
             struct ErrorSerializer(String);
 
             impl Serializer for ErrorSerializer {
-                fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments) -> Result {
+                fn emit_arguments(
+                    &mut self,
+                    key: Key,
+                    val: &fmt::Arguments,
+                ) -> Result {
                     use core::fmt::Write;
 
                     match key {
@@ -52,16 +56,13 @@ mod std_only {
 
             let mut serializer = ErrorSerializer(String::new());
             values.serialize(record, &mut serializer).unwrap();
-            assert_eq!(
-                serializer.0,
-                format!("{}", record.msg())
-            );
+            assert_eq!(serializer.0, format!("{}", record.msg()));
             Ok(())
         }
     }
 
     #[derive(Debug)]
-    struct TestError<E=std::string::ParseError>(&'static str, Option<E>);
+    struct TestError<E = std::string::ParseError>(&'static str, Option<E>);
 
     impl TestError {
         fn new(message: &'static str) -> Self {
@@ -129,33 +130,46 @@ mod std_only {
 
     #[test]
     fn error_fmt_no_source() {
-        let logger = Logger::root(CheckError, o!("error" => #TestError::new("foo")));
+        let logger =
+            Logger::root(CheckError, o!("error" => #TestError::new("foo")));
         info!(logger, "foo");
         slog_info!(logger, "foo");
     }
 
     #[test]
     fn error_fmt_no_source_not_last() {
-        let logger = Logger::root(CheckError, o!("error" => #TestError::new("foo"), "not-error" => "not-error"));
+        let logger = Logger::root(
+            CheckError,
+            o!("error" => #TestError::new("foo"), "not-error" => "not-error"),
+        );
         info!(logger, "not-error: not-error; foo");
         slog_info!(logger, "not-error: not-error; foo");
     }
 
     #[test]
     fn error_fmt_no_source_last() {
-        let logger = Logger::root(CheckError, o!("not-error" => "not-error", "error" => #TestError::new("foo")));
+        let logger = Logger::root(
+            CheckError,
+            o!("not-error" => "not-error", "error" => #TestError::new("foo")),
+        );
         info!(logger, "foonot-error: not-error; ");
         slog_info!(logger, "foonot-error: not-error; ");
     }
     #[test]
     fn error_fmt_single_source() {
-        let logger = Logger::root(CheckError, o!("error" => #TestError("foo", Some(TestError::new("bar")))));
+        let logger = Logger::root(
+            CheckError,
+            o!("error" => #TestError("foo", Some(TestError::new("bar")))),
+        );
         info!(logger, "foo: bar");
     }
 
     #[test]
     fn error_fmt_two_sources() {
-        let logger = Logger::root(CheckError, o!("error" => #TestError("foo", Some(TestError("bar", Some(TestError::new("baz")))))));
+        let logger = Logger::root(
+            CheckError,
+            o!("error" => #TestError("foo", Some(TestError("bar", Some(TestError::new("baz")))))),
+        );
         info!(logger, "foo: bar: baz");
     }
 
@@ -277,9 +291,8 @@ fn expressions() {
         let _log = log.new(o!(x.clone()));
         let _log = log.new(o!("foo" => "bar", x.clone()));
         let _log = log.new(o!("foo" => "bar", x.clone(), x.clone()));
-        let _log = log.new(
-            slog_o!("foo" => "bar", x.clone(), x.clone(), "aaa" => "bbb"),
-        );
+        let _log = log
+            .new(slog_o!("foo" => "bar", x.clone(), x.clone(), "aaa" => "bbb"));
 
         info!(log, "message"; "foo" => "bar", &x, &x, "aaa" => "bbb");
     }
@@ -315,8 +328,8 @@ fn expressions_fmt() {
 #[cfg(feature = "std")]
 #[test]
 fn display_and_alternate_display() {
-    use core::fmt;
     use core::cell::Cell;
+    use core::fmt;
 
     struct Example;
 
@@ -337,7 +350,11 @@ fn display_and_alternate_display() {
         type Ok = ();
         type Err = Never;
 
-        fn log(&self, record: &Record, values: &OwnedKVList) -> Result<(), Never> {
+        fn log(
+            &self,
+            record: &Record,
+            values: &OwnedKVList,
+        ) -> Result<(), Never> {
             let mut checked_n = false;
             let mut checked_a = false;
             {
@@ -371,11 +388,12 @@ fn display_and_alternate_display() {
 
 #[test]
 fn makers() {
-    use ::*;
+    use *;
     let drain = Duplicate(
         Discard.filter(|r| r.level().is_at_least(Level::Info)),
         Discard.filter_level(Level::Warning),
-    ).map(Fuse);
+    )
+    .map(Fuse);
     let _log = Logger::root(
         Arc::new(drain),
         o!("version" => env!("CARGO_PKG_VERSION")),
@@ -384,7 +402,7 @@ fn makers() {
 
 #[test]
 fn simple_logger_erased() {
-    use ::*;
+    use *;
 
     fn takes_arced_drain(_l: Logger) {}
 
@@ -397,14 +415,15 @@ fn simple_logger_erased() {
 
 #[test]
 fn logger_to_erased() {
-    use ::*;
+    use *;
 
     fn takes_arced_drain(_l: Logger) {}
 
     let drain = Duplicate(
         Discard.filter(|r| r.level().is_at_least(Level::Info)),
         Discard.filter_level(Level::Warning),
-    ).map(Fuse);
+    )
+    .map(Fuse);
     let log =
         Logger::root_typed(drain, o!("version" => env!("CARGO_PKG_VERSION")));
 
@@ -413,9 +432,10 @@ fn logger_to_erased() {
 
 #[test]
 fn logger_by_ref() {
-    use ::*;
+    use *;
     let drain = Discard.filter_level(Level::Warning).map(Fuse);
-    let log = Logger::root_typed(drain, o!("version" => env!("CARGO_PKG_VERSION")));
+    let log =
+        Logger::root_typed(drain, o!("version" => env!("CARGO_PKG_VERSION")));
     let f = "f";
     let d = (1, 2);
     info!(&log, "message"; "f" => %f, "d" => ?d);
