@@ -1,4 +1,6 @@
-use crate::{AsFmtSerializer, Discard, Drain, Logger, Never, OwnedKVList, Record, KV};
+use crate::{
+    AsFmtSerializer, Discard, Drain, Logger, Never, OwnedKVList, Record, KV,
+};
 
 // Separate module to test lack of imports
 mod no_imports {
