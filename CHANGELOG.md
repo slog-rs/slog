@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Next
 
+* **BIG:** Updated to Rust 2018
+  * Minimum supported Rust Version is now 1.31
+  * NOTE: Old 2015 crates will still work because of [excellent 2015/2018 compatibility](https://blog.rust-lang.org/2018/07/27/what-is-rust-2018.html#managing-compatibility)
 * Switch from Travis CI to Github Actions (fixes #294)
   * `rustfmt --check` now run by default
 * Fix `#` format when not used as a last argument.

@@ -1,7 +1,5 @@
 //#![feature(trace_macros)]
-#[macro_use]
-extern crate slog;
-use slog::{Fuse, Logger};
+use slog::{info, o, Fuse, Logger};
 
 mod common;
 

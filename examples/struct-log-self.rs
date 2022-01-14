@@ -1,7 +1,5 @@
 //! Example of how to implement `KV` for a struct
 //! to conveniently log data associated with it.
-#[macro_use]
-extern crate slog;
 use slog::*;
 
 mod common;
@@ -24,8 +22,8 @@ impl Peer {
 impl KV for Peer {
     fn serialize(
         &self,
-        _record: &Record,
-        serializer: &mut Serializer,
+        _record: &Record<'_>,
+        serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit_u32(Key::from("peer-port"), self.port)?;
         serializer.emit_str(Key::from("peer-host"), &self.host)?;
@@ -73,7 +71,7 @@ impl PeerCounter {
 
     // A hybrid approach with `Logger` with parent logging-context embedded into
     // a `struct` and a helper function adding mutable fields.
-    fn log_info(&self, msg: &str, kv: BorrowedKV) {
+    fn log_info(&self, msg: &str, kv: BorrowedKV<'_>) {
         info!(self.log, "{}", msg; "current-count" => self.count, kv);
     }
 

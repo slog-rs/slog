@@ -20,8 +20,8 @@
   <a href="https://docs.rs/releases/search?query=slog-">
       <img src="https://docs.rs/slog/badge.svg" alt="docs-rs: release versions documentation">
   </a>
-  <a href="https://blog.rust-lang.org/2018/01/04/Rust-1.23.html">
-      <img src="https://img.shields.io/badge/rust-1.23%2B-orange.svg">
+  <a href="https://blog.rust-lang.org/2018/12/06/Rust-1.31-and-rust-2018.html">
+      <img src="https://img.shields.io/badge/rust-1.31%2B-orange.svg">
   </a>
   <br>
     <strong><a href="https://github.com/slog-rs/slog/wiki/Getting-started">Getting started</a></strong>

@@ -1,5 +1,3 @@
-extern crate slog;
-
 #[cfg(test)]
 mod tests {
     #[test]

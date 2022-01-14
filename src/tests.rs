@@ -1,8 +1,10 @@
-use {AsFmtSerializer, Discard, Drain, Logger, Never, OwnedKVList, Record, KV};
+use crate::{
+    AsFmtSerializer, Discard, Drain, Logger, Never, OwnedKVList, Record, KV,
+};
 
 // Separate module to test lack of imports
 mod no_imports {
-    use {Discard, Logger};
+    use crate::{Discard, Logger};
     /// ensure o! macro expands without error inside a module
     #[test]
     fn test_o_macro_expansion() {
@@ -28,7 +30,7 @@ mod std_only {
         type Err = Never;
         fn log(
             &self,
-            record: &Record,
+            record: &Record<'_>,
             values: &OwnedKVList,
         ) -> std::result::Result<Self::Ok, Self::Err> {
             struct ErrorSerializer(String);
@@ -37,7 +39,7 @@ mod std_only {
                 fn emit_arguments(
                     &mut self,
                     key: Key,
-                    val: &fmt::Arguments,
+                    val: &fmt::Arguments<'_>,
                 ) -> Result {
                     use core::fmt::Write;
 
@@ -71,14 +73,14 @@ mod std_only {
     }
 
     impl<E> fmt::Display for TestError<E> {
-        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{}", self.0)
         }
     }
 
     impl<E: std::error::Error + 'static> std::error::Error for TestError<E> {
         #[allow(deprecated)]
-        fn cause(&self) -> Option<&std::error::Error> {
+        fn cause(&self) -> Option<&dyn std::error::Error> {
             self.1.as_ref().map(|error| error as _)
         }
 
@@ -106,7 +108,7 @@ mod std_only {
             type Err = Never;
             fn log(
                 &self,
-                record: &Record,
+                record: &Record<'_>,
                 values: &OwnedKVList,
             ) -> std::result::Result<Self::Ok, Self::Err> {
                 assert_eq!(
@@ -182,6 +184,8 @@ mod std_only {
     }
 }
 
+// Allow unused_must_use for macro testing.
+#[allow(unused_must_use)]
 #[test]
 fn expressions() {
     use super::{Record, Result, Serializer, KV};
@@ -279,8 +283,8 @@ fn expressions() {
         impl KV for K {
             fn serialize(
                 &self,
-                _record: &Record,
-                _serializer: &mut Serializer,
+                _record: &Record<'_>,
+                _serializer: &mut dyn Serializer,
             ) -> Result {
                 Ok(())
             }
@@ -328,13 +332,12 @@ fn expressions_fmt() {
 #[cfg(feature = "std")]
 #[test]
 fn display_and_alternate_display() {
-    use core::cell::Cell;
     use core::fmt;
 
     struct Example;
 
     impl fmt::Display for Example {
-        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             if f.alternate() {
                 f.write_str("alternate")
             } else {
@@ -352,8 +355,8 @@ fn display_and_alternate_display() {
 
         fn log(
             &self,
-            record: &Record,
-            values: &OwnedKVList,
+            record: &Record<'_>,
+            _values: &OwnedKVList,
         ) -> Result<(), Never> {
             let mut checked_n = false;
             let mut checked_a = false;
@@ -388,7 +391,7 @@ fn display_and_alternate_display() {
 
 #[test]
 fn makers() {
-    use *;
+    use crate::*;
     let drain = Duplicate(
         Discard.filter(|r| r.level().is_at_least(Level::Info)),
         Discard.filter_level(Level::Warning),
@@ -402,8 +405,7 @@ fn makers() {
 
 #[test]
 fn simple_logger_erased() {
-    use *;
-
+    use crate::*;
     fn takes_arced_drain(_l: Logger) {}
 
     let drain = Discard.filter_level(Level::Warning).map(Fuse);
@@ -415,7 +417,7 @@ fn simple_logger_erased() {
 
 #[test]
 fn logger_to_erased() {
-    use *;
+    use crate::*;
 
     fn takes_arced_drain(_l: Logger) {}
 
@@ -432,7 +434,7 @@ fn logger_to_erased() {
 
 #[test]
 fn logger_by_ref() {
-    use *;
+    use crate::*;
     let drain = Discard.filter_level(Level::Warning).map(Fuse);
     let log =
         Logger::root_typed(drain, o!("version" => env!("CARGO_PKG_VERSION")));
@@ -442,6 +444,7 @@ fn logger_by_ref() {
 }
 
 #[test]
+#[allow(unreachable_code, unused_variables)]
 fn test_never_type_clone() {
     // We just want to make sure that this compiles
     fn _do_not_run() {
@@ -454,7 +457,7 @@ fn test_never_type_clone() {
 #[cfg(feature = "std")]
 #[test]
 fn can_hash_keys() {
+    use crate::Key;
     use std::collections::HashSet;
-    use Key;
-    let tab: HashSet<Key> = ["foo"].iter().map(|&k| k.into()).collect();
+    let _tab: HashSet<Key> = ["foo"].iter().map(|&k| k.into()).collect();
 }

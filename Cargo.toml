@@ -11,6 +11,7 @@ homepage = "https://github.com/slog-rs/slog"
 repository = "https://github.com/slog-rs/slog"
 readme = "README.md"
 autoexamples = true
+edition = "2018"
 
 # This is our Minimum Supported Rust Version (MSRV)
 #
@@ -25,7 +26,7 @@ autoexamples = true
 #
 # The first version of Cargo that supports this field was in Rust 1.56.0.
 # In older releases, the field will be ignored, and Cargo will display a warning.
-rust-version = "1.23"
+rust-version = "1.31"
 
 build = "build.rs"
 
@@ -66,6 +67,8 @@ release_max_level_trace = []
 erased-serde = { version = "0.3", optional = true }
 serde = { version = "1", optional = true }
 serde_derive = { version = "1", optional = true }
+# NOTE: This is just a macro (not a runtime dependency)
+rustversion = "1"
 
 [[example]]
 name = "singlethread"
