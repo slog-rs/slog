@@ -314,8 +314,6 @@ use std::borrow::{Cow, ToOwned};
 #[cfg(feature = "std")]
 use std::boxed::Box;
 #[cfg(feature = "std")]
-use std::panic::{RefUnwindSafe, UnwindSafe};
-#[cfg(feature = "std")]
 use std::rc::Rc;
 #[cfg(feature = "std")]
 use std::string::String;
@@ -1544,137 +1542,127 @@ impl<'a, D: Drain + 'a> Drain for &'a mut D {
     }
 }
 
-#[cfg(feature = "std")]
+/// Internal utility module used to "maybe" bound traits
+/// based on cfg flags.
+///
+/// For exmaple, on #[cfg(feature = "std")] we require `UnwindSafe`.
+/// On no_std we disable that bound.
+///
+/// This is the same issue we had with `feature="nothread"`.
+/// In that case we had to drop all our `Send + Sync` bounds.
+///
+/// Before this (tiny) module, this means we had to write seperate versions of all our traits
+/// for every possible combination of std/no_std and threads/nothreads.
+///
+/// This means there were 4 times as many trait definitions to make.
+///
+/// As you can imagine, this led to some mistakes ;)
+///
+/// In particular, feature="nothreads" was almost completely
+/// broken before this module.
+///
+/// ## Usage
+/// Replace all usages of `Send`, `Sync`, and `UnwindSafe` with `maybe::Send` and `maybe::Sync`, etc
+///
+/// These bounds will automatically be enabled/disabled based on the appropriate feature flags.
+///
+/// This avoids quadrupling trait definitions for every possible feature combination.
+mod maybe {
+    #[cfg(feature = "std")]
+    use std::panic;
+    #[cfg(not(feature = "nothreads"))]
+    use core::marker;
+    macro_rules! maybe_bound_trait_def {
+        ($name:ident where $bound:path; if cfg($flag:meta)) => {
+            #[cfg($flag)]
+            pub trait $name: $bound {}
+            #[cfg($flag)]
+            impl<T: $bound + ?Sized> $name for T {}
+            #[cfg(not($flag))]
+            pub trait $name {}
+            #[cfg(not($flag))]
+            impl<T: ?Sized> $name for T {}
+
+        };
+    }
+    maybe_bound_trait_def!(UnwindSafe where panic::UnwindSafe; if cfg(feature="std"));
+    maybe_bound_trait_def!(RefUnwindSafe where panic::RefUnwindSafe; if cfg(feature="std"));
+    maybe_bound_trait_def!(Sync where marker::Sync; if cfg(not(feature = "nothreads")));
+    maybe_bound_trait_def!(Send where marker::Send; if cfg(not(feature = "nothreads")));
+}
+
 /// `Send + Sync + UnwindSafe` bound
 ///
 /// This type is used to enforce `Drain`s associated with `Logger`s
 /// are thread-safe.
-pub trait SendSyncUnwindSafe: Send + Sync + UnwindSafe {}
+pub trait SendSyncUnwindSafe: maybe::Send + maybe::Sync + maybe::UnwindSafe {}
 
-#[cfg(feature = "std")]
-impl<T> SendSyncUnwindSafe for T where T: Send + Sync + UnwindSafe + ?Sized {}
+impl<T> SendSyncUnwindSafe for T where T: maybe::Send + maybe::Sync + maybe::UnwindSafe + ?Sized {}
 
-#[cfg(feature = "std")]
 /// `Drain + Send + Sync + UnwindSafe` bound
 ///
 /// This type is used to enforce `Drain`s associated with `Logger`s
 /// are thread-safe.
-pub trait SendSyncUnwindSafeDrain: Drain + Send + Sync + UnwindSafe {}
+pub trait SendSyncUnwindSafeDrain: Drain + maybe::Send + maybe::Sync + maybe::UnwindSafe {}
 
-#[cfg(feature = "std")]
 impl<T> SendSyncUnwindSafeDrain for T where
-    T: Drain + Send + Sync + UnwindSafe + ?Sized
+    T: Drain + maybe::Send + maybe::Sync + maybe::UnwindSafe + ?Sized
 {
 }
 
-#[cfg(feature = "std")]
 /// `Drain + Send + Sync + RefUnwindSafe` bound
 ///
 /// This type is used to enforce `Drain`s associated with `Logger`s
 /// are thread-safe.
 pub trait SendSyncRefUnwindSafeDrain:
-    Drain + Send + Sync + RefUnwindSafe
+    Drain + maybe::Send + maybe::Sync + maybe::RefUnwindSafe
 {
 }
 
-#[cfg(feature = "std")]
 impl<T> SendSyncRefUnwindSafeDrain for T where
-    T: Drain + Send + Sync + RefUnwindSafe + ?Sized
+    T: Drain + maybe::Send + maybe::Sync + maybe::RefUnwindSafe + ?Sized
 {
 }
 
-#[cfg(feature = "std")]
 /// Function that can be used in `MapErr` drain
 pub trait MapErrFn<EI, EO>:
-    'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(EI) -> EO
+    'static + maybe::Sync + maybe::Send + maybe::UnwindSafe + maybe::RefUnwindSafe + Fn(EI) -> EO
 {
 }
 
-#[cfg(feature = "std")]
 impl<T, EI, EO> MapErrFn<EI, EO> for T where
     T: 'static
-        + Sync
-        + Send
+        + maybe::Sync
+        + maybe::Send
         + ?Sized
-        + UnwindSafe
-        + RefUnwindSafe
+        + maybe::UnwindSafe
+        + maybe::RefUnwindSafe
         + Fn(EI) -> EO
 {
 }
 
-#[cfg(feature = "std")]
 /// Function that can be used in `Filter` drain
 pub trait FilterFn:
-    'static + Sync + Send + UnwindSafe + RefUnwindSafe + Fn(&Record<'_>) -> bool
+    'static + maybe::Sync + maybe::Send + maybe::UnwindSafe + maybe::RefUnwindSafe + Fn(&Record<'_>) -> bool
 {
 }
 
-#[cfg(feature = "std")]
 impl<T> FilterFn for T where
     T: 'static
-        + Sync
-        + Send
+        + maybe::Sync
+        + maybe::Send
         + ?Sized
-        + UnwindSafe
-        + RefUnwindSafe
+        + maybe::UnwindSafe
+        + maybe::RefUnwindSafe
         + Fn(&Record<'_>) -> bool
 {
 }
 
-#[cfg(not(feature = "std"))]
-/// `Drain + Send + Sync + UnwindSafe` bound
-///
-/// This type is used to enforce `Drain`s associated with `Logger`s
-/// are thread-safe.
-pub trait SendSyncUnwindSafeDrain: Drain + Send + Sync {}
-
-#[cfg(not(feature = "std"))]
-impl<T> SendSyncUnwindSafeDrain for T where T: Drain + Send + Sync + ?Sized {}
-
-#[cfg(not(feature = "std"))]
-/// `Drain + Send + Sync + RefUnwindSafe` bound
-///
-/// This type is used to enforce `Drain`s associated with `Logger`s
-/// are thread-safe.
-pub trait SendSyncRefUnwindSafeDrain: Drain + Send + Sync {}
-
-#[cfg(not(feature = "std"))]
-impl<T> SendSyncRefUnwindSafeDrain for T where T: Drain + Send + Sync + ?Sized {}
-
-#[cfg(feature = "std")]
 /// `Drain + Send + RefUnwindSafe` bound
-pub trait SendRefUnwindSafeDrain: Drain + Send + RefUnwindSafe {}
+pub trait SendRefUnwindSafeDrain: Drain + maybe::Send + maybe::RefUnwindSafe {}
 
-#[cfg(feature = "std")]
 impl<T> SendRefUnwindSafeDrain for T where
-    T: Drain + Send + RefUnwindSafe + ?Sized
-{
-}
-
-#[cfg(not(feature = "std"))]
-/// `Drain + Send + RefUnwindSafe` bound
-pub trait SendRefUnwindSafeDrain: Drain + Send {}
-
-#[cfg(not(feature = "std"))]
-impl<T> SendRefUnwindSafeDrain for T where T: Drain + Send + ?Sized {}
-
-#[cfg(not(feature = "std"))]
-/// Function that can be used in `MapErr` drain
-pub trait MapErrFn<EI, EO>: 'static + Sync + Send + Fn(EI) -> EO {}
-
-#[cfg(not(feature = "std"))]
-impl<T, EI, EO> MapErrFn<EI, EO> for T where
-    T: 'static + Sync + Send + ?Sized + Fn(EI) -> EO
-{
-}
-
-#[cfg(not(feature = "std"))]
-/// Function that can be used in `Filter` drain
-pub trait FilterFn: 'static + Sync + Send + Fn(&Record<'_>) -> bool {}
-
-#[cfg(not(feature = "std"))]
-impl<T> FilterFn for T where
-    T: 'static + Sync + Send + ?Sized + Fn(&Record<'_>) -> bool
+    T: Drain + maybe::Send + maybe::RefUnwindSafe + ?Sized
 {
 }
 
@@ -1739,7 +1727,7 @@ impl Drain for Discard {
 #[derive(Debug, Clone)]
 pub struct Filter<D: Drain, F>(pub D, pub F)
 where
-    F: Fn(&Record<'_>) -> bool + 'static + Send + Sync;
+    F: Fn(&Record<'_>) -> bool + 'static + maybe::Send + maybe::Sync;
 
 impl<D: Drain, F> Filter<D, F>
 where
@@ -2550,7 +2538,7 @@ impl<'a> Record<'a> {
         self.rstatic.tag
     }
 
-    /// Get module
+    /// Get odule
     pub fn module(&self) -> &'static str {
         self.rstatic.location.module
     }
@@ -3340,31 +3328,12 @@ where
     }
 }
 
-#[cfg(feature = "nothreads")]
 /// Thread-local safety bound for `KV`
 ///
 /// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
-pub trait SendSyncRefUnwindSafeKV: KV {}
+pub trait SendSyncRefUnwindSafeKV: KV + maybe::Send + maybe::Sync + maybe::RefUnwindSafe {}
 
-#[cfg(feature = "nothreads")]
-impl<T> SendSyncRefUnwindSafeKV for T where T: KV + ?Sized {}
-
-#[cfg(all(not(feature = "nothreads"), feature = "std"))]
-/// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
-pub trait SendSyncRefUnwindSafeKV: KV + Send + Sync + RefUnwindSafe {}
-
-#[cfg(all(not(feature = "nothreads"), feature = "std"))]
-impl<T> SendSyncRefUnwindSafeKV for T where
-    T: KV + Send + Sync + RefUnwindSafe + ?Sized
-{
-}
-
-#[cfg(all(not(feature = "nothreads"), not(feature = "std")))]
-/// This type is used to enforce `KV`s stored in `Logger`s are thread-safe.
-pub trait SendSyncRefUnwindSafeKV: KV + Send + Sync {}
-
-#[cfg(all(not(feature = "nothreads"), not(feature = "std")))]
-impl<T> SendSyncRefUnwindSafeKV for T where T: KV + Send + Sync + ?Sized {}
+impl<T> SendSyncRefUnwindSafeKV for T where T: KV + maybe::Send + maybe::Sync + maybe::RefUnwindSafe + ?Sized {}
 
 /// Single pair `Key` and `Value`
 pub struct SingleKV<V>(pub Key, pub V)
