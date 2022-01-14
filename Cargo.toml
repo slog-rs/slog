@@ -67,6 +67,8 @@ release_max_level_trace = []
 erased-serde = { version = "0.3", optional = true }
 serde = { version = "1", optional = true }
 serde_derive = { version = "1", optional = true }
+# NOTE: This is just a macro (not a runtime dependency)
+rustversion = "1"
 
 [[example]]
 name = "singlethread"
