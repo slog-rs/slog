@@ -5,8 +5,8 @@
   </a>
   <br>
 
-  <a href="https://travis-ci.org/slog-rs/slog">
-      <img src="https://img.shields.io/travis/slog-rs/slog/master.svg" alt="Travis CI Build Status">
+  <a href="https://github.com/slog-rs/slog/actions/workflows/test.yml">
+      <img src="https://img.shields.io/github/workflow/status/slog-rs/slog/Cargo%20Test" alt="GH Actions (Cargo Test)">
   </a>
 
   <a href="https://crates.io/crates/slog">
@@ -19,6 +19,9 @@
 
   <a href="https://docs.rs/releases/search?query=slog-">
       <img src="https://docs.rs/slog/badge.svg" alt="docs-rs: release versions documentation">
+  </a>
+  <a href="https://blog.rust-lang.org/2018/12/06/Rust-1.31-and-rust-2018.html">
+      <img src="https://img.shields.io/badge/rust-1.31%2B-orange.svg">
   </a>
   <br>
     <strong><a href="https://github.com/slog-rs/slog/wiki/Getting-started">Getting started</a></strong>

@@ -3,19 +3,18 @@ use alloc::borrow::Cow;
 #[cfg(not(feature = "std"))]
 use alloc::string::{String, ToString};
 #[cfg(not(feature = "std"))]
+use core::clone::Clone;
+#[cfg(not(feature = "std"))]
 use core::cmp::PartialEq;
 #[cfg(not(feature = "std"))]
-use core::convert::{AsRef, From, Into};
+use core::convert::{AsRef, From};
 #[cfg(not(feature = "std"))]
 use core::fmt;
 #[cfg(not(feature = "std"))]
 use core::hash::{Hash, Hasher};
 #[cfg(not(feature = "std"))]
 use core::iter::{FromIterator, IntoIterator};
-#[cfg(not(feature = "std"))]
-use core::ops::Deref;
-#[cfg(not(feature = "std"))]
-use core::str::FromStr;
+
 #[cfg(feature = "std")]
 use std::borrow::Cow;
 #[cfg(feature = "std")]
@@ -185,7 +184,7 @@ impl AsRef<str> for Key {
 }
 
 impl fmt::Display for Key {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.data {
             Cow::Borrowed(ref ptr) => write!(f, "{}", ptr),
             Cow::Owned(ref ptr) => write!(f, "{}", ptr),
@@ -194,7 +193,7 @@ impl fmt::Display for Key {
 }
 
 impl fmt::Debug for Key {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.data {
             Cow::Borrowed(ref ptr) => write!(f, "{:?}", ptr),
             Cow::Owned(ref ptr) => write!(f, "{:?}", ptr),

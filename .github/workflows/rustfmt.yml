@@ -1,0 +1,31 @@
+# The file is the workflow for rustfmt
+#
+# It runs `cargo fmt --check`
+#
+# It will fail if there are formatting problems.
+on: [push, pull_request]
+name: rustfmt
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rustfmt:
+    # Only run on PRs if the source branch is on someone else's repo
+    if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+          components: rustfmt
+      - shell: bash
+        run: |
+          cargo fmt -- --check

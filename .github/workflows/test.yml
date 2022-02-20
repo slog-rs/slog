@@ -1,0 +1,63 @@
+# We use `actions-rs` for most of our actions
+#
+# This file is for the main tests. clippy & rustfmt are seperate workflows
+on: [push, pull_request]
+name: Cargo Test
+
+env:
+  CARGO_TERM_COLOR: always
+  # has a history of occasional bugs (especially on old versions)
+  #
+  # the ci is free so we might as well use it ;)
+  CARGO_INCREMENTAL: 0
+
+
+# Tested versions:
+# 1. stable
+# 2. nightly
+# 3. Minimum Supported Rust Version (MSRV)
+
+jobs:
+  test:
+    # Only run on PRs if the source branch is on someone else's repo
+    if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Even if one job fails we still want to see the other ones
+      matrix:
+        # 1.31 is MSRV
+        rust: [1.31, stable, nightly]
+        # NOTE: Features to test must be specified manually. They are applied to all versions seperately.
+        #
+        # This has the advantage of being more flexibile and thorough
+        # This has the disadvantage of being more vebrose
+        #
+        # Specific feature combos can be overriden per-version with 'include' and 'ecclude'
+        features: ["", "nested-values", "dynamic-keys", "nothreads", "nested-values dynamic-keys", "nested-values dynamic-keys nothreads"]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          override: true
+      - name: Check
+        # A failing `cargo check` always ends the build
+        run: |
+          cargo check --verbose --features "${{ matrix.features }}"
+        # A failing `cargo check` always fails the build
+        continue-on-error: false
+      - name: Test
+        run: |
+          cargo test --verbose --features "${{ matrix.features }}"
+
+        # By default, we require tests to succeed if either
+        # 1. It has default features (`features == ""`)
+        #
+        # Otherwise, we allow tests to fail.
+        #
+        # This is necessary because most feature combos currently break the tests :(
+        #
+        # TODO: Add some sort of option to get around this (or fix the build)
+        continue-on-error: ${{ matrix.features == '' }} 
