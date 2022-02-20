@@ -2706,8 +2706,16 @@ pub trait Serializer {
     /// Note: this has literally bytes semantics, not array semantics.
     /// It is probably most appropriate to display it as hex which is
     /// also the default (space-separated).
-    fn emit_bytes(&mut self, key: Key, bytes: &[u8]) -> Result {
-        self.emit_arguments(key, &format_args!("{}", BytesAsFmt(bytes)))
+    fn emit_bytes(
+        &mut self,
+        key: Key,
+        bytes: &[u8],
+        kind: BytesKind,
+    ) -> Result {
+        self.emit_arguments(
+            key,
+            &format_args!("{}", BytesAsFmt { bytes, kind }),
+        )
     }
 
     /// Emit `fmt::Arguments`
@@ -2769,21 +2777,82 @@ where
     }
 }
 
+/// The kind of bytes to log
+///
+/// The main distinction is between bytes as "values" (like checksums)
+/// or bytes as "streams" (like user input)
+///
+/// This changes the default formatting,
+/// although different `Drain` implementations can handle
+/// this information differently.
+#[rustversion::attr(since(1.40), non_exhaustive)]
+#[derive(Copy, Clone, Debug)]
+pub enum BytesKind {
+    /// Format the bytes as a "stream"
+    ///
+    /// By default, this prints as hex bytes prefixed with `0x` (but without underscores).
+    ///
+    /// Drain implementations are encouraged to switch to
+    /// more efficient formats like base64 (or direct binary).
+    Stream,
+    /// Format the bytes as a "value"
+    ///
+    /// By default, this prints as uppercase hex prefixed with `0x`,
+    /// implicitly seperated by underscores
+    ///
+    /// For example, `sha1("foo")` would format as `0xF1D2_D2F9_24E9_86AC_86FD_F7B3_6C94_BCDF_32BE_EC15`
+    /// Notice the leading `0x` and the underscores.
+    ///
+    /// If this leading `0x` and underscores are not desired, consider [BytesKind::PlainValue]
+    Value,
+    /// Format the bytes as a "plain" value.
+    ///
+    /// This is very similar to [BytesKind::Value],
+    /// however by default it avoids underscores and a leading `0x`.
+    ///
+    /// For example, `sha1("foo")` would format as `F1D2D2F924E986AC86FDF7B36C94BCDF32BEEC15`
+    /// Notice the lack of leading `0x` and the lack of underscores.
+    PlainValue,
+    #[doc(hidden)]
+    // Used to emulate the `#[non_exhaustive]` attribute (syn does the same thing)
+    __NonExhaustive,
+}
+impl Default for BytesKind {
+    #[inline]
+    fn default() -> BytesKind {
+        BytesKind::Value
+    }
+}
+
 /// A helper for formatting bytes as hex separated with spaces.
 ///
 /// This avoids allocation in the default implementation of `Serializer::emit_bytes()`.
-struct BytesAsFmt<'a>(pub &'a [u8]);
+struct BytesAsFmt<'a> {
+    bytes: &'a [u8],
+    kind: BytesKind,
+}
 
 impl<'a> fmt::Display for BytesAsFmt<'a> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut non_empty = false;
-        for byte in self.0 {
-            if non_empty {
-                write!(f, " {:02x}", byte)?;
-            } else {
-                write!(f, "{:02x}", byte)?;
-                non_empty = true;
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        use core::fmt::Write;
+        // NOTE: Can't use matches! macro because of MSRV
+        let seperate_with_underscore = match self.kind {
+            BytesKind::Stream => {
+                f.write_str("0x")?;
+                false
             }
+            BytesKind::Value => {
+                f.write_str("0x")?;
+                true
+            }
+            BytesKind::PlainValue => false,
+            BytesKind::__NonExhaustive => unreachable!(),
+        };
+        for (index, byte) in self.bytes.iter().enumerate() {
+            if seperate_with_underscore && (index % 2) == 0 {
+                f.write_char('_')?;
+            }
+            write!(f, "{:02X}", byte)?;
         }
         Ok(())
     }
@@ -3025,22 +3094,22 @@ impl Value for String {
 impl Value for [u8] {
     fn serialize(
         &self,
-        _record: &Record,
+        _record: &Record<'_>,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
-        serializer.emit_bytes(key, self)
+        serializer.emit_bytes(key, self, BytesKind::Stream)
     }
 }
 
 impl Value for Vec<u8> {
     fn serialize(
         &self,
-        _record: &Record,
+        _record: &Record<'_>,
         key: Key,
-        serializer: &mut Serializer,
+        serializer: &mut dyn Serializer,
     ) -> Result {
-        serializer.emit_bytes(key, self)
+        serializer.emit_bytes(key, self, BytesKind::Stream)
     }
 }
 
