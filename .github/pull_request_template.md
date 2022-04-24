@@ -1,3 +1,3 @@
 Make sure to:
 
-* [ ] Add an entry to CHANGELOG.md (if neccessary)
+* [ ] Add an entry to CHANGELOG.md (if necessary)
