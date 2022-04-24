@@ -1545,13 +1545,13 @@ impl<'a, D: Drain + 'a> Drain for &'a mut D {
 /// Internal utility module used to "maybe" bound traits
 /// based on cfg flags.
 ///
-/// For exmaple, on #[cfg(feature = "std")] we require `UnwindSafe`.
+/// For example, on #[cfg(feature = "std")] we require `UnwindSafe`.
 /// On no_std we disable that bound.
 ///
 /// This is the same issue we had with `feature="nothread"`.
 /// In that case we had to drop all our `Send + Sync` bounds.
 ///
-/// Before this (tiny) module, this means we had to write seperate versions of all our traits
+/// Before this (tiny) module, this means we had to write separate versions of all our traits
 /// for every possible combination of std/no_std and threads/nothreads.
 ///
 /// This means there were 4 times as many trait definitions to make.

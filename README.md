@@ -138,6 +138,6 @@ toward a common goal in a respectful and welcoming atmosphere!
 
 ## Verification Recommendation
 
-To help with the maintaince, the ownership of this crate is potentially shared between multiple developers.
+To help with the maintained, the ownership of this crate is potentially shared between multiple developers.
 It is recommended to always use [cargo-crev](https://github.com/crev-dev/cargo-crev)
 to verify the trustworthiness of each of your dependencies, including this one.
