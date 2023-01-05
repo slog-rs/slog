@@ -1,7 +1,5 @@
-//#![feature(nothreads)]
-#[macro_use]
-extern crate slog;
-use slog::{Fuse, Logger};
+#![cfg(feature = "nothreads")]
+use slog::{info, o, Fuse, Logger};
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -11,6 +9,7 @@ mod common;
 struct NoThreadSafeObject {
     val: Rc<RefCell<usize>>,
 }
+impl std::panic::RefUnwindSafe for NoThreadSafeObject {}
 
 fn main() {
     let log = Logger::root(Fuse(common::PrintlnDrain), o!("version" => "2"));

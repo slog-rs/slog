@@ -1,6 +1,6 @@
 [package]
 name = "slog"
-version = "2.6.0"
+version = "2.7.0"
 authors = ["Dawid Ciężarkiewicz <dpc@dpc.pw>"]
 description = "Structured, extensible, composable logging for Rust"
 keywords = ["log", "logging", "structured", "hierarchical"]
@@ -10,6 +10,22 @@ documentation = "https://docs.rs/slog"
 homepage = "https://github.com/slog-rs/slog"
 repository = "https://github.com/slog-rs/slog"
 readme = "README.md"
+edition = "2018"
+
+# This is our Minimum Supported Rust Version (MSRV)
+#
+# See the wiki for our full policy on changing this.
+#
+# There are two main requirements:
+# 1. Bumping the MSRV requires increasing the minor version number (2.7 -> 2.8)
+# 2. Changes must be clearly announced in the CHANGELOG.md file
+# 3. At a minimum, we must support at least the latest stable rust, minus 15 releases.
+#    - We can (and very often do) support versions much older than this.
+#    - See wiki for for details
+#
+# The first version of Cargo that supports this field was in Rust 1.56.0.
+# In older releases, the field will be ignored, and Cargo will display a warning.
+rust-version = "1.31"
 
 [profile.release]
 opt-level = 3
@@ -24,7 +40,7 @@ lto = true
 debug-assertions = false
 
 [features]
-nested-values = ["erased-serde"]
+nested-values = ["erased-serde", "serde", "serde_derive"]
 dynamic-keys = []
 std = []
 nothreads = []
@@ -46,6 +62,10 @@ release_max_level_trace = []
 
 [dependencies]
 erased-serde = { version = "0.3", optional = true }
+serde = { version = "1", optional = true }
+serde_derive = { version = "1", optional = true }
+# NOTE: This is just a macro (not a runtime dependency)
+rustversion = "1"
 
 [[example]]
 name = "singlethread"
