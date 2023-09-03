@@ -25,7 +25,7 @@ edition = "2018"
 #
 # The first version of Cargo that supports this field was in Rust 1.56.0.
 # In older releases, the field will be ignored, and Cargo will display a warning.
-rust-version = "1.31"
+rust-version = "1.49.0"
 
 [profile.release]
 opt-level = 3
@@ -65,7 +65,13 @@ erased-serde = { version = "0.3", optional = true }
 serde = { version = "1", optional = true }
 serde_derive = { version = "1", optional = true }
 # NOTE: This is just a macro (not a runtime dependency)
-rustversion = "1"
+#
+# It is used to conditionally enable use of newer rust language
+# features depending on the compiler features.
+# Currently, this is not needed because our MSRV is sufficient
+# for all the features we use.
+# However, in the future we may need to re-add it.
+# rustversion = "1"
 
 [[example]]
 name = "singlethread"

@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Next
 
 * **BIG:** Updated to Rust 2018
-  * Minimum supported Rust Version is now 1.31
   * NOTE: Old 2015 crates will still work because of [excellent 2015/2018 compatibility](https://blog.rust-lang.org/2018/07/27/what-is-rust-2018.html#managing-compatibility)
+* Minimum Supported Rust Version is now [1.49.0](https://blog.rust-lang.org/2020/12/31/Rust-1.49.0.html)
 * Fix support for `feature="nothreads"`
   * Internal refactoring to make different feature combos much easier (PR #301)
 * Switch from Travis CI to Github Actions (fixes #294)

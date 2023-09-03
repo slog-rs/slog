@@ -2019,7 +2019,7 @@ where
     D::Err: fmt::Debug + fmt::Display + std::error::Error,
 {
     // Deprecated in Rust 1.42
-    #[rustversion::attr(since(1.42), allow(deprecated))]
+    #[allow(deprecated)]
     fn description(&self) -> &str {
         match *self {
             MutexDrainError::Mutex => "Mutex acquire failed",
@@ -3704,7 +3704,7 @@ impl From<Error> for std::io::Error {
 #[cfg(feature = "std")]
 impl std::error::Error for Error {
     // Deprecated in Rust 1.42
-    #[rustversion::attr(since(1.42), allow(deprecated))]
+    #[allow(deprecated)]
     fn description(&self) -> &str {
         match *self {
             Error::Io(ref e) => e.description(),

@@ -26,8 +26,8 @@ jobs:
     strategy:
       fail-fast: false # Even if one job fails we still want to see the other ones
       matrix:
-        # 1.31 is MSRV
-        rust: [1.31, stable, nightly]
+        # 1.49 is MSRV
+        rust: [1.49, stable, nightly]
         # NOTE: Features to test must be specified manually. They are applied to all versions separately.
         #
         # This has the advantage of being more flexibile and thorough
