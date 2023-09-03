@@ -56,10 +56,11 @@ impl Key {
     pub fn as_str(&self) -> &str {
         self.data.as_ref()
     }
-
-    /// Take as a reference
-    pub fn as_ref(&self) -> &str {
-        self.as_str()
+}
+impl AsRef<str> for Key {
+    #[inline]
+    fn as_ref(&self) -> &str {
+        self.data.as_ref()
     }
 }
 

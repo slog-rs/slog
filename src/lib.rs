@@ -246,11 +246,9 @@
 //! ```
 //! use slog::{info, o};
 //!
-//! fn main() {
-//!     let drain = slog::Discard;
-//!     let root = slog::Logger::root(drain, o!());
-//!     info!(root, "formatted: {}", 1; "log-key" => true);
-//! }
+//! let drain = slog::Discard;
+//! let root = slog::Logger::root(drain, o!());
+//! info!(root, "formatted: {}", 1; "log-key" => true);
 //! ```
 //!
 //! See more information about format at [`log`](macro.log.html).
@@ -1179,7 +1177,7 @@ where
         T: SendSyncRefUnwindSafeKV + 'static,
     {
         Logger {
-            drain: drain,
+            drain,
             list: OwnedKVList::root(values),
         }
     }
@@ -1216,7 +1214,7 @@ where
     ///         o!("key1" => "value1", "key2" => "value2"));
     ///     let _log = root.new(o!("key" => "value"));
     /// }
-    #[cfg_attr(feature = "cargo-clippy", allow(wrong_self_convention))]
+    #[allow(clippy::wrong_self_convention)]
     pub fn new<T>(&self, values: OwnedKV<T>) -> Logger<D>
     where
         T: SendSyncRefUnwindSafeKV + 'static,
@@ -1738,7 +1736,7 @@ impl Drain for Discard {
         Ok(())
     }
     #[inline]
-    fn is_enabled(&self, _1: Level) -> bool {
+    fn is_enabled(&self, _level: Level) -> bool {
         false
     }
 }
@@ -1845,7 +1843,7 @@ impl<D: Drain, E> MapError<D, E> {
         F: MapErrFn<<D as Drain>::Err, E>,
     {
         MapError {
-            drain: drain,
+            drain,
             map_fn: Box::new(map_fn),
         }
     }
@@ -1965,7 +1963,7 @@ pub struct IgnoreResult<D: Drain> {
 impl<D: Drain> IgnoreResult<D> {
     /// Create `IgnoreResult` wrapping `drain`
     pub fn new(drain: D) -> Self {
-        IgnoreResult { drain: drain }
+        IgnoreResult { drain }
     }
 }
 
@@ -2087,13 +2085,13 @@ impl<D: Drain> Drain for std::sync::Mutex<D> {
 /// Official capitalized logging (and logging filtering) level names
 ///
 /// In order of `as_usize()`.
-pub static LOG_LEVEL_NAMES: [&'static str; 7] =
+pub static LOG_LEVEL_NAMES: [&str; 7] =
     ["OFF", "CRITICAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE"];
 
 /// Official capitalized logging (and logging filtering) short level names
 ///
 /// In order of `as_usize()`.
-pub static LOG_LEVEL_SHORT_NAMES: [&'static str; 7] =
+pub static LOG_LEVEL_SHORT_NAMES: [&str; 7] =
     ["OFF", "CRIT", "ERRO", "WARN", "INFO", "DEBG", "TRCE"];
 
 /// Logging level associated with a logging `Record`
@@ -2241,7 +2239,7 @@ impl FromStr for Level {
     type Err = ();
     fn from_str(name: &str) -> core::result::Result<Level, ()> {
         index_of_log_level_name(name)
-            .and_then(|idx| Level::from_usize(idx))
+            .and_then(Level::from_usize)
             .ok_or(())
     }
 }
@@ -2250,7 +2248,7 @@ impl FromStr for FilterLevel {
     type Err = ();
     fn from_str(name: &str) -> core::result::Result<FilterLevel, ()> {
         index_of_log_level_name(name)
-            .and_then(|idx| FilterLevel::from_usize(idx))
+            .and_then(FilterLevel::from_usize)
             .ok_or(())
     }
 }
@@ -2513,8 +2511,8 @@ impl<'a> Record<'a> {
     ) -> Self {
         Record {
             rstatic: s,
-            msg: msg,
-            kv: kv,
+            msg,
+            kv,
         }
     }
 
@@ -3270,6 +3268,7 @@ impl<'a> PushFnValueSerializer<'a> {
     /// This consumes `self` to prevent serializing one value multiple times
     pub fn emit<'b, S: 'b + Value>(mut self, s: S) -> Result {
         self.done = true;
+        #[cfg_attr(not(feature = "dynamic-keys"), allow(noop_method_call))]
         s.serialize(self.record, self.key.clone(), self.serializer)
     }
 }
@@ -3278,6 +3277,7 @@ impl<'a> Drop for PushFnValueSerializer<'a> {
     fn drop(&mut self) {
         if !self.done {
             // unfortunately this gives no change to return serialization errors
+            #[cfg_attr(not(feature = "dynamic-keys"), allow(noop_method_call))]
             let _ = self.serializer.emit_unit(self.key.clone());
         }
     }
@@ -3335,9 +3335,9 @@ where
         serializer: &mut dyn Serializer,
     ) -> Result {
         let ser = PushFnValueSerializer {
-            record: record,
-            key: key,
-            serializer: serializer,
+            record,
+            key,
+            serializer,
             done: false,
         };
         (self.0)(record, ser)
@@ -3509,6 +3509,7 @@ where
         record: &Record<'_>,
         serializer: &mut dyn Serializer,
     ) -> Result {
+        #[cfg_attr(not(feature = "dynamic-keys"), allow(noop_method_call))]
         self.1.serialize(record, self.0.clone(), serializer)
     }
 }
@@ -3743,7 +3744,7 @@ impl OwnedKVList {
     {
         OwnedKVList {
             node: Arc::new(OwnedKVListNode {
-                next_node: next_node,
+                next_node,
                 kv: values.0,
             }),
         }
@@ -3865,8 +3866,7 @@ mod private {
 #[doc(hidden)]
 pub static STATIC_TERMINATOR_UNIT: () = ();
 
-#[allow(unknown_lints)]
-#[allow(inline_always)]
+#[allow(clippy::inline_always)]
 #[inline(always)]
 #[doc(hidden)]
 /// Not an API
@@ -3902,12 +3902,10 @@ pub fn __slog_static_max_level() -> FilterLevel {
         FilterLevel::Debug
     } else if cfg!(feature = "max_level_trace") {
         FilterLevel::Trace
+    } else if !cfg!(debug_assertions) {
+        FilterLevel::Info
     } else {
-        if !cfg!(debug_assertions) {
-            FilterLevel::Info
-        } else {
-            FilterLevel::Debug
-        }
+        FilterLevel::Debug
     }
 }
 
