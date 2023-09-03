@@ -2785,7 +2785,7 @@ where
 /// This changes the default formatting,
 /// although different `Drain` implementations can handle
 /// this information differently.
-#[rustversion::attr(since(1.40), non_exhaustive)]
+#[non_exhaustive]
 #[derive(Copy, Clone, Debug)]
 pub enum BytesKind {
     /// Format the bytes as a "stream"
@@ -2813,9 +2813,6 @@ pub enum BytesKind {
     /// For example, `sha1("foo")` would format as `F1D2D2F924E986AC86FDF7B36C94BCDF32BEEC15`
     /// Notice the lack of leading `0x` and the lack of underscores.
     PlainValue,
-    #[doc(hidden)]
-    // Used to emulate the `#[non_exhaustive]` attribute (syn does the same thing)
-    __NonExhaustive,
 }
 impl Default for BytesKind {
     #[inline]
@@ -2835,19 +2832,14 @@ struct BytesAsFmt<'a> {
 impl<'a> fmt::Display for BytesAsFmt<'a> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         use core::fmt::Write;
-        // NOTE: Can't use matches! macro because of MSRV
-        let seperate_with_underscore = match self.kind {
-            BytesKind::Stream => {
-                f.write_str("0x")?;
-                false
-            }
-            BytesKind::Value => {
-                f.write_str("0x")?;
-                true
-            }
-            BytesKind::PlainValue => false,
-            BytesKind::__NonExhaustive => unreachable!(),
+        let (use_prefix, seperate_with_underscore) = match self.kind {
+            BytesKind::Stream => (true, false),
+            BytesKind::Value => (true, true),
+            BytesKind::PlainValue => (false, false),
         };
+        if use_prefix {
+            f.write_str("0x")?;
+        }
         for (index, byte) in self.bytes.iter().enumerate() {
             if seperate_with_underscore && (index % 2) == 0 {
                 f.write_char('_')?;
