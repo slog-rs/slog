@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   * Internal refactoring to make different feature combos much easier (PR #301)
 * Switch from Travis CI to Github Actions (fixes #294)
   * `rustfmt --check` now run by default
+  * Require `clippy` to succeed without warnings
 * Fix `#` format when not used as a last argument.
 * Implement `Value` for `std::borrow::Cow`
 * Fix duplicate `AsRef<str>` implementations, fixing support for `dynamic-keys`
