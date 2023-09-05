@@ -27,12 +27,30 @@ jobs:
       fail-fast: false # Even if one job fails we still want to see the other ones
       matrix:
         rust:
-          # Minimum Supported Rust Version: 1.49
+          # Minimum Supported Rust Version
+          #
+          # This is hardcoded and needs to be in sync with Cargo.toml and the README
           - 1.49
           # Per the MSRV policy (discussed in Wiki/docs), this places an upper bound on the MSRV
           #
           # In other words, we can never raise the MSRV past this, and must always support it.
           - "stable minus 15 releases"
+          # A recent version of stable rust that is hardcoded.
+          #
+          # This should be kept as up to date as possible.
+          #
+          # This is used so that clippy & tests are run on a reliable reference point.
+          # If clippy has any warnings, this will fail the build (we run with --deny warnings)
+          - 1.72
+          # The most recent version of stable rust (automatically updated)
+          #
+          # Sometimes, this is exactly the same as the hardcoded right above.
+          # However sometimes it will be automatically updated to something a little newer.
+          #
+          # If there are new clippy lints in the automatic update that aren't
+          # in the hardcoded versions, they will _NOT_ fail the build.
+          # This is true even if they are set to deny by default (clippy does this for some 'correctness' lints).
+          # They will simply be regular warnings.
           - stable
           - nightly
         # NOTE: Features to test must be specified manually. They are applied to all versions separately.
@@ -65,12 +83,26 @@ jobs:
         run: |
           cargo test --verbose --features "${{ matrix.features }}"
 
-        # By default, we require tests to succeed if either
-        # 1. It has default features (`features == ""`)
+        # We only require tests to succeed on the default feature combinations.
         #
-        # Otherwise, we allow tests to fail.
+        # This is necessary because we had CI disabled for a long time when
+        # Travis CI got rid of their free plans.
+        # It took us a while to switch to Github Actions.
         #
-        # This is necessary because most feature combos currently break the tests :(
+        # TODO: Fix the build on all feature combos
+        continue-on-error: ${{ matrix.features == '' }}
+
+      - name: Clippy
+        # With the exception of nightly, we use --deny warnings to treat warnings on errors.
+        run: |
+          cargo clippy --verbose --features "${{ matrix.features }}" -- --deny "${{ matrix.rust != 'nightly' && 'warnings' || 'clippy::correctness' }}"
+        # Clippy is required to succeed on hardcoded versions, and may not give any warnings.
         #
-        # TODO: Add some sort of option to get around this (or fix the build)
-        continue-on-error: ${{ matrix.features == '' }} 
+        # However, on automatically updated versions of rust (both stable & nightly) we allow clippy to fail.
+        # This is in case automatic updates have introduced new lints that would give warnings/errors
+        # about code that was previously allowed.
+        #
+        # This is the main reason that we have a 'hardcoded recent stable' version.
+        # We want as many lints from recent stable possible
+        # but don't want the surprises of automatic updates to our stable rust.
+        continue-on-error: ${{ !contains(matrix.rust, '1.') }}
