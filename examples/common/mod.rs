@@ -29,7 +29,7 @@ impl Drain for PrintlnDrain {
             .unwrap();
         values.serialize(record, &mut PrintlnSerializer).unwrap();
 
-        println!("");
+        println!();
         Ok(())
     }
 }

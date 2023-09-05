@@ -1297,6 +1297,11 @@ where
         record: &Record<'_>,
         values: &OwnedKVList,
     ) -> result::Result<Self::Ok, Self::Err> {
+        // Arc is required by API, but logically redundant
+        #[cfg_attr(
+            feature = "nothreads",
+            allow(clippy::arc_with_non_send_sync)
+        )]
         let chained = OwnedKVList {
             node: Arc::new(MultiListNode {
                 next_node: values.node.clone(),
@@ -2427,10 +2432,9 @@ where
 {
     let string = expected.to_string();
 
-    let actual = T::from_str(&string).expect(&format!(
-        "Failed to parse string representation of {:?}",
-        expected
-    ));
+    let actual = T::from_str(&string).unwrap_or_else(|_err| {
+        panic!("Failed to parse string representation of {:?}", expected)
+    });
 
     assert_eq!(
         expected, actual,
@@ -2441,10 +2445,10 @@ where
 
 #[test]
 fn filter_level_accepts_tests() {
-    assert_eq!(true, FilterLevel::Warning.accepts(Level::Error));
-    assert_eq!(true, FilterLevel::Warning.accepts(Level::Warning));
-    assert_eq!(false, FilterLevel::Warning.accepts(Level::Info));
-    assert_eq!(false, FilterLevel::Off.accepts(Level::Critical));
+    assert!(FilterLevel::Warning.accepts(Level::Error));
+    assert!(FilterLevel::Warning.accepts(Level::Warning));
+    assert!(!FilterLevel::Warning.accepts(Level::Info));
+    assert!(!FilterLevel::Off.accepts(Level::Critical));
 }
 // }}}
 
