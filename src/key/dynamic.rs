@@ -178,12 +178,6 @@ impl PartialEq<Self> for Key {
     }
 }
 
-impl AsRef<str> for Key {
-    fn as_ref<'a>(&'a self) -> &'a str {
-        self.data.as_ref()
-    }
-}
-
 impl fmt::Display for Key {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.data {
