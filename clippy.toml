@@ -1,0 +1,6 @@
+msrv = "1.49.0"
+# TODO: Consider adding this?
+#
+# I would much prefer supressing lints that break
+# API compatibility on a case-by-case basis.
+# avoid-breaking-exported-api = true
