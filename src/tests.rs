@@ -20,7 +20,6 @@ mod no_imports {
 #[cfg(feature = "std")]
 mod std_only {
     use super::super::*;
-    use std;
 
     #[derive(Clone)]
     struct CheckError;
@@ -204,7 +203,7 @@ fn expressions() {
     let log = Logger::root(Discard, o!("version" => env!("CARGO_PKG_VERSION")));
 
     let foo = Foo;
-    let r = X { foo: foo };
+    let r = X { foo };
 
     warn!(log, "logging message");
     slog_warn!(log, "logging message");
@@ -300,13 +299,17 @@ fn expressions() {
         info!(log, "message"; "foo" => "bar", &x, &x, "aaa" => "bbb");
     }
 
-    info!(
-        log,
-        "message {}",
-          { 3 + 3; 2};
-          "foo" => "bar",
-          "foo" => { 3 + 3; 2},
-          "aaa" => "bbb");
+    #[allow(clippy::no_effect)]
+    {
+        info!(
+            log,
+            "message {}",
+            { 3 + 3; 2};
+            "foo" => "bar",
+            "foo" => { 3 + 3; 2},
+            "aaa" => "bbb"
+        );
+    }
 }
 
 #[cfg(integer128)]
@@ -446,6 +449,7 @@ fn logger_by_ref() {
 #[allow(unreachable_code, unused_variables)]
 fn test_never_type_clone() {
     // We just want to make sure that this compiles
+    #[allow(clippy::diverging_sub_expression)]
     fn _do_not_run() {
         let x: Never = panic!("Can't actually construct a Never type here!");
         let y = x.clone();
@@ -458,5 +462,10 @@ fn test_never_type_clone() {
 fn can_hash_keys() {
     use crate::Key;
     use std::collections::HashSet;
+    // NOTE: Need conversion to support dynamic-keys
+    #[cfg_attr(
+        not(feature = "dynamic-keys"),
+        allow(clippy::useless_conversion)
+    )]
     let _tab: HashSet<Key> = ["foo"].iter().map(|&k| k.into()).collect();
 }

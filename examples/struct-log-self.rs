@@ -11,10 +11,7 @@ struct Peer {
 
 impl Peer {
     fn new(host: String, port: u32) -> Self {
-        Peer {
-            host: host,
-            port: port,
-        }
+        Peer { host, port }
     }
 }
 
@@ -47,7 +44,7 @@ impl Server {
         Server {
             _host: host,
             _port: port,
-            log: log,
+            log,
         }
     }
 
@@ -66,7 +63,7 @@ struct PeerCounter {
 
 impl PeerCounter {
     fn new(log: Logger) -> Self {
-        PeerCounter { count: 0, log: log }
+        PeerCounter { count: 0, log }
     }
 
     // A hybrid approach with `Logger` with parent logging-context embedded into

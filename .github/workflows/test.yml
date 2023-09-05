@@ -102,12 +102,12 @@ jobs:
       - name: Check
         # A failing `cargo check` always ends the build
         run: |
-          cargo check --verbose --features "${{ matrix.features }}"
+          cargo check --all-targets --verbose --features "${{ matrix.features }}"
         # A failing `cargo check` always fails the build
         continue-on-error: false
       - name: Test
         run: |
-          cargo test --verbose --features "${{ matrix.features }}"
+          cargo test --all-targets --verbose --features "${{ matrix.features }}"
 
         # We require tests to succeed on all the feature combinations.
         #
@@ -118,7 +118,7 @@ jobs:
       - name: Clippy
         # With the exception of nightly, we use --deny warnings to treat warnings on errors.
         run: |
-          cargo clippy --verbose --features "${{ matrix.features }}" -- --deny "${{ matrix.rust != 'nightly' && 'warnings' || 'clippy::correctness' }}"
+          cargo clippy --all-targets --verbose --features "${{ matrix.features }}" -- --deny "${{ matrix.rust != 'nightly' && 'warnings' || 'clippy::correctness' }}"
         # Clippy is required to succeed on hardcoded versions, and may not give any warnings.
         #
         # However, on automatically updated versions of rust (both stable & nightly) we allow clippy to fail.
