@@ -29,6 +29,10 @@ jobs:
         rust:
           # Minimum Supported Rust Version: 1.49
           - 1.49
+          # Per the MSRV policy (discussed in Wiki/docs), this places an upper bound on the MSRV
+          #
+          # In other words, we can never raise the MSRV past this, and must always support it.
+          - "stable minus 15 releases"
           - stable
           - nightly
         # NOTE: Features to test must be specified manually. They are applied to all versions separately.
