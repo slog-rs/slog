@@ -6,7 +6,7 @@
   <br>
 
   <a href="https://github.com/slog-rs/slog/actions/workflows/test.yml">
-      <img src="https://img.shields.io/github/workflow/status/slog-rs/slog/Cargo%20Test" alt="GH Actions (Cargo Test)">
+      <img src="https://img.shields.io/github/actions/workflow/status/slog-rs/slog/test.yml?branch=master" alt="GH Actions (Cargo Test)">
   </a>
 
   <a href="https://crates.io/crates/slog">
