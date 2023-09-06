@@ -83,14 +83,11 @@ jobs:
         run: |
           cargo test --verbose --features "${{ matrix.features }}"
 
-        # We only require tests to succeed on the default feature combinations.
+        # We require tests to succeed on all the feature combinations.
         #
-        # This is necessary because we had CI disabled for a long time when
-        # Travis CI got rid of their free plans.
-        # It took us a while to switch to Github Actions.
-        #
-        # TODO: Fix the build on all feature combos
-        continue-on-error: ${{ matrix.features == '' }}
+        # However, we can grant special exceptions for the Minimum Supported Rust Version
+        # if there is a really good reason (like a dependency that requires a newer version).
+        continue-on-error: false
 
       - name: Clippy
         # With the exception of nightly, we use --deny warnings to treat warnings on errors.
