@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   * `rustfmt --check` now run by default
   * Require `clippy` to succeed without warnings
   * Require all feature combinations to pass tests.
+    * Make exception for `nested-values` feature on MSRV (1.49),
+      because `erased-serde` dependency requires `edition="2021"` (needs 1.56)
 * Fix `#` format when not used as a last argument.
 * Implement `Value` for `std::borrow::Cow`
 * Fix duplicate `AsRef<str>` implementations, fixing support for `dynamic-keys`
