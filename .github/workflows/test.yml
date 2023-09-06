@@ -46,11 +46,11 @@ jobs:
           - "nested-values dynamic-keys nothreads"
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.rust }}
-          override: true
+          components: clippy
       - name: Check
         # A failing `cargo check` always ends the build
         run: |
