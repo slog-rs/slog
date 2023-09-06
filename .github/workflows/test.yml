@@ -41,6 +41,11 @@ jobs:
           #
           # In other words, we can never raise the MSRV past this, and must always support it.
           - "stable minus 15 releases"
+          # Major release 1.56: The first version to support `edition="2021"`
+          #
+          # This appears to be the earliest version that `erased-serde` supports,
+          # so is the earliest one we can enable the 'nested-values' feature.
+          - 1.56
           # A recent version of stable rust that is hardcoded.
           #
           # This should be kept as up to date as possible.
@@ -123,4 +128,7 @@ jobs:
         # This is the main reason that we have a 'hardcoded recent stable' version.
         # We want as many lints from recent stable possible
         # but don't want the surprises of automatic updates to our stable rust.
-        continue-on-error: ${{ !contains(matrix.rust, '1.') }}
+        #
+        # Also, include an explicit exception for Rust 1.56.
+        # We don't want to deal with the fact clippy changed the names of some lints.
+        continue-on-error: ${{ !contains(matrix.rust, '1.') || matrix.rust == '1.56' }}
