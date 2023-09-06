@@ -26,15 +26,24 @@ jobs:
     strategy:
       fail-fast: false # Even if one job fails we still want to see the other ones
       matrix:
-        # 1.49 is MSRV
-        rust: [1.49, stable, nightly]
+        rust:
+          # Minimum Supported Rust Version: 1.49
+          - 1.49
+          - stable
+          - nightly
         # NOTE: Features to test must be specified manually. They are applied to all versions separately.
         #
         # This has the advantage of being more flexibile and thorough
         # This has the disadvantage of being more vebrose
         #
         # Specific feature combos can be overridden per-version with 'include' and 'ecclude'
-        features: ["", "nested-values", "dynamic-keys", "nothreads", "nested-values dynamic-keys", "nested-values dynamic-keys nothreads"]
+        features:
+          - ""
+          - "nested-values"
+          - "dynamic-keys"
+          - "nothreads"
+          - "nested-values dynamic-keys"
+          - "nested-values dynamic-keys nothreads"
 
     steps:
       - uses: actions/checkout@v2
