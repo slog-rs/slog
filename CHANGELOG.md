@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Next
+## [Unreleased]
+
+### 2.8.0-beta.1 - 2023-09-09
 
 * **BIG:** Updated to Rust 2018
   * NOTE: Old 2015 crates will still work because of [excellent 2015/2018 compatibility](https://blog.rust-lang.org/2018/07/27/what-is-rust-2018.html#managing-compatibility)
