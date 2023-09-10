@@ -2090,8 +2090,9 @@ impl<D: Drain> Drain for std::sync::Mutex<D> {
 /// Official capitalized logging (and logging filtering) level names
 ///
 /// In order of `as_usize()`.
-pub static LOG_LEVEL_NAMES: [&str; 7] =
-    ["OFF", "CRITICAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE"];
+pub static LOG_LEVEL_NAMES: [&str; 7] = [
+    "OFF", "CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG", "TRACE",
+];
 
 /// Official capitalized logging (and logging filtering) short level names
 ///

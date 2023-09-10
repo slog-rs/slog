@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Fix `#` format when not used as a last argument.
 * Implement `Value` for `std::borrow::Cow`
 * Fix duplicate `AsRef<str>` implementations, fixing support for `dynamic-keys`
+* Fix incorrect 'long' name for `slog::Level::Warning` (fixes issue #282)
 
 ## 2.7.0 - 2020-11-29
 
