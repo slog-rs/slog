@@ -18,9 +18,42 @@ env:
 # 3. Minimum Supported Rust Version (MSRV)
 
 jobs:
+  # This is a workaround to handle the old crates.io registry is very slow,
+  # before the "sparse" registry feature was added.
+  #
+  # This can be removed once MSRV supports the sparse registry.
+  setup-legacy-cratesio-cache:
+    # Only run on PRs if the source branch is on someone else's repo
+    if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      # NOTE: We want to run test later
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      # MSRV
+      - uses: dtolnay/rust-toolchain@1.49
+      - uses: actions/cache@v3
+        name: Cache for legacy crates.io registry
+        with:
+          key: cratesio-old-versions-shared
+          path: |
+            ~/.cargo/registry
+      - name: cargo check to seed cache
+        run: |
+          cargo check --all-targets --verbose
+        # We honestly couldn't care less if there are errors.
+        #
+        # We are just here to seed the crates.io registry
+        continue-on-error: true
+
+
+
   test:
     # Only run on PRs if the source branch is on someone else's repo
     if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
+    needs: setup-legacy-cratesio-cache
 
     runs-on: ubuntu-latest
     strategy:
@@ -99,6 +132,17 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           components: clippy
+
+      - uses: actions/cache@v3
+        # Otherwise slows down by many minutes...
+        name: Use cache for crates.io registry
+        # Currently stable minus 15 == 1.57, still before sparse registry was added
+        if: ${{ contains(matrix.rust, 'stable minus') || (contains(matrix.rust, '1.') && matrix.rust != '1.72') }}
+        with:
+          key: cratesio-old-versions-shared
+          path: |
+            ~/.cargo/registry
+
       - name: Check
         # A failing `cargo check` always ends the build
         run: |
