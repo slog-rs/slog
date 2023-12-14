@@ -405,10 +405,10 @@ macro_rules! kv(
         kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => #$v:expr) => {
-        kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); )
+        kv!(@ ($crate::SingleKV::from(($k, { use $crate::{ErrorRefKind, ErrorValueKind}; let v = $v; let w = $crate::ErrorTagWrapper(v); (&&w).slog_error_kind().wrap(w.0) } )), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => #$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV::from(($k, { use $crate::{ErrorRefKind, ErrorValueKind}; let v = $v; let w = $crate::ErrorTagWrapper(v); (&&w).slog_error_kind().wrap(w.0) } )), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
@@ -462,10 +462,10 @@ macro_rules! slog_kv(
         slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => #$v:expr) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); )
+        slog_kv!(@ ($crate::SingleKV::from(($k, { use $crate::{ErrorRefKind, ErrorValueKind}; let v = $v; let w = $crate::ErrorTagWrapper(v); (&&w).slog_error_kind().wrap(w.0) } )), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => #$v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, $crate::ErrorValue($v))), $args_ready); $($args)* )
+        slog_kv!(@ ($crate::SingleKV::from(($k, { use $crate::{ErrorRefKind, ErrorValueKind}; let v = $v; let w = $crate::ErrorTagWrapper(v); (&&w).slog_error_kind().wrap(w.0) } )), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
@@ -730,7 +730,8 @@ macro_rules! slog_record(
 /// Similarly to use `std::fmt::Debug` value can be prefixed with `?`,
 /// or pretty-printed with `#?`.
 ///
-/// Errors can be prefixed with `#` as a shorthand for wrapping with `ErrorValue`.
+/// Errors can be prefixed with `#` as a shorthand. Error values will be wrapped
+/// with [`ErrorValue`]. Error references will be wrapped in [`ErrorRef`].
 ///
 /// Full list of supported formats can always be inspected by looking at
 /// [`kv` macro](macro.log.html)
@@ -3349,6 +3350,115 @@ where
     }
 }
 
+/// Wrapper for auto-deref specialization for error values and references.
+///
+/// See <https://lukaskalbertodt.github.io/2019/12/05/generalized-autoref-based-specialization.html>
+/// and <https://github.com/dtolnay/case-studies/tree/master/autoref-specialization> for
+/// details about the technique.
+///
+/// This type allows to detect if it received an error reference or value.
+/// To test the kind of `e`, you have to call it as `(&&ErrorTagWrapper(e)).slog_error_kind()`.
+/// It will return [`ErrorValueTag`] for values and [`ErrorRefTag`] for references.
+///
+/// This is an internal implementation detail of the `kv!` macro and should not
+/// be used directly.
+#[cfg(feature = "std")]
+#[doc(hidden)]
+pub struct ErrorTagWrapper<E>(E);
+
+#[cfg(feature = "std")]
+#[test]
+fn test_error_tag_wrapper() {
+    #[derive(Debug, Clone, Copy)]
+    struct MyError(&'static str);
+    impl core::fmt::Display for MyError {
+        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+            f.write_str(self.0)
+        }
+    }
+    impl std::error::Error for MyError {}
+    let e = MyError("everything is on fire");
+    assert_eq!((&&ErrorTagWrapper(e)).slog_error_kind(), ErrorValueTag);
+    let e = &e;
+    assert_eq!((&&ErrorTagWrapper(e)).slog_error_kind(), ErrorRefTag);
+}
+
+/// Unit struct indicating that the content of `ErrorTagWrapper` was a value.
+///
+/// This is an internal implementation detail of the `kv!` macro and should not
+/// be used directly.
+#[cfg(feature = "std")]
+#[doc(hidden)]
+#[derive(Debug, PartialEq, Eq)]
+pub struct ErrorValueTag;
+#[cfg(feature = "std")]
+impl ErrorValueTag {
+    /// Create a [`Value`] wrapper for an owned error value.
+    pub fn wrap<E>(self, e: E) -> ErrorValue<E>
+    where
+        E: std::error::Error,
+    {
+        ErrorValue(e)
+    }
+}
+
+/// Auxiliary trait for auto-deref dispatch of owned error values
+///
+/// This is an internal implementation detail of the `kv!` macro and should not
+/// be used directly.
+#[cfg(feature = "std")]
+#[doc(hidden)]
+pub trait ErrorValueKind {
+    #[inline]
+    fn slog_error_kind(&self) -> ErrorValueTag {
+        ErrorValueTag
+    }
+}
+#[cfg(feature = "std")]
+impl<E: std::error::Error> ErrorValueKind for ErrorTagWrapper<E> {}
+
+/// Unit struct indicating that the content of `ErrorTagWrapper` was a reference.
+///
+/// This is an internal implementation detail of the `kv!` macro and should not
+/// be used directly.
+#[cfg(feature = "std")]
+#[doc(hidden)]
+#[derive(Debug, PartialEq, Eq)]
+pub struct ErrorRefTag;
+#[cfg(feature = "std")]
+impl ErrorRefTag {
+    /// Create a [`Value`] wrapper for an error reference.
+    pub fn wrap<'a, E>(self, e: &'a E) -> ErrorRef<'a, E>
+    where
+        E: ?Sized + 'static + std::error::Error,
+    {
+        ErrorRef(e)
+    }
+}
+
+/// Auxiliary trait for auto-deref dispatch of error references
+///
+/// This is an internal implementation detail of the `kv!` macro and should not
+/// be used directly.
+#[cfg(feature = "std")]
+#[doc(hidden)]
+pub trait ErrorRefKind {
+    #[inline]
+    fn slog_error_kind(self) -> ErrorRefTag
+    where
+        Self: Sized,
+    {
+        ErrorRefTag
+    }
+}
+#[cfg(feature = "std")]
+impl<ERef> ErrorRefKind for &&ErrorTagWrapper<ERef>
+where
+    ERef: core::ops::Deref,
+    ERef::Target: std::error::Error,
+{
+}
+
 /// A wrapper struct for serializing errors
 ///
 /// This struct can be used to wrap types that don't implement `slog::Value` but
@@ -3388,7 +3498,7 @@ where
 ///
 /// Use [`ErrorValue`] if you want to move ownership of the error value.
 #[cfg(feature = "std")]
-pub struct ErrorRef<'a, E: std::error::Error>(pub &'a E);
+pub struct ErrorRef<'a, E: ?Sized + std::error::Error>(pub &'a E);
 
 #[cfg(feature = "std")]
 impl<'a, E> Value for ErrorRef<'a, E>
