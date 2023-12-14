@@ -133,6 +133,30 @@ mod std_only {
     }
 
     #[test]
+    fn error_ref() {
+        let error = TestError::new("foo");
+        let error = &error;
+        let logger = Logger::root(CheckError, o!());
+        info!(logger, "foo"; "error" => #error);
+    }
+
+    #[test]
+    fn error_box_ref() {
+        let error = TestError::new("foo");
+        let error = Box::new(error);
+        let logger = Logger::root(CheckError, o!());
+        info!(logger, "foo"; "error" => #&error);
+    }
+
+    #[test]
+    fn error_arc_ref() {
+        let error = TestError::new("foo");
+        let error = Arc::new(error);
+        let logger = Logger::root(CheckError, o!());
+        info!(logger, "foo"; "error" => #&error);
+    }
+
+    #[test]
     fn error_fmt_no_source() {
         let logger =
             Logger::root(CheckError, o!("error" => #TestError::new("foo")));
@@ -145,8 +169,8 @@ mod std_only {
         let error = TestError::new("foo");
         let error = &error;
         let logger = Logger::root(CheckError, o!());
-        info!(logger, "foo"; "error" => ErrorRef(error));
-        slog_info!(logger, "foo"; "error" => ErrorRef(error));
+        info!(logger, "foo"; "error" => #error);
+        slog_info!(logger, "foo"; "error" => #error);
     }
 
     #[test]
@@ -164,8 +188,8 @@ mod std_only {
         let error = TestError::new("foo");
         let error = &error;
         let logger = Logger::root(CheckError, o!());
-        info!(logger, "not-error: not-error; foo"; "error" => ErrorRef(error), "not-error" => "not-error");
-        slog_info!(logger, "not-error: not-error; foo"; "error" => ErrorRef(error), "not-error" => "not-error");
+        info!(logger, "not-error: not-error; foo"; "error" => #error, "not-error" => "not-error");
+        slog_info!(logger, "not-error: not-error; foo"; "error" => #error, "not-error" => "not-error");
     }
 
     #[test]
@@ -183,8 +207,8 @@ mod std_only {
         let error = TestError::new("foo");
         let error = &error;
         let logger = Logger::root(CheckError, o!());
-        info!(logger, "foonot-error: not-error; "; "not-error" => "not-error", "error" => ErrorRef(error));
-        slog_info!(logger, "foonot-error: not-error; "; "not-error" => "not-error", "error" => ErrorRef(error));
+        info!(logger, "foonot-error: not-error; "; "not-error" => "not-error", "error" => #error);
+        slog_info!(logger, "foonot-error: not-error; "; "not-error" => "not-error", "error" => #error);
     }
 
     #[test]
@@ -202,8 +226,8 @@ mod std_only {
         let error = TestError("foo", Some(TestError::new("bar")));
         let error = &error;
         let logger = Logger::root(CheckError, o!());
-        info!(logger, "foo: bar"; "error" => ErrorRef(error));
-        slog_info!(logger, "foo: bar"; "error" => ErrorRef(error));
+        info!(logger, "foo: bar"; "error" => #error);
+        slog_info!(logger, "foo: bar"; "error" => #error);
     }
 
     #[test]
@@ -224,8 +248,8 @@ mod std_only {
         );
         let error = &error;
         let logger = Logger::root(CheckError, o!());
-        info!(logger, "foo: bar: baz"; "error" => ErrorRef(error));
-        slog_info!(logger, "foo: bar: baz"; "error" => ErrorRef(error));
+        info!(logger, "foo: bar: baz"; "error" => #error);
+        slog_info!(logger, "foo: bar: baz"; "error" => #error);
     }
 
     #[test]
@@ -234,7 +258,8 @@ mod std_only {
         info!(logger, "not found"; "error" => std::io::Error::from(std::io::ErrorKind::NotFound));
         // compiles?
         info!(logger, "not found"; "error" => #std::io::Error::from(std::io::ErrorKind::NotFound));
-        info!(logger, "not found"; "error" => ErrorRef(&std::io::Error::from(std::io::ErrorKind::NotFound)));
+        let error = std::io::Error::from(std::io::ErrorKind::NotFound);
+        info!(logger, "not found"; "error" => #&error);
     }
 }
 
