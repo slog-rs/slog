@@ -3357,6 +3357,8 @@ where
 ///
 /// This struct is only available in `std` because the `Error` trait is not available
 /// without `std`.
+///
+/// Use [`ErrorRef`] if you have an error reference.
 #[cfg(feature = "std")]
 pub struct ErrorValue<E: std::error::Error>(pub E);
 
@@ -3372,6 +3374,34 @@ where
         serializer: &mut dyn Serializer,
     ) -> Result {
         serializer.emit_error(key, &self.0)
+    }
+}
+
+/// A wrapper struct for serializing errors references.
+///
+/// This struct can be used to wrap types that don't implement `slog::Value` but
+/// do implement `std::error::Error` so that they can be logged.
+/// This is usually not used directly but using `#error` in the macros.
+///
+/// This struct is only available in `std` because the `Error` trait is not available
+/// without `std`.
+///
+/// Use [`ErrorValue`] if you want to move ownership of the error value.
+#[cfg(feature = "std")]
+pub struct ErrorRef<'a, E: std::error::Error>(pub &'a E);
+
+#[cfg(feature = "std")]
+impl<'a, E> Value for ErrorRef<'a, E>
+where
+    E: 'static + std::error::Error,
+{
+    fn serialize(
+        &self,
+        _record: &Record<'_>,
+        key: Key,
+        serializer: &mut dyn Serializer,
+    ) -> Result {
+        serializer.emit_error(key, self.0)
     }
 }
 

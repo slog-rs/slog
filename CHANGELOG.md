@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Add `ErrorRef` wrapper to enable logging error references.
+
 ### 2.8.0-beta.1 - 2023-09-09
 
 * **BIG:** Updated to Rust 2018
