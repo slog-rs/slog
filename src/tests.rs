@@ -21,6 +21,9 @@ mod no_imports {
 mod std_only {
     use super::super::*;
 
+    /// Error checking drain
+    ///
+    /// This asserts that the message and formatted KV are the same.
     #[derive(Clone)]
     struct CheckError;
 
@@ -56,6 +59,7 @@ mod std_only {
 
             let mut serializer = ErrorSerializer(String::new());
             values.serialize(record, &mut serializer).unwrap();
+            record.kv().serialize(record, &mut serializer).unwrap();
             assert_eq!(serializer.0, format!("{}", record.msg()));
             Ok(())
         }
@@ -137,6 +141,15 @@ mod std_only {
     }
 
     #[test]
+    fn error_ref_fmt_no_source() {
+        let error = TestError::new("foo");
+        let error = &error;
+        let logger = Logger::root(CheckError, o!());
+        info!(logger, "foo"; "error" => ErrorRef(error));
+        slog_info!(logger, "foo"; "error" => ErrorRef(error));
+    }
+
+    #[test]
     fn error_fmt_no_source_not_last() {
         let logger = Logger::root(
             CheckError,
@@ -144,6 +157,15 @@ mod std_only {
         );
         info!(logger, "not-error: not-error; foo");
         slog_info!(logger, "not-error: not-error; foo");
+    }
+
+    #[test]
+    fn error_ref_fmt_no_source_not_last() {
+        let error = TestError::new("foo");
+        let error = &error;
+        let logger = Logger::root(CheckError, o!());
+        info!(logger, "not-error: not-error; foo"; "error" => ErrorRef(error), "not-error" => "not-error");
+        slog_info!(logger, "not-error: not-error; foo"; "error" => ErrorRef(error), "not-error" => "not-error");
     }
 
     #[test]
@@ -155,6 +177,16 @@ mod std_only {
         info!(logger, "foonot-error: not-error; ");
         slog_info!(logger, "foonot-error: not-error; ");
     }
+
+    #[test]
+    fn error_ref_fmt_no_source_last() {
+        let error = TestError::new("foo");
+        let error = &error;
+        let logger = Logger::root(CheckError, o!());
+        info!(logger, "foonot-error: not-error; "; "not-error" => "not-error", "error" => ErrorRef(error));
+        slog_info!(logger, "foonot-error: not-error; "; "not-error" => "not-error", "error" => ErrorRef(error));
+    }
+
     #[test]
     fn error_fmt_single_source() {
         let logger = Logger::root(
@@ -162,6 +194,16 @@ mod std_only {
             o!("error" => #TestError("foo", Some(TestError::new("bar")))),
         );
         info!(logger, "foo: bar");
+        slog_info!(logger, "foo: bar");
+    }
+
+    #[test]
+    fn error_ref_fmt_single_source() {
+        let error = TestError("foo", Some(TestError::new("bar")));
+        let error = &error;
+        let logger = Logger::root(CheckError, o!());
+        info!(logger, "foo: bar"; "error" => ErrorRef(error));
+        slog_info!(logger, "foo: bar"; "error" => ErrorRef(error));
     }
 
     #[test]
@@ -171,6 +213,19 @@ mod std_only {
             o!("error" => #TestError("foo", Some(TestError("bar", Some(TestError::new("baz")))))),
         );
         info!(logger, "foo: bar: baz");
+        slog_info!(logger, "foo: bar: baz");
+    }
+
+    #[test]
+    fn error_ref_fmt_two_sources() {
+        let error = TestError(
+            "foo",
+            Some(TestError("bar", Some(TestError::new("baz")))),
+        );
+        let error = &error;
+        let logger = Logger::root(CheckError, o!());
+        info!(logger, "foo: bar: baz"; "error" => ErrorRef(error));
+        slog_info!(logger, "foo: bar: baz"; "error" => ErrorRef(error));
     }
 
     #[test]
@@ -179,6 +234,7 @@ mod std_only {
         info!(logger, "not found"; "error" => std::io::Error::from(std::io::ErrorKind::NotFound));
         // compiles?
         info!(logger, "not found"; "error" => #std::io::Error::from(std::io::ErrorKind::NotFound));
+        info!(logger, "not found"; "error" => ErrorRef(&std::io::Error::from(std::io::ErrorKind::NotFound)));
     }
 }
 
