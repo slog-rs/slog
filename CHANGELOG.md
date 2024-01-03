@@ -6,8 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-* Add `ErrorRef` wrapper to enable logging error references.
-  * The `#` error formatter in macros was updated to automatically select `ErrorValue` or `ErrorRef`.
+* Add `ErrorRef` wrapper to enable logging error references (PR #327)
+  * The `#` error formatter in macros was updated to automatically select `ErrorValue` or `ErrorRef` (PR #328)
 
 ### 2.8.0-beta.1 - 2023-09-09
 
