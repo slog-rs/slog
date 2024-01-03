@@ -405,10 +405,10 @@ macro_rules! kv(
         kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => #$v:expr) => {
-        kv!(@ ($crate::SingleKV::from(($k, { use $crate::{ErrorRefKind, ErrorValueKind}; let v = $v; let w = $crate::ErrorTagWrapper(v); (&&w).slog_error_kind().wrap(w.0) } )), $args_ready); )
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@wrap_error $v) )), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => #$v:expr, $($args:tt)* ) => {
-        kv!(@ ($crate::SingleKV::from(($k, { use $crate::{ErrorRefKind, ErrorValueKind}; let v = $v; let w = $crate::ErrorTagWrapper(v); (&&w).slog_error_kind().wrap(w.0) } )), $args_ready); $($args)* )
+        kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@wrap_error $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
@@ -462,10 +462,10 @@ macro_rules! slog_kv(
         slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => #$v:expr) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, { use $crate::{ErrorRefKind, ErrorValueKind}; let v = $v; let w = $crate::ErrorTagWrapper(v); (&&w).slog_error_kind().wrap(w.0) } )), $args_ready); )
+        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@wrap_error $v) )), $args_ready); )
     };
     (@ $args_ready:expr; $k:expr => #$v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, { use $crate::{ErrorRefKind, ErrorValueKind}; let v = $v; let w = $crate::ErrorTagWrapper(v); (&&w).slog_error_kind().wrap(w.0) } )), $args_ready); $($args)* )
+        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@wrap_error $v) )), $args_ready); $($args)* )
     };
     (@ $args_ready:expr; $k:expr => $v:expr) => {
         slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
@@ -1068,6 +1068,16 @@ macro_rules! __slog_builtin {
     (@line) => ( line!() );
     (@column) => ( column!() );
     (@module_path) => ( module_path!() );
+    (@wrap_error $v:expr) => ({
+        // this magical sequence of code is used to wrap either with
+        // slog::ErrorValue or slog::ErrorRef as appropriate
+        // See PR #328 for details
+        #[allow(unused_imports)]
+        use $crate::{ErrorRefKind, ErrorValueKind};
+        let v = $v;
+        let w = $crate::ErrorTagWrapper(v);
+        (&&w).slog_error_kind().wrap(w.0)
+    });
 }
 
 // }}}
