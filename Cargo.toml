@@ -69,14 +69,15 @@ release_max_level_trace = []
 erased-serde = { version = "0.3", optional = true }
 serde = { version = "1", optional = true }
 serde_derive = { version = "1", optional = true }
+
+[dev-dependencies]
 # NOTE: This is just a macro (not a runtime dependency)
 #
 # It is used to conditionally enable use of newer rust language
 # features depending on the compiler features.
-# Currently, this is not needed because our MSRV is sufficient
-# for all the features we use.
-# However, in the future we may need to re-add it.
-# rustversion = "1"
+#
+# For the time being, this is only needed for tests.
+rustversion = "1"
 
 [[example]]
 name = "singlethread"
