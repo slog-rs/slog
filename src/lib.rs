@@ -3438,7 +3438,7 @@ pub struct ErrorRefTag;
 #[cfg(feature = "std")]
 impl ErrorRefTag {
     /// Create a [`Value`] wrapper for an error reference.
-    pub fn wrap<'a, E>(self, e: &'a E) -> ErrorRef<'a, E>
+    pub fn wrap<E>(self, e: &E) -> ErrorRef<'_, E>
     where
         E: ?Sized + 'static + std::error::Error,
     {
