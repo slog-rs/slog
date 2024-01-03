@@ -3388,7 +3388,14 @@ fn test_error_tag_wrapper() {
     }
     impl std::error::Error for MyError {}
     let e = MyError("everything is on fire");
-    assert_eq!((&&ErrorTagWrapper(e)).slog_error_kind(), ErrorValueTag);
+    assert_eq!(
+        {
+            #[allow(clippy::needless_borrow)]
+            // The "needless" borrow is part of the point
+            (&&ErrorTagWrapper(e)).slog_error_kind()
+        },
+        ErrorValueTag
+    );
     let e = &e;
     assert_eq!((&&ErrorTagWrapper(e)).slog_error_kind(), ErrorRefTag);
 }
