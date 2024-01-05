@@ -348,10 +348,15 @@ macro_rules! o(
 ///
 /// Use in case of macro name collisions
 #[macro_export(local_inner_macros)]
+#[cfg_attr(
+    not(feature = "suppress-macro2018-warnings"),
+    deprecated(
+        since = "2.8.0",
+        note = "Use full macro path ::slog::o!(...) (Rust 2018 feature)"
+    )
+)]
 macro_rules! slog_o(
-    ($($args:tt)*) => {
-        $crate::OwnedKV(slog_kv!($($args)*))
-    };
+    ($($args:tt)*) => ($crate::o!($($args)*));
 );
 
 /// Macro for building group of key-value pairs in
@@ -367,11 +372,16 @@ macro_rules! b(
 );
 
 /// Alias of `b`
-#[macro_export(local_inner_macros)]
+#[macro_export]
+#[cfg_attr(
+    not(feature = "suppress-macro2018-warnings"),
+    deprecated(
+        since = "2.8.0",
+        note = "Use full macro path ::slog::b!(...) (Rust 2018 feature)"
+    )
+)]
 macro_rules! slog_b(
-    ($($args:tt)*) => {
-        $crate::BorrowedKV(&slog_kv!($($args)*))
-    };
+    ($($args:tt)*) => ($crate::b!($($args)*));
 );
 
 /// Macro for build `KV` implementing type
@@ -435,59 +445,16 @@ macro_rules! kv(
 
 /// Alias of `kv`
 // Note: make sure to keep in sync with `kv`
-#[macro_export(local_inner_macros)]
+#[macro_export]
+#[cfg_attr(
+    not(feature = "suppress-macro2018-warnings"),
+    deprecated(
+        since = "2.8.0",
+        note = "Use full macro path ::slog::kv!(...) (Rust 2018 feature)"
+    )
+)]
 macro_rules! slog_kv(
-    (@ $args_ready:expr; $k:expr => %$v:expr) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{}", $v))), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => %$v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{}", $v))), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; $k:expr => #%$v:expr) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#}", $v))), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => #%$v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#}", $v))), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; $k:expr => ?$v:expr) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => ?$v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:?}", $v))), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; $k:expr => #?$v:expr) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => #?$v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@format_args "{:#?}", $v))), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; $k:expr => #$v:expr) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@wrap_error $v) )), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => #$v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, __slog_builtin!(@wrap_error $v) )), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); )
-    };
-    (@ $args_ready:expr; $k:expr => $v:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($crate::SingleKV::from(($k, $v)), $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; $slog_kv:expr) => {
-        slog_kv!(@ ($slog_kv, $args_ready); )
-    };
-    (@ $args_ready:expr; $slog_kv:expr, $($args:tt)* ) => {
-        slog_kv!(@ ($slog_kv, $args_ready); $($args)* )
-    };
-    (@ $args_ready:expr; ) => {
-        $args_ready
-    };
-    (@ $args_ready:expr;, ) => {
-        $args_ready
-    };
-    ($($args:tt)*) => {
-        slog_kv!(@ (); $($args)*)
-    };
+    ($($args:tt)*) => ($crate::kv!(@ (); $($args)*));
 );
 
 #[macro_export(local_inner_macros)]
@@ -510,24 +477,17 @@ macro_rules! record_static(
     }};
 );
 
-#[macro_export(local_inner_macros)]
 /// Create `RecordStatic` at the given code location (alias)
+#[macro_export]
+#[cfg_attr(
+    not(feature = "suppress-macro2018-warnings"),
+    deprecated(
+        since = "2.8.0",
+        note = "Use full macro path ::slog::record_static!(...) (Rust 2018 feature)"
+    )
+)]
 macro_rules! slog_record_static(
-    ($lvl:expr, $tag:expr,) => { slog_record_static!($lvl, $tag) };
-    ($lvl:expr, $tag:expr) => {{
-        static LOC : $crate::RecordLocation = $crate::RecordLocation {
-            file: __slog_builtin!(@file),
-            line: __slog_builtin!(@line),
-            column: __slog_builtin!(@column),
-            function: "",
-            module: __slog_builtin!(@module_path),
-        };
-        $crate::RecordStatic {
-            location : &LOC,
-            level: $lvl,
-            tag: $tag,
-        }
-    }};
+    ($($arg:tt)*) => ($crate::record_static!($($arg)*));
 );
 
 #[macro_export(local_inner_macros)]
@@ -547,17 +507,17 @@ macro_rules! record(
     }};
 );
 
-#[macro_export(local_inner_macros)]
+#[macro_export]
+#[cfg_attr(
+    not(feature = "suppress-macro2018-warnings"),
+    deprecated(
+        since = "2.8.0",
+        note = "Use full macro path ::slog::record!(...) (Rust 2018 feature)"
+    )
+)]
 /// Create `Record` at the given code location (alias)
 macro_rules! slog_record(
-    ($lvl:expr, $tag:expr, $args:expr, $b:expr,) => {
-        slog_record!($lvl, $tag, $args, $b)
-    };
-    ($lvl:expr, $tag:expr, $args:expr, $b:expr) => {{
-        static RS : $crate::RecordStatic<'static> = slog_record_static!($lvl,
-                                                                        $tag);
-        $crate::Record::new(&RS, $args, $b)
-    }};
+    ($($arg:tt)*) => ($crate::record_static!($($arg)*));
 );
 
 /// Log message a logging record
@@ -756,7 +716,7 @@ macro_rules! slog_record(
 macro_rules! log(
     // `2` means that `;` was already found
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-      $crate::Logger::log(&$l, &record!($lvl, $tag, &__slog_builtin!(@format_args $msg_fmt, $($fmt)*), b!($($kv)*)))
+      $crate::Logger::log(&$l, &record!($lvl, $tag, &$crate::__slog_builtin!(@format_args $msg_fmt, $($fmt)*), b!($($kv)*)))
    };
    (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
        log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
@@ -825,71 +785,28 @@ macro_rules! log(
 ///     slog_info!(log, "some interesting info"; "where" => "right here");
 /// }
 /// ```
-#[macro_export(local_inner_macros)]
+#[macro_export]
+#[cfg_attr(
+    not(feature = "suppress-macro2018-warnings"),
+    deprecated(
+        since = "2.8.0",
+        note = "Use full macro path ::slog::log!(...) (Rust 2018 feature)"
+    )
+)]
 macro_rules! slog_log(
-    // `2` means that `;` was already found
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* },  $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-      $crate::Logger::log(&$l, &slog_record!($lvl, $tag, &__slog_builtin!(@format_args $msg_fmt, $($fmt)*), slog_b!($($kv)*)))
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr;) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
-   };
-   (2 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* $($args)*}, $l, $lvl, $tag, $msg_fmt)
-   };
-    // `1` means that we are still looking for `;`
-    // -- handle named arguments to format string
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr;) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr,) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr; $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* $k = $v }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $k:ident = $v:expr, $($args:tt)*) => {
-       slog_log!(1 @ { $($fmt)* $k = $v, }, { $($kv)* __slog_builtin!(@stringify $k) => $v, }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-    // -- look for `;` termination
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr,) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, ; $($args:tt)*) => {
-       slog_log!(1 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt; $($args)*)
-   };
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr; $($args:tt)*) => {
-       slog_log!(2 @ { $($fmt)* }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-    // -- must be normal argument to format string
-   (1 @ { $($fmt:tt)* }, { $($kv:tt)* }, $l:expr, $lvl:expr, $tag:expr, $msg_fmt:expr, $f:tt $($args:tt)*) => {
-       slog_log!(1 @ { $($fmt)* $f }, { $($kv)* }, $l, $lvl, $tag, $msg_fmt, $($args)*)
-   };
-   ($l:expr, $lvl:expr, $tag:expr, $($args:tt)*) => {
-       if $lvl.as_usize() <= $crate::__slog_static_max_level().as_usize() {
-           slog_log!(1 @ { }, { }, $l, $lvl, $tag, $($args)*)
-       }
-   };
+    ($($args:tt)*) => ($crate::log!($($args)*));
 );
+
 /// Log critical level record
 ///
 /// See `log` for documentation.
-#[macro_export(local_inner_macros)]
+#[macro_export]
 macro_rules! crit(
     ($l:expr, #$tag:expr, $($args:tt)+) => {
-        log!($l, $crate::Level::Critical, $tag, $($args)+)
+        $crate::log!($l, $crate::Level::Critical, $tag, $($args)+)
     };
     ($l:expr, $($args:tt)+) => {
-        log!($l, $crate::Level::Critical, "", $($args)+)
+        $crate::log!($l, $crate::Level::Critical, "", $($args)+)
     };
 );
 
@@ -900,13 +817,15 @@ macro_rules! crit(
 ///
 /// See `slog_log` for documentation.
 #[macro_export(local_inner_macros)]
+#[cfg_attr(
+    not(feature = "suppress-macro2018-warnings"),
+    deprecated(
+        since = "2.8.0",
+        note = "Use full macro path ::slog::crit!(...) (Rust 2018 feature)"
+    )
+)]
 macro_rules! slog_crit(
-    ($l:expr, #$tag:expr, $($args:tt)+) => {
-        slog_log!($l, $crate::Level::Critical, $tag, $($args)+)
-    };
-    ($l:expr, $($args:tt)+) => {
-        slog_log!($l, $crate::Level::Critical, "", $($args)+)
-    };
+    ($($args:tt)*) => ($crate::crit!($($args)*));
 );
 
 /// Log error level record
@@ -928,26 +847,28 @@ macro_rules! error(
 /// existing `log` crate macro.
 ///
 /// See `slog_log` for documentation.
-#[macro_export(local_inner_macros)]
+#[macro_export]
+#[cfg_attr(
+    not(feature = "suppress-macro2018-warnings"),
+    deprecated(
+        since = "2.8.0",
+        note = "Use full macro path ::slog::error!(...) (Rust 2018 feature)"
+    )
+)]
 macro_rules! slog_error(
-    ($l:expr, #$tag:expr, $($args:tt)+) => {
-        slog_log!($l, $crate::Level::Error, $tag, $($args)+)
-    };
-    ($l:expr, $($args:tt)+) => {
-        slog_log!($l, $crate::Level::Error, "", $($args)+)
-    };
+    ($($args:tt)*) => ($crate::error!($($args)*));
 );
 
 /// Log warning level record
 ///
 /// See `log` for documentation.
-#[macro_export(local_inner_macros)]
+#[macro_export]
 macro_rules! warn(
     ($l:expr, #$tag:expr, $($args:tt)+) => {
-        log!($l, $crate::Level::Warning, $tag, $($args)+)
+        $crate::log!($l, $crate::Level::Warning, $tag, $($args)+)
     };
     ($l:expr, $($args:tt)+) => {
-        log!($l, $crate::Level::Warning, "", $($args)+)
+        $crate::log!($l, $crate::Level::Warning, "", $($args)+)
     };
 );
 
@@ -957,26 +878,28 @@ macro_rules! warn(
 /// existing `log` crate macro.
 ///
 /// See `slog_log` for documentation.
-#[macro_export(local_inner_macros)]
+#[macro_export]
+#[cfg_attr(
+    not(feature = "suppress-macro2018-warnings"),
+    deprecated(
+        since = "2.8.0",
+        note = "Use full macro path ::slog::warn!(...) (Rust 2018 feature)"
+    )
+)]
 macro_rules! slog_warn(
-    ($l:expr, #$tag:expr, $($args:tt)+) => {
-        slog_log!($l, $crate::Level::Warning, $tag, $($args)+)
-    };
-    ($l:expr, $($args:tt)+) => {
-        slog_log!($l, $crate::Level::Warning, "", $($args)+)
-    };
+    ($($args:tt)*) => ($crate::warn!($($args)*));
 );
 
 /// Log info level record
 ///
 /// See `slog_log` for documentation.
-#[macro_export(local_inner_macros)]
+#[macro_export]
 macro_rules! info(
     ($l:expr, #$tag:expr, $($args:tt)*) => {
-        log!($l, $crate::Level::Info, $tag, $($args)*)
+        $crate::log!($l, $crate::Level::Info, $tag, $($args)*)
     };
     ($l:expr, $($args:tt)*) => {
-        log!($l, $crate::Level::Info, "", $($args)*)
+        $crate::log!($l, $crate::Level::Info, "", $($args)*)
     };
 );
 
@@ -986,26 +909,28 @@ macro_rules! info(
 /// existing `log` crate macro.
 ///
 /// See `slog_log` for documentation.
-#[macro_export(local_inner_macros)]
+#[macro_export]
+#[cfg_attr(
+    not(feature = "suppress-macro2018-warnings"),
+    deprecated(
+        since = "2.8.0",
+        note = "Use full macro path ::slog::info!(...) (Rust 2018 feature)"
+    )
+)]
 macro_rules! slog_info(
-    ($l:expr, #$tag:expr, $($args:tt)+) => {
-        slog_log!($l, $crate::Level::Info, $tag, $($args)+)
-    };
-    ($l:expr, $($args:tt)+) => {
-        slog_log!($l, $crate::Level::Info, "", $($args)+)
-    };
+    ($($args:tt)*) => ($crate::info!($($args)*));
 );
 
 /// Log debug level record
 ///
 /// See `log` for documentation.
-#[macro_export(local_inner_macros)]
+#[macro_export]
 macro_rules! debug(
     ($l:expr, #$tag:expr, $($args:tt)+) => {
-        log!($l, $crate::Level::Debug, $tag, $($args)+)
+        $crate::log!($l, $crate::Level::Debug, $tag, $($args)+)
     };
     ($l:expr, $($args:tt)+) => {
-        log!($l, $crate::Level::Debug, "", $($args)+)
+        $crate::log!($l, $crate::Level::Debug, "", $($args)+)
     };
 );
 
@@ -1015,26 +940,28 @@ macro_rules! debug(
 /// existing `log` crate macro.
 ///
 /// See `slog_log` for documentation.
-#[macro_export(local_inner_macros)]
+#[macro_export]
+#[cfg_attr(
+    not(feature = "suppress-macro2018-warnings"),
+    deprecated(
+        since = "2.8.0",
+        note = "Use full macro path ::slog::debug!(...) (Rust 2018 feature)"
+    )
+)]
 macro_rules! slog_debug(
-    ($l:expr, #$tag:expr, $($args:tt)+) => {
-        slog_log!($l, $crate::Level::Debug, $tag, $($args)+)
-    };
-    ($l:expr, $($args:tt)+) => {
-        slog_log!($l, $crate::Level::Debug, "", $($args)+)
-    };
+    ($($args:tt)*) => ($crate::debug!($($args)*));
 );
 
 /// Log trace level record
 ///
 /// See `log` for documentation.
-#[macro_export(local_inner_macros)]
+#[macro_export]
 macro_rules! trace(
     ($l:expr, #$tag:expr, $($args:tt)+) => {
-        log!($l, $crate::Level::Trace, $tag, $($args)+)
+        $crate::log!($l, $crate::Level::Trace, $tag, $($args)+)
     };
     ($l:expr, $($args:tt)+) => {
-        log!($l, $crate::Level::Trace, "", $($args)+)
+        $crate::log!($l, $crate::Level::Trace, "", $($args)+)
     };
 );
 
@@ -1044,23 +971,22 @@ macro_rules! trace(
 /// existing `log` crate macro.
 ///
 /// See `slog_log` for documentation.
-#[macro_export(local_inner_macros)]
+#[macro_export]
+#[cfg_attr(
+    not(feature = "suppress-macro2018-warnings"),
+    deprecated(
+        since = "2.8.0",
+        note = "Use full macro path ::slog::trace!(...) (Rust 2018 feature)"
+    )
+)]
 macro_rules! slog_trace(
-    ($l:expr, #$tag:expr, $($args:tt)+) => {
-        slog_log!($l, $crate::Level::Trace, $tag, $($args)+)
-    };
-    ($l:expr, $($args:tt)+) => {
-        slog_log!($l, $crate::Level::Trace, "", $($args)+)
-    };
-    ($($args:tt)+) => {
-        slog_log!($crate::Level::Trace, $($args)+)
-    };
+    ($($args:tt)*) => ($crate::trace!($($args)*));
 );
 
 /// Helper macro for using the built-in macros inside of
 /// exposed macros with `local_inner_macros` attribute.
 #[doc(hidden)]
-#[macro_export]
+#[macro_export] // TODO: Always use explicit paths
 macro_rules! __slog_builtin {
     (@format_args $($t:tt)*) => ( format_args!($($t)*) );
     (@stringify $($t:tt)*) => ( stringify!($($t)*) );
