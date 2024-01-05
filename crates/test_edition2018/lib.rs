@@ -1,6 +1,8 @@
 #![allow(
     // part of the tests
     named_arguments_used_positionally,
+    // don't want to modify old code
+    deprecated,
 )]
 
 #[cfg(test)]
@@ -13,15 +15,15 @@ mod tests {
         let _ = slog::kv!("a" => %"A");
         let _ = slog::kv!("a" => ?"A");
 
-        let _ = slog::slog_kv!("a" => "A");
-        let _ = slog::slog_kv!("a" => %"A");
-        let _ = slog::slog_kv!("a" => ?"A");
+        let _ = slog::kv!("a" => "A");
+        let _ = slog::kv!("a" => %"A");
+        let _ = slog::kv!("a" => ?"A");
 
         // checks if `local_inner_macros` works correctly.
         let _ = slog::o!("a" => "A");
         let _ = slog::b!("a" => "A");
-        let _ = slog::slog_o!("a" => "A");
-        let _ = slog::slog_b!("a" => "A");
+        let _ = slog::o!("a" => "A");
+        let _ = slog::b!("a" => "A");
     }
 
     #[test]
@@ -34,17 +36,10 @@ mod tests {
         slog::log!(logger, slog::Level::Info, "", "{}{}", a = "A", b = "B");
         slog::log!(logger, slog::Level::Info, "", "{}", a="A"; "id" => 42);
 
-        slog::slog_log!(logger, slog::Level::Info, "", "logger message");
-        slog::slog_log!(logger, slog::Level::Info, "", "{}", 42);
-        slog::slog_log!(
-            logger,
-            slog::Level::Info,
-            "",
-            "{}{}",
-            a = "A",
-            b = "B"
-        );
-        slog::slog_log!(logger, slog::Level::Info, "", "{}", a="A"; "id" => 42);
+        slog::log!(logger, slog::Level::Info, "", "logger message");
+        slog::log!(logger, slog::Level::Info, "", "{}", 42);
+        slog::log!(logger, slog::Level::Info, "", "{}{}", a = "A", b = "B");
+        slog::log!(logger, slog::Level::Info, "", "{}", a="A"; "id" => 42);
 
         // checks if `local_inner_macros` works correctly.
 
@@ -55,11 +50,11 @@ mod tests {
         slog::error!(logger, "message");
         slog::crit!(logger, "message");
 
-        slog::slog_trace!(logger, "message");
-        slog::slog_debug!(logger, "message");
-        slog::slog_info!(logger, "message");
-        slog::slog_warn!(logger, "message");
-        slog::slog_error!(logger, "message");
-        slog::slog_crit!(logger, "message");
+        slog::trace!(logger, "message");
+        slog::debug!(logger, "message");
+        slog::info!(logger, "message");
+        slog::warn!(logger, "message");
+        slog::error!(logger, "message");
+        slog::crit!(logger, "message");
     }
 }

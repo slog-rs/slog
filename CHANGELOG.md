@@ -5,9 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+* Deprecate old prefixed macros like `slog_log`.
+  Rust 2018 macro paths make these unnecessary, use `slog::log!` instead.
+  * This change can be applied automatically by running `sed -E 's/(slog::)?slog_(\w+[!])/slog::\2/' {files}`,
+    which is how I converted the slog tests.
 
 ### 2.8.0-rc.1 - 2025-08-06
-
 * Minimum Supported Rust Version is now [1.56](https://blog.rust-lang.org/2021/10/21/Rust-1.56.0/).
   This was already required if you wanted to use the `nested-values` feature. 
 * Take advantage of the fact that in 1.81 [`std::error::Error`] has been moved to `core`.

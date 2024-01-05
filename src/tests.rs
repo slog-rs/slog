@@ -13,7 +13,7 @@ mod no_imports {
     /// ensure o! macro expands without error inside a module
     #[test]
     fn test_slog_o_macro_expansion() {
-        let _ = Logger::root(Discard, slog_o!("a" => "aa"));
+        let _ = Logger::root(Discard, crate::o!("a" => "aa"));
     }
 }
 
@@ -163,7 +163,7 @@ mod std_only {
         let logger =
             Logger::root(CheckError, o!("error" => #TestError::new("foo")));
         info!(logger, "foo");
-        slog_info!(logger, "foo");
+        crate::info!(logger, "foo");
     }
 
     #[test]
@@ -172,7 +172,7 @@ mod std_only {
         let error = &error;
         let logger = Logger::root(CheckError, o!());
         info!(logger, "foo"; "error" => #error);
-        slog_info!(logger, "foo"; "error" => #error);
+        crate::info!(logger, "foo"; "error" => #error);
     }
 
     #[test]
@@ -182,7 +182,7 @@ mod std_only {
             o!("error" => #TestError::new("foo"), "not-error" => "not-error"),
         );
         info!(logger, "not-error: not-error; foo");
-        slog_info!(logger, "not-error: not-error; foo");
+        crate::info!(logger, "not-error: not-error; foo");
     }
 
     #[test]
@@ -191,7 +191,7 @@ mod std_only {
         let error = &error;
         let logger = Logger::root(CheckError, o!());
         info!(logger, "not-error: not-error; foo"; "error" => #error, "not-error" => "not-error");
-        slog_info!(logger, "not-error: not-error; foo"; "error" => #error, "not-error" => "not-error");
+        crate::info!(logger, "not-error: not-error; foo"; "error" => #error, "not-error" => "not-error");
     }
 
     #[test]
@@ -201,7 +201,7 @@ mod std_only {
             o!("not-error" => "not-error", "error" => #TestError::new("foo")),
         );
         info!(logger, "foonot-error: not-error; ");
-        slog_info!(logger, "foonot-error: not-error; ");
+        crate::info!(logger, "foonot-error: not-error; ");
     }
 
     #[test]
@@ -210,7 +210,7 @@ mod std_only {
         let error = &error;
         let logger = Logger::root(CheckError, o!());
         info!(logger, "foonot-error: not-error; "; "not-error" => "not-error", "error" => #error);
-        slog_info!(logger, "foonot-error: not-error; "; "not-error" => "not-error", "error" => #error);
+        crate::info!(logger, "foonot-error: not-error; "; "not-error" => "not-error", "error" => #error);
     }
 
     #[test]
@@ -220,7 +220,7 @@ mod std_only {
             o!("error" => #TestError("foo", Some(TestError::new("bar")))),
         );
         info!(logger, "foo: bar");
-        slog_info!(logger, "foo: bar");
+        crate::info!(logger, "foo: bar");
     }
 
     #[test]
@@ -229,7 +229,7 @@ mod std_only {
         let error = &error;
         let logger = Logger::root(CheckError, o!());
         info!(logger, "foo: bar"; "error" => #error);
-        slog_info!(logger, "foo: bar"; "error" => #error);
+        crate::info!(logger, "foo: bar"; "error" => #error);
     }
 
     #[test]
@@ -239,7 +239,7 @@ mod std_only {
             o!("error" => #TestError("foo", Some(TestError("bar", Some(TestError::new("baz")))))),
         );
         info!(logger, "foo: bar: baz");
-        slog_info!(logger, "foo: bar: baz");
+        crate::info!(logger, "foo: bar: baz");
     }
 
     #[test]
@@ -251,7 +251,7 @@ mod std_only {
         let error = &error;
         let logger = Logger::root(CheckError, o!());
         info!(logger, "foo: bar: baz"; "error" => #error);
-        slog_info!(logger, "foo: bar: baz"; "error" => #error);
+        crate::info!(logger, "foo: bar: baz"; "error" => #error);
     }
 
     #[test]
@@ -289,16 +289,16 @@ fn expressions() {
     let r = X { foo };
 
     warn!(log, "logging message");
-    slog_warn!(log, "logging message");
+    crate::warn!(log, "logging message");
 
     info!(log, #"with tag", "logging message");
-    slog_info!(log, #"with tag", "logging message");
+    crate::info!(log, #"with tag", "logging message");
 
     warn!(log, "logging message"; "a" => "b");
-    slog_warn!(log, "logging message"; "a" => "b");
+    crate::warn!(log, "logging message"; "a" => "b");
 
     warn!(log, "logging message bar={}", r.foo.bar());
-    slog_warn!(log, "logging message bar={}", r.foo.bar());
+    crate::warn!(log, "logging message bar={}", r.foo.bar());
 
     warn!(
         log,
@@ -306,7 +306,7 @@ fn expressions() {
         r.foo.bar(),
         r.foo.bar()
     );
-    slog_warn!(
+    crate::warn!(
         log,
         "logging message bar={} foo={}",
         r.foo.bar(),
@@ -320,7 +320,7 @@ fn expressions() {
         r.foo.bar(),
         r.foo.bar(),
     );
-    slog_warn!(
+    crate::warn!(
         log,
         "logging message bar={} foo={}",
         r.foo.bar(),
@@ -328,24 +328,24 @@ fn expressions() {
     );
 
     warn!(log, "logging message bar={}", r.foo.bar(); "x" => 1);
-    slog_warn!(log, "logging message bar={}", r.foo.bar(); "x" => 1);
+    crate::warn!(log, "logging message bar={}", r.foo.bar(); "x" => 1);
 
     // trailing comma check
     warn!(log, "logging message bar={}", r.foo.bar(); "x" => 1,);
-    slog_warn!(log, "logging message bar={}", r.foo.bar(); "x" => 1,);
+    crate::warn!(log, "logging message bar={}", r.foo.bar(); "x" => 1,);
 
     warn!(log,
           "logging message bar={}", r.foo.bar(); "x" => 1, "y" => r.foo.bar());
-    slog_warn!(log,
+    crate::warn!(log,
                "logging message bar={}", r.foo.bar();
                "x" => 1, "y" => r.foo.bar());
 
     warn!(log, "logging message bar={}", r.foo.bar(); "x" => r.foo.bar());
-    slog_warn!(log, "logging message bar={}", r.foo.bar(); "x" => r.foo.bar());
+    crate::warn!(log, "logging message bar={}", r.foo.bar(); "x" => r.foo.bar());
 
     warn!(log, "logging message bar={}", r.foo.bar();
           "x" => r.foo.bar(), "y" => r.foo.bar());
-    slog_warn!(log,
+    crate::warn!(log,
                "logging message bar={}", r.foo.bar();
                "x" => r.foo.bar(), "y" => r.foo.bar());
 
@@ -353,7 +353,7 @@ fn expressions() {
     warn!(log,
           "logging message bar={}", r.foo.bar();
           "x" => r.foo.bar(), "y" => r.foo.bar(),);
-    slog_warn!(log,
+    crate::warn!(log,
                "logging message bar={}", r.foo.bar();
                "x" => r.foo.bar(), "y" => r.foo.bar(),);
 
@@ -376,8 +376,9 @@ fn expressions() {
         let _log = log.new(o!(x.clone()));
         let _log = log.new(o!("foo" => "bar", x.clone()));
         let _log = log.new(o!("foo" => "bar", x.clone(), x.clone()));
-        let _log = log
-            .new(slog_o!("foo" => "bar", x.clone(), x.clone(), "aaa" => "bbb"));
+        let _log = log.new(
+            crate::o!("foo" => "bar", x.clone(), x.clone(), "aaa" => "bbb"),
+        );
 
         info!(log, "message"; "foo" => "bar", &x, &x, "aaa" => "bbb");
     }
