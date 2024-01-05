@@ -65,6 +65,9 @@ release_max_level_info  = []
 release_max_level_debug = []
 release_max_level_trace = []
 
+# Suppress warnings relating to uses of the macros in Rust 2018
+suppress-macro2018-warnings = []
+
 [dependencies]
 erased-serde = { version = "0.3", optional = true }
 serde = { version = "1", optional = true }

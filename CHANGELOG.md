@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Give warnings when using old `slog_` prefixed macros (ex. `slog_log!)
+  * These are redundant with Rust 2018 macro paths `slog::log!`
+  * These warnings can be explicitly disabled with the `suppress-macro2018-warnings` feature
+
 ### 2.8.0-beta.2 - 2024-01-05
 
 * Add `ErrorRef` wrapper to enable logging error references (PR #327)
