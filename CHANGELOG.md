@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Add `ErrorRef` wrapper to enable logging error references (PR #327)
   * The `#` error formatter in macros was updated to automatically select `ErrorValue` or `ErrorRef` (PR #328)
+* Add `flush` method to `Drain` trait (PR #322). 
+  Only the `Async` drain supports this feature and checks if
+  the channel is emptied.
 
 ### 2.8.0-beta.1 - 2023-09-09
 
