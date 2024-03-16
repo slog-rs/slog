@@ -306,11 +306,13 @@ extern crate erased_serde;
 extern crate serde;
 
 use core::str::FromStr;
+use core::time::Duration;
 use core::{convert, fmt, result};
 #[cfg(feature = "std")]
 use std::borrow::{Cow, ToOwned};
 #[cfg(feature = "std")]
 use std::boxed::Box;
+use std::io;
 #[cfg(feature = "std")]
 use std::rc::Rc;
 #[cfg(feature = "std")]
@@ -1322,6 +1324,12 @@ where
         self.drain.log(record, &chained)
     }
 
+    /// Flush the underlying drain. See the the underlying `Drain`s implementation for further
+    /// information.
+    fn flush(&self, interval: Duration) -> io::Result<()> {
+        self.drain.flush(interval)
+    }
+
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         self.drain.is_enabled(level)
@@ -1370,6 +1378,12 @@ pub trait Drain {
         values: &OwnedKVList,
     ) -> result::Result<Self::Ok, Self::Err>;
 
+    /// Flush the drain if possible. Certain implementations, e.g. `Async`, provide this method.
+    /// The flush will poll with interval `interval` till all records have been
+    /// processed (what that means is dependent on the actual `Drain`).
+    fn flush(&self, _interval: Duration) -> io::Result<()> {
+        return Err(io::Error::from(io::ErrorKind::Unsupported));
+    }
     /// **Avoid**: Check if messages at the specified log level are **maybe**
     /// enabled for this logger.
     ///
@@ -1717,6 +1731,10 @@ impl<D: Drain + ?Sized> Drain for Box<D> {
     fn is_enabled(&self, level: Level) -> bool {
         (**self).is_enabled(level)
     }
+    #[inline]
+    fn flush(&self, interval: Duration) -> io::Result<()> {
+        (**self).flush(interval)
+    }
 }
 
 impl<D: Drain + ?Sized> Drain for Arc<D> {
@@ -1732,6 +1750,10 @@ impl<D: Drain + ?Sized> Drain for Arc<D> {
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         (**self).is_enabled(level)
+    }
+    #[inline]
+    fn flush(&self, interval: Duration) -> io::Result<()> {
+        (**self).flush(interval)
     }
 }
 
@@ -1802,6 +1824,11 @@ where
          */
         self.0.is_enabled(level)
     }
+
+    #[inline]
+    fn flush(&self, interval: Duration) -> io::Result<()> {
+        self.0.flush(interval)
+    }
 }
 
 /// `Drain` filtering records by `Record` logging level
@@ -1840,6 +1867,11 @@ impl<D: Drain> Drain for LevelFilter<D> {
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         level.is_at_least(self.1) && self.0.is_enabled(level)
+    }
+
+    #[inline]
+    fn flush(&self, interval: Duration) -> io::Result<()> {
+        self.0.flush(interval)
     }
 }
 
@@ -1881,6 +1913,10 @@ impl<D: Drain, E> Drain for MapError<D, E> {
     fn is_enabled(&self, level: Level) -> bool {
         self.drain.is_enabled(level)
     }
+    #[inline]
+    fn flush(&self, interval: Duration) -> io::Result<()> {
+        self.drain.flush(interval)
+    }
 }
 
 /// `Drain` duplicating records into two other `Drain`s
@@ -1918,6 +1954,10 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         self.0.is_enabled(level) || self.1.is_enabled(level)
+    }
+    #[inline]
+    fn flush(&self, interval: Duration) -> io::Result<()> {
+        self.0.flush(interval)
     }
 }
 
@@ -1964,6 +2004,10 @@ where
     fn is_enabled(&self, level: Level) -> bool {
         self.0.is_enabled(level)
     }
+    #[inline]
+    fn flush(&self, interval: Duration) -> io::Result<()> {
+        self.0.flush(interval)
+    }
 }
 
 /// `Drain` ignoring result
@@ -1998,6 +2042,10 @@ impl<D: Drain> Drain for IgnoreResult<D> {
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         self.drain.is_enabled(level)
+    }
+    #[inline]
+    fn flush(&self, interval: Duration) -> io::Result<()> {
+        self.drain.flush(interval)
     }
 }
 
@@ -2093,6 +2141,13 @@ impl<D: Drain> Drain for std::sync::Mutex<D> {
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         self.lock().ok().map_or(true, |lock| lock.is_enabled(level))
+    }
+    #[inline]
+    fn flush(&self, interval: Duration) -> io::Result<()> {
+        match self.lock() {
+            Err(_) => Ok(()),
+            Ok(d) => d.flush(interval),
+        }
     }
 }
 // }}}
