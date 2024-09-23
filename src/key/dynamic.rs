@@ -1,36 +1,11 @@
-#[cfg(not(feature = "std"))]
 use alloc::borrow::Cow;
-#[cfg(not(feature = "std"))]
 use alloc::string::{String, ToString};
-#[cfg(not(feature = "std"))]
 use core::clone::Clone;
-#[cfg(not(feature = "std"))]
 use core::cmp::PartialEq;
-#[cfg(not(feature = "std"))]
 use core::convert::{AsRef, From};
-#[cfg(not(feature = "std"))]
 use core::fmt;
-#[cfg(not(feature = "std"))]
 use core::hash::{Hash, Hasher};
-#[cfg(not(feature = "std"))]
 use core::iter::{FromIterator, IntoIterator};
-
-#[cfg(feature = "std")]
-use std::borrow::Cow;
-#[cfg(feature = "std")]
-use std::cmp::PartialEq;
-#[cfg(feature = "std")]
-use std::convert::{AsRef, From};
-#[cfg(feature = "std")]
-use std::fmt;
-#[cfg(feature = "std")]
-use std::hash::{Hash, Hasher};
-#[cfg(feature = "std")]
-use std::iter::{FromIterator, IntoIterator};
-#[cfg(feature = "std")]
-use std::string::String;
-#[cfg(feature = "std")]
-use std::string::ToString;
 
 /// Opaque Key is a representation of a key.
 ///

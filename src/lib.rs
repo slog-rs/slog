@@ -279,41 +279,27 @@
 // {{{ Imports & meta
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
-#![no_std]
+#![warn(
+    // Use `core` and `alloc` instead of `std` wherever possible
+    clippy::alloc_instead_of_core,
+    clippy::std_instead_of_core,
+    clippy::std_instead_of_alloc,
+)]
+#![cfg_attr(not(feature = "std"), no_std)]
 
-#[cfg(not(feature = "std"))]
 extern crate alloc;
-#[macro_use]
-#[cfg(feature = "std")]
-extern crate std;
 
 mod key;
 pub use self::key::Key;
-#[cfg(not(feature = "std"))]
+
 use alloc::borrow::{Cow, ToOwned};
-#[cfg(not(feature = "std"))]
 use alloc::boxed::Box;
-#[cfg(not(feature = "std"))]
 use alloc::rc::Rc;
-#[cfg(not(feature = "std"))]
 use alloc::string::String;
-#[cfg(not(feature = "std"))]
 use alloc::{sync::Arc, vec::Vec};
 
 use core::str::FromStr;
 use core::{convert, fmt, result};
-#[cfg(feature = "std")]
-use std::borrow::{Cow, ToOwned};
-#[cfg(feature = "std")]
-use std::boxed::Box;
-#[cfg(feature = "std")]
-use std::rc::Rc;
-#[cfg(feature = "std")]
-use std::string::String;
-#[cfg(feature = "std")]
-use std::sync::Arc;
-#[cfg(feature = "std")]
-use std::vec::Vec;
 // }}}
 
 // {{{ Macros
@@ -2434,7 +2420,7 @@ fn filter_level_to_string_and_from_str_are_compatible() {
 #[cfg(all(test, feature = "std"))]
 fn assert_to_string_from_str<T>(expected: T)
 where
-    T: std::string::ToString + FromStr + PartialEq + fmt::Debug,
+    T: alloc::string::ToString + FromStr + PartialEq + fmt::Debug,
     <T as FromStr>::Err: fmt::Debug,
 {
     let string = expected.to_string();
@@ -3926,7 +3912,7 @@ pub enum Error {
     /// `io::Error` (not available in ![no_std] mode)
     Io(std::io::Error),
     /// `fmt::Error`
-    Fmt(std::fmt::Error),
+    Fmt(core::fmt::Error),
     /// Other error
     Other,
 }
@@ -3996,7 +3982,7 @@ impl std::error::Error for Error {
 
 #[cfg(feature = "std")]
 impl core::fmt::Display for Error {
-    fn fmt(&self, fmt: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, fmt: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match *self {
             Error::Io(ref e) => e.fmt(fmt),
             Error::Fmt(ref e) => e.fmt(fmt),

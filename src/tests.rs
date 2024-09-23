@@ -34,7 +34,7 @@ mod std_only {
             &self,
             record: &Record<'_>,
             values: &OwnedKVList,
-        ) -> std::result::Result<Self::Ok, Self::Err> {
+        ) -> core::result::Result<Self::Ok, Self::Err> {
             struct ErrorSerializer(String);
 
             impl Serializer for ErrorSerializer {
@@ -66,7 +66,7 @@ mod std_only {
     }
 
     #[derive(Debug)]
-    struct TestError<E = std::string::ParseError>(&'static str, Option<E>);
+    struct TestError<E = alloc::string::ParseError>(&'static str, Option<E>);
 
     impl TestError {
         fn new(message: &'static str) -> Self {
@@ -112,7 +112,7 @@ mod std_only {
                 &self,
                 record: &Record<'_>,
                 values: &OwnedKVList,
-            ) -> std::result::Result<Self::Ok, Self::Err> {
+            ) -> core::result::Result<Self::Ok, Self::Err> {
                 assert_eq!(
                     format!("{}", record.msg()),
                     format!("{:?}", values)
