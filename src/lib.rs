@@ -1069,7 +1069,7 @@ macro_rules! __slog_builtin {
 /// In an essence `Logger` instance holds two pieces of information:
 ///
 /// * drain - destination where to forward logging `Record`s for
-/// processing.
+///   processing.
 /// * context - list of key-value pairs associated with it.
 ///
 /// The root `Logger` is created with a `Drain` that will be cloned to every
