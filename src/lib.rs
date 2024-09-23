@@ -2953,7 +2953,7 @@ where
 // {{{ Value
 /// Value that can be serialized
 ///
-/// Types that implement this type implement custom serialization in the
+/// Types that implement this trait implement custom serialization in the
 /// structured part of the log macros. Without an implementation of `Value` for
 /// your type you must emit using either the `?` "debug", `#?` "pretty-debug",
 /// `%` "display", `#%` "alternate display" or [`SerdeValue`](trait.SerdeValue.html)

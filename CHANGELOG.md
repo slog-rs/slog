@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+* doc: Fix typo in slog::Value docs (issue #335)
+  * Thank you to @larswirzenius for noticing this!
 * doc: Fix "lazy continuation" in `slog::Logger` doc
   * This mistake was caught by a new lint [`#[warn(clippy::doc_lazy_continuation)]`](https://rust-lang.github.io/rust-clippy/rust-1.81.0/index.html#/doc_lazy_continuation)
 * Fix some internal warnings
