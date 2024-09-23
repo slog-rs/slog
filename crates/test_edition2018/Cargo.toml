@@ -2,6 +2,7 @@
 name = "test_edition2018"
 version = "0.0.0"
 description = "A crate for testing 2018-style macro imports"
+edition = "2018"
 authors = ["Yusuke Sasaki <yusuke.sasaki.nuem@gmail.com>"]
 publish = false
 
