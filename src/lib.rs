@@ -278,7 +278,7 @@
 
 // {{{ Imports & meta
 #![warn(missing_docs)]
-#![deny(rust_2018_idioms)]
+#![warn(rust_2018_idioms)]
 #![no_std]
 
 #[cfg(not(feature = "std"))]
@@ -299,11 +299,6 @@ use alloc::rc::Rc;
 use alloc::string::String;
 #[cfg(not(feature = "std"))]
 use alloc::{sync::Arc, vec::Vec};
-
-#[cfg(feature = "nested-values")]
-extern crate erased_serde;
-#[cfg(feature = "nested-values")]
-extern crate serde;
 
 use core::str::FromStr;
 use core::{convert, fmt, result};

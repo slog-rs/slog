@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Fix some internal warnings
   * Example: Avoid the new [`#[warn(unexpected_cfgs)]`](https://blog.rust-lang.org/2024/05/06/check-cfg.html) lint.
   * None of these should affect user crates
+* nested-values: Fix CI failure caused by `#[deny(unused_extern_crates)]` lint
+  * Switch `#[deny(rust_2018_idioms)]` to `#[warn(...)]` to avoid unnecessary build failures in the future.
+  * I don't *think* this should affect user code.
 
 ### 2.8.0-beta.2 - 2024-01-05
 
