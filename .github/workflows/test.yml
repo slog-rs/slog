@@ -52,7 +52,7 @@ jobs:
           #
           # This is used so that clippy & tests are run on a reliable reference point.
           # If clippy has any warnings, this will fail the build (we run with --deny warnings)
-          - 1.72
+          - 1.81
           # The most recent version of stable rust (automatically updated)
           #
           # Sometimes, this is exactly the same as the hardcoded right above.
