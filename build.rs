@@ -20,4 +20,10 @@ fn main() {
     if !is_emscripten {
         println!("cargo:rustc-cfg=integer128");
     }
+
+    // In Rust 1.80, cfg names are validated at compile time
+    // See blog: https://blog.rust-lang.org/2024/05/06/check-cfg.html
+    //
+    // On prior versions, this directive is ignored.
+    println!("cargo:rustc-check-cfg=cfg(integer128)");
 }

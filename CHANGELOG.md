@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+* Fix some internal warnings
+  * Example: Avoid the new [`#[warn(unexpected_cfgs)]`](https://blog.rust-lang.org/2024/05/06/check-cfg.html) lint.
+  * None of these should affect user crates
 
 ### 2.8.0-beta.2 - 2024-01-05
 
