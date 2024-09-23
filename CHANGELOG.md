@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* ci: Make clippy warnings give CI warnings, not errors
+
 ### 2.8.0-beta.2 - 2024-01-05
 
 * Add `ErrorRef` wrapper to enable logging error references (PR #327)

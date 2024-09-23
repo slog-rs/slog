@@ -19,6 +19,9 @@ env:
 
 jobs:
   test:
+    permissions:
+      # Needed for auguwu/clippy-action
+      checks: write
     # Only run on PRs if the source branch is on someone else's repo
     if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
 
@@ -116,19 +119,9 @@ jobs:
         continue-on-error: false
 
       - name: Clippy
-        # With the exception of nightly, we use --deny warnings to treat warnings on errors.
-        run: |
-          cargo clippy --all-targets --verbose --features "${{ matrix.features }}" -- --deny "${{ matrix.rust != 'nightly' && 'warnings' || 'clippy::correctness' }}"
-        # Clippy is required to succeed on hardcoded versions, and may not give any warnings.
-        #
-        # However, on automatically updated versions of rust (both stable & nightly) we allow clippy to fail.
-        # This is in case automatic updates have introduced new lints that would give warnings/errors
-        # about code that was previously allowed.
-        #
-        # This is the main reason that we have a 'hardcoded recent stable' version.
-        # We want as many lints from recent stable possible
-        # but don't want the surprises of automatic updates to our stable rust.
-        #
-        # Also, include an explicit exception for Rust 1.56.
-        # We don't want to deal with the fact clippy changed the names of some lints.
-        continue-on-error: ${{ !contains(matrix.rust, '1.') || matrix.rust == '1.56' }}
+        # TODO: Use actual auguwu/clippy-action action instead of my fork
+        uses: Techcable/clippy-action@input/features
+        with:
+          check-args: --all-targets
+          features: "${{ matrix.features }}"
+          token: ${{secrets.GITHUB_TOKEN}}
