@@ -35,7 +35,7 @@ jobs:
           # you need to remove this from the main list and manually add the desired
           # feature/version combinations to 'include'
           # This hack is not currently needed because serde-erased v0.3 supports our MSRV.
-          - 1.56
+          - 1.61
 
           # Per the MSRV policy (discussed in Wiki/docs), this places an upper bound on the MSRV
           #
@@ -44,8 +44,8 @@ jobs:
           #
           # Intermediate Releases (between MSRV and latest stable)
           # Be careful not to add these needlessly; they hold up CI
-          #
-          - 1.61
+          # <nothing currently>
+
           # The most recent version of stable rust (automatically updated)
           - stable
           - nightly

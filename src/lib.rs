@@ -290,6 +290,11 @@
     clippy::std_instead_of_core,
     clippy::std_instead_of_alloc,
 )]
+#![allow(
+    // Thiw lint was triggered by bumping the MSRV to 1.61
+    // TODO: Apply suggestions rather than suppressing
+    clippy::uninlined_format_args,
+)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate alloc;
