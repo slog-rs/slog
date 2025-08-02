@@ -85,7 +85,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   * **WARNING**: This is a breaking change that we couldn't avoid. Users using
     explicitly macro import (like `#[macro_use(slog_o)]`) must add
     `__slog_builtin` to the import list.
-* Bump miminum supported Rust version to 1.26
+* Bump minimum supported Rust version to 1.26
 
 ## 2.3.3 - 2018-07-20
 

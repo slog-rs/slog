@@ -2323,7 +2323,7 @@ fn level_from_str() {
     assert_from_str(Level::Info, "i");
     assert_from_str(Level::Info, "in");
     assert_from_str(Level::Info, "inf");
-    refute_from_str::<Level>("infor");
+    refute_from_str::<Level>("infor"); // spellchecker:ignore
 
     refute_from_str::<Level>("?");
     refute_from_str::<Level>("info ");
@@ -2353,7 +2353,7 @@ fn filter_level_from_str() {
     assert_from_str(FilterLevel::Info, "i");
     assert_from_str(FilterLevel::Info, "in");
     assert_from_str(FilterLevel::Info, "inf");
-    refute_from_str::<FilterLevel>("infor");
+    refute_from_str::<FilterLevel>("infor"); // spellchecker:ignore
 
     refute_from_str::<FilterLevel>("?");
     refute_from_str::<FilterLevel>("info ");
@@ -2738,7 +2738,7 @@ pub trait Serializer {
     ///
     /// Error values are a bit special as their `Display` implementation doesn't show full
     /// information about the type but must be retrieved using `source()`. This can be used
-    /// for formatting sources of errors differntly.
+    /// for formatting sources of errors differently.
     ///
     /// The default implementation of this method formats the sources separated with `: `.
     /// Serializers are encouraged to take advantage of the type information and format it as
@@ -2793,7 +2793,7 @@ pub enum BytesKind {
     /// Format the bytes as a "value"
     ///
     /// By default, this prints as uppercase hex prefixed with `0x`,
-    /// implicitly seperated by underscores
+    /// implicitly separated by underscores
     ///
     /// For example, `sha1("foo")` would format as `0xF1D2_D2F9_24E9_86AC_86FD_F7B3_6C94_BCDF_32BE_EC15`
     /// Notice the leading `0x` and the underscores.
@@ -2827,7 +2827,7 @@ struct BytesAsFmt<'a> {
 impl<'a> fmt::Display for BytesAsFmt<'a> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         use core::fmt::Write;
-        let (use_prefix, seperate_with_underscore) = match self.kind {
+        let (use_prefix, separate_with_underscore) = match self.kind {
             BytesKind::Stream => (true, false),
             BytesKind::Value => (true, true),
             BytesKind::PlainValue => (false, false),
@@ -2836,7 +2836,7 @@ impl<'a> fmt::Display for BytesAsFmt<'a> {
             f.write_str("0x")?;
         }
         for (index, byte) in self.bytes.iter().enumerate() {
-            if seperate_with_underscore && (index % 2) == 0 {
+            if separate_with_underscore && (index % 2) == 0 {
                 f.write_char('_')?;
             }
             write!(f, "{:02X}", byte)?;

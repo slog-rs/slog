@@ -1,0 +1,20 @@
+# Checks spelling with typos
+# This has very few false positives, only checking for known misspellings (similar to codespell).
+# This action is based on https://github.com/crate-ci/typos/blob/master/docs/github-action.md
+name: Check Spelling
+on: [push, pull_request]
+
+env:
+  CLICOLOR: 1
+
+permissions:
+  contents: read
+
+jobs:
+  typos:
+    name: Check spelling with typos
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run typos (pinned version)
+      uses: crate-ci/typos@v1.35.1

@@ -66,8 +66,8 @@ jobs:
           - nightly
         # NOTE: Features to test must be specified manually. They are applied to all versions separately.
         #
-        # This has the advantage of being more flexibile and thorough
-        # This has the disadvantage of being more vebrose
+        # This has the advantage of being more flexible and thorough
+        # This has the disadvantage of being more verbose
         #
         # Specific feature combos can be overridden per-version with 'include' and 'ecclude'
         features:
