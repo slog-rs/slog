@@ -19,7 +19,7 @@ fn main() {
 
     // Move obj2 into a closure. Since it's !Send, this only works
     // with nothreads feature.
-    let obj2 = obj.clone();
+    let obj2 = std::panic::AssertUnwindSafe(obj.clone());
     let sublog = log.new(o!("obj.val" => slog::FnValue(move |_| {
         format!("{}", obj2.val.borrow())
     })));
