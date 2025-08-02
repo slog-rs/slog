@@ -45,7 +45,7 @@ lto = true
 debug-assertions = false
 
 [features]
-nested-values = ["erased-serde", "serde", "serde_derive"]
+nested-values = ["erased-serde", "serde"]
 dynamic-keys = []
 std = []
 nothreads = []
@@ -68,7 +68,6 @@ release_max_level_trace = []
 [dependencies]
 erased-serde = { version = "0.3", optional = true }
 serde = { version = "1", optional = true }
-serde_derive = { version = "1", optional = true }
 
 [dev-dependencies]
 # NOTE: This is just a macro (not a runtime dependency)
@@ -78,6 +77,7 @@ serde_derive = { version = "1", optional = true }
 #
 # For the time being, this is only needed for tests.
 rustversion = "1"
+serde_derive = "1"
 
 [[example]]
 name = "singlethread"

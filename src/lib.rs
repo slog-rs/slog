@@ -2929,10 +2929,23 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
 /// # }
 /// ```
 #[cfg(feature = "nested-values")]
-#[derive(Clone, serde_derive::Serialize)]
+#[derive(Clone)]
 pub struct Serde<T>(pub T)
 where
     T: serde::Serialize + Clone + Send + 'static;
+
+#[cfg(feature = "nested-values")]
+impl<T: serde::Serialize + Clone + Send + 'static> serde::Serialize
+    for Serde<T>
+{
+    #[inline]
+    fn serialize<S>(&self, serializer: S) -> result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        serde::Serialize::serialize(&self.0, serializer)
+    }
+}
 
 #[cfg(feature = "nested-values")]
 impl<T> SerdeValue for Serde<T>
