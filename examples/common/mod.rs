@@ -5,7 +5,7 @@ pub struct PrintlnSerializer;
 
 impl Serializer for PrintlnSerializer {
     fn emit_arguments(&mut self, key: Key, val: &fmt::Arguments<'_>) -> Result {
-        print!(", {}={}", key, val);
+        print!(", {key}={val}");
         Ok(())
     }
 }

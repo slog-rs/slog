@@ -27,7 +27,7 @@ edition = "2018"
 # - .github/workflows/test.yml (Github Actions)
 # - README.md
 # - clippy.toml (Clippy config)
-rust-version = "1.56"
+rust-version = "1.61"
 
 [profile.release]
 opt-level = 3
@@ -59,7 +59,7 @@ nested-values = ["erased-serde", "serde"]
 # without breaking other libraries.
 dynamic-keys = []
 # Require the standard library.
-std = []
+std = ["serde?/std", "anyhow?/std"]
 # DANGER: Remove the Send + Sync bound from the default logger and drain.
 #
 # This feature is highly discouraged, because it could break other libraries relying on slog.
@@ -100,7 +100,6 @@ release_max_level_debug = []
 release_max_level_trace = []
 
 [dependencies]
-# TODO: The std feature should imply serde?/std, but weak feature dependencies need Rust 1.60
 serde = { version = "1", optional = true, default-features = false }
 anyhow = { version = "1", optional = true, default-features = false }
 parking_lot = { version = "0.12", optional = true }

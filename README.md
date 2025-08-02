@@ -21,8 +21,8 @@
       <img src="https://docs.rs/slog/badge.svg" alt="docs-rs: release versions documentation">
   </a>
   <!-- Badge showing our Minimum Supported Rust Version, along with a link to the release announcement on the official blog -->
-  <a href="https://blog.rust-lang.org/2021/10/21/Rust-1.56.0/">
-      <img src="https://img.shields.io/badge/rust-1.56%2B-orange.svg">
+  <a href="https://blog.rust-lang.org/2022/05/19/Rust-1.61.0/">
+      <img src="https://img.shields.io/badge/rust-1.61%2B-blue.svg">
   </a>
   <br>
     <strong><a href="https://github.com/slog-rs/slog/wiki/Getting-started">Getting started</a></strong>
