@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   * The crate almost passes clippy::pedantic now.
   * None of these should affect user crates
 * Stop requiring the `serde_derive` crate to implement the `nested-values` feature.
+* The `nested-values` feature no longer requires `serde/std` (was a mistake).
 * nested-values: Fix CI failure caused by `#[deny(unused_extern_crates)]` lint
   * Switch `#[deny(rust_2018_idioms)]` to `#[warn(...)]` to avoid unnecessary build failures in the future.
   * I don't *think* this should affect user code.
