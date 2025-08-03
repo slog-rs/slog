@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 * Minimum Supported Rust Version is now [1.56](https://blog.rust-lang.org/2021/10/21/Rust-1.56.0/).
   This was already required if you wanted to use the `nested-values` feature. 
+* Take advantage of the fact that in 1.81 [`std::error::Error`] has been moved to `core`.
+  On this rust version, slog now supports the error trait without requiring `std`.
 * Alias the `slog::Never` type to [`std::convert::Infallible`], fixing issue #209.
 * doc: Fix typo in slog::Value docs (issue #335)
   * Thank you to @larswirzenius for noticing this!

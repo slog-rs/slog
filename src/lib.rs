@@ -305,6 +305,13 @@ use alloc::{sync::Arc, vec::Vec};
 
 use core::str::FromStr;
 use core::{convert, fmt, result};
+
+#[cfg(all(not(feature = "std"), has_std_error))]
+// re-export as StdError is intended usage
+use core::error::Error as StdError;
+#[cfg(feature = "std")]
+use std::error::Error as StdError;
+
 // }}}
 
 // {{{ Macros
@@ -2015,10 +2022,10 @@ where
 }
 
 #[cfg(feature = "std")]
-impl<D> std::error::Error for MutexDrainError<D>
+impl<D> StdError for MutexDrainError<D>
 where
     D: Drain,
-    D::Err: fmt::Debug + fmt::Display + std::error::Error,
+    D::Err: fmt::Debug + fmt::Display + StdError,
 {
     // Deprecated in Rust 1.42
     #[allow(deprecated)]
@@ -2029,7 +2036,7 @@ where
         }
     }
 
-    fn cause(&self) -> Option<&dyn std::error::Error> {
+    fn cause(&self) -> Option<&dyn StdError> {
         match *self {
             MutexDrainError::Mutex => None,
             MutexDrainError::Drain(ref e) => Some(e),
@@ -2737,7 +2744,7 @@ pub trait Serializer {
         value.serialize_fallback(key, &mut SerializerForward(self))
     }
 
-    /// Emit a type implementing `std::error::Error`
+    /// Emit a type implementing [`std::error::Error`]
     ///
     /// Error values are a bit special as their `Display` implementation doesn't show full
     /// information about the type but must be retrieved using `source()`. This can be used
@@ -2747,13 +2754,13 @@ pub trait Serializer {
     /// Serializers are encouraged to take advantage of the type information and format it as
     /// appropriate.
     ///
-    /// This method is only available in `std` because the `Error` trait is not available
-    /// without `std`.
-    #[cfg(feature = "std")]
+    /// This method is available if either the `std` feature is enabled,
+    /// or if [`core::error::Error`] is supported by the current rust version (1.81+)
+    #[cfg(has_std_error)]
     fn emit_error(
         &mut self,
         key: Key,
-        error: &(dyn std::error::Error + 'static),
+        error: &(dyn StdError + 'static),
     ) -> Result {
         self.emit_arguments(key, &format_args!("{}", ErrorAsFmt(error)))
     }
@@ -2852,10 +2859,10 @@ impl fmt::Display for BytesAsFmt<'_> {
 ///
 /// This avoids allocation in the default implementation of `Serializer::emit_error()`.
 /// This is only enabled with `std` as the trait is only available there.
-#[cfg(feature = "std")]
-struct ErrorAsFmt<'a>(pub &'a (dyn std::error::Error + 'static));
+#[cfg(has_std_error)]
+struct ErrorAsFmt<'a>(pub &'a (dyn StdError + 'static));
 
-#[cfg(feature = "std")]
+#[cfg(has_std_error)]
 impl fmt::Display for ErrorAsFmt<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         // For backwards compatibility
@@ -3367,11 +3374,11 @@ where
 ///
 /// This is an internal implementation detail of the `kv!` macro and should not
 /// be used directly.
-#[cfg(feature = "std")]
+#[cfg(has_std_error)]
 #[doc(hidden)]
 pub struct ErrorTagWrapper<E>(E);
 
-#[cfg(feature = "std")]
+#[cfg(has_std_error)]
 #[test]
 fn test_error_tag_wrapper() {
     #[derive(Debug, Clone, Copy)]
@@ -3381,7 +3388,7 @@ fn test_error_tag_wrapper() {
             f.write_str(self.0)
         }
     }
-    impl std::error::Error for MyError {}
+    impl StdError for MyError {}
     let e = MyError("everything is on fire");
     assert_eq!(
         {
@@ -3399,16 +3406,16 @@ fn test_error_tag_wrapper() {
 ///
 /// This is an internal implementation detail of the `kv!` macro and should not
 /// be used directly.
-#[cfg(feature = "std")]
+#[cfg(has_std_error)]
 #[doc(hidden)]
 #[derive(Debug, PartialEq, Eq)]
 pub struct ErrorValueTag;
-#[cfg(feature = "std")]
+#[cfg(has_std_error)]
 impl ErrorValueTag {
     /// Create a [`Value`] wrapper for an owned error value.
     pub fn wrap<E>(self, e: E) -> ErrorValue<E>
     where
-        E: std::error::Error,
+        E: StdError,
     {
         ErrorValue(e)
     }
@@ -3418,7 +3425,7 @@ impl ErrorValueTag {
 ///
 /// This is an internal implementation detail of the `kv!` macro and should not
 /// be used directly.
-#[cfg(feature = "std")]
+#[cfg(has_std_error)]
 #[doc(hidden)]
 pub trait ErrorValueKind {
     #[inline]
@@ -3426,23 +3433,23 @@ pub trait ErrorValueKind {
         ErrorValueTag
     }
 }
-#[cfg(feature = "std")]
-impl<E: std::error::Error> ErrorValueKind for ErrorTagWrapper<E> {}
+#[cfg(has_std_error)]
+impl<E: StdError> ErrorValueKind for ErrorTagWrapper<E> {}
 
 /// Unit struct indicating that the content of `ErrorTagWrapper` was a reference.
 ///
 /// This is an internal implementation detail of the `kv!` macro and should not
 /// be used directly.
-#[cfg(feature = "std")]
+#[cfg(has_std_error)]
 #[doc(hidden)]
 #[derive(Debug, PartialEq, Eq)]
 pub struct ErrorRefTag;
-#[cfg(feature = "std")]
+#[cfg(has_std_error)]
 impl ErrorRefTag {
     /// Create a [`Value`] wrapper for an error reference.
     pub fn wrap<E>(self, e: &E) -> ErrorRef<'_, E>
     where
-        E: ?Sized + 'static + std::error::Error,
+        E: ?Sized + 'static + StdError,
     {
         ErrorRef(e)
     }
@@ -3452,7 +3459,7 @@ impl ErrorRefTag {
 ///
 /// This is an internal implementation detail of the `kv!` macro and should not
 /// be used directly.
-#[cfg(feature = "std")]
+#[cfg(has_std_error)]
 #[doc(hidden)]
 pub trait ErrorRefKind {
     #[inline]
@@ -3463,11 +3470,11 @@ pub trait ErrorRefKind {
         ErrorRefTag
     }
 }
-#[cfg(feature = "std")]
+#[cfg(has_std_error)]
 impl<ERef> ErrorRefKind for &&ErrorTagWrapper<ERef>
 where
     ERef: core::ops::Deref,
-    ERef::Target: std::error::Error,
+    ERef::Target: StdError,
 {
 }
 
@@ -3481,13 +3488,13 @@ where
 /// without `std`.
 ///
 /// Use [`ErrorRef`] if you have an error reference.
-#[cfg(feature = "std")]
-pub struct ErrorValue<E: std::error::Error>(pub E);
+#[cfg(has_std_error)]
+pub struct ErrorValue<E: StdError>(pub E);
 
-#[cfg(feature = "std")]
+#[cfg(has_std_error)]
 impl<E> Value for ErrorValue<E>
 where
-    E: 'static + std::error::Error,
+    E: 'static + StdError,
 {
     fn serialize(
         &self,
@@ -3505,17 +3512,16 @@ where
 /// do implement `std::error::Error` so that they can be logged.
 /// This is usually not used directly but using `#error` in the macros.
 ///
-/// This struct is only available in `std` because the `Error` trait is not available
-/// without `std`.
+/// This struct is available if either `std` or [`core::error::Error`] is.
 ///
 /// Use [`ErrorValue`] if you want to move ownership of the error value.
-#[cfg(feature = "std")]
-pub struct ErrorRef<'a, E: ?Sized + std::error::Error>(pub &'a E);
+#[cfg(has_std_error)]
+pub struct ErrorRef<'a, E: ?Sized + StdError>(pub &'a E);
 
-#[cfg(feature = "std")]
+#[cfg(has_std_error)]
 impl<E> Value for ErrorRef<'_, E>
 where
-    E: 'static + std::error::Error,
+    E: 'static + StdError,
 {
     fn serialize(
         &self,
@@ -3920,7 +3926,6 @@ where
 
 // {{{ Error
 #[derive(Debug)]
-#[cfg(feature = "std")]
 /// Serialization Error
 pub enum Error {
     /// `io::Error` (not available in ![no_std] mode)
@@ -3964,20 +3969,22 @@ impl From<Error> for std::io::Error {
     }
 }
 
-#[cfg(feature = "std")]
-impl std::error::Error for Error {
+#[cfg(has_std_error)]
+impl StdError for Error {
     // Deprecated in Rust 1.42
     #[allow(deprecated)]
     fn description(&self) -> &str {
         match *self {
+            #[cfg(feature = "std")]
             Error::Io(ref e) => e.description(),
             Error::Fmt(_) => "formatting error",
             Error::Other => "serialization error",
         }
     }
 
-    fn cause(&self) -> Option<&dyn std::error::Error> {
+    fn cause(&self) -> Option<&dyn StdError> {
         match *self {
+            #[cfg(feature = "std")]
             Error::Io(ref e) => Some(e),
             Error::Fmt(ref e) => Some(e),
             Error::Other => None,

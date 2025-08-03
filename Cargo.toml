@@ -93,6 +93,9 @@ optional = true
 default-features = false
 features = ["alloc"]  # erased-serde always requires alloc, and so does slog
 
+[build-dependencies]
+rustversion = "1"
+
 [dev-dependencies]
 # NOTE: This is just a macro (not a runtime dependency)
 #
