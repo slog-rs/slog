@@ -395,7 +395,6 @@ fn expressions() {
     }
 }
 
-#[cfg(integer128)]
 #[test]
 fn integer_128_types() {
     let log = Logger::root(Discard, o!("version" => env!("CARGO_PKG_VERSION")));

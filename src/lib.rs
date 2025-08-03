@@ -2673,12 +2673,10 @@ pub trait Serializer {
     }
     impl_default_as_fmt! {
         /// Emit `u128`
-        #[cfg(integer128)]
         u128 => emit_u128
     }
     impl_default_as_fmt! {
         /// Emit `i128`
-        #[cfg(integer128)]
         i128 => emit_i128
     }
     impl_default_as_fmt! {
@@ -3042,9 +3040,7 @@ impl_value_for!(f32, emit_f32);
 impl_value_for!(u64, emit_u64);
 impl_value_for!(i64, emit_i64);
 impl_value_for!(f64, emit_f64);
-#[cfg(integer128)]
 impl_value_for!(u128, emit_u128);
-#[cfg(integer128)]
 impl_value_for!(i128, emit_i128);
 
 impl Value for () {

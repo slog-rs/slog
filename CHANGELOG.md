@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * nested-values: Fix CI failure caused by `#[deny(unused_extern_crates)]` lint
   * Switch `#[deny(rust_2018_idioms)]` to `#[warn(...)]` to avoid unnecessary build failures in the future.
   * I don't *think* this should affect user code.
+* Always support 128-bit integers, even on the `wasm32-unknown-emscripten` target.
 
 ### 2.8.0-beta.2 - 2024-01-05
 

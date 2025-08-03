@@ -77,9 +77,6 @@ serde = { version = "1", optional = true }
 rustversion = "1"
 serde_derive = "1"
 
-[build-dependencies]
-rustversion = "1"
-
 [[example]]
 name = "singlethread"
 required-features = ["nothreads"]
