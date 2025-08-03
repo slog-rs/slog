@@ -42,11 +42,30 @@ lto = true
 debug-assertions = false
 
 [features]
-nested-values = ["erased-serde", "serde"]
-dynamic-keys = []
-std = []
-nothreads = []
 default = ["std"]
+# Support nesting values in log messages using serde
+#
+# Using this is recommended to improve the detail of log messages.
+# Without it, only flat values like numbers and strings can be logged.
+# This requires the underlying logger to support this feature,
+# usually requiring a nested-values feature flag on the logging backend.
+#
+# NOTE: Using nested-values requires Rust 1.56
+nested-values = ["erased-serde", "serde"]
+# DANGER: Use a String for slog::Key insated of &'static str
+#
+# This is discouraged, becauase it can break other libraries relying on slog.
+# If you really need to dynamically allocate keys, you can use String::leak to achieve the same functionality
+# without breaking other libraries.
+dynamic-keys = []
+# Require the standard library.
+std = []
+# DANGER: Remove the Send + Sync bound from the default logger and drain.
+#
+# This feature is highly discouraged, because it could break other libraries relying on slog.
+# It is possible to achieve the same functionality by using a custom drain parameter to slog::Logger,
+# which will not break other libraries and avoids the overhead of an Arc.
+nothreads = []
 
 max_level_off   = []
 max_level_error = []
@@ -63,8 +82,13 @@ release_max_level_debug = []
 release_max_level_trace = []
 
 [dependencies]
-erased-serde = { version = "0.3", optional = true }
 serde = { version = "1", optional = true }
+
+[dependencies.erased-serde]
+# The 0.3 series of erased-serde has MSRV 1.56, but the 0.4 series requires Rust 1.61
+# Since we want to support old rust, we stick with the old 0.3 series
+version = "0.3"
+optional = true
 
 [dev-dependencies]
 # NOTE: This is just a macro (not a runtime dependency)
