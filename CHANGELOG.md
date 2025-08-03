@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   This was already required if you wanted to use the `nested-values` feature. 
 * Take advantage of the fact that in 1.81 [`std::error::Error`] has been moved to `core`.
   On this rust version, slog now supports the error trait without requiring `std`.
+* Try to give a descriptive error when the `nested-values` feature is unsupported.
 * Alias the `slog::Never` type to [`std::convert::Infallible`], fixing issue #209.
 * doc: Fix typo in slog::Value docs (issue #335)
   * Thank you to @larswirzenius for noticing this!

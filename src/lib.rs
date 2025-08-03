@@ -2900,7 +2900,32 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
         _key: Key,
         _serializer: &mut dyn Serializer,
     ) -> Result<()> {
-        Err(Error::Other)
+        // Use std::io::ErrorKind::Other as a hack to give a custom error,
+        // without adding another variant to the slog::Error enum
+        // TODO: Figure out a better way to
+        #[cfg(feature = "std")]
+        {
+            #[derive(Debug)]
+            struct NestedValuesUnsupportedError {
+                value_type_name: &'static str,
+            }
+            impl fmt::Display for NestedValuesUnsupportedError {
+                fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                    write!(f, "Logger does not implement nested-values and {} does not implement serialize_fallback", self.value_type_name)
+                }
+            }
+            impl StdError for NestedValuesUnsupportedError {}
+            Err(Error::Io(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                Box::new(NestedValuesUnsupportedError {
+                    value_type_name: core::any::type_name::<Self>(),
+                }),
+            )))
+        }
+        #[cfg(not(feature = "std"))]
+        {
+            Err(Error::Other)
+        }
     }
 
     /// Convert to `erased_serialize::Serialize` of the underlying value,
