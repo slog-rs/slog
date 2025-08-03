@@ -534,7 +534,7 @@ fn test_never_type_clone() {
     #[allow(clippy::diverging_sub_expression)]
     fn _do_not_run() {
         let x: Never = panic!("Can't actually construct a Never type here!");
-        let y = x.clone();
+        let y = x;
     }
     // Always pass if we compiled
 }

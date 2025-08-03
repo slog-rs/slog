@@ -4007,17 +4007,12 @@ impl core::fmt::Display for Error {
 // }}}
 
 // {{{ Misc
-/// This type is here just to abstract away lack of `!` type support in stable
-/// rust during time of the release. It will be switched to `!` at some point
-/// and `Never` should not be considered "stable" API.
+/// This type is here just to abstract away lack of `!` type support in stable rust.
+///
+/// It is an alias to [`core::convert::Infallible`],
+/// which will eventually become an alias itself to `!`.
 #[doc(hidden)]
-pub type Never = private::NeverStruct;
-
-mod private {
-    #[doc(hidden)]
-    #[derive(Clone, Debug)]
-    pub struct NeverStruct(());
-}
+pub type Never = core::convert::Infallible;
 
 /// This is not part of "stable" API
 #[doc(hidden)]

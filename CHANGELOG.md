@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 * Minimum Supported Rust Version is now [1.56](https://blog.rust-lang.org/2021/10/21/Rust-1.56.0/).
   This was already required if you wanted to use the `nested-values` feature. 
+* Alias the `slog::Never` type to [`std::convert::Infallible`], fixing issue #209.
 * doc: Fix typo in slog::Value docs (issue #335)
   * Thank you to @larswirzenius for noticing this!
 * doc: Fix "lazy continuation" in `slog::Logger` doc
@@ -20,6 +21,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   * Switch `#[deny(rust_2018_idioms)]` to `#[warn(...)]` to avoid unnecessary build failures in the future.
   * I don't *think* this should affect user code.
 * Always support 128-bit integers, even on the `wasm32-unknown-emscripten` target.
+
+[`std::convert::Infallible`]: https://doc.rust-lang.org/std/convert/enum.Infallible.html
 
 ### 2.8.0-beta.2 - 2024-01-05
 
