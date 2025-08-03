@@ -67,6 +67,17 @@ std = []
 # which will not break other libraries and avoids the overhead of an Arc.
 nothreads = []
 
+#
+# IMPLICIT FEATURES
+#
+# These features are fully supported, but have the same names as dependencies.
+# The current MSRV does not support the new 'dep:...' syntax.
+# We pretend to declare these here to keep the feature docs consistent.
+#
+
+# Implement serde::Value for anyhow::Error
+# anyhow = ["dep:anyhow"]
+
 max_level_off   = []
 max_level_error = []
 max_level_warn  = []
@@ -84,6 +95,7 @@ release_max_level_trace = []
 [dependencies]
 # TODO: The std feature should imply serde?/std, but weak feature dependencies need Rust 1.60
 serde = { version = "1", optional = true, default-features = false }
+anyhow = { version = "1", optional = true, default-features = false }
 
 [dependencies.erased-serde]
 # The 0.3 series of erased-serde has MSRV 1.56, but the 0.4 series requires Rust 1.61

@@ -3299,6 +3299,18 @@ impl Value for dyn StdError + Send + Sync + 'static {
     }
 }
 
+#[cfg(feature = "anyhow")]
+impl Value for anyhow::Error {
+    fn serialize(
+        &self,
+        _record: &Record<'_>,
+        key: Key,
+        serializer: &mut dyn Serializer,
+    ) -> Result {
+        serializer.emit_error(key, self.as_ref())
+    }
+}
+
 /// Explicit lazy-closure `Value`
 pub struct FnValue<V: Value, F>(pub F)
 where

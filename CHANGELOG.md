@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Try to give a descriptive error when the `nested-values` feature is unsupported.
 * Implement slog::Value for `dyn std::error::Error` and `Box<dyn std::error:Error`,
   along with the `Send`/`Sync` versions.
+* Optionally implement slog::Value for [`anyhow::Error`].
+  Requires the `anyhow` feature to be enabled.
 * Alias the `slog::Never` type to [`std::convert::Infallible`], fixing issue #209.
 * doc: Fix typo in slog::Value docs (issue #335)
   * Thank you to @larswirzenius for noticing this!
@@ -29,6 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Always support 128-bit integers, even on the `wasm32-unknown-emscripten` target.
 
 [`std::convert::Infallible`]: https://doc.rust-lang.org/std/convert/enum.Infallible.html
+[`anyhow::Error`]: https://docs.rs/anyhow/1/anyhow/struct.Error.html
 
 ### 2.8.0-beta.2 - 2024-01-05
 
