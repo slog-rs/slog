@@ -3265,6 +3265,40 @@ impl Value for std::io::Error {
     }
 }
 
+#[cfg(has_std_error)]
+impl Value for dyn StdError + 'static {
+    fn serialize(
+        &self,
+        _record: &Record<'_>,
+        key: Key,
+        serializer: &mut dyn Serializer,
+    ) -> Result {
+        serializer.emit_error(key, self)
+    }
+}
+#[cfg(has_std_error)]
+impl Value for dyn StdError + Send + 'static {
+    fn serialize(
+        &self,
+        _record: &Record<'_>,
+        key: Key,
+        serializer: &mut dyn Serializer,
+    ) -> Result {
+        serializer.emit_error(key, self)
+    }
+}
+#[cfg(has_std_error)]
+impl Value for dyn StdError + Send + Sync + 'static {
+    fn serialize(
+        &self,
+        _record: &Record<'_>,
+        key: Key,
+        serializer: &mut dyn Serializer,
+    ) -> Result {
+        serializer.emit_error(key, self)
+    }
+}
+
 /// Explicit lazy-closure `Value`
 pub struct FnValue<V: Value, F>(pub F)
 where
