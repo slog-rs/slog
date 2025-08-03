@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 * Bump MSRV to 1.61.
+* Update `erased-serde` from v0.3 to v0.4
 * Deprecate old prefixed macros like `slog_log`.
   Rust 2018 macro paths make these unnecessary, use `slog::log!` instead.
 
