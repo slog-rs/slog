@@ -105,9 +105,8 @@ anyhow = { version = "1", optional = true, default-features = false }
 parking_lot = { version = "0.12", optional = true }
 
 [dependencies.erased-serde]
-# The 0.3 series of erased-serde has MSRV 1.56, but the 0.4 series requires Rust 1.61
-# Since we want to support old rust, we stick with the old 0.3 series
-version = "0.3"
+# The 0.4 series of erased-serde has MSRV Rust 1.61, just like we do
+version = "0.4"
 optional = true
 default-features = false
 features = ["alloc"]  # erased-serde always requires alloc, and so does slog
