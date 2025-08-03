@@ -3924,17 +3924,8 @@ where
 /// Serialization Error
 pub enum Error {
     /// `io::Error` (not available in ![no_std] mode)
+    #[cfg(feature = "std")]
     Io(std::io::Error),
-    /// `fmt::Error`
-    Fmt(core::fmt::Error),
-    /// Other error
-    Other,
-}
-
-#[derive(Debug)]
-#[cfg(not(feature = "std"))]
-/// Serialization Error
-pub enum Error {
     /// `fmt::Error`
     Fmt(core::fmt::Error),
     /// Other error
@@ -3994,10 +3985,10 @@ impl std::error::Error for Error {
     }
 }
 
-#[cfg(feature = "std")]
 impl core::fmt::Display for Error {
     fn fmt(&self, fmt: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match *self {
+            #[cfg(feature = "std")]
             Error::Io(ref e) => e.fmt(fmt),
             Error::Fmt(ref e) => e.fmt(fmt),
             Error::Other => fmt.write_str("Other serialization error"),
