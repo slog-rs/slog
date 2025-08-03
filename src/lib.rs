@@ -278,7 +278,12 @@
 
 // {{{ Imports & meta
 #![warn(missing_docs)]
-#![warn(rust_2018_idioms)]
+#![warn(
+    rust_2018_compatibility,
+    rust_2018_idioms,
+    rust_2021_compatibility,
+    future_incompatible
+)]
 #![warn(
     // Use `core` and `alloc` instead of `std` wherever possible
     clippy::alloc_instead_of_core,
@@ -2822,7 +2827,7 @@ struct BytesAsFmt<'a> {
     kind: BytesKind,
 }
 
-impl<'a> fmt::Display for BytesAsFmt<'a> {
+impl fmt::Display for BytesAsFmt<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         use core::fmt::Write;
         let (use_prefix, separate_with_underscore) = match self.kind {
@@ -2851,7 +2856,7 @@ impl<'a> fmt::Display for BytesAsFmt<'a> {
 struct ErrorAsFmt<'a>(pub &'a (dyn std::error::Error + 'static));
 
 #[cfg(feature = "std")]
-impl<'a> fmt::Display for ErrorAsFmt<'a> {
+impl fmt::Display for ErrorAsFmt<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         // For backwards compatibility
         // This is fine because we don't need downcasting
@@ -2977,7 +2982,7 @@ where
 /// struct MyNewType(i64);
 ///
 /// impl Value for MyNewType {
-///     fn serialize(&self, _rec: &Record, key: Key, serializer: &mut Serializer) -> Result {
+///     fn serialize(&self, _rec: &Record, key: Key, serializer: &mut dyn Serializer) -> Result {
 ///         serializer.emit_i64(key, self.0)
 ///     }
 /// }
@@ -2997,7 +3002,7 @@ pub trait Value {
     ) -> Result;
 }
 
-impl<'a, V> Value for &'a V
+impl<V> Value for &V
 where
     V: Value + ?Sized,
 {
@@ -3065,7 +3070,7 @@ impl Value for str {
     }
 }
 
-impl<'a> Value for fmt::Arguments<'a> {
+impl Value for fmt::Arguments<'_> {
     fn serialize(
         &self,
         _record: &Record<'_>,
@@ -3178,7 +3183,7 @@ where
     }
 }
 
-impl<'a, T> Value for Cow<'a, T>
+impl<T> Value for Cow<'_, T>
 where
     T: Value + ToOwned + ?Sized,
 {
@@ -3193,7 +3198,7 @@ where
 }
 
 #[cfg(feature = "std")]
-impl<'a> Value for std::path::Display<'a> {
+impl Value for std::path::Display<'_> {
     fn serialize(
         &self,
         _record: &Record<'_>,
@@ -3233,9 +3238,9 @@ pub struct FnValue<V: Value, F>(pub F)
 where
     F: for<'c, 'd> Fn(&'c Record<'d>) -> V;
 
-impl<'a, V: 'a + Value, F> Value for FnValue<V, F>
+impl<V: Value, F> Value for FnValue<V, F>
 where
-    F: 'a + for<'c, 'd> Fn(&'c Record<'d>) -> V,
+    F: for<'c, 'd> Fn(&'c Record<'d>) -> V,
 {
     fn serialize(
         &self,
@@ -3262,7 +3267,7 @@ pub struct PushFnValueSerializer<'a> {
     done: bool,
 }
 
-impl<'a> PushFnValueSerializer<'a> {
+impl PushFnValueSerializer<'_> {
     #[deprecated(note = "Renamed to `emit`")]
     /// Emit a value
     pub fn serialize<'b, S: 'b + Value>(self, s: S) -> Result {
@@ -3279,7 +3284,7 @@ impl<'a> PushFnValueSerializer<'a> {
     }
 }
 
-impl<'a> Drop for PushFnValueSerializer<'a> {
+impl Drop for PushFnValueSerializer<'_> {
     fn drop(&mut self) {
         if !self.done {
             // unfortunately this gives no change to return serialization errors
@@ -3508,7 +3513,7 @@ where
 pub struct ErrorRef<'a, E: ?Sized + std::error::Error>(pub &'a E);
 
 #[cfg(feature = "std")]
-impl<'a, E> Value for ErrorRef<'a, E>
+impl<E> Value for ErrorRef<'_, E>
 where
     E: 'static + std::error::Error,
 {
@@ -3602,7 +3607,7 @@ pub trait KV {
     ) -> Result;
 }
 
-impl<'a, T> KV for &'a T
+impl<T> KV for &T
 where
     T: KV,
 {
@@ -3726,7 +3731,7 @@ where
     }
 }
 
-impl<'a> KV for BorrowedKV<'a> {
+impl KV for BorrowedKV<'_> {
     fn serialize(
         &self,
         record: &Record<'_>,

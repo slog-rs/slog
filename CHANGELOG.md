@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   * This mistake was caught by a new lint [`#[warn(clippy::doc_lazy_continuation)]`](https://rust-lang.github.io/rust-clippy/rust-1.81.0/index.html#/doc_lazy_continuation)
 * Fix some internal warnings
   * Example: Avoid the new [`#[warn(unexpected_cfgs)]`](https://blog.rust-lang.org/2024/05/06/check-cfg.html) lint.
+  * The crate almost passes clippy::pedantic now.
   * None of these should affect user crates
 * Stop requiring the `serde_derive` crate to implement the `nested-values` feature.
 * nested-values: Fix CI failure caused by `#[deny(unused_extern_crates)]` lint
