@@ -71,12 +71,12 @@ jobs:
         #
         # Specific feature combos can be overridden per-version with 'include' and 'ecclude'
         features:
-          - ""
-          - "nested-values"
-          - "dynamic-keys"
-          - "nothreads"
-          - "nested-values dynamic-keys"
-          - "nested-values dynamic-keys nothreads"
+          - "std"
+          - "std nested-values"
+          - "std dynamic-keys"
+          - "std nothreads"
+          - "std nested-values dynamic-keys"
+          - "std nested-values dynamic-keys nothreads"
         include:
           # Minimum Supported Rust Version (1.49) doesn't support nested-values feature
           #
@@ -85,13 +85,13 @@ jobs:
           #
           # TODO: Go back to testing all features (see above)
           - rust: 1.49
-            features: "" # Default features
+            features: "std" # Default features
           - rust: 1.49
-            features: "dynamic-keys"
+            features: "std dynamic-keys"
           - rust: 1.49
-            features: "nothreads"
+            features: "std nothreads"
           - rust: 1.49
-            features: "nothreads dynamic-keys" # All (supported) features
+            features: "std nothreads dynamic-keys" # All (supported) features
 
     steps:
       - uses: actions/checkout@v4
@@ -102,12 +102,12 @@ jobs:
       - name: Check
         # A failing `cargo check` always ends the build
         run: |
-          cargo check --all-targets --verbose --features "${{ matrix.features }}"
+          cargo check --all-targets --verbose --no-default-features --features "${{ matrix.features }}"
         # A failing `cargo check` always fails the build
         continue-on-error: false
       - name: Test
         run: |
-          cargo test --all-targets --verbose --features "${{ matrix.features }}"
+          cargo test --all-targets --verbose --no-default-features --features "${{ matrix.features }}"
 
         # We require tests to succeed on all the feature combinations.
         #
@@ -118,7 +118,7 @@ jobs:
       - name: Clippy
         # With the exception of nightly, we use --deny warnings to treat warnings on errors.
         run: |
-          cargo clippy --all-targets --verbose --features "${{ matrix.features }}" -- --deny "${{ matrix.rust != 'nightly' && 'warnings' || 'clippy::correctness' }}"
+          cargo clippy --all-targets --verbose --no-default-features --features "${{ matrix.features }}" -- --deny "${{ matrix.rust != 'nightly' && 'warnings' || 'clippy::correctness' }}"
         # Clippy is required to succeed on hardcoded versions, and may not give any warnings.
         #
         # However, on automatically updated versions of rust (both stable & nightly) we allow clippy to fail.
