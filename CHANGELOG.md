@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+* **BIG**: Enables the `nested-values` feature by default.
 * Deprecate old prefixed macros like `slog_log`.
   Rust 2018 macro paths make these unnecessary, use `slog::log!` instead.
 

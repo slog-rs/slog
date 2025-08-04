@@ -42,7 +42,7 @@ lto = true
 debug-assertions = false
 
 [features]
-default = ["std"]
+default = ["std", "nested-values"]
 # Support nesting values in log messages using serde
 #
 # Using this is recommended to improve the detail of log messages.
