@@ -23,14 +23,11 @@ edition = "2018"
 #    - We can (and very often do) support versions much older than this.
 #    - See wiki for for details
 #
-# The first version of Cargo that supports this field was in Rust 1.56.0.
-# In older releases, the field will be ignored, and Cargo will display a warning.
-#
 # This must be kept in sync with the following places:
 # - .github/workflows/test.yml (Github Actions)
 # - README.md
 # - clippy.toml (Clippy config)
-rust-version = "1.49.0"
+rust-version = "1.56"
 
 [profile.release]
 opt-level = 3

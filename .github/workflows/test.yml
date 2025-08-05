@@ -27,25 +27,26 @@ jobs:
       fail-fast: false # Even if one job fails we still want to see the other ones
       matrix:
         rust:
-          # Minimum Supported Rust Version: 1.49
+          # Minimum Supported Rust Version
           #
           # This is hardcoded and needs to be in sync with Cargo.toml and the README
           #
-          # Right now we have to explicitly list the combination of features & msrv,
-          # because some feature combinations are unsupported (currently nested-values).
-          #
-          # TODO: Once the MSRV supports all feature combos, add this back
-          # - << put msrv here >>
+          # If one of the features does not support this MSRV,
+          # you need to remove this from the main list and manually add the desired
+          # feature/version combinations to 'include'
+          # This hack is not currently needed because serde-erased v0.3 supports our MSRV.
+          - 1.56
 
           # Per the MSRV policy (discussed in Wiki/docs), this places an upper bound on the MSRV
           #
           # In other words, we can never raise the MSRV past this, and must always support it.
           - "stable minus 15 releases"
-          # Major release 1.56: The first version to support `edition="2021"`
           #
-          # This appears to be the earliest version that `erased-serde` supports,
-          # so is the earliest one we can enable the 'nested-values' feature.
-          - 1.56
+          # Intermediate Releases (between MSRV and latest stable)
+          #
+          - 1.61
+          - 1.70
+          - 1.81
           # The most recent version of stable rust (automatically updated)
           - stable
           - nightly
@@ -62,21 +63,6 @@ jobs:
           - "std nothreads"
           - "std nested-values dynamic-keys"
           - "std nested-values dynamic-keys nothreads"
-        include:
-          # Minimum Supported Rust Version (1.49) doesn't support nested-values feature
-          #
-          # This is because the erased-serde dependency currently requires edition="2021", which was added in Rust 1.56.
-          # As a workaround, we explicitly include the combinations of features that we want to test on MSRV.
-          #
-          # TODO: Go back to testing all features (see above)
-          - rust: 1.49
-            features: "std" # Default features
-          - rust: 1.49
-            features: "std dynamic-keys"
-          - rust: 1.49
-            features: "std nothreads"
-          - rust: 1.49
-            features: "std nothreads dynamic-keys" # All (supported) features
 
     steps:
       - uses: actions/checkout@v4
