@@ -21,9 +21,13 @@ fn main() {
         println!("cargo:rustc-cfg=integer128");
     }
 
-    // In Rust 1.80, cfg names are validated at compile time
-    // See blog: https://blog.rust-lang.org/2024/05/06/check-cfg.html
-    //
-    // On prior versions, this directive is ignored.
-    println!("cargo:rustc-check-cfg=cfg(integer128)");
+    // Givn a rust-check-cfg directive on 1.70 will give an error
+    // because in that version it is a nightly feature
+    if rustversion::cfg!(since(1.80)) {
+        // In Rust 1.80, cfg names are validated at compile time
+        // See blog: https://blog.rust-lang.org/2024/05/06/check-cfg.html
+        //
+        // On prior versions, this directive is not supported.
+        println!("cargo:rustc-check-cfg=cfg(integer128)");
+    }
 }
