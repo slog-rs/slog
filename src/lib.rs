@@ -319,13 +319,11 @@ use std::error::Error as StdError;
 /// [`OwnedKV`](struct.OwnedKV.html)
 ///
 /// ```
-/// fn main() {
-///     let drain = slog::Discard;
-///     let _root = slog::Logger::root(
-///         drain,
-///         slog::o!("key1" => "value1", "key2" => "value2")
-///     );
-/// }
+/// let drain = slog::Discard;
+/// let _root = slog::Logger::root(
+///     drain,
+///     slog::o!("key1" => "value1", "key2" => "value2")
+/// );
 /// ```
 #[macro_export(local_inner_macros)]
 macro_rules! o(
@@ -511,41 +509,33 @@ macro_rules! slog_record(
 /// ### Simple
 ///
 /// ```
-/// use slog::info;
-/// fn main() {
-///     let drain = slog::Discard;
-///     let root = slog::Logger::root(
-///         drain,
-///         slog::o!("key1" => "value1", "key2" => "value2")
-///     );
-///     slog::info!(root, "test info log"; "log-key" => true);
-/// }
+/// let drain = slog::Discard;
+/// let root = slog::Logger::root(
+///     drain,
+///     slog::o!("key1" => "value1", "key2" => "value2"),
+/// );
+/// slog::info!(root, "test info log"; "log-key" => true);
 /// ```
 ///
 /// Note that `"key" => value` part is optional:
 ///
 /// ```
-/// use slog::info;
-/// fn main() {
-///     let drain = slog::Discard;
-///     let root = slog::Logger::root(
-///         drain, slog::o!("key1" => "value1", "key2" => "value2")
-///     );
-///     info!(root, "test info log");
-/// }
+/// let drain = slog::Discard;
+/// let root = slog::Logger::root(
+///     drain,
+///     slog::o!("key1" => "value1", "key2" => "value2"),
+/// );
+/// slog::info!(root, "test info log");
 /// ```
 ///
 /// ### Formatting support:
 ///
 /// ```
-/// use slog::info;
-/// fn main() {
-///     let drain = slog::Discard;
-///     let root = slog::Logger::root(drain,
-///         slog::o!("key1" => "value1", "key2" => "value2")
-///     );
-///     info!(root, "formatted {num_entries} entries of {}", "something", num_entries = 2; "log-key" => true);
-/// }
+/// let drain = slog::Discard;
+/// let root = slog::Logger::root(drain,
+///     slog::o!("key1" => "value1", "key2" => "value2")
+/// );
+/// slog::info!(root, "formatted {num_entries} entries of {}", "something", num_entries = 2; "log-key" => true);
 /// ```
 ///
 /// Note:
@@ -557,14 +547,12 @@ macro_rules! slog_record(
 /// `"key" => value` part is optional:
 ///
 /// ```
-/// use slog::info;
-/// fn main() {
-///     let drain = slog::Discard;
-///     let root = slog::Logger::root(
-///         drain, slog::o!("key1" => "value1", "key2" => "value2")
-///     );
-///     info!(root, "formatted: {}", 1);
-/// }
+/// let drain = slog::Discard;
+/// let root = slog::Logger::root(
+///     drain,
+///     slog::o!("key1" => "value1", "key2" => "value2"),
+/// );
+/// slog::info!(root, "formatted: {}", 1);
 /// ```
 ///
 /// Use formatting support wisely. Prefer named arguments, so the associated
@@ -576,18 +564,15 @@ macro_rules! slog_record(
 /// with `#`.
 ///
 /// ```
-/// use slog::info;
-/// fn main() {
-///     let drain = slog::Discard;
-///     let root = slog::Logger::root(drain,
-///         slog::o!("key1" => "value1", "key2" => "value2")
-///     );
-///     let ops = 3;
-///     slog::info!(
-///         root,
-///         #"performance-metric", "thread speed"; "ops_per_sec" => ops
-///     );
-/// }
+/// let drain = slog::Discard;
+/// let root = slog::Logger::root(drain,
+///     slog::o!("key1" => "value1", "key2" => "value2")
+/// );
+/// let ops = 3;
+/// slog::info!(
+///     root,
+///     #"performance-metric", "thread speed"; "ops_per_sec" => ops
+/// );
 /// ```
 ///
 /// See `Record::tag()` for more information about tags.
@@ -602,40 +587,30 @@ macro_rules! slog_record(
 /// `=>` syntax.
 ///
 /// ```
-/// use slog::*;
+/// use slog::{KV, Value, Record, Serializer, Key, o, info};
+/// struct MyKV;
+/// struct MyV;
 ///
-/// fn main() {
-///     struct MyKV;
-///     struct MyV;
-///
-///     impl KV for MyKV {
-///        fn serialize(&self,
-///                     _record: &Record,
-///                     serializer: &mut dyn Serializer)
-///                    -> Result {
-///            serializer.emit_u32("MyK".into(), 16)
-///        }
+/// impl KV for MyKV {
+///     fn serialize(&self, _record: &Record, serializer: &mut dyn Serializer) -> slog::Result {
+///         serializer.emit_u32("MyK".into(), 16)
 ///     }
-///
-///     impl Value for MyV {
-///        fn serialize(&self,
-///                     _record: &Record,
-///                     key : Key,
-///                     serializer: &mut dyn Serializer)
-///                    -> Result {
-///            serializer.emit_u32("MyKV".into(), 16)
-///        }
-///     }
-///
-///     let drain = slog::Discard;
-///
-///     let root = slog::Logger::root(drain, o!(MyKV));
-///
-///     info!(
-///         root,
-///         "testing MyV"; "MyV" => MyV
-///     );
 /// }
+///
+/// impl Value for MyV {
+///     fn serialize(&self, _record: &Record, key: Key, serializer: &mut dyn Serializer) -> slog::Result {
+///         serializer.emit_u32("MyKV".into(), 16)
+///     }
+/// }
+///
+/// let drain = slog::Discard;
+///
+/// let root = slog::Logger::root(drain, o!(MyKV));
+///
+/// info!(
+///     root,
+///     "testing MyV"; "MyV" => MyV
+/// );
 /// ```
 ///
 /// ### `fmt::Display` and `fmt::Debug` values
@@ -659,17 +634,14 @@ macro_rules! slog_record(
 /// [`kv` macro](macro.log.html)
 ///
 /// ```
-/// use std::fmt::Write;
+/// # use std::fmt::Write;
+/// let drain = slog::Discard;
+/// let log  = slog::Logger::root(drain, slog::o!());
 ///
-/// fn main() {
-///     let drain = slog::Discard;
-///     let log  = slog::Logger::root(drain, slog::o!());
+/// let mut output = String::new();
 ///
-///     let mut output = String::new();
-///
-///     if let Err(e) = write!(&mut output, "write to string") {
-///         slog::error!(log, "write failed"; "err" => %e);
-///     }
+/// if let Err(e) = write!(&mut output, "write to string") {
+///     slog::error!(log, "write failed"; "err" => %e);
 /// }
 /// ```
 #[macro_export(local_inner_macros)]
@@ -1007,12 +979,10 @@ where
     /// Use `o!` macro to build `OwnedKV` object.
     ///
     /// ```
-    /// fn main() {
-    ///     let _root = slog::Logger::root(
-    ///         slog::Discard,
-    ///         slog::o!("key1" => "value1", "key2" => "value2"),
-    ///     );
-    /// }
+    /// let _root = slog::Logger::root(
+    ///     slog::Discard,
+    ///     slog::o!("key1" => "value1", "key2" => "value2"),
+    /// );
     /// ```
     pub fn root<T>(drain: D, values: OwnedKV<T>) -> Logger
     where
@@ -1075,12 +1045,12 @@ where
     ///
     /// ```
     /// use slog::o;
-    ///
-    /// fn main() {
-    ///     let root = slog::Logger::root(slog::Discard,
-    ///         o!("key1" => "value1", "key2" => "value2"));
-    ///     let _log = root.new(o!("key" => "value"));
-    /// }
+    /// let root = slog::Logger::root(
+    ///     slog::Discard,
+    ///     o!("key1" => "value1", "key2" => "value2"),
+    /// );
+    /// let _log = root.new(slog::o!("key" => "value"));
+    /// ```
     #[allow(clippy::wrong_self_convention)]
     pub fn new<T>(&self, values: OwnedKV<T>) -> Logger<D>
     where
@@ -1301,11 +1271,8 @@ pub trait Drain {
     /// into another `Drain`.
     ///
     /// ```
-    /// use slog::*;
-    ///
-    /// fn main() {
-    ///     let _drain = Discard.map(Fuse);
-    /// }
+    /// use slog::{Discard, Fuse, Drain, o};
+    /// let _drain = Discard.map(Fuse);
     /// ```
     fn map<F, R>(self, f: F) -> R
     where
@@ -3257,23 +3224,20 @@ impl Drop for PushFnValueSerializer<'_> {
 ///
 /// ```
 /// use slog::{PushFnValue, Logger, Discard};
-///
-/// fn main() {
-///     // Create a logger with a key-value printing
-///     // `file:line` string value for every logging statement.
-///     // `Discard` `Drain` used for brevity.
-///     let root = Logger::root(Discard, slog::o!(
-///         "source_location" => PushFnValue(|record , s| {
-///              s.serialize(
-///                   format_args!(
-///                        "{}:{}",
-///                        record.file(),
-///                        record.line(),
-///                   )
-///              )
-///         })
-///     ));
-/// }
+/// // Create a logger with a key-value printing
+/// // `file:line` string value for every logging statement.
+/// // `Discard` `Drain` used for brevity.
+/// let root = Logger::root(Discard, slog::o!(
+///     "source_location" => PushFnValue(|record , s| {
+///         s.serialize(
+///             format_args!(
+///                 "{}:{}",
+///                 record.file(),
+///                 record.line(),
+///             )
+///         )
+///     })
+/// ));
 /// ```
 #[must_use = "must be passed to logger to actually log"]
 pub struct PushFnValue<F>(pub F)
