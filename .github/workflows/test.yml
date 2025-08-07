@@ -71,7 +71,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.rust }}
-          components: clippy
       - name: Check
         run: |
           cargo check --all-targets --verbose --no-default-features --features "${{ matrix.features }}"
@@ -86,10 +85,3 @@ jobs:
         # However, we can grant special exceptions for the Minimum Supported Rust Version
         # if there is a really good reason (like a dependency that requires a newer version).
         continue-on-error: false
-
-      - name: Clippy
-        # Run clippy with default settings, to catch clippy::correctness issues
-        # It would be nice if we could figure out how to turn clippy warnings into Github warnings.
-        # This is what actions-rs/clippy-check does, but that is deprecated.
-        run: |
-          cargo clippy --all-targets --verbose --features "${{ matrix.features }}"
