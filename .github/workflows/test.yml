@@ -87,8 +87,9 @@ jobs:
         # A failing `cargo check` always fails the build
         continue-on-error: false
       - name: Test
+        # NOTE: Running --all-targets does not include doc tests
         run: |
-          cargo test --all-targets --verbose --no-default-features --features "${{ matrix.features }}"
+          cargo test --all --verbose --no-default-features --features "${{ matrix.features }}"
 
         # We require tests to succeed on all the feature combinations.
         #
