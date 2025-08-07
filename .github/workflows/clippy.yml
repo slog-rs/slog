@@ -1,0 +1,42 @@
+# We use `actions-rs` for most of our actions
+on: [push, pull_request]
+name: Clippy
+
+env:
+  CARGO_TERM_COLOR: always
+  # has a history of occasional bugs (especially on old versions)
+  #
+  # the ci is free so we might as well use it ;)
+  CARGO_INCREMENTAL: 0
+
+
+jobs:
+  clippy:
+    # Only run on PRs if the source branch is on someone else's repo
+    if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust:
+          # in hardcoded versions, warnings will fail the build
+          - 1.88
+          # in auto-updated versions, warnings will not fail the build
+          - stable
+          - nightly
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust }}
+          components: clippy 
+      - name: Clippy
+        run: |
+          cargo clippy --all --all-targets --verbose --all-features -- -D warnings
+        # When using hardcoded/pinned versions, warnings are forbidden.
+        #
+        # On automatically updated versions of rust (both stable & nightly) we allow clippy to fail.
+        # This is because automatic updates can introduce new lints or change existing lints.
+        continue-on-error: ${{ !contains(matrix.rust, '1.') }}

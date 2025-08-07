@@ -46,22 +46,7 @@ jobs:
           # This appears to be the earliest version that `erased-serde` supports,
           # so is the earliest one we can enable the 'nested-values' feature.
           - 1.56
-          # A recent version of stable rust that is hardcoded.
-          #
-          # This should be kept as up to date as possible.
-          #
-          # This is used so that clippy & tests are run on a reliable reference point.
-          # If clippy has any warnings, this will fail the build (we run with --deny warnings)
-          - 1.81
           # The most recent version of stable rust (automatically updated)
-          #
-          # Sometimes, this is exactly the same as the hardcoded right above.
-          # However sometimes it will be automatically updated to something a little newer.
-          #
-          # If there are new clippy lints in the automatic update that aren't
-          # in the hardcoded versions, they will _NOT_ fail the build.
-          # This is true even if they are set to deny by default (clippy does this for some 'correctness' lints).
-          # They will simply be regular warnings.
           - stable
           - nightly
         # NOTE: Features to test must be specified manually. They are applied to all versions separately.
@@ -100,7 +85,6 @@ jobs:
           toolchain: ${{ matrix.rust }}
           components: clippy
       - name: Check
-        # A failing `cargo check` always ends the build
         run: |
           cargo check --all-targets --verbose --no-default-features --features "${{ matrix.features }}"
         # A failing `cargo check` always fails the build
@@ -116,19 +100,8 @@ jobs:
         continue-on-error: false
 
       - name: Clippy
-        # With the exception of nightly, we use --deny warnings to treat warnings on errors.
+        # Run clippy with default settings, to catch clippy::correctness issues
+        # It would be nice if we could figure out how to turn clippy warnings into Github warnings.
+        # This is what actions-rs/clippy-check does, but that is deprecated.
         run: |
-          cargo clippy --all-targets --verbose --no-default-features --features "${{ matrix.features }}" -- --deny "${{ matrix.rust != 'nightly' && 'warnings' || 'clippy::correctness' }}"
-        # Clippy is required to succeed on hardcoded versions, and may not give any warnings.
-        #
-        # However, on automatically updated versions of rust (both stable & nightly) we allow clippy to fail.
-        # This is in case automatic updates have introduced new lints that would give warnings/errors
-        # about code that was previously allowed.
-        #
-        # This is the main reason that we have a 'hardcoded recent stable' version.
-        # We want as many lints from recent stable possible
-        # but don't want the surprises of automatic updates to our stable rust.
-        #
-        # Also, include an explicit exception for Rust 1.56.
-        # We don't want to deal with the fact clippy changed the names of some lints.
-        continue-on-error: ${{ !contains(matrix.rust, '1.') || matrix.rust == '1.56' }}
+          cargo clippy --all-targets --verbose --features "${{ matrix.features }}"
