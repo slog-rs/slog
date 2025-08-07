@@ -57,6 +57,9 @@ jobs:
         #
         # Specific feature combos can be overridden per-version with 'include' and 'ecclude'
         features:
+          - ""
+          - "nested-values"
+          - "dynamic-keys"
           - "std"
           - "std nested-values"
           - "std dynamic-keys"
