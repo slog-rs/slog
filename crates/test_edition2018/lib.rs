@@ -1,3 +1,8 @@
+#![allow(
+    // part of the tests
+    named_arguments_used_positionally,
+)]
+
 #[cfg(test)]
 mod tests {
     #[test]
