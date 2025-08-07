@@ -43,10 +43,9 @@ jobs:
           - "stable minus 15 releases"
           #
           # Intermediate Releases (between MSRV and latest stable)
+          # Be careful not to add these needlessly; they hold up CI
           #
           - 1.61
-          - 1.70
-          - 1.81
           # The most recent version of stable rust (automatically updated)
           - stable
           - nightly
