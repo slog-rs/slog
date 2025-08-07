@@ -319,14 +319,11 @@ use std::error::Error as StdError;
 /// [`OwnedKV`](struct.OwnedKV.html)
 ///
 /// ```
-/// #[macro_use]
-/// extern crate slog;
-///
 /// fn main() {
 ///     let drain = slog::Discard;
 ///     let _root = slog::Logger::root(
 ///         drain,
-///         o!("key1" => "value1", "key2" => "value2")
+///         slog::o!("key1" => "value1", "key2" => "value2")
 ///     );
 /// }
 /// ```
@@ -514,29 +511,25 @@ macro_rules! slog_record(
 /// ### Simple
 ///
 /// ```
-/// #[macro_use]
-/// extern crate slog;
-///
+/// use slog::info;
 /// fn main() {
 ///     let drain = slog::Discard;
 ///     let root = slog::Logger::root(
 ///         drain,
-///         o!("key1" => "value1", "key2" => "value2")
+///         slog::o!("key1" => "value1", "key2" => "value2")
 ///     );
-///     info!(root, "test info log"; "log-key" => true);
+///     slog::info!(root, "test info log"; "log-key" => true);
 /// }
 /// ```
 ///
 /// Note that `"key" => value` part is optional:
 ///
 /// ```
-/// #[macro_use]
-/// extern crate slog;
-///
+/// use slog::info;
 /// fn main() {
 ///     let drain = slog::Discard;
 ///     let root = slog::Logger::root(
-///         drain, o!("key1" => "value1", "key2" => "value2")
+///         drain, slog::o!("key1" => "value1", "key2" => "value2")
 ///     );
 ///     info!(root, "test info log");
 /// }
@@ -545,13 +538,11 @@ macro_rules! slog_record(
 /// ### Formatting support:
 ///
 /// ```
-/// #[macro_use]
-/// extern crate slog;
-///
+/// use slog::info;
 /// fn main() {
 ///     let drain = slog::Discard;
 ///     let root = slog::Logger::root(drain,
-///         o!("key1" => "value1", "key2" => "value2")
+///         slog::o!("key1" => "value1", "key2" => "value2")
 ///     );
 ///     info!(root, "formatted {num_entries} entries of {}", "something", num_entries = 2; "log-key" => true);
 /// }
@@ -566,13 +557,11 @@ macro_rules! slog_record(
 /// `"key" => value` part is optional:
 ///
 /// ```
-/// #[macro_use]
-/// extern crate slog;
-///
+/// use slog::info;
 /// fn main() {
 ///     let drain = slog::Discard;
 ///     let root = slog::Logger::root(
-///         drain, o!("key1" => "value1", "key2" => "value2")
+///         drain, slog::o!("key1" => "value1", "key2" => "value2")
 ///     );
 ///     info!(root, "formatted: {}", 1);
 /// }
@@ -587,16 +576,14 @@ macro_rules! slog_record(
 /// with `#`.
 ///
 /// ```
-/// #[macro_use]
-/// extern crate slog;
-///
+/// use slog::info;
 /// fn main() {
 ///     let drain = slog::Discard;
 ///     let root = slog::Logger::root(drain,
-///         o!("key1" => "value1", "key2" => "value2")
+///         slog::o!("key1" => "value1", "key2" => "value2")
 ///     );
 ///     let ops = 3;
-///     info!(
+///     slog::info!(
 ///         root,
 ///         #"performance-metric", "thread speed"; "ops_per_sec" => ops
 ///     );
@@ -615,9 +602,6 @@ macro_rules! slog_record(
 /// `=>` syntax.
 ///
 /// ```
-/// #[macro_use]
-/// extern crate slog;
-///
 /// use slog::*;
 ///
 /// fn main() {
@@ -675,18 +659,16 @@ macro_rules! slog_record(
 /// [`kv` macro](macro.log.html)
 ///
 /// ```
-/// #[macro_use]
-/// extern crate slog;
 /// use std::fmt::Write;
 ///
 /// fn main() {
 ///     let drain = slog::Discard;
-///     let log  = slog::Logger::root(drain, o!());
+///     let log  = slog::Logger::root(drain, slog::o!());
 ///
 ///     let mut output = String::new();
 ///
 ///     if let Err(e) = write!(&mut output, "write to string") {
-///         error!(log, "write failed"; "err" => %e);
+///         slog::error!(log, "write failed"; "err" => %e);
 ///     }
 /// }
 /// ```
@@ -1025,13 +1007,10 @@ where
     /// Use `o!` macro to build `OwnedKV` object.
     ///
     /// ```
-    /// #[macro_use]
-    /// extern crate slog;
-    ///
     /// fn main() {
     ///     let _root = slog::Logger::root(
     ///         slog::Discard,
-    ///         o!("key1" => "value1", "key2" => "value2"),
+    ///         slog::o!("key1" => "value1", "key2" => "value2"),
     ///     );
     /// }
     /// ```
@@ -1095,8 +1074,7 @@ where
     /// tiny bit slower than doing it directly.
     ///
     /// ```
-    /// #[macro_use]
-    /// extern crate slog;
+    /// use slog::o;
     ///
     /// fn main() {
     ///     let root = slog::Logger::root(slog::Discard,
@@ -1268,8 +1246,6 @@ pub trait Drain {
     /// logged or not).
     ///
     /// ```
-    /// # #[macro_use]
-    /// # extern crate slog;
     /// # use slog::*;
     /// # fn main() {
     /// let logger = Logger::root(Discard, o!());
@@ -1325,8 +1301,6 @@ pub trait Drain {
     /// into another `Drain`.
     ///
     /// ```
-    /// #[macro_use]
-    /// extern crate slog;
     /// use slog::*;
     ///
     /// fn main() {
@@ -2838,8 +2812,6 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
 ///
 /// # Examples
 /// ```
-/// # #[macro_use]
-/// # extern crate serde_derive;
 /// # use serde_derive::Serialize;
 /// # use slog::{info, o, Drain, Logger};
 ///
@@ -3284,15 +3256,13 @@ impl Drop for PushFnValueSerializer<'_> {
 /// `Serialize`-implementing type in performance-critical logging statement.
 ///
 /// ```
-/// #[macro_use]
-/// extern crate slog;
 /// use slog::{PushFnValue, Logger, Discard};
 ///
 /// fn main() {
 ///     // Create a logger with a key-value printing
 ///     // `file:line` string value for every logging statement.
 ///     // `Discard` `Drain` used for brevity.
-///     let root = Logger::root(Discard, o!(
+///     let root = Logger::root(Discard, slog::o!(
 ///         "source_location" => PushFnValue(|record , s| {
 ///              s.serialize(
 ///                   format_args!(
