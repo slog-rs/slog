@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+### 2.8.0-rc.1 - 2025-08-06
+
 * Minimum Supported Rust Version is now [1.56](https://blog.rust-lang.org/2021/10/21/Rust-1.56.0/).
   This was already required if you wanted to use the `nested-values` feature. 
 * Take advantage of the fact that in 1.81 [`std::error::Error`] has been moved to `core`.
