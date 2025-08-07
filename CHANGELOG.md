@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   This was already required if you wanted to use the `nested-values` feature. 
 * Take advantage of the fact that in 1.81 [`std::error::Error`] has been moved to `core`.
   On this rust version, slog now supports the error trait without requiring `std`.
+* Add `#[must_use]` to most public types, including `slog::Logger`, `slog::OwnedKV`, and `slog::FnValue`.
 * Try to give a descriptive error when the `nested-values` feature is unsupported.
 * Implement slog::Value for `dyn std::error::Error` and `Box<dyn std::error:Error`,
   along with the `Send`/`Sync` versions.

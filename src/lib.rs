@@ -1112,6 +1112,7 @@ macro_rules! __slog_builtin {
 /// means `Logger<Arc<SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>`. See
 /// `Logger::root_typed` and `Logger::to_erased` for more information.
 #[derive(Clone)]
+#[must_use = "does nothing unless used"]
 pub struct Logger<D = Arc<dyn SendSyncRefUnwindSafeDrain<Ok = (), Err = Never>>>
 where
     D: SendSyncUnwindSafeDrain<Ok = (), Err = Never>,
@@ -1732,6 +1733,7 @@ impl<D: Drain + ?Sized> Drain for Arc<D> {
 ///
 /// `/dev/null` of `Drain`s
 #[derive(Debug, Copy, Clone)]
+#[must_use = "does nothing by itself; needs to be attached to Logger"]
 pub struct Discard;
 
 impl Drain for Discard {
@@ -1755,6 +1757,7 @@ impl Drain for Discard {
 /// Wraps another `Drain` and passes `Record`s to it, only if they satisfy a
 /// given condition.
 #[derive(Debug, Clone)]
+#[must_use = "does nothing by itself; needs to be attached to Logger"]
 pub struct Filter<D: Drain, F>(pub D, pub F)
 where
     F: Fn(&Record<'_>) -> bool + 'static + maybe::Send + maybe::Sync;
@@ -1807,6 +1810,7 @@ where
 /// that will be lifted in the future, it is a standalone type.
 /// Reference: https://github.com/rust-lang/rust/issues/34511
 #[derive(Debug, Clone)]
+#[must_use = "does nothing by itself; needs to be attached to Logger"]
 pub struct LevelFilter<D: Drain>(pub D, pub Level);
 
 impl<D: Drain> LevelFilter<D> {
@@ -1839,6 +1843,7 @@ impl<D: Drain> Drain for LevelFilter<D> {
 /// `Drain` mapping error returned by another `Drain`
 ///
 /// See `Drain::map_err` for convenience function.
+#[must_use = "does nothing by itself; needs to be attached to Logger"]
 pub struct MapError<D: Drain, E> {
     drain: D,
     // eliminated dynamic dispatch, after rust learns `-> impl Trait`
@@ -1880,6 +1885,7 @@ impl<D: Drain, E> Drain for MapError<D, E> {
 ///
 /// Can be nested for more than two outputs.
 #[derive(Debug, Clone)]
+#[must_use = "does nothing by itself; needs to be attached to Logger"]
 pub struct Duplicate<D1: Drain, D2: Drain>(pub D1, pub D2);
 
 impl<D1: Drain, D2: Drain> Duplicate<D1, D2> {
@@ -1922,6 +1928,7 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
 /// Note: `Drain::Err` must implement `Display` (for displaying on panic). It's
 /// easy to create your own `Fuse` drain if this requirement can't be fulfilled.
 #[derive(Debug, Clone)]
+#[must_use = "does nothing by itself; needs to be attached to Logger"]
 pub struct Fuse<D: Drain>(pub D)
 where
     D::Err: fmt::Debug;
@@ -1965,6 +1972,7 @@ where
 /// returns nothing (`Drain::Ok=()`) `IgnoreResult` will ignore any result
 /// returned by the `Drain` it wraps.
 #[derive(Clone)]
+#[must_use = "does nothing by itself; needs to be attached to Logger"]
 pub struct IgnoreResult<D: Drain> {
     drain: D,
 }
@@ -2123,6 +2131,7 @@ pub enum Level {
 
 /// Logging filtering level
 #[derive(Copy, Clone, Debug, Hash, Eq, PartialEq, Ord, PartialOrd)]
+#[must_use = "has no effect unless attached to a drain"]
 pub enum FilterLevel {
     /// Log nothing
     Off,
@@ -2496,6 +2505,7 @@ pub struct RecordStatic<'a> {
 ///
 /// Record is passed to a `Logger`, which delivers it to its own `Drain`,
 /// where actual logging processing is implemented.
+#[must_use = "does nothing by itself"]
 pub struct Record<'a> {
     rstatic: &'a RecordStatic<'a>,
     msg: &'a fmt::Arguments<'a>,
@@ -2792,6 +2802,7 @@ where
 /// this information differently.
 #[non_exhaustive]
 #[derive(Copy, Clone, Debug)]
+#[must_use = "does nothing by itself"]
 pub enum BytesKind {
     /// Format the bytes as a "stream"
     ///
@@ -2965,6 +2976,7 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
 /// ```
 #[cfg(feature = "nested-values")]
 #[derive(Clone)]
+#[must_use = "must be passed to logger to actually log"]
 pub struct Serde<T>(pub T)
 where
     T: serde::Serialize + Clone + Send + 'static;
@@ -3312,6 +3324,7 @@ impl Value for anyhow::Error {
 }
 
 /// Explicit lazy-closure `Value`
+#[must_use = "must be passed to logger to actually log"]
 pub struct FnValue<V: Value, F>(pub F)
 where
     F: for<'c, 'd> Fn(&'c Record<'d>) -> V;
@@ -3338,6 +3351,7 @@ pub type PushFnSerializer<'a> = PushFnValueSerializer<'a>;
 ///
 /// It makes sure only one value is serialized, and will automatically emit
 /// `()` if nothing else was serialized.
+#[must_use = "must be passed to logger to actually log"]
 pub struct PushFnValueSerializer<'a> {
     record: &'a Record<'a>,
     key: Key,
@@ -3407,6 +3421,7 @@ impl Drop for PushFnValueSerializer<'_> {
 ///     ));
 /// }
 /// ```
+#[must_use = "must be passed to logger to actually log"]
 pub struct PushFnValue<F>(pub F)
 where
     F: 'static
@@ -3560,6 +3575,7 @@ where
 ///
 /// Use [`ErrorRef`] if you have an error reference.
 #[cfg(has_std_error)]
+#[must_use = "must be passed to logger to actually log"]
 pub struct ErrorValue<E: StdError>(pub E);
 
 #[cfg(has_std_error)]
@@ -3587,6 +3603,7 @@ where
 ///
 /// Use [`ErrorValue`] if you want to move ownership of the error value.
 #[cfg(has_std_error)]
+#[must_use = "must be passed to logger to actually log"]
 pub struct ErrorRef<'a, E: ?Sized + StdError>(pub &'a E);
 
 #[cfg(has_std_error)]
@@ -3711,6 +3728,7 @@ impl<T> SendSyncRefUnwindSafeKV for T where
 }
 
 /// Single pair `Key` and `Value`
+#[must_use = "does nothing by itself"]
 pub struct SingleKV<V>(pub Key, pub V)
 where
     V: Value;
@@ -3828,6 +3846,7 @@ impl KV for BorrowedKV<'_> {
 /// Zero, one or more owned key-value pairs.
 ///
 /// Can be constructed with [`o!` macro](macro.o.html).
+#[must_use = "does nothing unless attached to logger"]
 pub struct OwnedKV<T>(
     #[doc(hidden)]
     /// The exact details of that it are not considered public
@@ -3848,6 +3867,7 @@ where
 /// Zero, one or more borrowed key-value pairs.
 ///
 /// Can be constructed with [`b!` macro](macro.b.html).
+#[must_use = "does nothing unless attached to logger"]
 pub struct BorrowedKV<'a>(
     /// The exact details of it function are not
     /// considered public and stable API. `log` and other
@@ -3875,6 +3895,7 @@ struct MultiListNode {
 
 /// Chain of `SyncMultiSerialize`-s of a `Logger` and its ancestors
 #[derive(Clone)]
+#[must_use = "does nothing unless attached to logger"]
 pub struct OwnedKVList {
     node: Arc<dyn SendSyncRefUnwindSafeKV + 'static>,
 }
