@@ -317,6 +317,8 @@ use core::error::Error as StdError;
 #[cfg(feature = "std")]
 use std::error::Error as StdError;
 
+pub mod prelude;
+
 // }}}
 
 // {{{ Macros

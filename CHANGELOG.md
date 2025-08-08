@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Optionally implement Drain for [`parking_lot::Mutex`].
   This is noticeably faster than `std::sync::Mutex` in the uncontented case, is smaller, and avoids poisoning.
   * This feature has a separate name per version to allow supporting multiple versions of `parking_lot` at once. The current version (v0.12) has feature name `parking_lot_0_12`
+* Define a `prelude` module for common imports, allowing import of logging macros (`info!`, `!debug`, ...) and `slog::Logger` in one go.
 
 [`parking_lot::Mutex`]: https://docs.rs/parking_lot/latest/parking_lot/type.Mutex.html
 
