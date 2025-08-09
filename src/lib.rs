@@ -1079,6 +1079,17 @@ where
         let _ = self.drain.log(record, &self.list);
     }
 
+    /// Flush all pending log records,
+    /// blocking until completion.
+    ///
+    /// Will call [`std::io::Write::flush`] if applicable.
+    ///
+    /// Returns [`FlushError::NotSupported`] if the underlying drain does not support [`Drain::flush`].
+    #[inline]
+    pub fn flush(&self) -> result::Result<(), FlushError> {
+        self.drain.flush()
+    }
+
     /// Get list of key-value pairs assigned to this `Logger`
     pub fn list(&self) -> &OwnedKVList {
         &self.list
@@ -1159,6 +1170,53 @@ where
     fn is_enabled(&self, level: Level) -> bool {
         self.drain.is_enabled(level)
     }
+
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        self.drain.flush()
+    }
+}
+
+/// An error that occurs when calling [`Drain::flush`].
+#[non_exhaustive]
+#[derive(Debug)]
+pub enum FlushError {
+    /// An error that occurs doing IO.
+    ///
+    /// Often triggered by [`std::io::]
+    #[cfg(feature = "std")]
+    Io(std::io::Error),
+    /// Indicates this drain does not support flushing.
+    NotSupported,
+}
+#[cfg(feature = "std")]
+impl From<std::io::Error> for FlushError {
+    fn from(value: std::io::Error) -> Self {
+        FlushError::Io(value)
+    }
+}
+#[cfg(has_std_error)]
+impl StdError for FlushError {
+    fn source(&self) -> Option<&(dyn StdError + 'static)> {
+        match self {
+            #[cfg(feature = "std")]
+            FlushError::Io(cause) => Some(cause),
+            FlushError::NotSupported => None,
+        }
+    }
+}
+impl fmt::Display for FlushError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            #[cfg(feature = "std")]
+            FlushError::Io(_) => {
+                f.write_str("Encountered IO error during flushing")
+            }
+            FlushError::NotSupported => {
+                f.write_str("Drain does not support flushing")
+            }
+        }
+    }
 }
 
 // {{{ Drain
@@ -1202,6 +1260,15 @@ pub trait Drain {
         record: &Record<'_>,
         values: &OwnedKVList,
     ) -> result::Result<Self::Ok, Self::Err>;
+
+    /// Flush all pending log records, blocking until completion.
+    ///
+    /// Should call [`std::io::Write::flush`] if applicable.
+    ///
+    /// Returns [`FlushError::NotSupported`] if the drain has not implemented this method.
+    fn flush(&self) -> result::Result<(), FlushError> {
+        Err(FlushError::NotSupported)
+    }
 
     /// **Avoid**: Check if messages at the specified log level are **maybe**
     /// enabled for this logger.
@@ -1365,6 +1432,10 @@ impl<'a, D: Drain + 'a> Drain for &'a D {
     fn is_enabled(&self, level: Level) -> bool {
         (**self).is_enabled(level)
     }
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        (**self).flush()
+    }
 }
 
 impl<'a, D: Drain + 'a> Drain for &'a mut D {
@@ -1381,6 +1452,10 @@ impl<'a, D: Drain + 'a> Drain for &'a mut D {
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         (**self).is_enabled(level)
+    }
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        (**self).flush()
     }
 }
 
@@ -1543,6 +1618,10 @@ impl<D: Drain + ?Sized> Drain for Box<D> {
     fn is_enabled(&self, level: Level) -> bool {
         (**self).is_enabled(level)
     }
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        (**self).flush()
+    }
 }
 
 impl<D: Drain + ?Sized> Drain for Arc<D> {
@@ -1558,6 +1637,10 @@ impl<D: Drain + ?Sized> Drain for Arc<D> {
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         (**self).is_enabled(level)
+    }
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        (**self).flush()
     }
 }
 
@@ -1581,6 +1664,10 @@ impl Drain for Discard {
     #[inline]
     fn is_enabled(&self, _level: Level) -> bool {
         false
+    }
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        Ok(())
     }
 }
 
@@ -1630,6 +1717,10 @@ where
          */
         self.0.is_enabled(level)
     }
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        self.0.flush()
+    }
 }
 
 /// `Drain` filtering records by `Record` logging level
@@ -1669,6 +1760,10 @@ impl<D: Drain> Drain for LevelFilter<D> {
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         level.is_at_least(self.1) && self.0.is_enabled(level)
+    }
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        self.0.flush()
     }
 }
 
@@ -1711,6 +1806,10 @@ impl<D: Drain, E> Drain for MapError<D, E> {
     fn is_enabled(&self, level: Level) -> bool {
         self.drain.is_enabled(level)
     }
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        self.drain.flush()
+    }
 }
 
 /// `Drain` duplicating records into two other `Drain`s
@@ -1749,6 +1848,17 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         self.0.is_enabled(level) || self.1.is_enabled(level)
+    }
+    /// Flush both drains.
+    ///
+    /// Will return [`FlushError::NotSupported`] if either drain does not support flushing.
+    /// If one drain supports flushing and the other does not,
+    /// it is unspecified whether or not anything will be flushed at all.
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        self.0.flush()?;
+        self.1.flush()?;
+        Ok(())
     }
 }
 
@@ -1796,6 +1906,10 @@ where
     fn is_enabled(&self, level: Level) -> bool {
         self.0.is_enabled(level)
     }
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        self.0.flush()
+    }
 }
 
 /// `Drain` ignoring result
@@ -1831,6 +1945,11 @@ impl<D: Drain> Drain for IgnoreResult<D> {
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         self.drain.is_enabled(level)
+    }
+
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        self.drain.flush()
     }
 }
 
@@ -1926,6 +2045,13 @@ impl<D: Drain> Drain for std::sync::Mutex<D> {
     #[inline]
     fn is_enabled(&self, level: Level) -> bool {
         self.lock().ok().map_or(true, |lock| lock.is_enabled(level))
+    }
+    #[inline]
+    fn flush(&self) -> result::Result<(), FlushError> {
+        let guard = self.lock().map_err(|_poison| {
+            std::io::Error::new(std::io::ErrorKind::Other, "Mutex is poisoned")
+        })?;
+        guard.flush()
     }
 }
 
