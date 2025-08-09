@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * **BIG**: Enables the `nested-values` feature by default.
 * Deprecate old prefixed macros like `slog_log`.
   Rust 2018 macro paths make these unnecessary, use `slog::log!` instead.
+* Optionally implement Drain for [`parking_lot::Mutex`].
+  This is noticeably faster than `std::sync::Mutex` in the uncontented case, is smaller, and avoids poisoning.
+
+[`parking_lot::Mutex`]: https://docs.rs/parking_lot/latest/parking_lot/type.Mutex.html
 
 ### 2.8.0-rc.1 - 2025-08-06
 * Minimum Supported Rust Version is now [1.56](https://blog.rust-lang.org/2021/10/21/Rust-1.56.0/).

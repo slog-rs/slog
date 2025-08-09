@@ -78,6 +78,13 @@ nothreads = []
 # Implement serde::Value for anyhow::Error
 # anyhow = ["dep:anyhow"]
 
+# Implement slog::Drain for parking_lot::Mutex
+#
+# Because parking_lot has not reached 1.0 yet,
+# slog may update the version of parking_lot at any time,
+# even in a patch release (2.8.x)
+# parking_lot = ["dep:parking_lot"]
+
 max_level_off   = []
 max_level_error = []
 max_level_warn  = []
@@ -96,6 +103,7 @@ release_max_level_trace = []
 # TODO: The std feature should imply serde?/std, but weak feature dependencies need Rust 1.60
 serde = { version = "1", optional = true, default-features = false }
 anyhow = { version = "1", optional = true, default-features = false }
+parking_lot = { version = "0.12", optional = true }
 
 [dependencies.erased-serde]
 # The 0.3 series of erased-serde has MSRV 1.56, but the 0.4 series requires Rust 1.61
