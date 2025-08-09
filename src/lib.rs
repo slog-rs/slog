@@ -1921,6 +1921,24 @@ impl<D: Drain> Drain for std::sync::Mutex<D> {
         self.lock().ok().map_or(true, |lock| lock.is_enabled(level))
     }
 }
+
+#[cfg(feature = "parking_lot")]
+impl<D: Drain> Drain for parking_lot::Mutex<D> {
+    type Ok = D::Ok;
+    type Err = D::Err;
+    fn log(
+        &self,
+        record: &Record<'_>,
+        logger_values: &OwnedKVList,
+    ) -> result::Result<Self::Ok, Self::Err> {
+        let d = self.lock();
+        d.log(record, logger_values)
+    }
+    #[inline]
+    fn is_enabled(&self, level: Level) -> bool {
+        self.lock().is_enabled(level)
+    }
+}
 // }}}
 
 // {{{ Level & FilterLevel
