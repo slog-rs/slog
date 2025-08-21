@@ -148,8 +148,6 @@ mod std_only {
         info!(logger, "foo"; "error" => #&error);
     }
 
-    // requires `impl Error for Arc<T>` - since 1.52
-    #[rustversion::since(1.52)]
     #[test]
     fn error_arc_ref() {
         let error = TestError::new("foo");
