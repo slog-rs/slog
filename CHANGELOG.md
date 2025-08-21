@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * **BIG**: Enables the `nested-values` feature by default.
 * Deprecate old prefixed macros like `slog_log`.
   Rust 2018 macro paths make these unnecessary, use `slog::log!` instead.
+* Define a `prelude` module for common imports, allowing import of logging macros (`info!`, `!debug`, ...) and `slog::Logger` in one go.
 
 ### 2.8.0-rc.1 - 2025-08-06
 * Minimum Supported Rust Version is now [1.56](https://blog.rust-lang.org/2021/10/21/Rust-1.56.0/).

@@ -1,10 +1,13 @@
 //#![feature(trace_macros)]
-use slog::{info, o, Fuse, Logger};
+use slog::prelude::*;
 
 mod common;
 
 fn main() {
-    let log = Logger::root(Fuse(common::PrintlnDrain), o!("version" => "2"));
+    let log = Logger::root(
+        slog::Fuse(common::PrintlnDrain),
+        slog::o!("version" => "2"),
+    );
 
     //trace_macros!(true);
     info!(log, "foo is {foo}", foo = 2; "a" => "b");
