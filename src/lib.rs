@@ -1927,8 +1927,8 @@ impl<D: Drain> Drain for std::sync::Mutex<D> {
     }
 }
 
-#[cfg(feature = "parking_lot")]
-impl<D: Drain> Drain for parking_lot::Mutex<D> {
+#[cfg(feature = "parking_lot_0_12")]
+impl<D: Drain> Drain for parking_lot_0_12::Mutex<D> {
     type Ok = D::Ok;
     type Err = D::Err;
     fn log(

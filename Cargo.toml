@@ -70,12 +70,23 @@ nothreads = []
 # Implement serde::Value for anyhow::Error
 anyhow = ["dep:anyhow"]
 
-# Implement slog::Drain for parking_lot::Mutex
+# Implement slog::Drain for parking_lot::Mutex.
 #
-# Because parking_lot has not reached 1.0 yet,
-# slog may update the version of parking_lot at any time,
-# even in a patch release (2.8.x)
-parking_lot = ["dep:parking_lot"]
+# Each version of parking_lot has a separate feature name,
+# so that multiple versions of parking_lot can be supported at once without causing conflicts.
+# This works because Cargo supports depending on multiple versions of the same crate,
+# and Rust considers parking_lot_0_12::Mutex and parking_lot1::Mutex as completely different types.
+#
+# Compatibility Guarantees:
+# New versions of parking_lot can be added in a patch version of slog (2.8.1 -> 2.8.2)
+#
+# Support for an old version of parking_lot will be reatined as long as reasonably possible,
+# and only removed if it causes significant issues or is known to be severely buggy.
+# In the exceptional event that support for an old version is removed,
+# it will only happen in a slog minor version upgrade (2.8 -> 2.9), never in a patch version upgrade.
+#
+# A hypothetical parking_lot v1.0 release would be named `parking_lot1` rather than `parking_lot_1`.
+parking_lot_0_12 = ["dep:parking_lot_0_12"]
 
 # Control the log level at compile-time
 
@@ -96,7 +107,7 @@ release_max_level_trace = []
 [dependencies]
 serde = { version = "1", optional = true, default-features = false }
 anyhow = { version = "1", optional = true, default-features = false }
-parking_lot = { version = "0.12", optional = true }
+parking_lot_0_12 = { package = "parking_lot", version = "0.12", optional = true }
 
 [dependencies.erased-serde]
 # The 0.4 series of erased-serde has MSRV Rust 1.61, just like we do
