@@ -67,23 +67,17 @@ std = ["serde?/std", "anyhow?/std"]
 # which will not break other libraries and avoids the overhead of an Arc.
 nothreads = []
 
-#
-# IMPLICIT FEATURES
-#
-# These features are fully supported, but have the same names as dependencies.
-# The current MSRV does not support the new 'dep:...' syntax.
-# We pretend to declare these here to keep the feature docs consistent.
-#
-
 # Implement serde::Value for anyhow::Error
-# anyhow = ["dep:anyhow"]
+anyhow = ["dep:anyhow"]
 
 # Implement slog::Drain for parking_lot::Mutex
 #
 # Because parking_lot has not reached 1.0 yet,
 # slog may update the version of parking_lot at any time,
 # even in a patch release (2.8.x)
-# parking_lot = ["dep:parking_lot"]
+parking_lot = ["dep:parking_lot"]
+
+# Control the log level at compile-time
 
 max_level_off   = []
 max_level_error = []
