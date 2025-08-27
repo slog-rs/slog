@@ -120,6 +120,10 @@ serde_derive = "1"
 name = "singlethread"
 required-features = ["nothreads"]
 
+[[test]]
+name = "track_caller"
+path = "tests/track_caller/mod.rs"
+
 [package.metadata.docs.rs]
 features = ["std", "nested-values", "dynamic-keys"]
 

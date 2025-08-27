@@ -316,7 +316,6 @@ use core::{convert, fmt, result};
 use core::error::Error as StdError;
 #[cfg(feature = "std")]
 use std::error::Error as StdError;
-
 // }}}
 
 // {{{ Macros
@@ -441,24 +440,86 @@ macro_rules! slog_kv(
     ($($args:tt)*) => ($crate::kv!(@ (); $($args)*));
 );
 
+/// Use [`core::panic::Location::caller()`] to respect `#[track_caller]`
+///
+/// **Beware**: Inline `const { ... }` expressions do not interact well with `#[track_caller]`,
+/// yet are necessary for slog to create `&'static slog::Record` expressions.
+/// See `tests/bizarre_nested_const_location.rs` for details.
+/// To work around this, we go to great lengths to ensure that only the outermost `record!` macro
+/// involves a `const { ... }` expression.
+#[cfg(use_const_location)]
+#[doc(hidden)]
+pub mod location_support {
+    use std::panic::Location;
+    use crate::{RecordLocation, RecordStatic};
+
+    #[doc(hidden)]
+    #[macro_export]
+    macro_rules! __builtin_location {
+        (@record_location) => (const {
+            let loc = core::panic::Location::caller();
+            &$crate::RecordLocation {
+                column: loc.column(),
+                line: loc.line(),
+                file: loc.file(),
+                function: "",
+                module: core::module_path!(),
+            }
+        });
+        // implements the standard `record_static!` macro,
+        (@record_static $lvl:expr, $tag:expr) => ({
+            let location = $crate::__builtin_location!(@record_location);
+            $crate::RecordStatic { level: $lvl, location, tag: $tag }
+        });
+        // creates a static reference to the result of a record_static! macro
+        (@record_static_ref $lvl:expr, $tag:expr) => (const {
+            let loc = core::panic::Location::caller();
+            &$crate::RecordStatic {
+                level: $lvl,
+                location: &$crate::RecordLocation {
+                    column: loc.column(),
+                    line: loc.line(),
+                    file: loc.file(),
+                    function: "",
+                    module: core::module_path!(),
+                }, tag: $tag
+            }
+        });
+    }
+}
+
+#[cfg(not(use_const_location))]
+#[doc(hidden)]
+pub mod location_support {
+    #[doc(hidden)]
+    #[macro_export]
+    macro_rules! __builtin_location {
+        (@caller) => ((file!(), line!(), column!()));
+        (@record_static $lvl:expr, $tag:expr) => {
+            static LOC : $crate::RecordLocation = $crate::RecordLocation {
+                file: file!(),
+                line: line!(),
+                column: $crate::__builtin!(@column),
+                function: "",
+                module: $crate::__builtin!(@module_path),
+            };
+            $crate::RecordStatic {
+                location : &LOC,
+                level: $lvl,
+                tag : $tag,
+            }
+        }
+    }
+}
+
+
+
 #[macro_export(local_inner_macros)]
 /// Create `RecordStatic` at the given code location
+///
+/// On versions of Rust before 1.79, `#[track_caller]` is not respected.
 macro_rules! record_static(
-    ($lvl:expr, $tag:expr,) => { record_static!($lvl, $tag) };
-    ($lvl:expr, $tag:expr) => {{
-        static LOC : $crate::RecordLocation = $crate::RecordLocation {
-            file: $crate::__builtin!(@file),
-            line: $crate::__builtin!(@line),
-            column: $crate::__builtin!(@column),
-            function: "",
-            module: $crate::__builtin!(@module_path),
-        };
-        $crate::RecordStatic {
-            location : &LOC,
-            level: $lvl,
-            tag : $tag,
-        }
-    }};
+    ($lvl:expr, $tag:expr $(,)?) => ($crate::__builtin_location!(@record_static $lvl, $tag));
 );
 
 /// Create `RecordStatic` at the given code location (alias)
@@ -477,14 +538,12 @@ macro_rules! slog_record_static(
 /// Note that this requires that `lvl` and `tag` are compile-time constants. If
 /// you need them to *not* be compile-time, such as when recreating a `Record`
 /// from a serialized version, use `Record::new` instead.
+///
+/// On versions of Rust before 1.79, `#[track_caller]` is not respected.
 macro_rules! record(
-    ($lvl:expr, $tag:expr, $args:expr, $b:expr,) => {
-        record!($lvl, $tag, $args, $b)
-    };
-    ($lvl:expr, $tag:expr, $args:expr, $b:expr) => {{
-        #[allow(dead_code)]
-        static RS : $crate::RecordStatic<'static> = record_static!($lvl, $tag);
-        $crate::Record::new(&RS, $args, $b)
+    ($lvl:expr, $tag:expr, $args:expr, $b:expr $(,)?) => {{
+        let rs: &'static $crate::RecordStatic<'static> = $crate::__builtin_location!(@record_static_ref $lvl, $tag);
+        $crate::Record::new(rs, $args, $b)
     }};
 );
 
@@ -895,15 +954,12 @@ macro_rules! slog_trace(
 
 /// Helper macro for using the built-in macros inside of
 /// exposed macros with `local_inner_macros` attribute.
-#[doc(hidden)]
-#[macro_export] // TODO: Always use explicit paths
+#[macro_export]
 macro_rules! __builtin {
     (@format_args $($t:tt)*) => ( format_args!($($t)*) );
     (@stringify $($t:tt)*) => ( stringify!($($t)*) );
-    (@file) => ( file!() );
-    (@line) => ( line!() );
-    (@column) => ( column!() );
     (@module_path) => ( module_path!() );
+    (@$loc_kind:ident) => ( $crate::__builtin_location!(@$loc_kind) );
     (@wrap_error $v:expr) => ({
         // this magical sequence of code is used to wrap either with
         // slog::ErrorValue or slog::ErrorRef as appropriate
@@ -2353,6 +2409,8 @@ pub struct RecordStatic<'a> {
 ///
 /// Record is passed to a `Logger`, which delivers it to its own `Drain`,
 /// where actual logging processing is implemented.
+///
+/// On versions of Rust before 1.79, `#[track_caller]` is not respected.
 #[must_use = "does nothing by itself"]
 pub struct Record<'a> {
     rstatic: &'a RecordStatic<'a>,
