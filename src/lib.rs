@@ -1190,6 +1190,8 @@ pub enum FlushError {
     /// A custom error, which is not directly caused by IO or [`FlushError::NotSupported`].
     #[cfg(has_std_error)]
     Custom(Box<dyn StdError + Send + Sync + 'static>),
+    /// An error caused by calling [`slog::Duplicate::flush`].
+    Duplicate(Box<DuplicateDrainFlushError>),
 }
 #[cfg(feature = "std")]
 impl From<std::io::Error> for FlushError {
@@ -1206,6 +1208,7 @@ impl StdError for FlushError {
             FlushError::NotSupported => None,
             #[cfg(has_std_error)]
             FlushError::Custom(cause) => Some(&**cause),
+            FlushError::Duplicate(cause) => Some(cause),
         }
     }
 }
@@ -1223,7 +1226,64 @@ impl fmt::Display for FlushError {
             FlushError::Custom(cause) => {
                 write!(f, "Encountered error during flushing: {cause}")
             }
+            FlushError::Duplicate(cause) => write!(f, "{cause}"),
         }
+    }
+}
+
+/// An error from calling [`Duplicate::flush`].
+///
+/// This means that at least one of the drains has failed to flush.
+#[derive(Debug)]
+pub enum DuplicateDrainFlushError {
+    /// Occurs when calling [`Drain::flush`] the left (first) drain of [`Duplicate`] fails,
+    /// but flushing the right drain succeeds.
+    Left(FlushError),
+    /// Occurs when calling [`Drain::flush`] the right (second) drain of [`Duplicate`] fails,
+    /// but flushing the left drain succeeds.
+    Right(FlushError),
+    /// Occurs when calling [`Drain::flush`] fails for both the left and right
+    /// (first and second) drains of [`Duplicate`].
+    Both(FlushError, FlushError),
+}
+impl DuplicateDrainFlushError {
+    /// If flushing the left drain triggered an error, then return it.
+    ///
+    /// Returns `None` if flushing the left drain did not cause an error.
+    pub fn left(&self) -> Option<&'_ FlushError> {
+        match self {
+            DuplicateDrainFlushError::Left(left)
+            | DuplicateDrainFlushError::Both(left, _) => Some(left),
+            DuplicateDrainFlushError::Right(_) => None,
+        }
+    }
+
+    /// If flushing the right drain triggered an error, then return it.
+    ///
+    /// Returns `None` if flushing the right drain did not cause an error.
+    pub fn right(&self) -> Option<&'_ FlushError> {
+        match self {
+            DuplicateDrainFlushError::Right(_) => None,
+            DuplicateDrainFlushError::Both(left, _) => Some(left),
+            DuplicateDrainFlushError::Left(_) => None,
+        }
+    }
+}
+#[cfg(has_std_error)]
+impl StdError for DuplicateDrainFlushError {}
+impl fmt::Display for DuplicateDrainFlushError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let (single, name) = match self {
+            DuplicateDrainFlushError::Left(single) => (single, "left"),
+            DuplicateDrainFlushError::Right(single) => (single, "right"),
+            DuplicateDrainFlushError::Both(left, right) => {
+                return write!(
+                    f,
+                    "Failed to flush both drains: ({left}) and ({right})"
+                );
+            }
+        };
+        write!(f, "Failed to flush {name} drain: ({single})")
     }
 }
 
@@ -1859,14 +1919,23 @@ impl<D1: Drain, D2: Drain> Drain for Duplicate<D1, D2> {
     }
     /// Flush both drains.
     ///
-    /// Will return [`FlushError::NotSupported`] if either drain does not support flushing.
-    /// If one drain supports flushing and the other does not,
-    /// it is unspecified whether or not anything will be flushed at all.
+    /// If one or both of the drains fails, this will return a [`DuplicateDrainFlushError`].
+    /// Even if the first drain fails with an error, the second one will still be flushed.
     #[inline]
     fn flush(&self) -> result::Result<(), FlushError> {
-        self.0.flush()?;
-        self.1.flush()?;
-        Ok(())
+        let first_res = self.0.flush();
+        let second_res = self.1.flush();
+        let err = match (first_res, second_res) {
+            (Ok(()), Ok(())) => {
+                return Ok(()); // short-circuit success
+            }
+            (Err(left), Ok(())) => DuplicateDrainFlushError::Left(left),
+            (Ok(()), Err(right)) => DuplicateDrainFlushError::Right(right),
+            (Err(left), Err(right)) => {
+                DuplicateDrainFlushError::Both(left, right)
+            }
+        };
+        Err(FlushError::Duplicate(Box::new(err)))
     }
 }
 
