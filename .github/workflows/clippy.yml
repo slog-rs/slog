@@ -32,6 +32,8 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           components: clippy 
+      - uses: Swatinem/rust-cache@v2
+        if: ${{ matrix.rust != 'nightly' }}
       - name: Clippy
         run: |
           cargo clippy --all --all-targets --verbose --all-features -- -D warnings
