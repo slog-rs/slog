@@ -1081,7 +1081,8 @@ where
 
     /// Flush all pending log records, blocking until completion.
     ///
-    /// Will call [`std::io::Write::flush`] if applicable.
+    /// In many cases this is equivalent to calling [`std::io::Write::flush`] on the underlying stream.
+    /// See docs on [`Drain::flush`] for more details.
     ///
     /// Returns [`FlushError::NotSupported`] if the underlying drain does not support [`Drain::flush`].
     #[inline]
@@ -1331,9 +1332,37 @@ pub trait Drain {
 
     /// Flush all pending log records, blocking until completion.
     ///
+    /// This method is logically idempotent.
+    /// In theory, two successive flush calls are the same as one:
+    /// They will both flush all message up to the point of the final.
+    /// In practice, this is not actually the case as IO is complicated and
+    /// flush calls can return errors.
+    ///
     /// Should call [`std::io::Write::flush`] if applicable.
+    /// If this drain wraps another drain,
+    /// it should delegate to the flush call of the wrapped drain.
+    ///
+    /// An implementation of flush should try to avoid blocking log operations while the flush is in progress.
+    /// Unfortunately, there are some cases like `impl Drain for Mutex` where this is not possible.
+    ///
+    /// A flush call is only required to flush records that are queued before the start of the call.
+    /// In particular, consider the following interleaving of events
+    /// ```text
+    /// thread1 drain.log(record1)
+    /// thread1: drain.flush() begin
+    /// thread2: drain.log(record2)
+    /// thread2: drain.flush() finish
+    /// ```
+    /// In this case, the drain is only required to flush `record1`.
+    /// It may or may not flush `record2`.
+    /// This is mainly relevant for the implementation of [`slog_async::Async`],
+    /// as we have no control over the implementation of [`std::io::Write::flush`].
+    /// This behavior is chosen to prevent a flush call from blocking indefinitely
+    /// in the case of concurrent logging by other threads.
     ///
     /// Returns [`FlushError::NotSupported`] if the drain has not implemented this method.
+    ///
+    /// [`slog_async::Async`]: https://docs.rs/slog-async/latest/slog_async/struct.Async.html
     fn flush(&self) -> result::Result<(), FlushError> {
         Err(FlushError::NotSupported)
     }
