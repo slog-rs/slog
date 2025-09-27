@@ -94,3 +94,24 @@ jobs:
         # However, we can grant special exceptions for the Minimum Supported Rust Version
         # if there is a really good reason (like a dependency that requires a newer version).
         continue-on-error: false
+      - name: rustdoc
+        # Restrict to working on nightly/stable (old versions might have undefined types)
+        if: ${{ matrix.rust == 'nightly' || matrix.rust == 'stable' }}
+        env:
+          RUSTDOCFLAGS: -Dwarnings
+        run: |
+          cargo doc --no-deps --all --verbose --no-default-features --features "${{ matrix.features }}"
+  # Runs the same build that docs.rs does. See https://github.com/dtolnay/cargo-docs-rs
+  docsrs:
+    # Only run on PRs if the source branch is on someone else's repo
+    if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
+
+    name: docs.rs
+    runs-on: ubuntu-latest
+    env:
+      RUSTDOCFLAGS: -Dwarnings
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@nightly
+      - uses: dtolnay/install@cargo-docs-rs
+      - run: cargo docs-rs
