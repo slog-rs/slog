@@ -1187,6 +1187,9 @@ pub enum FlushError {
     Io(std::io::Error),
     /// Indicates this drain does not support flushing.
     NotSupported,
+    /// A custom error, which is not directly caused by IO or [`FlushError::NotSupported`].
+    #[cfg(has_std_error)]
+    Custom(Box<dyn StdError + Send + Sync + 'static>),
 }
 #[cfg(feature = "std")]
 impl From<std::io::Error> for FlushError {
@@ -1201,6 +1204,8 @@ impl StdError for FlushError {
             #[cfg(feature = "std")]
             FlushError::Io(cause) => Some(cause),
             FlushError::NotSupported => None,
+            #[cfg(has_std_error)]
+            FlushError::Custom(cause) => Some(&**cause),
         }
     }
 }
@@ -1213,6 +1218,10 @@ impl fmt::Display for FlushError {
             }
             FlushError::NotSupported => {
                 f.write_str("Drain does not support flushing")
+            }
+            #[cfg(has_std_error)]
+            FlushError::Custom(cause) => {
+                write!(f, "Encountered error during flushing: {cause}")
             }
         }
     }
