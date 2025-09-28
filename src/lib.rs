@@ -299,6 +299,10 @@
 
 extern crate alloc;
 
+// Allows referencing `slog` in docs
+#[cfg(doc)]
+extern crate self as slog;
+
 mod key;
 pub use self::key::Key;
 
@@ -1308,7 +1312,7 @@ pub trait Drain {
     /// Type returned by this drain
     ///
     /// It can be useful in some circumstances, but rarely. It will probably
-    /// default to `()` once https://github.com/rust-lang/rust/issues/29661 is
+    /// default to `()` once <https://github.com/rust-lang/rust/issues/29661> is
     /// stable.
     type Ok;
     /// Type of potential errors that can be returned by this `Drain`
@@ -1828,7 +1832,7 @@ where
 /// TODO: Remove this type. This drain is a special case of `Filter`, but
 /// because `Filter` can not use static dispatch ATM due to Rust limitations
 /// that will be lifted in the future, it is a standalone type.
-/// Reference: https://github.com/rust-lang/rust/issues/34511
+/// Reference: <https://github.com/rust-lang/rust/issues/34511>
 #[derive(Debug, Clone)]
 #[must_use = "does nothing by itself; needs to be attached to Logger"]
 pub struct LevelFilter<D: Drain>(pub D, pub Level);
