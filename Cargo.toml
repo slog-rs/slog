@@ -51,7 +51,7 @@ default = ["std", "nested-values"]
 # usually requiring a nested-values feature flag on the logging backend.
 #
 # NOTE: Using nested-values requires Rust 1.56
-nested-values = ["erased-serde", "serde"]
+nested-values = ["dep:erased-serde", "dep:serde_core"]
 # DANGER: Use a String for slog::Key insated of &'static str
 #
 # This is discouraged, becauase it can break other libraries relying on slog.
@@ -59,7 +59,7 @@ nested-values = ["erased-serde", "serde"]
 # without breaking other libraries.
 dynamic-keys = []
 # Require the standard library.
-std = ["serde?/std", "anyhow?/std"]
+std = ["serde_core?/std", "anyhow?/std"]
 # DANGER: Remove the Send + Sync bound from the default logger and drain.
 #
 # This feature is highly discouraged, because it could break other libraries relying on slog.
@@ -67,7 +67,7 @@ std = ["serde?/std", "anyhow?/std"]
 # which will not break other libraries and avoids the overhead of an Arc.
 nothreads = []
 
-# Implement serde::Value for anyhow::Error
+# Implement slog::Value for anyhow::Error
 anyhow = ["dep:anyhow"]
 
 # Implement slog::Drain for parking_lot::Mutex.
@@ -105,7 +105,8 @@ release_max_level_debug = []
 release_max_level_trace = []
 
 [dependencies]
-serde = { version = "1", optional = true, default-features = false }
+# Depending on serde_core rather than serde reduces compile times (added in serde v1.0.200)
+serde_core = { version = "1", optional = true, default-features = false }
 anyhow = { version = "1", optional = true, default-features = false }
 parking_lot_0_12 = { package = "parking_lot", version = "0.12", optional = true }
 
@@ -125,6 +126,7 @@ rustversion = "1"
 # It is used to conditionally enable use of newer rust language
 # features depending on the compiler features.
 rustversion = "1"
+serde = "1"
 serde_derive = "1"
 
 [[example]]

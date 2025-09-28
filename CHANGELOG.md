@@ -14,7 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   This is noticeably faster than `std::sync::Mutex` in the uncontented case, is smaller, and avoids poisoning.
   * This feature has a separate name per version to allow supporting multiple versions of `parking_lot` at once. The current version (v0.12) has feature name `parking_lot_0_12`
 * Define a `prelude` module for common imports, allowing import of logging macros (`info!`, `!debug`, ...) and `slog::Logger` in one go.
+* Depend on [`serde_core`] rather than `serde` to reduce compile times.
 
+[`serde_core`]: https://docs.rs/serde_core/1/serde_core/
 [`parking_lot::Mutex`]: https://docs.rs/parking_lot/latest/parking_lot/type.Mutex.html
 
 ### 2.8.0-rc.1 - 2025-08-06

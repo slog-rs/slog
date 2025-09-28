@@ -3035,7 +3035,7 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
     fn to_sendable(&self) -> Box<dyn SerdeValue + Send + 'static>;
 }
 
-/// Use to wrap a value that implements [serde::Serialize] so it's written to
+/// Use to wrap a value that implements [serde::Serialize](serde_core::Serialize) so it's written to
 /// the log record as an object, rather than a primitive.
 ///
 /// # Examples
@@ -3063,25 +3063,25 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
 #[must_use = "must be passed to logger to actually log"]
 pub struct Serde<T>(pub T)
 where
-    T: serde::Serialize + Clone + Send + 'static;
+    T: serde_core::Serialize + Clone + Send + 'static;
 
 #[cfg(feature = "nested-values")]
-impl<T: serde::Serialize + Clone + Send + 'static> serde::Serialize
+impl<T: serde_core::Serialize + Clone + Send + 'static> serde_core::Serialize
     for Serde<T>
 {
     #[inline]
     fn serialize<S>(&self, serializer: S) -> result::Result<S::Ok, S::Error>
     where
-        S: serde::Serializer,
+        S: serde_core::Serializer,
     {
-        serde::Serialize::serialize(&self.0, serializer)
+        serde_core::Serialize::serialize(&self.0, serializer)
     }
 }
 
 #[cfg(feature = "nested-values")]
 impl<T> SerdeValue for Serde<T>
 where
-    T: serde::Serialize + Clone + Send + 'static,
+    T: serde_core::Serialize + Clone + Send + 'static,
 {
     fn as_serde(&self) -> &dyn erased_serde::Serialize {
         &self.0
@@ -3703,7 +3703,7 @@ where
 #[cfg(feature = "nested-values")]
 impl<T> Value for Serde<T>
 where
-    T: serde::Serialize + Clone + Send + 'static,
+    T: serde_core::Serialize + Clone + Send + 'static,
 {
     fn serialize(
         &self,
