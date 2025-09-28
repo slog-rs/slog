@@ -132,7 +132,14 @@ name = "singlethread"
 required-features = ["nothreads"]
 
 [package.metadata.docs.rs]
-features = ["std", "nested-values", "dynamic-keys"]
+# Should enable most features
+features = [
+    "std",
+    "nested-values",
+    "dynamic-keys",
+    "anyhow",
+    "parking_lot_0_12"
+]
 
 [workspace]
 members = [

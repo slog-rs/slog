@@ -61,14 +61,16 @@ jobs:
           - "dynamic-keys"
           - "std"
           - "std nested-values"
+          - "std nested-values anyhow"
           - "std dynamic-keys"
           - "std nothreads"
           - "std nested-values dynamic-keys"
           - "std nested-values dynamic-keys nothreads"
+          - "std nested-values dynamic-keys anyhow"
         include:
           # Our MSRV doesn't support parking_lot, so explicitly test it here
           - rust: stable
-            features: "std parking_lot_0_12"
+            features: "std nested-values parking_lot_0_12"
 
     steps:
       - uses: actions/checkout@v4
