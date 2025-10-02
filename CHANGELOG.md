@@ -5,31 +5,58 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-* **BIG**: Enables the `nested-values` feature by default.
-* Bump MSRV to 1.61.
+
+## [2.8.0] - 2025-10-05
+This is the biggest slog release since 2.0. It fully preserves compatibility with prior releases.
+
+### Highlights
+- Enables the `nested-values` feature by default.
+  The next major release of `slog_json`, `slog_term`, etc should also enable this feature by default.
+- Added `Logger::flush` and `Drain::flush` methods.
+- Improved support for logging errors
+  - Have `#` log specifier transparently support `&` references to error
+  - Implement `slog::Value` for `Box<dyn std::error::Error>` and `anyhow::Error`
+- Define a `prelude` module for common imports
+- Upgraded to Rust 2018 and require Rust 1.61
+  - Deprecate the old `slog_log!` macros in favor of `slog::log!`
+- Many internal improvements & bug fixes
+
+### Changed
+* Enables the `nested-values` feature by default.
+* Updated to Rust 2018
+  * NOTE: Old 2015 crates will still work because of [excellent 2015/2018 compatibility](https://blog.rust-lang.org/2018/07/27/what-is-rust-2018.html#managing-compatibility)
+* Bump MSRV to 1.61
+  - This is already required for `erased-serde`, `syn`, `serde_core`, and many other important crates in the rust ecosystem.
 * Update `erased-serde` from v0.3 to v0.4
-* Deprecate old prefixed macros like `slog_log`.
-  Rust 2018 macro paths make these unnecessary, use `slog::log!` instead.
-* Optionally implement Drain for [`parking_lot::Mutex`].
-  This is noticeably faster than `std::sync::Mutex` in the uncontented case, is smaller, and avoids poisoning.
-  * This feature has a separate name per version to allow supporting multiple versions of `parking_lot` at once. The current version (v0.12) has feature name `parking_lot_0_12`
-* Define a `prelude` module for common imports, allowing import of logging macros (`info!`, `!debug`, ...) and `slog::Logger` in one go.
 * Depend on [`serde_core`] rather than `serde` to reduce compile times.
 
-[`serde_core`]: https://docs.rs/serde_core/1/serde_core/
-[`parking_lot::Mutex`]: https://docs.rs/parking_lot/latest/parking_lot/type.Mutex.html
+### Added
+* Added a `Logger::flush` and `Drain::flush` methods
+  * Since this is a new method, not all drains implement it.
+    Calling it on an unsupported drain will give an error
+* Define a `prelude` module for common imports.
+   Replace `use slog::{Serde, Logger, info, debug, trace}` with `use slog::prelude::*`
+* Optionally implement Drain for [`parking_lot::Mutex`].
+  This is noticeably faster than `std::sync::Mutex`, is smaller, and avoids poisoning.
+  * This feature has a separate name per version to allow supporting multiple versions of `parking_lot` at once. The current version (v0.12) has feature name `parking_lot_0_12`
+* Implement slog::Value for `dyn std::error::Error` and `Box<dyn std::error:Error` (along with the `Send`/`Sync` versions).
+* Optionally implement slog::Value for [`anyhow::Error`] (requires `anyhow` feature)
+* Add `ErrorRef` wrapper to enable logging error references (PR #327)
+  * The `#` error formatter in macros was updated to automatically select `ErrorValue` or `ErrorRef` (PR #328)
+* Add `emit_bytes` method (PR #290)
+  * Control formatting using `BytesKind` enum
+* Implement `Value` for `std::borrow::Cow`
 
-### 2.8.0-rc.1 - 2025-08-06
-* Minimum Supported Rust Version is now [1.56](https://blog.rust-lang.org/2021/10/21/Rust-1.56.0/).
-  This was already required if you wanted to use the `nested-values` feature. 
+### Deprecated
+* Deprecate old prefixed macros like `slog_log`.
+  Rust 2018 macro paths like `slog::log!` make these unnecessary.
+
+### Fixed
+* Fix logging of references to errors (resolved by introduction of `ErrorRef` in PR #327)
 * Take advantage of the fact that in 1.81 [`std::error::Error`] has been moved to `core`.
   On this rust version, slog now supports the error trait without requiring `std`.
 * Add `#[must_use]` to most public types, including `slog::Logger`, `slog::OwnedKV`, and `slog::FnValue`.
-* Try to give a descriptive error when the `nested-values` feature is unsupported.
-* Implement slog::Value for `dyn std::error::Error` and `Box<dyn std::error:Error`,
-  along with the `Send`/`Sync` versions.
-* Optionally implement slog::Value for [`anyhow::Error`].
-  Requires the `anyhow` feature to be enabled.
+* Give a descriptive error when the `nested-values` feature is unsupported.
 * Alias the `slog::Never` type to [`std::convert::Infallible`], fixing issue #209.
 * doc: Fix typo in slog::Value docs (issue #335)
   * Thank you to @larswirzenius for noticing this!
@@ -37,30 +64,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   * This mistake was caught by a new lint [`#[warn(clippy::doc_lazy_continuation)]`](https://rust-lang.github.io/rust-clippy/rust-1.81.0/index.html#/doc_lazy_continuation)
 * Fix some internal warnings
   * Example: Avoid the new [`#[warn(unexpected_cfgs)]`](https://blog.rust-lang.org/2024/05/06/check-cfg.html) lint.
-  * The crate almost passes clippy::pedantic now.
-  * None of these should affect user crates
+  * The crate almost passes clippy::pedantic now, except for a few very verbose lints like `clippy::must-use-candidate`
+  * None of these changes should affect user crates
 * Stop requiring the `serde_derive` crate to implement the `nested-values` feature.
+  We depend on the new `serde_core` instead of even requiring `serde`.
 * The `nested-values` feature no longer requires `serde/std` (was a mistake).
-* nested-values: Fix CI failure caused by `#[deny(unused_extern_crates)]` lint
-  * Switch `#[deny(rust_2018_idioms)]` to `#[warn(...)]` to avoid unnecessary build failures in the future.
-  * I don't *think* this should affect user code.
 * Always support 128-bit integers, even on the `wasm32-unknown-emscripten` target.
-
-[`std::convert::Infallible`]: https://doc.rust-lang.org/std/convert/enum.Infallible.html
-[`anyhow::Error`]: https://docs.rs/anyhow/1/anyhow/struct.Error.html
-
-### 2.8.0-beta.2 - 2024-01-05
-
-* Add `ErrorRef` wrapper to enable logging error references (PR #327)
-  * The `#` error formatter in macros was updated to automatically select `ErrorValue` or `ErrorRef` (PR #328)
-
-### 2.8.0-beta.1 - 2023-09-09
-
-* **BIG:** Updated to Rust 2018
-  * NOTE: Old 2015 crates will still work because of [excellent 2015/2018 compatibility](https://blog.rust-lang.org/2018/07/27/what-is-rust-2018.html#managing-compatibility)
-* Minimum Supported Rust Version is now [1.49.0](https://blog.rust-lang.org/2020/12/31/Rust-1.49.0.html)
-* Add `emit_bytes` method (PR #290)
-  * Control formatting using `BytesKind` enum
 * Fix support for `feature="nothreads"`
   * Internal refactoring to make different feature combos much easier (PR #301)
 * Switch from Travis CI to Github Actions (fixes #294)
@@ -70,9 +79,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     * Make exception for `nested-values` feature on MSRV (1.49),
       because `erased-serde` dependency requires `edition="2021"` (needs 1.56)
 * Fix `#` format when not used as a last argument.
-* Implement `Value` for `std::borrow::Cow`
-* Fix duplicate `AsRef<str>` implementations, fixing support for `dynamic-keys`
+* Fix duplicate `AsRef<str>` implementations when using `dynamic-keys` feature.
 * Fix incorrect 'long' name for `slog::Level::Warning` (fixes issue #282)
+
+[`std::error::Error`]: https://doc.rust-lang.org/std/error/trait.Error.html
+[`std::convert::Infallible`]: https://doc.rust-lang.org/std/convert/enum.Infallible.html
+[`anyhow::Error`]: https://docs.rs/anyhow/1/anyhow/struct.Error.html
+[`serde_core`]: https://docs.rs/serde_core/1/serde_core/
+[`parking_lot::Mutex`]: https://docs.rs/parking_lot/latest/parking_lot/type.Mutex.html
 
 ## 2.7.0 - 2020-11-29
 
