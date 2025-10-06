@@ -118,16 +118,18 @@ default-features = false
 features = ["alloc"]  # erased-serde always requires alloc, and so does slog
 
 [build-dependencies]
-rustversion = "1"
+# rustversion v1.0.6 added the rustversion::cfg! macro
+rustversion = "1.0.6"
 
 [dev-dependencies]
 # NOTE: This is just a macro (not a runtime dependency)
 #
 # It is used to conditionally enable use of newer rust language
 # features depending on the compiler features.
-rustversion = "1"
-serde = "1"
-serde_derive = "1"
+rustversion = "1.0.6"
+# first version to support serde_core
+serde = "1.0.220"
+serde_derive = "1.0.220"
 
 [[example]]
 name = "singlethread"

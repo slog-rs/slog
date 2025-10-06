@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - **[Fix]** Restore compatibility with `erased-serde` version `0.3`.
   - Compatibility with `erased-serde` version `0.4` may be provided again in a
     future version.
+* Ensure compatibility with `-Zminimal-versions` flag by specifying minimal dependency versions (fixes #357)
+  - Not (yet) tested in CI
 
 ## [2.8.0] - 2025-10-05
 This is the biggest slog release since 2.0. It fully preserves compatibility with prior releases.
