@@ -2978,7 +2978,7 @@ impl fmt::Display for ErrorAsFmt<'_> {
 // }}}
 
 // {{{ serde
-/// A value that can be serialized via serde
+/// A value that can be serialized via `serde`, using [`erased_serde` 0.3](https://docs.rs/erased-serde/0.3).
 ///
 /// This is useful for implementing nested values, like sequences or structures.
 #[cfg(feature = "nested-values")]
@@ -3025,7 +3025,7 @@ pub trait SerdeValue: erased_serde::Serialize + Value {
         }
     }
 
-    /// Convert to `erased_serialize::Serialize` of the underlying value,
+    /// Convert to [`erased_serde::Serialize`] of the underlying value,
     /// so `slog::Serializer`s can use it to serialize via `serde`.
     fn as_serde(&self) -> &dyn erased_serde::Serialize;
 

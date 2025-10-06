@@ -49,8 +49,6 @@ default = ["std", "nested-values"]
 # Without it, only flat values like numbers and strings can be logged.
 # This requires the underlying logger to support this feature,
 # usually requiring a nested-values feature flag on the logging backend.
-#
-# NOTE: Using nested-values requires Rust 1.56
 nested-values = ["dep:erased-serde", "dep:serde_core"]
 # DANGER: Use a String for slog::Key insated of &'static str
 #
@@ -111,8 +109,10 @@ anyhow = { version = "1", optional = true, default-features = false }
 parking_lot_0_12 = { package = "parking_lot", version = "0.12", optional = true }
 
 [dependencies.erased-serde]
-# The 0.4 series of erased-serde has MSRV Rust 1.61, just like we do
-version = "0.4"
+# For Slog 2.x, we keep compat with `erased-serde 0.3` as it's a public
+# dependency, even if newer major versions are available.
+# erased-serde 0.3 has MSRV 1.56, which is stronger than our MSRV (1.61)
+version = "0.3"
 optional = true
 default-features = false
 features = ["alloc"]  # erased-serde always requires alloc, and so does slog
