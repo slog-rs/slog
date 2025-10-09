@@ -79,6 +79,9 @@ jobs:
           toolchain: ${{ matrix.rust }}
       - uses: Swatinem/rust-cache@v2
         if: ${{ matrix.rust != 'nightly' }} # ineffective due to version key
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-minimal-versions,cargo-hack
       - name: Check
         run: |
           cargo check --all-targets --verbose --no-default-features --features "${{ matrix.features }}"
@@ -94,6 +97,9 @@ jobs:
         # However, we can grant special exceptions for the Minimum Supported Rust Version
         # if there is a really good reason (like a dependency that requires a newer version).
         continue-on-error: false
+      - name: Test (-Zminimal-versions)
+        run:
+          cargo minimal-versions test --all --verbose --no-default-features "${{ matrix.features }}"
       - name: rustdoc
         # Restrict to working on nightly/stable (old versions might have undefined types)
         if: ${{ matrix.rust == 'nightly' || matrix.rust == 'stable' }}
