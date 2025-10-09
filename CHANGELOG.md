@@ -6,10 +6,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-- **[Fix]** Restore compatibility with `erased-serde` version `0.3`.
+## 2.8.1 - 2025-10-05
+This fixes an accidental breaking change in the v2.8.0 release,
+where the public API was changed from `erased_serde v0.4` to `erased_serde v0.3`.
+This should not affect normal users of the API but could break drains supporting `nested-values`.
+
+I (@Techcable) apologize for this breakage and have yanked the 2.8.0 release due to this issue. I will try to setup [`cargo-semver-checks`] in the CI to avoid this in the future.
+
+[`cargo-semver-checks`]: https://github.com/obi1kenobi/cargo-semver-checks
+
+### Fixed
+- Restore compatibility with `erased-serde` version `0.3`.
   - Compatibility with `erased-serde` version `0.4` may be provided again in a
-    future version.
-* Ensure compatibility with `-Zminimal-versions` flag by specifying minimal dependency versions (fixes #357)
+    future version, but will be done so in a backwards compatible way.
+  - Thanks to @demurgos for recognizing and fixing this in PR #359
+- Ensure compatibility with `-Zminimal-versions` flag by specifying minimal dependency versions (fixes #357)
   - Not (yet) tested in CI
 
 ## [2.8.0] - 2025-10-05
