@@ -3334,7 +3334,7 @@ impl<T: Value, F: FnOnce() -> T> Value for std::sync::LazyLock<T, F> {
         key: Key,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        (**self).serialize(record, key, serializer)
+        Self::force(self).serialize(record, key, serializer)
     }
 }
 
@@ -3346,7 +3346,7 @@ impl<T: Value, F: FnOnce() -> T> Value for core::cell::LazyCell<T, F> {
         key: Key,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        (**self).serialize(record, key, serializer)
+        Self::force(self).serialize(record, key, serializer)
     }
 }
 
