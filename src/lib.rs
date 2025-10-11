@@ -3327,6 +3327,7 @@ where
 
 #[cfg(feature = "std")]
 #[rustversion::since(1.80)]
+#[clippy::msrv = "1.80"]
 impl<T: Value, F: FnOnce() -> T> Value for std::sync::LazyLock<T, F> {
     fn serialize(
         &self,
@@ -3339,6 +3340,7 @@ impl<T: Value, F: FnOnce() -> T> Value for std::sync::LazyLock<T, F> {
 }
 
 #[rustversion::since(1.80)]
+#[clippy::msrv = "1.80"]
 impl<T: Value, F: FnOnce() -> T> Value for core::cell::LazyCell<T, F> {
     fn serialize(
         &self,
