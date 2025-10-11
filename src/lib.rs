@@ -3541,7 +3541,7 @@ where
 /// be used directly.
 #[cfg(has_std_error)]
 #[doc(hidden)]
-pub struct ErrorTagWrapper<E>(E);
+pub struct ErrorTagWrapper<E>(pub E);
 
 #[cfg(has_std_error)]
 #[test]
