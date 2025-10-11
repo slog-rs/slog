@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 * Get `anyhow` working with `-Zminimal-versions`: `AsRef` impl was not present in 1.0.0
+  * Does not work on nightly rust due to a bug in anyhow v1.0.0.
 * ci: Fix testing `-Zminimal-versions` with non-default features
 
 ## 2.8.2 - 2025-10-11

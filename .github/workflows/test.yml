@@ -98,6 +98,9 @@ jobs:
         # if there is a really good reason (like a dependency that requires a newer version).
         continue-on-error: false
       - name: Test (-Zminimal-versions)
+        # Skip testing anyhow with -Zminimal-versions on nightly, as anyhow v1.0.0 assumes
+        # the existence of a backtrace method on nightly. However, this function has been remoed.
+        if: ${{ !(contains(matrix.features, 'anyhow') && matrix.rust == 'nightly') }}
         # NOTE: Use of --all here means features must be defined for the entire workspace
         # Since the default package is the only published package, the flag is not strictly necessary
         run: |
