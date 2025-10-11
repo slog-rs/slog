@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-### Fixes
+## 2.8.2 - 2025-10-11
+
+### Fixed
 * Fix use of `#` operator in macros due to private field (issue #364)
   * Thanks to @Manishearth for identifying this.
 * ci: Check the tests pass with `-Zminimal-versions`
