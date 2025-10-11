@@ -98,8 +98,10 @@ jobs:
         # if there is a really good reason (like a dependency that requires a newer version).
         continue-on-error: false
       - name: Test (-Zminimal-versions)
-        run:
-          cargo minimal-versions test --all --verbose --no-default-features "${{ matrix.features }}"
+        # NOTE: Use of --all here means features must be defined for the entire workspace
+        # Since the default package is the only published package, the flag is not strictly necessary
+        run: |
+          cargo minimal-versions test --verbose --no-default-features --features "${{ matrix.features }}"
       - name: rustdoc
         # Restrict to working on nightly/stable (old versions might have undefined types)
         if: ${{ matrix.rust == 'nightly' || matrix.rust == 'stable' }}
