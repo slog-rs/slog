@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+* Get `anyhow` working with `-Zminimal-versions`: `AsRef` impl was not present in 1.0.0
+
 ## 2.8.2 - 2025-10-11
 
 ### Fixed

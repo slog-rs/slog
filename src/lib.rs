@@ -3403,7 +3403,8 @@ impl Value for anyhow::Error {
         key: Key,
         serializer: &mut dyn Serializer,
     ) -> Result {
-        serializer.emit_error(key, self.as_ref())
+        let err: &dyn StdError = &**self;
+        serializer.emit_error(key, err)
     }
 }
 
