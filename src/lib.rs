@@ -3339,7 +3339,7 @@ impl<T: Value, F: FnOnce() -> T> Value for std::sync::LazyLock<T, F> {
 }
 
 #[rustversion::since(1.80)]
-impl<T: Value, F: FnOnce() -> T> Value for std::cell::LazyCell<T, F> {
+impl<T: Value, F: FnOnce() -> T> Value for core::cell::LazyCell<T, F> {
     fn serialize(
         &self,
         record: &Record<'_>,
