@@ -3338,6 +3338,18 @@ impl<T: Value, F: FnOnce() -> T> Value for std::sync::LazyLock<T, F> {
     }
 }
 
+#[rustversion::since(1.80)]
+impl<T: Value, F: FnOnce() -> T> Value for std::cell::LazyCell<T, F> {
+    fn serialize(
+        &self,
+        record: &Record<'_>,
+        key: Key,
+        serializer: &mut dyn Serializer,
+    ) -> Result {
+        (**self).serialize(record, key, serializer)
+    }
+}
+
 #[cfg(feature = "std")]
 impl Value for std::path::Display<'_> {
     fn serialize(

@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * ci: Check the tests pass with `-Zminimal-versions`
 
 ### Added
-* Implement slog::Value for `std::sync::LazyLock`.
+* Implement slog::Value for `std::sync::LazyLock` and `std::cell::LazyCell`.
 
 ## 2.8.1 - 2025-10-05
 This fixes an accidental breaking change in the v2.8.0 release,
