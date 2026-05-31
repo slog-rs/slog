@@ -75,7 +75,10 @@ impl From<String> for Key {
 
 impl From<Key> for String {
     fn from(s: Key) -> String {
-        s.to_string()
+        match s.data {
+            Cow::Borrowed(s) => s.to_string(),
+            Cow::Owned(s) => s,
+        }
     }
 }
 
