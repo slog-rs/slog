@@ -107,6 +107,11 @@ release_max_level_trace = []
 serde_core = { version = "1", optional = true, default-features = false }
 anyhow = { version = "1", optional = true, default-features = false }
 parking_lot_0_12 = { package = "parking_lot", version = "0.12", optional = true }
+# NOTE: This is just a macro (not a runtime dependency)
+#
+# It is used to conditionally enable use of newer rust language
+# features depending on the compiler features.
+rustversion = "1.0.6"
 
 [dependencies.erased-serde]
 # For Slog 2.x, we keep compat with `erased-serde 0.3` as it's a public
@@ -122,11 +127,6 @@ features = ["alloc"]  # erased-serde always requires alloc, and so does slog
 rustversion = "1.0.6"
 
 [dev-dependencies]
-# NOTE: This is just a macro (not a runtime dependency)
-#
-# It is used to conditionally enable use of newer rust language
-# features depending on the compiler features.
-rustversion = "1.0.6"
 # first version to support serde_core
 serde = "1.0.220"
 serde_derive = "1.0.220"

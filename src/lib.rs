@@ -3326,6 +3326,33 @@ where
 }
 
 #[cfg(feature = "std")]
+#[rustversion::since(1.80)]
+#[clippy::msrv = "1.80"]
+impl<T: Value, F: FnOnce() -> T> Value for std::sync::LazyLock<T, F> {
+    fn serialize(
+        &self,
+        record: &Record<'_>,
+        key: Key,
+        serializer: &mut dyn Serializer,
+    ) -> Result {
+        Self::force(self).serialize(record, key, serializer)
+    }
+}
+
+#[rustversion::since(1.80)]
+#[clippy::msrv = "1.80"]
+impl<T: Value, F: FnOnce() -> T> Value for core::cell::LazyCell<T, F> {
+    fn serialize(
+        &self,
+        record: &Record<'_>,
+        key: Key,
+        serializer: &mut dyn Serializer,
+    ) -> Result {
+        Self::force(self).serialize(record, key, serializer)
+    }
+}
+
+#[cfg(feature = "std")]
 impl Value for std::path::Display<'_> {
     fn serialize(
         &self,
